@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>90978168723-rbcb3lon7cq0r79alsuuasiemub5b4tg.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.90978168723-rbcb3lon7cq0r79alsuuasiemub5b4tg</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>90978168723-8ekn73ev14lpop7pnom37p5t1b9bjlap.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC1XBWKv29nG4OLDvQytRSB_Zt63xRMAOM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>90978168723</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.triqinnovations.app</string>
+	<key>PROJECT_ID</key>
+	<string>triq-inovations-acd40</string>
+	<key>STORAGE_BUCKET</key>
+	<string>triq-inovations-acd40.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:90978168723:ios:9d05514486dddcdcfac266</string>
+	<key>DATABASE_URL</key>
+	<string>https://triq-inovations-acd40-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

@@ -1,0 +1,85 @@
+part of 'app_resources.dart';
+
+/// A centralized class for defining application-wide color constants.
+///
+/// This ensures consistency across the app and makes it easy to update colors in one place.
+abstract class AppColors {
+  // Basic Colors
+  static const Color white = Colors.white;
+  static const Color black = Colors.black;
+  static const Color transparent = Colors.transparent;
+
+  // Primary Theme Colors
+  static const Color primary = Color(0xFF042c74);
+  static const Color primaryLight = Color(0xFF2681E1);
+  static const Color primaryDark = Color(0xFF003382);
+  static const Color primaryVariant = Color(0xFF2681E1);
+  static const Color primarySuperLight = Color(0xFF687FE5);
+
+
+  // Secondary Colors
+  static const Color secondary = primary;
+  static const Color secondaryLight = Color(0xFFb5a8d5);
+  static const Color secondaryDark = Color(0xFF5746A6);
+  static const Color secondaryVariant = Color(0xFF43307F);
+   static const Color appbarVarient = Color(0xFF003382);
+  // Accent Colors
+  static const Color accent = Color(0xFFff6b6b);
+  static const Color accentLight = Color(0xFFFFA8A8);
+  static const Color accentDark = Color(0xFFD43D3D);
+
+  // Neutral Colors
+  static const Color gray = Color(0xFF9E9E9E);
+  static const Color lightGray = Color(0xFFE0E0E0);
+  static const Color darkGray = Color(0xFF616161);
+  static const Color softGray = Color(0xFFF5F5F5);
+  static const Color mediumGray = Color(0xFFBDBDBD);
+
+
+  static const Color softGreen = Color(0xFF4CAF50);
+  static const Color backgroundlightgreen = Color(0xFF3A98B9);
+
+  // Text Colors
+  static const Color textPrimary = Color(0xFF000000);
+  static const Color textSecondary = Color(0xFF757575);
+  static const Color textDisabled = Color(0xFF9E9E9E);
+  static const Color textOnPrimary = Colors.white;
+  static const Color textOnSecondary = Colors.white;
+  static const Color textOnAccent = Colors.white;
+  static const Color textGray = Color(0xFF595959);
+  static const Color textOnSurface = Colors.white;
+
+  // Background Colors
+  static const Color background = Color(0xFFF5F5FA);
+  static const Color scaffoldBackground = Color(0xFFF6F6F6);
+  static const Color cardBackground = Color(0xFFFFFFFF);
+  static const Color appBarBackground = Color(0xFFECECEC);
+  static const Color walletBackground = Color(0xFF76BA99);
+
+  // State Colors
+  static const Color error = Color(0xFFB00020);
+  static const Color warning = Color(0xFFFFA000);
+  static const Color success = Color(0xFF28A745);
+  static const Color info = Color(0xFF1976D2);
+
+  // Disabled & Inactive Colors
+  static const Color disabled = Color(0xFFBDBDBD);
+  static const Color inactive = Color(0xFFEEEEEE);
+  static const Color overlay = Color(0x66000000);
+
+
+
+  static const Color pink = Color(0xFFED75E3); // 40% black for overlays
+  static const Color lightGreen = Color(0xFF6CCA9B); // 40% black for overlays
+  static const Color yellow = Color(0xFFF3B33E); // 40% black for overlays
+  static const Color darkGreen = Color(0xFFB7BE79); // 40% black for overlays
+  static const Color darkPink = Color(0xFFD28591); // 40% black for overlays
+
+
+// icon background color
+static const Color bluebackground = Color(0xFF4ED7F1);
+static const Color greenbackground = Color(0xFF76BA99);
+static const Color redbackground = Color(0xFFE97777);
+  static const Color darkGreenBack=Color(0xFF3A98B9);
+  
+}
