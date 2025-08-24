@@ -236,33 +236,33 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
     BuildContext context,
     OrganizationHomeViewModel model,
   ) {
-    if (model.isLoading) {
-      return Center(child: LottieBuilder.asset("assets/lotties/globe.json"));
-    }
-
-    if (model.dashboard == null || model.dashboard!.cards.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.dashboard_outlined, color: AppColors.gray, size: 50),
-            SizedBox(height: 16),
-            Text(
-              "${LanguageService.get('no_dashboard_data')} ${LanguageService.get('or_not_added_to_any_organization')}",
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(color: AppColors.gray),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 16),
-            TextButton(
-              onPressed: () => model.fetchDashboardData(),
-              child: Text(LanguageService.get("refresh")),
-            ),
-          ],
-        ),
-      );
-    }
+    // if (model.isLoading) {
+    //   return Center(child: LottieBuilder.asset("assets/lotties/globe.json"));
+    // }
+    //
+    // if (model.dashboard == null || model.dashboard!.cards.isEmpty) {
+    //   return Center(
+    //     child: Column(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: [
+    //         Icon(Icons.dashboard_outlined, color: AppColors.gray, size: 50),
+    //         SizedBox(height: 16),
+    //         Text(
+    //           "${LanguageService.get('no_dashboard_data')} ${LanguageService.get('or_not_added_to_any_organization')}",
+    //           style: Theme.of(
+    //             context,
+    //           ).textTheme.titleMedium?.copyWith(color: AppColors.gray),
+    //           textAlign: TextAlign.center,
+    //         ),
+    //         SizedBox(height: 16),
+    //         TextButton(
+    //           onPressed: () => model.fetchDashboardData(),
+    //           child: Text(LanguageService.get("refresh")),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
 
     return Column(
       children: [
@@ -272,7 +272,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
         SizedBox(height: 20),
 
         // Second Card - Secondary Features Grid (2-row grid)
-        _buildSecondaryFeaturesCard(context),
+        _buildSecondaryFeaturesCard(context, model),
       ],
     );
   }
@@ -351,7 +351,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
     );
   }
 
-  Widget _buildSecondaryFeaturesCard(BuildContext context) {
+  Widget _buildSecondaryFeaturesCard(BuildContext context, OrganizationHomeViewModel model) {
     final List<DashboardCardData> secondaryFeatures = [
       DashboardCardData(
         title: LanguageService.get('analytics_dashboard'),
@@ -410,7 +410,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
         itemCount: secondaryFeatures.length,
         itemBuilder: (context, index) {
           final card = secondaryFeatures[index];
-          return _buildSecondaryFeatureCard(context, card, index);
+          return _buildSecondaryFeatureCard(context, card, index, model);
         },
       ),
     );
@@ -420,11 +420,16 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
     BuildContext context,
     DashboardCardData card,
     int index,
+    OrganizationHomeViewModel model,
   ) {
     return GestureDetector(
           onTap: () {
-            // TODO: Implement navigation when model is available
-            // model.navigateToRoute(card.route, null);
+            // Navigate based on the card route
+            if (card.route == '/machines') {
+              // Navigate to Machine Records screen
+              model.navigateToMachineRecords();
+            }
+            // TODO: Implement other navigation routes when needed
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

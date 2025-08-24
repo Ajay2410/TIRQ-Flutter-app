@@ -19,6 +19,7 @@ class CommonTextField extends StatelessWidget {
   final bool enabled;
   final String? helperText;
   final String? errorText;
+  final Color? disabledBackgroundColor;
 
   const CommonTextField({
     super.key,
@@ -39,6 +40,7 @@ class CommonTextField extends StatelessWidget {
     this.enabled = true,
     this.helperText,
     this.errorText,
+    this.disabledBackgroundColor,
   });
 
   @override
@@ -56,13 +58,16 @@ class CommonTextField extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        
+
         // Text Field
         TextFormField(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
+          onTapOutside: (event) {
+            FocusScope.of(context).unfocus();
+          },
           readOnly: readOnly,
           maxLines: maxLines,
           maxLength: maxLength,
@@ -82,7 +87,11 @@ class CommonTextField extends StatelessWidget {
             helperText: helperText,
             errorText: errorText,
             filled: true,
-            fillColor: enabled ? AppColors.white : AppColors.lightGray.withValues(alpha: 0.1),
+            fillColor:
+                enabled
+                    ? AppColors.white
+                    : (disabledBackgroundColor ??
+                        AppColors.colorF8FBFE),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: AppColors.lightGray),
@@ -105,7 +114,9 @@ class CommonTextField extends StatelessWidget {
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.lightGray.withValues(alpha: 0.5)),
+              borderSide: BorderSide(
+                color: AppColors.lightGray.withValues(alpha: 0.5),
+              ),
             ),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -153,7 +164,10 @@ class CommonValidators {
     };
   }
 
-  static String? Function(String?)? minLength(int minLength, String errorMessage) {
+  static String? Function(String?)? minLength(
+    int minLength,
+    String errorMessage,
+  ) {
     return (value) {
       if (value == null || value.length < minLength) {
         return errorMessage;
@@ -162,7 +176,10 @@ class CommonValidators {
     };
   }
 
-  static String? Function(String?)? maxLength(int maxLength, String errorMessage) {
+  static String? Function(String?)? maxLength(
+    int maxLength,
+    String errorMessage,
+  ) {
     return (value) {
       if (value != null && value.length > maxLength) {
         return errorMessage;
@@ -171,7 +188,10 @@ class CommonValidators {
     };
   }
 
-  static String? Function(String?)? pattern(RegExp pattern, String errorMessage) {
+  static String? Function(String?)? pattern(
+    RegExp pattern,
+    String errorMessage,
+  ) {
     return (value) {
       if (value == null || value.trim().isEmpty) {
         return null; // Allow empty values, use required validator if needed

@@ -180,4 +180,9 @@ abstract class Routes {
   static const String generalSetting = '/generalSetting';
 
   static const String myWallet = '/myWallet';
+
+  /// Route for the Machine Records screen.
+  static const String machineRecords = '/machineRecords';
+  static const String addNewMachineModel = '/addNewMachineModel';
+  static const String customerEditDetailsView = '/customerEditDetailsView';
 }

@@ -344,7 +344,7 @@ class _MyCustomersViewState extends State<MyCustomersView>
   }
 
   Widget _buildCustomerCard(Customer customer, MyCustomersViewModel model) {
-    return GestureDetector(
+    return InkWell(
       onTap: () => model.onCustomerTap(customer),
       child: Row(
         children: [

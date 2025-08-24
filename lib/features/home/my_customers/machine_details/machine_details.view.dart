@@ -24,7 +24,7 @@ class MachineDetailsView extends StatelessWidget {
                 ),
               ),
             ),
-            _buildActionButtons(),
+            _buildActionButtons(context),
           ],
         ),
       ),
@@ -46,30 +46,40 @@ class MachineDetailsView extends StatelessWidget {
       titleSpacing: 0,
       title: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(2),
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.colorF0F2FC,
-            ),
-            child: Container(
-              height: 26,
-              width: 26,
-              decoration: const BoxDecoration(
-                color: AppColors.bluebackground,
-                shape: BoxShape.circle,
-              ),
-              child: const Center(
-                child: Text(
-                  'CR',
-                  style: TextStyle(
-                    color: AppColors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(2),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.colorF0F2FC,
+                ),
+                child: Container(
+                  height: 26,
+                  width: 26,
+                  decoration: const BoxDecoration(
+                    color: AppColors.bluebackground,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'CR',
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+              Positioned(
+                bottom: -4,
+                right: -4,
+                child: Image.asset(AppImages.flag, width: 17, height: 17),
+              ),
+            ],
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -135,27 +145,27 @@ class MachineDetailsView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-                              Row(
-                  children: [
-                    Expanded(
-                      child: _buildInfoRow(
-                        AppImages.modelNumber,
-                        'model_number'.lang,
-                        machine['modelNumber'] ?? 'DEF',
-                        AppColors.colorF2A22E ,
-                      ),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildInfoRow(
+                      AppImages.modelNumber,
+                      'model_number'.lang,
+                      machine['modelNumber'] ?? 'DEF',
+                      AppColors.colorF2A22E,
                     ),
-                    SizedBox(width: 14),
-                    Expanded(
-                      child: _buildInfoRow(
-                        AppImages.machineType,
-                        'machine_type'.lang,
-                        machine['machineType'] ?? 'fully_automatic'.lang,
-                        AppColors.colorFF6868,
-                      ),
+                  ),
+                  SizedBox(width: 14),
+                  Expanded(
+                    child: _buildInfoRow(
+                      AppImages.machineType,
+                      'machine_type'.lang,
+                      machine['machineType'] ?? 'fully_automatic'.lang,
+                      AppColors.colorFF6868,
                     ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 14),
               Divider(color: AppColors.lightGray),
               const SizedBox(height: 14),
@@ -169,27 +179,62 @@ class MachineDetailsView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-                              Row(
-                  children: [
-                    Expanded(
-                      child: _buildInfoRow(
-                        AppImages.height,
-                        'height'.lang,
-                        machine['maxHeight'] ?? '1.0',
-                        AppColors.color41C293,
-                      ),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildInfoRow(
+                      AppImages.height,
+                      'height'.lang,
+                      machine['maxHeight'] ?? '1.0',
+                      AppColors.color41C293,
                     ),
-                    SizedBox(width: 14),
-                    Expanded(
-                      child: _buildInfoRow(
-                        AppImages.width,
-                        'width'.lang,
-                        machine['maxWidth'] ?? '1.0',
-                        AppColors.primarySuperLight,
-                      ),
+                  ),
+                  SizedBox(width: 14),
+                  Expanded(
+                    child: _buildInfoRow(
+                      AppImages.width,
+                      'width'.lang,
+                      machine['maxWidth'] ?? '1.0',
+                      AppColors.primarySuperLight,
                     ),
-                  ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              Divider(color: AppColors.lightGray),
+              const SizedBox(height: 14),
+
+
+              Text(
+                'minimum_processing_size'.lang,
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildInfoRow(
+                      AppImages.height,
+                      'height'.lang,
+                      machine['maxHeight'] ?? '1.0',
+                      AppColors.color41C293,
+                    ),
+                  ),
+                  SizedBox(width: 14),
+                  Expanded(
+                    child: _buildInfoRow(
+                      AppImages.width,
+                      'width'.lang,
+                      machine['maxWidth'] ?? '1.0',
+                      AppColors.primarySuperLight,
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 14),
               Divider(color: AppColors.lightGray),
               const SizedBox(height: 14),
@@ -280,7 +325,7 @@ class MachineDetailsView extends StatelessWidget {
                       machine['isInWarranty'] == true
                           ? 'in_warranty'.lang
                           : 'out_of_warranty'.lang,
-                     AppColors.color41C293,
+                      AppColors.color41C293,
                       isWarning: machine['isInWarranty'] != true,
                     ),
                   ),
@@ -317,12 +362,7 @@ class MachineDetailsView extends StatelessWidget {
             color: iconColor.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Image.asset(
-            iconPath,
-            width: 20,
-            height: 20,
-            color: iconColor,
-          ),
+          child: Image.asset(iconPath, width: 20, height: 20, color: iconColor),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -353,7 +393,7 @@ class MachineDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -373,8 +413,7 @@ class MachineDetailsView extends StatelessWidget {
           Expanded(
             child: ElevatedButton(
               onPressed: () {
-                // Handle delete action here
-                // You can add your delete logic here
+                // TODO: Handle edit action - navigate to appropriate edit screen
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryLight,

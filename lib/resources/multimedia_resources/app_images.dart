@@ -57,6 +57,7 @@ abstract class AppImages {
 
   // Common Icons
   static const String warning = "assets/icons/warning.png";
+  static const String alert = "assets/icons/alert.png";
 
   // Machine Details Icons
   static const String modelNumber = "assets/icons/model_number.png";

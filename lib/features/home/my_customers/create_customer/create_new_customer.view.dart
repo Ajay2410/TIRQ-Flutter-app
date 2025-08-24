@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:manager/packages/animated_custom_dropdown/custom_dropdown.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/services/language.service.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
@@ -11,39 +11,32 @@ import 'package:manager/widgets/common_text_field.dart';
 import 'create_new_customer.vm.dart';
 
 class CreateNewCustomerView extends StatelessWidget {
-  const CreateNewCustomerView({super.key});
+  final bool isEditMode;
+  final Map<String, dynamic>? machineData;
+
+  const CreateNewCustomerView({super.key, this.isEditMode = false, this.machineData});
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CreateNewCustomerViewModel>.reactive(
-      viewModelBuilder: () => CreateNewCustomerViewModel()..init(),
+      viewModelBuilder: () => CreateNewCustomerViewModel(isEditMode: isEditMode, machineData: machineData)..init(),
       builder: (context, model, child) {
-        return Scaffold(
-          appBar: _buildAppBar(context, model),
-          body: _buildBody(context, model),
-        );
+        return Scaffold(appBar: _buildAppBar(context, model), body: _buildBody(context, model));
       },
     );
   }
 
-  PreferredSizeWidget _buildAppBar(
-    BuildContext context,
-    CreateNewCustomerViewModel model,
-  ) {
+  PreferredSizeWidget _buildAppBar(BuildContext context, CreateNewCustomerViewModel model) {
     return AppBar(
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: AppColors.white),
+        icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
         onPressed: () => Navigator.of(context).pop(),
       ),
       titleSpacing: 0,
       title: Text(
-        LanguageService.get('add_new_customer'),
-        style: const TextStyle(
-          color: AppColors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-        ),
+        isEditMode ? LanguageService.get('edit') : LanguageService.get('add_new_customer'),
+        style: const TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -61,19 +54,10 @@ class CreateNewCustomerView extends StatelessWidget {
                 color: AppColors.white,
                 padding: const EdgeInsets.all(16),
                 child: Column(
-                  children: [
-                    _buildCustomerInfoSection(context, model),
-                    const SizedBox(height: 24),
-                    _buildMachineOwnershipSection(context, model),
-                    const SizedBox(height: 32),
-                  ],
+                  children: [_buildCustomerInfoSection(context, model), const SizedBox(height: 24), _buildMachineOwnershipSection(context, model)],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-
-                child: _buildSaveButton(context, model),
-              ),
+              Padding(padding: const EdgeInsets.all(16), child: _buildSaveButton(context, model)),
             ],
           ),
         ),
@@ -81,10 +65,7 @@ class CreateNewCustomerView extends StatelessWidget {
     );
   }
 
-  Widget _buildCustomerInfoSection(
-    BuildContext context,
-    CreateNewCustomerViewModel model,
-  ) {
+  Widget _buildCustomerInfoSection(BuildContext context, CreateNewCustomerViewModel model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -92,9 +73,7 @@ class CreateNewCustomerView extends StatelessWidget {
           controller: model.organizationNameController,
           label: LanguageService.get('organization_name'),
           placeholder: LanguageService.get('name'),
-          validator: CommonValidators.required(
-            LanguageService.get('please_enter_organization_name'),
-          ),
+          validator: CommonValidators.required(LanguageService.get('please_enter_organization_name')),
         ),
         const SizedBox(height: 16),
         _buildPhoneField(context, model),
@@ -104,18 +83,14 @@ class CreateNewCustomerView extends StatelessWidget {
           label: LanguageService.get('email_address'),
           placeholder: LanguageService.get('email_address_placeholder'),
           keyboardType: TextInputType.emailAddress,
-          validator: CommonValidators.email(
-            LanguageService.get('please_enter_valid_email'),
-          ),
+          validator: CommonValidators.email(LanguageService.get('please_enter_valid_email')),
         ),
         const SizedBox(height: 16),
         CommonTextField(
           controller: model.contactPersonController,
           label: LanguageService.get('contact_person'),
           placeholder: LanguageService.get('person_name'),
-          validator: CommonValidators.required(
-            LanguageService.get('please_enter_contact_person'),
-          ),
+          validator: CommonValidators.required(LanguageService.get('please_enter_contact_person')),
         ),
         const SizedBox(height: 16),
         _buildDesignationDropdown(context, model),
@@ -125,21 +100,11 @@ class CreateNewCustomerView extends StatelessWidget {
     );
   }
 
-  Widget _buildPhoneField(
-    BuildContext context,
-    CreateNewCustomerViewModel model,
-  ) {
+  Widget _buildPhoneField(BuildContext context, CreateNewCustomerViewModel model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          LanguageService.get('phone_number'),
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text(LanguageService.get('phone_number'), style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         IntlPhoneField(
           pickerDialogStyle: PickerDialogStyle(
@@ -148,38 +113,23 @@ class CreateNewCustomerView extends StatelessWidget {
             countryNameStyle: TextStyle(color: AppColors.black),
           ),
           controller: model.phoneController,
-          initialCountryCode: 'IN',
+          initialCountryCode: model.isEditMode && model.countryCode.isNotEmpty ? model.countryCode : 'IN',
           onChanged: (phone) {
             model.updatePhoneNumber(phone);
           },
           decoration: InputDecoration(
             hintText: LanguageService.get('phone_number_placeholder'),
-            hintStyle: const TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 14,
-            ),
+            hintStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
             filled: true,
             fillColor: AppColors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.lightGray),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.lightGray),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.lightGray)),
+            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.lightGray)),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: AppColors.primary, width: 2),
             ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.error),
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
-            ),
+            errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.error)),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           ),
           validator: (phone) {
             if (phone == null || phone.number.isEmpty) {
@@ -195,21 +145,11 @@ class CreateNewCustomerView extends StatelessWidget {
     );
   }
 
-  Widget _buildDesignationDropdown(
-    BuildContext context,
-    CreateNewCustomerViewModel model,
-  ) {
+  Widget _buildDesignationDropdown(BuildContext context, CreateNewCustomerViewModel model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          LanguageService.get('designation'),
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text(LanguageService.get('designation'), style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         FormField<String>(
           validator: (value) {
@@ -224,52 +164,26 @@ class CreateNewCustomerView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomDropdown(
-                  items: [
-                    LanguageService.get('md'),
-                    LanguageService.get('ceo'),
-                    LanguageService.get('chairman'),
-                  ],
+                  items: model.designationItems,
                   onChanged: (value) {
                     model.updateDesignation(value);
                     field.didChange(value);
                   },
-                  controller: TextEditingController(
-                    text: model.selectedDesignation ?? '',
-                  ),
+                  controller: TextEditingController(text: model.selectedDesignation ?? ''),
                   hintText: LanguageService.get('select_designation'),
-                  hintStyle: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 14,
-                  ),
-                  selectedStyle: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 14,
-                  ),
-                  listItemStyle: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 14,
-                  ),
+                  hintStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                  selectedStyle: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
+                  listItemStyle: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
+                  errorBorderSide: BorderSide(color: AppColors.error, width: 1),
                   borderRadius: BorderRadius.circular(12),
                   fillColor: AppColors.white,
-                  borderSide: BorderSide(
-                    color:
-                        field.hasError ? AppColors.error : AppColors.lightGray,
-                  ),
-                  fieldSuffixIcon: const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: AppColors.textSecondary,
-                  ),
+                  borderSide: BorderSide(color: field.hasError ? AppColors.error : AppColors.lightGray),
+                  fieldSuffixIcon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
                 ),
                 if (field.hasError)
                   Padding(
                     padding: const EdgeInsets.only(left: 16),
-                    child: Text(
-                      field.errorText!,
-                      style: const TextStyle(
-                        color: AppColors.error,
-                        fontSize: 12,
-                      ),
-                    ),
+                    child: Text(field.errorText!, style: const TextStyle(color: AppColors.error, fontSize: 12)),
                   ),
               ],
             );
@@ -279,21 +193,11 @@ class CreateNewCustomerView extends StatelessWidget {
     );
   }
 
-  Widget _buildMachineDropdown(
-    BuildContext context,
-    CreateNewCustomerViewModel model,
-  ) {
+  Widget _buildMachineDropdown(BuildContext context, CreateNewCustomerViewModel model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          LanguageService.get('assign_machine'),
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text(LanguageService.get('assign_machine'), style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         FormField<String>(
           validator: (value) {
@@ -307,53 +211,25 @@ class CreateNewCustomerView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomDropdown.search(
-                  items: [
-                    LanguageService.get('machine_name_format'),
-                    LanguageService.get('machine_production_line_a'),
-                    LanguageService.get('machine_assembly_unit_b'),
-                    LanguageService.get('machine_testing_station_c'),
-                  ],
+                  items: model.machineItems,
                   onChanged: (value) {
                     model.updateMachine(value);
                     field.didChange(value);
                   },
-                  controller: TextEditingController(
-                    text: model.selectedMachine ?? '',
-                  ),
+                  controller: TextEditingController(text: model.selectedMachine ?? ''),
                   hintText: LanguageService.get('select_machine'),
-                  hintStyle: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 14,
-                  ),
-                  selectedStyle: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 14,
-                  ),
-                  listItemStyle: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 14,
-                  ),
+                  hintStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                  selectedStyle: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
+                  listItemStyle: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
                   borderRadius: BorderRadius.circular(12),
                   fillColor: AppColors.white,
-                  borderSide: BorderSide(
-                    color:
-                        field.hasError ? AppColors.error : AppColors.lightGray,
-                  ),
-                  fieldSuffixIcon: const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: AppColors.textSecondary,
-                  ),
+                  borderSide: BorderSide(color: field.hasError ? AppColors.error : AppColors.lightGray),
+                  fieldSuffixIcon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
                 ),
                 if (field.hasError)
                   Padding(
                     padding: const EdgeInsets.only(left: 16),
-                    child: Text(
-                      field.errorText!,
-                      style: const TextStyle(
-                        color: AppColors.error,
-                        fontSize: 12,
-                      ),
-                    ),
+                    child: Text(field.errorText!, style: const TextStyle(color: AppColors.error, fontSize: 12)),
                   ),
               ],
             );
@@ -363,20 +239,13 @@ class CreateNewCustomerView extends StatelessWidget {
     );
   }
 
-  Widget _buildMachineOwnershipSection(
-    BuildContext context,
-    CreateNewCustomerViewModel model,
-  ) {
+  Widget _buildMachineOwnershipSection(BuildContext context, CreateNewCustomerViewModel model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           LanguageService.get('machine_ownership'),
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
         Row(
@@ -452,21 +321,12 @@ class CreateNewCustomerView extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(
-    String iconPath,
-    String label,
-    String value,
-    Color iconColor, {
-    bool isWarning = false,
-  }) {
+  Widget _buildInfoRow(String iconPath, String label, String value, Color iconColor, {bool isWarning = false}) {
     return Row(
       children: [
         Container(
           padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: iconColor.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(8),
-          ),
+          decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
           child: Image.asset(iconPath, width: 20, height: 20, color: iconColor),
         ),
         const SizedBox(width: 12),
@@ -474,23 +334,9 @@ class CreateNewCustomerView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                label,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+              Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
               const SizedBox(height: 4),
-              Text(
-                value,
-                style: TextStyle(
-                  color: isWarning ? AppColors.redBack : AppColors.textPrimary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              Text(value, style: TextStyle(color: isWarning ? AppColors.redBack : AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
             ],
           ),
         ),
@@ -498,10 +344,7 @@ class CreateNewCustomerView extends StatelessWidget {
     );
   }
 
-  Widget _buildSaveButton(
-    BuildContext context,
-    CreateNewCustomerViewModel model,
-  ) {
+  Widget _buildSaveButton(BuildContext context, CreateNewCustomerViewModel model) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -510,9 +353,7 @@ class CreateNewCustomerView extends StatelessWidget {
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(45),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
           elevation: 5,
         ),
         child:
@@ -520,18 +361,9 @@ class CreateNewCustomerView extends StatelessWidget {
                 ? const SizedBox(
                   height: 20,
                   width: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-                  ),
+                  child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.white)),
                 )
-                : Text(
-                  LanguageService.get('save'),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                : Text(LanguageService.get('save'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
       ),
     );
   }

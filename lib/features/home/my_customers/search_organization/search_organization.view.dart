@@ -3,6 +3,9 @@ import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/services/language.service.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
+import '../../../../core/locator.dart';
+import '../machine_details/customer_details/customer_edit_details.view.dart';
 import 'search_organization.vm.dart';
 
 class SearchOrganizationView extends StatefulWidget {
@@ -199,10 +202,11 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
   }
 
   Widget _buildSearchResultItem(Map<String, String> result) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
-        // Handle tap on search result item
-        // You can add navigation or other actions here
+        final navigationService = locator<NavigationService>();
+
+        navigationService.navigateToView(const CustomerEditDetailsView());
       },
       child: Row(
         children: [

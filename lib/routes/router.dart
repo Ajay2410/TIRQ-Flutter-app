@@ -29,9 +29,9 @@ import 'package:stacked/stacked.dart';
 import '../features/Messages/chat_list/archived_chat_list.view.dart';
 import '../features/Messages/create_group/create_group.view.dart';
 import '../features/auth/auth_selection/auth_selection.view.dart';
-import '../features/auth/register/register.vm.dart';
 import '../features/employee/add_employee/add_employee.view.dart';
 import '../features/home/customers_list/customers_list.view.dart';
+import '../features/home/my_customers/machine_details/customer_details/customer_edit_details.view.dart';
 import '../features/home/my_customers/my_customers.view.dart';
 import '../features/home/my_customers/customer_details.view.dart';
 import '../features/home/my_customers/create_customer/create_new_customer.view.dart';
@@ -50,6 +50,8 @@ import '../features/profile/my_wallet/general.view.dart';
 import '../features/tickets/add_ticket/add_ticket.view.dart';
 import '../features/tickets/tickets_list/tickets_list.view.dart';
 import '../features/organization/employees_list/employee_role_cards.view.dart';
+import '../features/home/machine_records/machine_records.view.dart';
+import '../features/home/machine_records/add_new_machine_model.view.dart';
 
 // TODO: Add imports for the new views when they are created
 // import '../features/home/factories_overview/factories_overview.view.dart';
@@ -571,6 +573,18 @@ class AppRouter extends RouterBase {
     //     settings: data,
     //   );
     // },
+    MachineRecordsView: (data) {
+      return MaterialPageRoute(
+        builder: (BuildContext _) => MachineRecordsView(),
+        settings: data,
+      );
+    },
+    AddNewMachineModelView: (data) {
+      return MaterialPageRoute(
+        builder: (BuildContext _) => AddNewMachineModelView(),
+        settings: data,
+      );
+    },
   };
 
   /// Defines the list of routes available in the app.
@@ -627,6 +641,9 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.introduction, page: IntroductionView),
     RouteDef(Routes.authSelectionView, page: AuthSelectionView),
     RouteDef(Routes.generalSetting, page: GeneralSettingView),
+    RouteDef(Routes.machineRecords, page: MachineRecordsView),
+    RouteDef(Routes.addNewMachineModel, page: AddNewMachineModelView),
+    RouteDef(Routes.customerEditDetailsView, page: CustomerEditDetailsView),
 
     // TODO: Add the following route definitions when the corresponding views are created:
 

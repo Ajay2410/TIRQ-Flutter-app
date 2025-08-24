@@ -41,7 +41,7 @@ class OrganizationHomeViewModel extends ReactiveViewModel {
 
   void init() {
     requestPermissions();
-    fetchDashboardData();
+    // fetchDashboardData();
     initNotifications();
   }
 
@@ -114,6 +114,10 @@ class OrganizationHomeViewModel extends ReactiveViewModel {
 
   void navigateToInstallationTracker() async {
     _navigationService.navigateTo(Routes.installation);
+  }
+
+  void navigateToMachineRecords() async {
+    _navigationService.navigateTo(Routes.machineRecords);
   }
 
   // Add these new route navigation methods for the quick action menu
