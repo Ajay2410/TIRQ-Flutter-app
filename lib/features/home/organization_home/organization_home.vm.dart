@@ -88,37 +88,32 @@ class OrganizationHomeViewModel extends ReactiveViewModel {
     _navigationService.navigateTo(Routes.customersList);
   }
 
-
-
-  void navigateToAnalytics() async{
-      _navigationService.navigateTo(Routes.analytics);
-
+  void navigateToMyCustomers() async {
+    _navigationService.navigateTo(Routes.myCustomers);
   }
 
-
-  void navigateToFeedback() async{
-      _navigationService.navigateTo(Routes.feedback);
+  void navigateToAnalytics() async {
+    _navigationService.navigateTo(Routes.analytics);
   }
 
+  void navigateToFeedback() async {
+    _navigationService.navigateTo(Routes.feedback);
+  }
 
   void navigateToInvoice() async {
-      _navigationService.navigateTo(Routes.invoice);
+    _navigationService.navigateTo(Routes.invoice);
   }
 
-
-
-  void navigateToGlobalActivity() async{
-      _navigationService.navigateTo(Routes.globalActivity);
+  void navigateToGlobalActivity() async {
+    _navigationService.navigateTo(Routes.globalActivity);
   }
 
-
-  void navigateToWarrantyTracker() async{
-      _navigationService.navigateTo(Routes.warranty);
+  void navigateToWarrantyTracker() async {
+    _navigationService.navigateTo(Routes.warranty);
   }
 
-
-  void navigateToInstallationTracker() async{
-     _navigationService.navigateTo(Routes.installation);
+  void navigateToInstallationTracker() async {
+    _navigationService.navigateTo(Routes.installation);
   }
 
   // Add these new route navigation methods for the quick action menu

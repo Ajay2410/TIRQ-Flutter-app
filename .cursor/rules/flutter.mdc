@@ -1,0 +1,9 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+- use localization [if you remove some string then remove from localization as well as]
+- for a assets use common asset class where store all assets
+- use common thing which already build if not build then create new components

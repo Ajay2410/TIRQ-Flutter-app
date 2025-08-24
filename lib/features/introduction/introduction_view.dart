@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import '../../resources/app_resources/app_resources.dart';
 import '../../services/language.service.dart';
 import '../auth/login/login.view.dart';
@@ -13,7 +14,8 @@ class IntroductionView extends StatefulWidget {
   State<IntroductionView> createState() => _IntroductionViewState();
 }
 
-class _IntroductionViewState extends State<IntroductionView> with TickerProviderStateMixin {
+class _IntroductionViewState extends State<IntroductionView>
+    with TickerProviderStateMixin {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
   late AnimationController _animationController;
@@ -21,7 +23,8 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
   late AnimationController _floatingController;
   late AnimationController _pulseController;
   late AnimationController _rippleController;
-  late AnimationController _imageTransitionController; // New animation controller for image transitions
+  late AnimationController
+  _imageTransitionController; // New animation controller for image transitions
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
   late Animation<double> _slideUpAnimation;
@@ -29,7 +32,8 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
   late Animation<double> _floatingAnimation;
   late Animation<double> _pulseAnimation;
   late Animation<double> _rippleAnimation;
-  late Animation<double> _imageScaleAnimation; // New animation for image scaling
+  late Animation<double>
+  _imageScaleAnimation; // New animation for image scaling
   late Animation<double> _imageFadeAnimation; // New animation for image fading
 
   final List<IntroPage> _pages = [
@@ -37,7 +41,8 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
       title: "Tracking",
       subtitle: "T",
       subtitleImagePath: "assets/images/T.png",
-      description: "Real-time tracking of service tickets, requests, and employee activities",
+      description:
+          "Real-time tracking of service tickets, requests, and employee activities",
       icon: Icons.track_changes_rounded,
       primaryColor: Color(0xFF042c74),
       secondaryColor: Color(0xFF013ead),
@@ -63,7 +68,8 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
       title: "Integration",
       subtitle: "I",
       subtitleImagePath: "assets/images/I.png",
-      description: "Unified platform connecting customers, service teams, and management",
+      description:
+          "Unified platform connecting customers, service teams, and management",
       icon: Icons.hub_rounded,
       primaryColor: Color(0xFF1976D2),
       secondaryColor: Color(0xFF2196F3),
@@ -76,7 +82,8 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
       title: "Quality",
       subtitle: "Q",
       subtitleImagePath: "assets/images/Q.png",
-      description: "Delivering world-class standards and globally trusted service excellence",
+      description:
+          "Delivering world-class standards and globally trusted service excellence",
       icon: Icons.diamond_rounded,
       primaryColor: Color(0xFFff6b6b),
       secondaryColor: Color(0xFFFFA8A8),
@@ -95,68 +102,86 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
 
   void _initAnimations() {
     // Main content animation
-    _animationController = AnimationController(duration: Duration(milliseconds: 1500), vsync: this);
+    _animationController = AnimationController(
+      duration: Duration(milliseconds: 1500),
+      vsync: this,
+    );
 
     // Background animation
-    _backgroundController = AnimationController(duration: Duration(milliseconds: 2000), vsync: this);
+    _backgroundController = AnimationController(
+      duration: Duration(milliseconds: 2000),
+      vsync: this,
+    );
 
     // Floating elements animation
-    _floatingController = AnimationController(duration: Duration(milliseconds: 3000), vsync: this);
+    _floatingController = AnimationController(
+      duration: Duration(milliseconds: 3000),
+      vsync: this,
+    );
 
     // Pulse animation for interactive elements
-    _pulseController = AnimationController(duration: Duration(milliseconds: 1500), vsync: this);
+    _pulseController = AnimationController(
+      duration: Duration(milliseconds: 1500),
+      vsync: this,
+    );
 
     // Ripple animation for touch feedback
-    _rippleController = AnimationController(duration: Duration(milliseconds: 600), vsync: this);
+    _rippleController = AnimationController(
+      duration: Duration(milliseconds: 600),
+      vsync: this,
+    );
 
     // Image transition animation controller
-    _imageTransitionController = AnimationController(duration: Duration(milliseconds: 800), vsync: this);
+    _imageTransitionController = AnimationController(
+      duration: Duration(milliseconds: 800),
+      vsync: this,
+    );
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack));
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack),
+    );
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Interval(0.2, 1.0, curve: Curves.easeInOut)));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Interval(0.2, 1.0, curve: Curves.easeInOut),
+      ),
+    );
 
-    _slideUpAnimation = Tween<double>(
-      begin: 30.0,
-      end: 0.0,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic));
+    _slideUpAnimation = Tween<double>(begin: 30.0, end: 0.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
+    );
 
-    _backgroundAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _backgroundController, curve: Curves.easeInOut));
+    _backgroundAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _backgroundController, curve: Curves.easeInOut),
+    );
 
-    _floatingAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _floatingController, curve: Curves.easeInOut));
+    _floatingAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _floatingController, curve: Curves.easeInOut),
+    );
 
-    _pulseAnimation = Tween<double>(
-      begin: 0.98,
-      end: 1.02,
-    ).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut));
+    _pulseAnimation = Tween<double>(begin: 0.98, end: 1.02).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
 
-    _rippleAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _rippleController, curve: Curves.easeOut));
+    _rippleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _rippleController, curve: Curves.easeOut),
+    );
 
     // Image transition animations
-    _imageScaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.1,
-    ).animate(CurvedAnimation(parent: _imageTransitionController, curve: Curves.easeInOut));
+    _imageScaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
+      CurvedAnimation(
+        parent: _imageTransitionController,
+        curve: Curves.easeInOut,
+      ),
+    );
 
-    _imageFadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _imageTransitionController, curve: Curves.easeInOut));
+    _imageFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _imageTransitionController,
+        curve: Curves.easeInOut,
+      ),
+    );
 
     _animationController.forward();
     _backgroundController.repeat(reverse: true);
@@ -194,9 +219,14 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
 
   void _nextPage() {
     if (_currentIndex < _pages.length - 1) {
-      _pageController.nextPage(duration: Duration(milliseconds: 400), curve: Curves.easeInOutCubic);
+      _pageController.nextPage(
+        duration: Duration(milliseconds: 400),
+        curve: Curves.easeInOutCubic,
+      );
     } else {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginView()));
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (context) => LoginView()));
     }
 
     // Trigger ripple animation
@@ -206,7 +236,10 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
 
   void _previousPage() {
     if (_currentIndex > 0) {
-      _pageController.previousPage(duration: Duration(milliseconds: 400), curve: Curves.easeInOutCubic);
+      _pageController.previousPage(
+        duration: Duration(milliseconds: 400),
+        curve: Curves.easeInOutCubic,
+      );
     }
 
     // Trigger ripple animation
@@ -221,7 +254,11 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
       backgroundColor: AppColors.white,
       body: SafeArea(
         child: Column(
-          children: [_buildHeader(), Expanded(child: _buildPageContent()), _buildNavigationButtons(currentPage)],
+          children: [
+            _buildHeader(),
+            Expanded(child: _buildPageContent()),
+            _buildNavigationButtons(currentPage),
+          ],
         ),
       ),
     );
@@ -230,7 +267,7 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
   Widget _buildHeader() {
     return ClipRRect(
       child: SizedBox(
-        height: 380,
+        height: Get.height * 0.5,
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -249,14 +286,16 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                           return Transform.scale(
                             scale:
                                 _imageScaleAnimation.value *
-                                (1.0 + _backgroundAnimation.value * 0.03), // Subtle breathing effect
+                                (1.0 +
+                                    _backgroundAnimation.value *
+                                        0.03), // Subtle breathing effect
                             child: Opacity(
                               opacity: _imageFadeAnimation.value,
                               child: Image.asset(
                                 _pages[_currentIndex].imagePath,
-                                height: 408,
-                                width: 380,
-                                fit: BoxFit.cover,
+                                height: Get.height * 0.5,
+                                width: Get.width,
+                                fit: BoxFit.fitHeight,
                               ),
                             ),
                           );
@@ -265,7 +304,10 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                     ),
 
                     // Gradient overlay that changes color based on current page
-                    AnimatedContainer(duration: Duration(milliseconds: 600), decoration: BoxDecoration()),
+                    AnimatedContainer(
+                      duration: Duration(milliseconds: 600),
+                      decoration: BoxDecoration(),
+                    ),
                   ],
                 );
               },
@@ -276,15 +318,29 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
               animation: _floatingController,
               builder: (context, child) {
                 return Stack(
-                  children: List.generate(_pages[_currentIndex].particles, (index) {
+                  children: List.generate(_pages[_currentIndex].particles, (
+                    index,
+                  ) {
                     final random = math.Random(index);
                     final xPosition = random.nextDouble() * 350;
                     final yPosition = random.nextDouble() * 300;
                     final animationOffset = random.nextDouble() * 2 * math.pi;
 
                     return Positioned(
-                      left: xPosition + math.sin(_floatingAnimation.value * 2 * math.pi + animationOffset) * 20,
-                      top: yPosition + math.cos(_floatingAnimation.value * 2 * math.pi + animationOffset) * 15,
+                      left:
+                          xPosition +
+                          math.sin(
+                                _floatingAnimation.value * 2 * math.pi +
+                                    animationOffset,
+                              ) *
+                              20,
+                      top:
+                          yPosition +
+                          math.cos(
+                                _floatingAnimation.value * 2 * math.pi +
+                                    animationOffset,
+                              ) *
+                              15,
                       child: AnimatedOpacity(
                         duration: Duration(milliseconds: 600),
                         opacity: 0.3,
@@ -295,7 +351,11 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                             color: Color(0xFF042c74),
                             shape: BoxShape.circle,
                             boxShadow: [
-                              BoxShadow(color: Color(0xFF042c74).withOpacity(0.3), blurRadius: 8, spreadRadius: 2),
+                              BoxShadow(
+                                color: Color(0xFF042c74).withOpacity(0.3),
+                                blurRadius: 8,
+                                spreadRadius: 2,
+                              ),
                             ],
                           ),
                         ),
@@ -318,7 +378,12 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                     builder: (context, child) {
                       return Transform.scale(
                         scale: _pulseAnimation.value,
-                        child: Image.asset('assets/images/logo2.png', height: 32, width: 65, fit: BoxFit.contain),
+                        child: Image.asset(
+                          'assets/images/logo2.png',
+                          height: 32,
+                          width: 65,
+                          fit: BoxFit.contain,
+                        ),
                       );
                     },
                   ),
@@ -326,7 +391,9 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                   GestureDetector(
                     onTap: () {
                       HapticFeedback.lightImpact();
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginView()));
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => LoginView()),
+                      );
                     },
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 300),
@@ -334,7 +401,11 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
 
                       child: Text(
                         LanguageService.get("Skip"),
-                        style: TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -396,7 +467,11 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                         SizedBox(height: 40),
                         Text(
                           page.title,
-                          style: TextStyle(fontSize: 34, fontWeight: FontWeight.w900, color: Colors.black),
+                          style: TextStyle(
+                            fontSize: 34,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.black,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -408,7 +483,11 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: Text(
                   page.description,
-                  style: TextStyle(fontSize: 14, color: AppColors.textGray, fontWeight: FontWeight.w400),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.textGray,
+                    fontWeight: FontWeight.w400,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -503,7 +582,10 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(_pages.length, (index) => _buildDotIndicator(index)),
+        children: List.generate(
+          _pages.length,
+          (index) => _buildDotIndicator(index),
+        ),
       ),
     );
   }
@@ -513,7 +595,11 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
     return GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
-        _pageController.animateToPage(index, duration: Duration(milliseconds: 400), curve: Curves.easeInOut);
+        _pageController.animateToPage(
+          index,
+          duration: Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
       },
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
@@ -521,7 +607,10 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
         width: isActive ? 34 : 5,
         height: 5,
         decoration: BoxDecoration(
-          color: isActive ? AppColors.primaryVariant : AppColors.primaryVariant.withOpacity(0.2),
+          color:
+              isActive
+                  ? AppColors.primaryVariant
+                  : AppColors.primaryVariant.withOpacity(0.2),
           borderRadius: BorderRadius.circular(4),
         ),
       ),
@@ -545,7 +634,11 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                       child: Container(
                         child: Text(
                           LanguageService.get("back"),
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF374151)),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF374151),
+                          ),
                         ),
                       ),
                     )
@@ -562,7 +655,10 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                       key: ValueKey('continue'),
                       onTap: _nextPage, // or your completion handler
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 32, vertical: 10),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 32,
+                          vertical: 10,
+                        ),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [Color(0xFF042c74), Color(0xFF013ead)],
@@ -571,12 +667,20 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                           ),
                           borderRadius: BorderRadius.circular(30),
                           boxShadow: [
-                            BoxShadow(color: Color(0xFF042c74).withOpacity(0.3), blurRadius: 12, offset: Offset(0, 4)),
+                            BoxShadow(
+                              color: Color(0xFF042c74).withOpacity(0.3),
+                              blurRadius: 12,
+                              offset: Offset(0, 4),
+                            ),
                           ],
                         ),
                         child: Text(
                           LanguageService.get("continue"),
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     )
@@ -600,7 +704,9 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                                   child: CircularProgressIndicator(
                                     value: (_currentIndex + 1) / _pages.length,
                                     backgroundColor: Color(0xFFE5E7EB),
-                                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF042c74)),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Color(0xFF042c74),
+                                    ),
                                     strokeWidth: 3,
                                   ),
                                 ),
@@ -609,20 +715,29 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                                   height: 48,
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
-                                      colors: [Color(0xFF042c74), Color(0xFF013ead)],
+                                      colors: [
+                                        Color(0xFF042c74),
+                                        Color(0xFF013ead),
+                                      ],
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
                                     ),
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Color(0xFF042c74).withOpacity(0.3),
+                                        color: Color(
+                                          0xFF042c74,
+                                        ).withOpacity(0.3),
                                         blurRadius: 12,
                                         offset: Offset(0, 4),
                                       ),
                                     ],
                                   ),
-                                  child: Icon(Icons.arrow_forward, color: Colors.white, size: 18),
+                                  child: Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.white,
+                                    size: 18,
+                                  ),
                                 ),
 
                                 // Ripple effect
@@ -633,7 +748,9 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       border: Border.all(
-                                        color: Color(0xFF042c74).withOpacity(0.3 * (1 - _rippleAnimation.value)),
+                                        color: Color(0xFF042c74).withOpacity(
+                                          0.3 * (1 - _rippleAnimation.value),
+                                        ),
                                         width: 2,
                                       ),
                                     ),

@@ -20,6 +20,7 @@ import 'package:manager/features/profile/qr/qr.view.dart';
 import 'package:manager/features/qr/scan_qr/scan_qr.view.dart';
 import 'package:manager/features/requests/approvals/approval.view.dart';
 import 'package:manager/features/search/search_view.dart';
+import 'package:manager/features/home/my_customers/search_organization/search_organization.view.dart';
 import 'package:manager/features/stage/stage.view.dart';
 import 'package:manager/features/tasks/tasks_home/tasks_home.view.dart';
 import 'package:manager/routes/routes.dart';
@@ -31,6 +32,9 @@ import '../features/auth/auth_selection/auth_selection.view.dart';
 import '../features/auth/register/register.vm.dart';
 import '../features/employee/add_employee/add_employee.view.dart';
 import '../features/home/customers_list/customers_list.view.dart';
+import '../features/home/my_customers/my_customers.view.dart';
+import '../features/home/my_customers/customer_details.view.dart';
+import '../features/home/my_customers/create_customer/create_new_customer.view.dart';
 import '../features/home/employee_home/employee_home.view.dart';
 import '../features/home/organization_home/organization_home.view.dart';
 import '../features/introduction/introduction_view.dart';
@@ -115,7 +119,7 @@ class AppRouter extends RouterBase {
     },
     OtpVerificationView: (data) {
       final OtpVerificationViewAttributes attributes =
-      data.arguments as OtpVerificationViewAttributes;
+          data.arguments as OtpVerificationViewAttributes;
       return MaterialPageRoute(
         builder:
             (BuildContext _) => OtpVerificationView(attributes: attributes),
@@ -147,6 +151,18 @@ class AppRouter extends RouterBase {
         settings: data,
       );
     },
+    MyCustomersView: (data) {
+      return MaterialPageRoute(
+        builder: (BuildContext _) => MyCustomersView(),
+        settings: data,
+      );
+    },
+    CustomerDetailsView: (data) {
+      return MaterialPageRoute(
+        builder: (BuildContext _) => CustomerDetailsView(),
+        settings: data,
+      );
+    },
     TicketsListView: (data) {
       return MaterialPageRoute(
         builder: (BuildContext _) => TicketsListView(),
@@ -167,32 +183,28 @@ class AppRouter extends RouterBase {
       );
     },
 
-
-    Globalactivity: (data){
+    Globalactivity: (data) {
       return MaterialPageRoute(
         builder: (BuildContext _) => Globalactivity(),
         settings: data,
       );
-
     },
 
-
-    WarrentyTrackerView: (data){
+    WarrentyTrackerView: (data) {
       return MaterialPageRoute(
         builder: (BuildContext _) => WarrentyTrackerView(),
         settings: data,
       );
-
     },
 
-    InstallationTrackerView: (data){
+    InstallationTrackerView: (data) {
       return MaterialPageRoute(
         builder: (BuildContext _) => InstallationTrackerView(),
         settings: data,
       );
     },
 
-    PiInvoiceRecordView: (data){
+    PiInvoiceRecordView: (data) {
       return MaterialPageRoute(
         builder: (BuildContext _) => PiInvoiceRecordView(),
         settings: data,
@@ -203,8 +215,10 @@ class AppRouter extends RouterBase {
       return MaterialPageRoute(
         builder:
             (BuildContext _) => MachinesListView(
-          attributes: MachinesListViewAttributes.fromJson(data.queryParams.rawMap as Map<String,String>),
-        ),
+              attributes: MachinesListViewAttributes.fromJson(
+                data.queryParams.rawMap as Map<String, String>,
+              ),
+            ),
         settings: data,
       );
     },
@@ -224,8 +238,8 @@ class AppRouter extends RouterBase {
       return MaterialPageRoute(
         builder:
             (BuildContext _) => UpdateOrganizationView(
-          attributes: data.arguments as UpdateOrganizationViewAttributes,
-        ),
+              attributes: data.arguments as UpdateOrganizationViewAttributes,
+            ),
         settings: data,
       );
     },
@@ -234,8 +248,8 @@ class AppRouter extends RouterBase {
       return MaterialPageRoute(
         builder:
             (BuildContext _) => EmployeeProfileView(
-          attributes: data.arguments as EmployeeProfileViewAttributes,
-        ),
+              attributes: data.arguments as EmployeeProfileViewAttributes,
+            ),
         settings: data,
       );
     },
@@ -244,8 +258,8 @@ class AppRouter extends RouterBase {
       return MaterialPageRoute(
         builder:
             (BuildContext _) => AddTicketView(
-          attributes: data.arguments as AddTicketViewAttributes,
-        ),
+              attributes: data.arguments as AddTicketViewAttributes,
+            ),
         settings: data,
       );
     },
@@ -263,7 +277,9 @@ class AppRouter extends RouterBase {
     },
     StageView: (data) {
       return MaterialPageRoute(
-        builder: (BuildContext _) => StageView(attributes: data.arguments as StageViewAttributes,),
+        builder:
+            (BuildContext _) =>
+                StageView(attributes: data.arguments as StageViewAttributes),
         settings: data,
       );
     },
@@ -277,14 +293,19 @@ class AppRouter extends RouterBase {
       return MaterialPageRoute(
         builder:
             (BuildContext _) => AddPartnerView(
-          attributes: data.arguments as AddPartnerViewAttributes,
-        ),
+              attributes: data.arguments as AddPartnerViewAttributes,
+            ),
         settings: data,
       );
     },
     EmployeesListView: (data) {
       return MaterialPageRoute(
-        builder: (BuildContext _) => EmployeesListView( attributes: EmployeeListViewAttributes.fromJson(data.queryParams.rawMap as Map<String,String>),),
+        builder:
+            (BuildContext _) => EmployeesListView(
+              attributes: EmployeeListViewAttributes.fromJson(
+                data.queryParams.rawMap as Map<String, String>,
+              ),
+            ),
         settings: data,
       );
     },
@@ -292,8 +313,8 @@ class AppRouter extends RouterBase {
       return MaterialPageRoute(
         builder:
             (BuildContext _) => AddEmployeeView(
-          attributes: data.arguments as AddEmployeeViewAttributes,
-        ),
+              attributes: data.arguments as AddEmployeeViewAttributes,
+            ),
         settings: data,
       );
     },
@@ -301,7 +322,7 @@ class AppRouter extends RouterBase {
       return MaterialPageRoute(
         builder:
             (BuildContext _) =>
-            ChatView(attributes: data.arguments as ChatViewAttributes),
+                ChatView(attributes: data.arguments as ChatViewAttributes),
         settings: data,
       );
     },
@@ -309,99 +330,102 @@ class AppRouter extends RouterBase {
       return MaterialPageRoute(
         builder:
             (BuildContext _) => AddMachineView(
-          attributes:AddMachineViewAttributes.fromMap(data.queryParams.rawMap as Map<String,String>),
-        ),
+              attributes: AddMachineViewAttributes.fromMap(
+                data.queryParams.rawMap as Map<String, String>,
+              ),
+            ),
         settings: data,
       );
     },
     SearchView: (data) {
       return MaterialPageRoute(
         builder:
-            (BuildContext _) => SearchView(
-          attributes: data.arguments as SearchViewAttributes,
-        ),
+            (BuildContext _) =>
+                SearchView(attributes: data.arguments as SearchViewAttributes),
+        settings: data,
+      );
+    },
+    SearchOrganizationView: (data) {
+      return MaterialPageRoute(
+        builder: (BuildContext _) => const SearchOrganizationView(),
         settings: data,
       );
     },
     ChatListView: (data) {
       return MaterialPageRoute(
-        builder:
-            (BuildContext _) => ChatListView(),
+        builder: (BuildContext _) => ChatListView(),
         settings: data,
       );
     },
     PermissionsView: (data) {
       return MaterialPageRoute(
-        builder:
-            (BuildContext _) => PermissionsView(),
+        builder: (BuildContext _) => PermissionsView(),
         settings: data,
       );
     },
     CreateGroupChat: (data) {
       return MaterialPageRoute(
-        builder:
-            (BuildContext _) => CreateGroupChat(),
+        builder: (BuildContext _) => CreateGroupChat(),
         settings: data,
       );
     },
     ArchivedChatList: (data) {
       return MaterialPageRoute(
-        builder:
-            (BuildContext _) => ArchivedChatList(),
+        builder: (BuildContext _) => ArchivedChatList(),
         settings: data,
       );
     },
     ImageViewerView: (data) {
       return MaterialPageRoute(
         builder:
-            (BuildContext _) => ImageViewerView(imageUrl: data.arguments as String,),
+            (BuildContext _) =>
+                ImageViewerView(imageUrl: data.arguments as String),
         settings: data,
       );
     },
     EmployeeDetailsView: (data) {
       return MaterialPageRoute(
         builder:
-            (BuildContext _) => EmployeeDetailsView(attributes: EmployeeDetailsViewAttributes.fromJson(data.queryParams.rawMap as Map<String,String>,),),
+            (BuildContext _) => EmployeeDetailsView(
+              attributes: EmployeeDetailsViewAttributes.fromJson(
+                data.queryParams.rawMap as Map<String, String>,
+              ),
+            ),
         settings: data,
       );
     },
 
     RoleEmployeeListView: (data) {
       return MaterialPageRoute(
-        builder:
-            (BuildContext _) => RoleEmployeeListView(),
+        builder: (BuildContext _) => RoleEmployeeListView(),
         settings: data,
       );
     },
 
     DepartmentHierarchyView: (data) {
       return MaterialPageRoute(
-        builder:
-            (BuildContext _) => DepartmentHierarchyView(),
+        builder: (BuildContext _) => DepartmentHierarchyView(),
         settings: data,
       );
     },
 
     IntroductionView: (data) {
       return MaterialPageRoute(
-        builder:
-            (BuildContext _) => IntroductionView(),
+        builder: (BuildContext _) => IntroductionView(),
         settings: data,
       );
     },
 
     AuthSelectionView: (data) {
       return MaterialPageRoute(
-        builder:
-            (BuildContext _) => AuthSelectionView(),
+        builder: (BuildContext _) => AuthSelectionView(),
         settings: data,
       );
     },
 
     GeneralSettingView: (data) {
       return MaterialPageRoute(
-        builder:
-            (BuildContext _) => GeneralSettingView(),
+        builder: (BuildContext _) => GeneralSettingView(),
         settings: data,
       );
     },
@@ -563,6 +587,9 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.organizationHome, page: OrganizationHomeView),
     RouteDef(Routes.employeeHome, page: EmployeeHomeView),
     RouteDef(Routes.customersList, page: CustomersListView),
+    RouteDef(Routes.myCustomers, page: MyCustomersView),
+    RouteDef(Routes.createNewCustomer, page: CreateNewCustomerView),
+    RouteDef(Routes.customerDetails, page: CustomerDetailsView),
     RouteDef(Routes.ticketsList, page: TicketsListView),
     RouteDef(Routes.machinesList, page: MachinesListView),
     RouteDef(Routes.profile, page: ProfileView),

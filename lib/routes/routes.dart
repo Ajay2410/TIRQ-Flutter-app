@@ -37,6 +37,15 @@ abstract class Routes {
   /// Route for the Customers List screen.
   static const String customersList = '/customersList';
 
+  /// Route for the My Customers screen.
+  static const String myCustomers = '/myCustomers';
+
+  /// Route for the Create New Customer screen.
+  static const String createNewCustomer = '/createNewCustomer';
+
+  /// Route for the Customer Details screen.
+  static const String customerDetails = '/customerDetails';
+
   /// Route for the Tickets List screen.
   static const String ticketsList = '/ticketsList';
 
@@ -93,6 +102,9 @@ abstract class Routes {
   /// Route for the Machine Downtime Tracker screen.
   static const String machineDowntimeTracker = '/machineDowntimeTracker';
 
+  /// Route for the Search Organization screen.
+  static const String searchOrganization = '/searchOrganization';
+
   /// Route for the Dispatch Tracker screen.
   static const String dispatchTracker = '/dispatchTracker';
 
@@ -125,7 +137,6 @@ abstract class Routes {
 
   /// Route for the CreateOrEditOrg screen.
   static const String updateOrg = '/updateOrg';
-
 
   static const String updateEmployee = '/updateEmployee';
 

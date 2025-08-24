@@ -81,5 +81,19 @@ static const Color bluebackground = Color(0xFF4ED7F1);
 static const Color greenbackground = Color(0xFF76BA99);
 static const Color redbackground = Color(0xFFE97777);
   static const Color darkGreenBack=Color(0xFF3A98B9);
+  static const Color redBack =Color(0xFFC52E2E);
+  static const Color colorBlue =Color(0xFF314E8D);
+  static const Color colorF0F2FC =Color(0xFFF0F2FC);
   
+  // Dialog Colors
+  static const Color warningRed = Color(0xFFD93025);
+  static const Color warningLightRed = Color(0xFFFCE8E6);
+  
+  // Additional Colors
+  static const Color orange = Color(0xFFFF9800);
+  static const Color colorFF6868 = Color(0xFFFF6868);
+  static const Color colorF2A22E = Color(0xFFF2A22E);
+  static const Color color41C293 = Color(0xFF41C293);
+  static const Color colorFFB141 = Color(0xFFFFB141);
+  static const Color color0ABAB5 = Color(0xFF0ABAB5);
 }
