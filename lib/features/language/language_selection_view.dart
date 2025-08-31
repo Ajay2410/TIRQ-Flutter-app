@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:manager/core/locator.dart';
 import 'package:manager/core/storage/storage.dart';
@@ -11,8 +12,7 @@ class LanguageSelectionView extends StatefulWidget {
   _LanguageSelectionViewState createState() => _LanguageSelectionViewState();
 }
 
-class _LanguageSelectionViewState extends State<LanguageSelectionView>
-    with TickerProviderStateMixin {
+class _LanguageSelectionViewState extends State<LanguageSelectionView> with TickerProviderStateMixin {
   String selectedLanguage = '';
   String searchQuery = '';
   bool isSearchVisible = false;
@@ -25,146 +25,26 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView>
   late Animation<double> _searchAnimation;
 
   final List<Map<String, String>> languages = [
-    {
-      'code': 'en',
-      'name': 'English',
-      'native': 'English',
-      'country': 'United States',
-      'flag': '🇺🇸'
-    },
-    {
-      'code': 'zh',
-      'name': 'Chinese (Simplified)',
-      'native': '中文',
-      'country': 'China',
-      'flag': '🇨🇳'
-    },
-    {
-      'code': 'hi',
-      'name': 'Hindi',
-      'native': 'हिन्दी',
-      'country': 'India',
-      'flag': '🇮🇳'
-    },
-    {
-      'code': 'ja',
-      'name': 'Japanese',
-      'native': '日本語',
-      'country': 'Japan',
-      'flag': '🇯🇵'
-    },
-    {
-      'code': 'de',
-      'name': 'German',
-      'native': 'Deutsch',
-      'country': 'Germany',
-      'flag': '🇩🇪'
-    },
-    {
-      'code': 'fr',
-      'name': 'French',
-      'native': 'Français',
-      'country': 'France',
-      'flag': '🇫🇷'
-    },
-    {
-      'code': 'es',
-      'name': 'Spanish',
-      'native': 'Español',
-      'country': 'Spain',
-      'flag': '🇪🇸'
-    },
-    {
-      'code': 'pt',
-      'name': 'Portuguese',
-      'native': 'Português',
-      'country': 'Brazil',
-      'flag': '🇧🇷'
-    },
-    {
-      'code': 'ru',
-      'name': 'Russian',
-      'native': 'Русский',
-      'country': 'Russia',
-      'flag': '🇷🇺'
-    },
-    {
-      'code': 'ar',
-      'name': 'Arabic',
-      'native': 'العربية',
-      'country': 'Saudi Arabia',
-      'flag': '🇸🇦'
-    },
-    {
-      'code': 'bn',
-      'name': 'Bengali',
-      'native': 'বাংলা',
-      'country': 'Bangladesh',
-      'flag': '🇧🇩'
-    },
-    {
-      'code': 'tr',
-      'name': 'Turkish',
-      'native': 'Türkçe',
-      'country': 'Turkey',
-      'flag': '🇹🇷'
-    },
-    {
-      'code': 'it',
-      'name': 'Italian',
-      'native': 'Italiano',
-      'country': 'Italy',
-      'flag': '🇮🇹'
-    },
-    {
-      'code': 'ko',
-      'name': 'Korean',
-      'native': '한국어',
-      'country': 'South Korea',
-      'flag': '🇰🇷'
-    },
-    {
-      'code': 'vi',
-      'name': 'Vietnamese',
-      'native': 'Tiếng Việt',
-      'country': 'Vietnam',
-      'flag': '🇻🇳'
-    },
-    {
-      'code': 'th',
-      'name': 'Thai',
-      'native': 'ไทย',
-      'country': 'Thailand',
-      'flag': '🇹🇭'
-    },
-    {
-      'code': 'nl',
-      'name': 'Dutch',
-      'native': 'Nederlands',
-      'country': 'Netherlands',
-      'flag': '🇳🇱'
-    },
-    {
-      'code': 'pl',
-      'name': 'Polish',
-      'native': 'Polski',
-      'country': 'Poland',
-      'flag': '🇵🇱'
-    },
-    {
-      'code': 'id',
-      'name': 'Malay/Indonesian',
-      'native': 'Bahasa Indonesia',
-      'country': 'Indonesia',
-      'flag': '🇮🇩'
-    },
-    {
-      'code': 'uk',
-      'name': 'Ukrainian',
-      'native': 'Українська',
-      'country': 'Ukraine',
-      'flag': '🇺🇦'
-    }
+    {'code': 'en', 'name': 'English', 'native': 'English', 'country': 'United States', 'flag': '🇺🇸'},
+    {'code': 'zh', 'name': 'Chinese (Simplified)', 'native': '中文', 'country': 'China', 'flag': '🇨🇳'},
+    {'code': 'hi', 'name': 'Hindi', 'native': 'हिन्दी', 'country': 'India', 'flag': '🇮🇳'},
+    {'code': 'ja', 'name': 'Japanese', 'native': '日本語', 'country': 'Japan', 'flag': '🇯🇵'},
+    {'code': 'de', 'name': 'German', 'native': 'Deutsch', 'country': 'Germany', 'flag': '🇩🇪'},
+    {'code': 'fr', 'name': 'French', 'native': 'Français', 'country': 'France', 'flag': '🇫🇷'},
+    {'code': 'es', 'name': 'Spanish', 'native': 'Español', 'country': 'Spain', 'flag': '🇪🇸'},
+    {'code': 'pt', 'name': 'Portuguese', 'native': 'Português', 'country': 'Brazil', 'flag': '🇧🇷'},
+    {'code': 'ru', 'name': 'Russian', 'native': 'Русский', 'country': 'Russia', 'flag': '🇷🇺'},
+    {'code': 'ar', 'name': 'Arabic', 'native': 'العربية', 'country': 'Saudi Arabia', 'flag': '🇸🇦'},
+    {'code': 'bn', 'name': 'Bengali', 'native': 'বাংলা', 'country': 'Bangladesh', 'flag': '🇧🇩'},
+    {'code': 'tr', 'name': 'Turkish', 'native': 'Türkçe', 'country': 'Turkey', 'flag': '🇹🇷'},
+    {'code': 'it', 'name': 'Italian', 'native': 'Italiano', 'country': 'Italy', 'flag': '🇮🇹'},
+    {'code': 'ko', 'name': 'Korean', 'native': '한국어', 'country': 'South Korea', 'flag': '🇰🇷'},
+    {'code': 'vi', 'name': 'Vietnamese', 'native': 'Tiếng Việt', 'country': 'Vietnam', 'flag': '🇻🇳'},
+    {'code': 'th', 'name': 'Thai', 'native': 'ไทย', 'country': 'Thailand', 'flag': '🇹🇭'},
+    {'code': 'nl', 'name': 'Dutch', 'native': 'Nederlands', 'country': 'Netherlands', 'flag': '🇳🇱'},
+    {'code': 'pl', 'name': 'Polish', 'native': 'Polski', 'country': 'Poland', 'flag': '🇵🇱'},
+    {'code': 'id', 'name': 'Malay/Indonesian', 'native': 'Bahasa Indonesia', 'country': 'Indonesia', 'flag': '🇮🇩'},
+    {'code': 'uk', 'name': 'Ukrainian', 'native': 'Українська', 'country': 'Ukraine', 'flag': '🇺🇦'},
   ];
 
   List<Map<String, String>> get filteredLanguages {
@@ -184,41 +64,23 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView>
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    );
+    _animationController = AnimationController(duration: const Duration(milliseconds: 1000), vsync: this);
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
-    _buttonAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
+    _buttonAnimationController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
     _buttonScaleAnimation = Tween<double>(
       begin: 0.9,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _buttonAnimationController,
-      curve: Curves.elasticOut,
-    ));
+    ).animate(CurvedAnimation(parent: _buttonAnimationController, curve: Curves.elasticOut));
 
-    _searchAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
+    _searchAnimationController = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
     _searchAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _searchAnimationController,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _searchAnimationController, curve: Curves.easeInOut));
 
     _animationController.forward();
   }
@@ -247,24 +109,30 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
-      body: SafeArea(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              _buildHeader(),
-              _buildSearchDropdown(),
-              const SizedBox(height: 20),
-              Expanded(
-                child: _buildLanguageGrid(),
-              ),
-              const SizedBox(height: 20),
-              _buildBottomSection(),
-              const SizedBox(height: 20),
-            ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: AppColors.scaffoldBackground,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: AppColors.white,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: AppColors.scaffoldBackground,
+        body: SafeArea(
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                _buildHeader(),
+                _buildSearchDropdown(),
+                const SizedBox(height: 20),
+                Expanded(child: _buildLanguageGrid()),
+                const SizedBox(height: 20),
+                _buildBottomSection(),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),
@@ -280,48 +148,27 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Welcome',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.black,
-                ),
-              ),
+              const Text('Welcome', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Colors.black)),
               Container(
                 width: 40,
                 height: 40,
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(13),
-                ),
-                child:  !isSearchVisible ?
-                IconButton(
-                  icon: SvgPicture.asset(
-                    'assets/svg/search-normal.svg',
-                    width: 50,
-                    height: 50,
-                  ),
-                  onPressed: _toggleSearch,
-                ) :
-                IconButton(
-                  icon: Icon(
-                     Icons.close,
-                    color:  AppColors.black,
-                    size: 25,
-                  ),
-                  onPressed: _toggleSearch,
-                ),
+                decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(13)),
+                child:
+                    !isSearchVisible
+                        ? IconButton(
+                          icon: SvgPicture.asset('assets/svg/search-normal.svg', width: 50, height: 50),
+                          onPressed: _toggleSearch,
+                        )
+                        : IconButton(
+                          icon: Icon(Icons.close, color: AppColors.black, size: 25),
+                          onPressed: _toggleSearch,
+                        ),
               ),
             ],
           ),
           Text(
             'Choose your preferred App language to continue',
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColors.textGray,
-              fontWeight: FontWeight.w400,
-            ),
+            style: TextStyle(fontSize: 12, color: AppColors.textGray, fontWeight: FontWeight.w400),
           ),
         ],
       ),
@@ -352,35 +199,22 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView>
               },
               decoration: InputDecoration(
                 hintText: 'Search language',
-                hintStyle: TextStyle(
-                  color: Colors.grey.shade500,
-                  fontSize: 14,
-                ),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: Colors.grey.shade500,
-                  size: 20,
-                ),
-                suffixIcon: searchQuery.isNotEmpty
-                    ? IconButton(
-                  icon: Icon(
-                    Icons.clear,
-                    color: Colors.grey.shade500,
-                    size: 20,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      searchQuery = '';
-                      _searchController.clear();
-                    });
-                  },
-                )
-                    : null,
+                hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
+                prefixIcon: Icon(Icons.search, color: Colors.grey.shade500, size: 20),
+                suffixIcon:
+                    searchQuery.isNotEmpty
+                        ? IconButton(
+                          icon: Icon(Icons.clear, color: Colors.grey.shade500, size: 20),
+                          onPressed: () {
+                            setState(() {
+                              searchQuery = '';
+                              _searchController.clear();
+                            });
+                          },
+                        )
+                        : null,
                 border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               ),
             ),
           ),
@@ -420,11 +254,7 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView>
                   width: isSelected ? 2 : 1,
                 ),
                 boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
+                  BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2)),
                 ],
               ),
               child: Stack(
@@ -436,23 +266,14 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView>
                       Center(
                         child: SizedBox(
                           height: 33,
-                          child: Center(
-                            child: Text(
-                              language['flag'] ?? '🏳️',
-                              style: const TextStyle(fontSize: 28),
-                            ),
-                          ),
+                          child: Center(child: Text(language['flag'] ?? '🏳️', style: const TextStyle(fontSize: 28))),
                         ),
                       ),
                       const SizedBox(height: 8),
                       // Country name
                       Text(
                         language['country'] ?? 'Unknown',
-                        style: const TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
+                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.black),
                         textAlign: TextAlign.center,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -460,11 +281,7 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView>
                       const SizedBox(height: 2),
                       Text(
                         language['native'] ?? '',
-                        style: const TextStyle(
-                          fontSize: 10,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
+                        style: const TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.w400),
                         textAlign: TextAlign.center,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -479,15 +296,8 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView>
                       child: Container(
                         width: 20,
                         height: 20,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF1E3A8A),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.check,
-                          color: Colors.white,
-                          size: 12,
-                        ),
+                        decoration: const BoxDecoration(color: Color(0xFF1E3A8A), shape: BoxShape.circle),
+                        child: const Icon(Icons.check, color: Colors.white, size: 12),
                       ),
                     ),
                 ],
@@ -500,37 +310,21 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView>
   }
 
   Widget _buildBottomSection() {
-    return
-      Container(
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: SizedBox(
         width: double.infinity,
         height: 43,
-        child:
-        ElevatedButton(
-
+        child: ElevatedButton(
           onPressed: selectedLanguage.isNotEmpty ? _onContinue : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: selectedLanguage.isNotEmpty
-                ? const Color(0xFF1E3A8A)
-                : Colors.grey.shade300,
+            backgroundColor: selectedLanguage.isNotEmpty ? const Color(0xFF1E3A8A) : Colors.grey.shade300,
             foregroundColor: Colors.white,
             elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(25),
-            ),
-            padding: EdgeInsets.symmetric(
-              horizontal: AppSizes.w18,
-              vertical: AppSizes.h8,
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.w18, vertical: AppSizes.h8),
           ),
-          child: const Text(
-            'Continue',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          child: const Text('Continue', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         ),
       ),
     );

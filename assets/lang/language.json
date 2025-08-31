@@ -97,7 +97,18 @@
     "German": "Mehr hinzufügen",
     "French": "Ajouter plus",
     "Arabic": "أضف المزيد",
-    "Portuguese": "Adicionar Mais"
+    "Portuguese": "Adicionar Mais",
+    "Russian": "Добавить еще",
+    "Bengali": "আরও যোগ করুন",
+    "Turkish": "Daha Fazla Ekle",
+    "Italian": "Aggiungi altro",
+    "Korean": "더 추가",
+    "Vietnamese": "Thêm nữa",
+    "Thai": "เพิ่ม",
+    "Dutch": "Meer toevoegen",
+    "Polish": "Dodaj więcej",
+    "Malay/Indonesian": "Tambah Lagi",
+    "Ukrainian": "Додати ще"
   },
   "success": {
     "English": "Success",
@@ -296,18 +307,6 @@
     "Polish": "Numer faktury/umowy jest wymagany",
     "Malay/Indonesian": "Nomor faktur/kontrak diperlukan",
     "Ukrainian": "Номер рахунку/контракту обов'язковий"
-  },
-    "Russian": "Добавить еще",
-    "Bengali": "আরও যোগ করুন",
-    "Turkish": "Daha Fazla Ekle",
-    "Italian": "Aggiungi altro",
-    "Korean": "더 추가",
-    "Vietnamese": "Thêm nữa",
-    "Thai": "เพิ่ม",
-    "Dutch": "Meer toevoegen",
-    "Polish": "Dodaj więcej",
-    "Malay/Indonesian": "Tambah Lagi",
-    "Ukrainian": "Додати ще"
   },
   "search_employees": {
     "English": "Search employees...",

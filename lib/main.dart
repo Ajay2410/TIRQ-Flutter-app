@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:manager/core/storage/storage.dart';
@@ -38,23 +39,16 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:
-      Container(
+      home: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              AppColors.primaryLight,
-              AppColors.primaryDark,
-            ],
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
             begin: Alignment.centerRight,
             end: Alignment.centerLeft,
             stops: [0.08, 1],
           ),
         ),
-        child: Scaffold(
-          body: const AppView(),
-          backgroundColor: AppColors.transparent,
-        ),
+        child: Scaffold(body: const AppView(), backgroundColor: AppColors.transparent),
       ),
     ),
   );
