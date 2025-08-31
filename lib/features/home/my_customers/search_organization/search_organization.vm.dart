@@ -7,9 +7,7 @@ import 'package:manager/core/utils/failures.dart';
 
 class SearchOrganizationViewModel extends BaseViewModel {
   final CustomerService _customerService = locator<CustomerService>();
-  final Debouncer _debouncer = Debouncer(
-    delay: const Duration(milliseconds: 500),
-  );
+  final Debouncer _debouncer = Debouncer(delay: const Duration(milliseconds: 500));
 
   List<Customer> _searchResults = [];
   String _searchQuery = '';
@@ -17,8 +15,11 @@ class SearchOrganizationViewModel extends BaseViewModel {
   String? _errorMessage;
 
   List<Customer> get searchResults => _searchResults;
+
   String get searchQuery => _searchQuery;
+
   bool get isLoading => _isLoading;
+
   String? get errorMessage => _errorMessage;
 
   void setSearchQuery(String query) {

@@ -56,12 +56,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
                     height: 32,
                     margin: const EdgeInsets.all(8),
                     decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.redBack),
-                    child: const Center(
-                      child: Text(
-                        '!',
-                        style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                    child: const Center(child: Text('!', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold))),
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -89,10 +84,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
                           padding: EdgeInsets.symmetric(vertical: 14),
                         ),
-                        child: Text(
-                          'cancel'.lang,
-                          style: TextStyle(color: AppColors.darkGray, fontSize: 16, fontWeight: FontWeight.w500),
-                        ),
+                        child: Text('cancel'.lang, style: TextStyle(color: AppColors.darkGray, fontSize: 16, fontWeight: FontWeight.w500)),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -118,19 +110,9 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
                                 ? SizedBox(
                                   width: 20,
                                   height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-                                  ),
+                                  child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.white)),
                                 )
-                                : Text(
-                                  'remove'.lang,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                : Text('remove'.lang, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ],
@@ -139,10 +121,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
 
                 Align(
                   alignment: Alignment.center,
-                  child: Text(
-                    'remove_machine_warning'.lang,
-                    style: TextStyle(color: AppColors.redBack, fontSize: 12, fontWeight: FontWeight.w400),
-                  ),
+                  child: Text('remove_machine_warning'.lang, style: TextStyle(color: AppColors.redBack, fontSize: 12, fontWeight: FontWeight.w400)),
                 ),
               ],
             ),
@@ -158,10 +137,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
     });
 
     try {
-      final result = await _customerService.removeMachine(
-        customerId: widget.customer.id!,
-        machineId: widget.machineElement.machine?.id ?? '',
-      );
+      final result = await _customerService.removeMachine(customerId: widget.customer.id!, machineId: widget.machineElement.machine?.id ?? '');
 
       result.fold(
         (failure) {
@@ -237,9 +213,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
               height: 26,
               width: 26,
               decoration: const BoxDecoration(color: AppColors.bluebackground, shape: BoxShape.circle),
-              child: const Center(
-                child: Text('CR', style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-              ),
+              child: const Center(child: Text('CR', style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold))),
             ),
           ),
           const SizedBox(width: 12),
@@ -282,10 +256,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'basic_information'.lang,
-                style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              Text('basic_information'.lang, style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -312,10 +283,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
               Divider(color: AppColors.lightGray),
               const SizedBox(height: 14),
 
-              Text(
-                'maximum_processing_size'.lang,
-                style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              Text('maximum_processing_size'.lang, style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -342,10 +310,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
               Divider(color: AppColors.lightGray),
               const SizedBox(height: 14),
 
-              Text(
-                'minimum_processing_size'.lang,
-                style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              Text('minimum_processing_size'.lang, style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -379,10 +344,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
               Divider(color: AppColors.lightGray),
               const SizedBox(height: 14),
 
-              Text(
-                'machine_ownership'.lang,
-                style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              Text('machine_ownership'.lang, style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -475,19 +437,9 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                label,
-                style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400),
-              ),
+              Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
               const SizedBox(height: 4),
-              Text(
-                value,
-                style: TextStyle(
-                  color: isWarning ? AppColors.redBack : AppColors.textPrimary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              Text(value, style: TextStyle(color: isWarning ? AppColors.redBack : AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
             ],
           ),
         ),
@@ -504,14 +456,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.white,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.05),
-            offset: const Offset(0, -5),
-            blurRadius: 10,
-            spreadRadius: 0,
-          ),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), offset: const Offset(0, -5), blurRadius: 10, spreadRadius: 0)],
       ),
       child: Row(
         children: [
@@ -520,26 +465,12 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
             child: ElevatedButton(
               onPressed: () async {
                 final result = await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder:
-                        (context) =>
-                            CustomerEditDetailsView(customer: widget.customer, machineElement: widget.machineElement),
-                  ),
+                  MaterialPageRoute(builder: (context) => CustomerEditDetailsView(customer: widget.customer, machineElement: widget.machineElement)),
                 );
 
-                // if (result != null && result is Customer) {
-                //   _refreshCustomerData(result);
-                //
-                //   if (mounted) {
-                //     _scaffoldKey.currentState?.showSnackBar(
-                //       SnackBar(
-                //         content: Text('Customer updated successfully'),
-                //         backgroundColor: Colors.green,
-                //         duration: Duration(seconds: 2),
-                //       ),
-                //     );
-                //   }
-                // }
+                if (result != null && result is Customer) {
+                  Navigator.of(context).pop(result);
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryLight,
@@ -549,10 +480,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
                 padding: EdgeInsets.symmetric(vertical: 14),
               ),
-              child: Text(
-                'edit'.lang,
-                style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700),
-              ),
+              child: Text('edit'.lang, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700)),
             ),
           ),
           const SizedBox(width: 70),
@@ -572,15 +500,9 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
                       ? SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
+                        child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
                       )
-                      : Text(
-                        'remove'.lang,
-                        style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700),
-                      ),
+                      : Text('remove'.lang, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700)),
             ),
           ),
           const SizedBox(width: 40),

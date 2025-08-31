@@ -9,6 +9,7 @@ import 'package:manager/services/customer.service.dart';
 import 'package:manager/core/locator.dart';
 import 'package:manager/features/home/my_customers/machine_details/customer_machine_details.view.dart';
 import 'package:manager/features/home/my_customers/machine_details/customer_details/customer_edit_details.view.dart';
+import 'package:manager/features/home/my_customers/create_customer/create_new_customer.view.dart';
 
 class CustomerDetailsView extends StatefulWidget {
   final Customer customer;
@@ -23,6 +24,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
   bool _isDeleting = false;
   late Customer _currentCustomer;
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+  final CustomerService _customerService = locator<CustomerService>();
 
   @override
   void initState() {
@@ -34,6 +36,22 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     setState(() {
       _currentCustomer = updatedCustomer;
     });
+  }
+
+  void _navigateToEditCustomer() async {
+    final result = await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => CreateNewCustomerView(isEditMode: true, customerId: _currentCustomer.id)));
+
+    if (result != null && result is Customer) {
+      _refreshCustomerData(result);
+
+      if (mounted) {
+        _scaffoldKey.currentState?.showSnackBar(
+          SnackBar(content: Text('Customer updated successfully'), backgroundColor: Colors.green, duration: Duration(seconds: 2)),
+        );
+      }
+    }
   }
 
   @override
@@ -68,8 +86,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                 ],
               ),
             ),
-            if (_isDeleting)
-              Positioned.fill(child: Center(child: CircularProgressIndicator(color: AppColors.white, strokeWidth: 2))),
+            if (_isDeleting) Positioned.fill(child: Center(child: CircularProgressIndicator(color: AppColors.white, strokeWidth: 2))),
           ],
         ),
         floatingActionButton: _buildFloatingActionButton(context),
@@ -125,20 +142,26 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
           menuPadding: EdgeInsets.zero,
           offset: const Offset(-10, 30),
           onSelected: (String value) {
-            if (value == 'delete') {
+            if (value == 'edit') {
+              _navigateToEditCustomer();
+            } else if (value == 'delete') {
               _showDeleteConfirmation(context);
             }
           },
           itemBuilder:
               (BuildContext context) => [
                 PopupMenuItem<String>(
+                  value: 'edit',
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Text('edit'.lang, style: const TextStyle(color: AppColors.primary, fontSize: 16, fontWeight: FontWeight.w500)),
+                  ),
+                ),
+                PopupMenuItem<String>(
                   value: 'delete',
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Text(
-                      'delete'.lang,
-                      style: const TextStyle(color: AppColors.redBack, fontSize: 16, fontWeight: FontWeight.w500),
-                    ),
+                    child: Text('delete'.lang, style: const TextStyle(color: AppColors.redBack, fontSize: 16, fontWeight: FontWeight.w500)),
                   ),
                 ),
               ],
@@ -158,9 +181,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
       decoration: BoxDecoration(
         color: AppColors.colorF0F2FC,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2)),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2))],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,15 +192,10 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
               children: [
                 _buildContactInfoRow(
                   'contact_person'.lang,
-                  _currentCustomer.contactPerson?.isNotEmpty == true
-                      ? _currentCustomer.contactPerson!
-                      : 'not_available'.lang,
+                  _currentCustomer.contactPerson?.isNotEmpty == true ? _currentCustomer.contactPerson! : 'not_available'.lang,
                 ),
                 const SizedBox(height: 12),
-                _buildContactInfoRow(
-                  'email'.lang,
-                  _currentCustomer.email?.isNotEmpty == true ? _currentCustomer.email! : 'not_available'.lang,
-                ),
+                _buildContactInfoRow('email'.lang, _currentCustomer.email?.isNotEmpty == true ? _currentCustomer.email! : 'not_available'.lang),
               ],
             ),
           ),
@@ -190,16 +206,12 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
               children: [
                 _buildContactInfoRow(
                   'designation'.lang,
-                  _currentCustomer.designation?.isNotEmpty == true
-                      ? _currentCustomer.designation!
-                      : 'not_available'.lang,
+                  _currentCustomer.designation?.isNotEmpty == true ? _currentCustomer.designation! : 'not_available'.lang,
                 ),
                 const SizedBox(height: 12),
                 _buildContactInfoRow(
                   'phone'.lang,
-                  _currentCustomer.phoneNumber?.isNotEmpty == true
-                      ? _currentCustomer.phoneNumber!
-                      : 'not_available'.lang,
+                  _currentCustomer.phoneNumber?.isNotEmpty == true ? _currentCustomer.phoneNumber! : 'not_available'.lang,
                 ),
               ],
             ),
@@ -228,24 +240,15 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
           children: [
             Image.asset(AppImages.myCustomers, width: 80, height: 80, color: AppColors.gray),
             const SizedBox(height: 20),
-            Text(
-              'no_machines_assigned'.lang,
-              style: TextStyle(fontSize: 18, color: AppColors.textSecondary, fontWeight: FontWeight.w500),
-            ),
+            Text('no_machines_assigned'.lang, style: TextStyle(fontSize: 18, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
             const SizedBox(height: 10),
-            Text(
-              'this_customer_has_no_machines'.lang,
-              style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
-              textAlign: TextAlign.center,
-            ),
+            Text('this_customer_has_no_machines'.lang, style: TextStyle(fontSize: 14, color: AppColors.textSecondary), textAlign: TextAlign.center),
           ],
         ),
       );
     }
 
-    return Column(
-      children: _currentCustomer.machines!.map((machineData) => _buildMachineCard(context, machineData)).toList(),
-    );
+    return Column(children: _currentCustomer.machines!.map((machineData) => _buildMachineCard(context, machineData)).toList());
   }
 
   Widget _buildMachineCard(BuildContext context, MachineElement machineData) {
@@ -264,9 +267,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2)),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2))],
       ),
       child: Column(
         children: [
@@ -275,47 +276,32 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 decoration: BoxDecoration(color: AppColors.colorF0F2FC, borderRadius: BorderRadius.circular(16)),
-                child: Text(
-                  country,
-                  style: TextStyle(color: AppColors.colorBlue, fontSize: 14, fontWeight: FontWeight.bold),
-                ),
+                child: Text(country, style: TextStyle(color: AppColors.colorBlue, fontSize: 14, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  machineName,
-                  style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
+              Expanded(child: Text(machineName, style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold))),
 
               Container(
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  color:
-                      isInWarranty
-                          ? AppColors.success.withValues(alpha: 0.15)
-                          : AppColors.redBack.withValues(alpha: 0.2),
+                  color: isInWarranty ? AppColors.success.withValues(alpha: 0.15) : AppColors.redBack.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
                   isInWarranty ? 'in_warranty'.lang : 'out_of_warranty'.lang,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: isInWarranty ? AppColors.success : AppColors.redBack,
-                  ),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: isInWarranty ? AppColors.success : AppColors.redBack),
                 ),
               ),
               const SizedBox(width: 8),
               GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder:
-                          (context) =>
-                              CustomerMachineDetailsView(customer: _currentCustomer, machineElement: machineData),
-                    ),
+                onTap: () async {
+                  final result = await Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => CustomerMachineDetailsView(customer: _currentCustomer, machineElement: machineData)),
                   );
+
+                  if (result != null && result is Customer) {
+                    _refreshCustomerData(result);
+                  }
                 },
                 child: Container(
                   padding: const EdgeInsets.all(6),
@@ -358,20 +344,14 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
   Widget _buildFloatingActionButton(BuildContext context) {
     return FloatingActionButton.extended(
       onPressed: () async {
-        final result = await Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (context) => CustomerEditDetailsView(customer: _currentCustomer)));
+        final result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => CustomerEditDetailsView(customer: _currentCustomer)));
 
         if (result != null && result is Customer) {
           _refreshCustomerData(result);
 
           if (mounted) {
             _scaffoldKey.currentState?.showSnackBar(
-              SnackBar(
-                content: Text('Customer updated successfully'),
-                backgroundColor: Colors.green,
-                duration: Duration(seconds: 2),
-              ),
+              SnackBar(content: Text('Customer updated successfully'), backgroundColor: Colors.green, duration: Duration(seconds: 2)),
             );
           }
         }
@@ -380,10 +360,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
       foregroundColor: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       icon: const Icon(Icons.add, size: 20),
-      label: Text(
-        'assign_new_machine'.lang,
-        style: TextStyle(color: AppColors.white, fontSize: 14, fontWeight: FontWeight.w500),
-      ),
+      label: Text('assign_new_machine'.lang, style: TextStyle(color: AppColors.white, fontSize: 14, fontWeight: FontWeight.w500)),
     );
   }
 
@@ -409,12 +386,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                     height: 32,
                     margin: const EdgeInsets.all(8),
                     decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.redBack),
-                    child: const Center(
-                      child: Text(
-                        '!',
-                        style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                    child: const Center(child: Text('!', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold))),
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -440,10 +412,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
                           padding: EdgeInsets.symmetric(vertical: 14),
                         ),
-                        child: Text(
-                          'cancel'.lang,
-                          style: TextStyle(color: AppColors.darkGray, fontSize: 16, fontWeight: FontWeight.w500),
-                        ),
+                        child: Text('cancel'.lang, style: TextStyle(color: AppColors.darkGray, fontSize: 16, fontWeight: FontWeight.w500)),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -470,19 +439,9 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                                 ? SizedBox(
                                   width: 20,
                                   height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                  ),
+                                  child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
                                 )
-                                : Text(
-                                  'remove'.lang,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
+                                : Text('remove'.lang, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500)),
                       ),
                     ),
                   ],
@@ -491,10 +450,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
 
                 Align(
                   alignment: Alignment.center,
-                  child: Text(
-                    'remove_customer_warning'.lang,
-                    style: TextStyle(color: AppColors.redBack, fontSize: 12, fontWeight: FontWeight.w400),
-                  ),
+                  child: Text('remove_customer_warning'.lang, style: TextStyle(color: AppColors.redBack, fontSize: 12, fontWeight: FontWeight.w400)),
                 ),
               ],
             ),
@@ -512,12 +468,50 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     });
 
     try {
-      await Future.delayed(const Duration(seconds: 3));
-      // TODO: Implement customer deletion
-      Get.back(result: true);
+      if (_currentCustomer.id == null || _currentCustomer.id!.isEmpty) {
+        Fluttertoast.showToast(
+          msg: 'invalid_machine_id'.lang,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: AppColors.redBack,
+          textColor: AppColors.white,
+          fontSize: 16,
+        );
+        return;
+      }
+
+      final result = await _customerService.deleteCustomer(_currentCustomer.id!);
+
+      result.fold(
+        (failure) {
+          Fluttertoast.showToast(
+            msg: failure.message,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: AppColors.redBack,
+            textColor: AppColors.white,
+            fontSize: 16,
+          );
+        },
+        (success) {
+          Fluttertoast.showToast(
+            msg: 'machine_removed_successfully'.lang,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: AppColors.success,
+            textColor: AppColors.white,
+            fontSize: 16,
+          );
+
+          Get.back(result: true);
+        },
+      );
     } catch (e) {
       Fluttertoast.showToast(
-        msg: 'An error occurred: ${e.toString()}',
+        msg: 'unexpected_error_occurred'.lang,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,

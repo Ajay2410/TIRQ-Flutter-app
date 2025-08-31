@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:manager/core/locator.dart';
 import 'package:manager/core/utils/app_logger.dart';
@@ -28,47 +29,55 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
   final TextEditingController invoiceContractNoController = TextEditingController();
 
   String? _selectedDesignation;
+
   String? get selectedDesignation => _selectedDesignation;
 
   String? _selectedMachine;
+
   String? get selectedMachine => _selectedMachine;
 
   DateTime? _purchaseDate;
+
   DateTime? get purchaseDate => _purchaseDate;
 
   DateTime? _installationDate;
+
   DateTime? get installationDate => _installationDate;
 
   DateTime? _warrantyStartDate;
+
   DateTime? get warrantyStartDate => _warrantyStartDate;
 
   DateTime? _warrantyEndDate;
+
   DateTime? get warrantyEndDate => _warrantyEndDate;
 
   String _warrantyStatus = '';
+
   String get warrantyStatus => _warrantyStatus;
 
   String _invoiceContractNo = '';
+
   String get invoiceContractNo => _invoiceContractNo;
 
   String get formattedPurchaseDate {
     if (_purchaseDate == null) return LanguageService.get('not_available');
-    return '${_purchaseDate!.day}/${_purchaseDate!.month}/${_purchaseDate!.year}';
+    return DateFormat('MMM dd, yyyy').format(_purchaseDate!);
   }
 
   String get formattedInstallationDate {
     if (_installationDate == null) return LanguageService.get('not_available');
-    return '${_installationDate!.day}/${_installationDate!.month}/${_installationDate!.year}';
+    return DateFormat('MMM dd, yyyy').format(_installationDate!);
   }
 
   String get formattedWarrantyStartDate {
     if (_warrantyStartDate == null) return LanguageService.get('not_available');
-    return '${_warrantyStartDate!.day}/${_warrantyStartDate!.month}/${_warrantyStartDate!.year}';
+    return DateFormat('MMM dd, yyyy').format(_warrantyStartDate!);
   }
 
   String get formattedWarrantyEndDate {
     if (_warrantyEndDate == null) return LanguageService.get('not_available');
-    return '${_warrantyEndDate!.day}/${_warrantyEndDate!.month}/${_warrantyEndDate!.year}';
+    return DateFormat('MMM dd, yyyy').format(_warrantyEndDate!);
   }
 
   Color get warrantyStatusColor {
@@ -79,11 +88,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
   }
 
   List<String> get machineItems {
-    List<String> items =
-        _machineStorageService.machines
-            .map((machine) => machine.machineName ?? '')
-            .where((name) => name.isNotEmpty)
-            .toList();
+    List<String> items = _machineStorageService.machines.map((machine) => machine.machineName ?? '').where((name) => name.isNotEmpty).toList();
 
     if (_selectedMachine != null && _selectedMachine!.isNotEmpty) {
       if (!items.contains(_selectedMachine)) {
@@ -97,10 +102,13 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
   bool get isLoadingMachines => _machineStorageService.isLoading;
 
   String _fullPhoneNumber = '';
+
   String get fullPhoneNumber => _fullPhoneNumber;
   String _countryCode = '';
+
   String get countryCode => _countryCode;
   String _initialCountryCode = 'IN';
+
   String get initialCountryCode => _initialCountryCode;
 
   MachineElement? editMachineElement;
@@ -195,7 +203,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
       context: context,
       initialDate: _warrantyStartDate ?? DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
     );
     if (picked != null) {
       _warrantyStartDate = picked;
@@ -217,10 +225,19 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
       return;
     }
 
+    final DateTime firstDate = _warrantyStartDate!.add(const Duration(days: 1));
+    DateTime initialDate;
+
+    if (_warrantyEndDate != null) {
+      initialDate = _warrantyEndDate!.isBefore(firstDate) ? firstDate : _warrantyEndDate!;
+    } else {
+      initialDate = firstDate;
+    }
+
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _warrantyEndDate ?? _warrantyStartDate!.add(const Duration(days: 1)),
-      firstDate: _warrantyStartDate!.add(const Duration(days: 1)),
+      initialDate: initialDate,
+      firstDate: firstDate,
       lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
     );
     if (picked != null) {
@@ -281,12 +298,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
 
         result.fold(
           (failure) {
-            Fluttertoast.showToast(
-              msg: failure.message,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              toastLength: Toast.LENGTH_LONG,
-            );
+            Fluttertoast.showToast(msg: failure.message, backgroundColor: Colors.red, textColor: Colors.white, toastLength: Toast.LENGTH_LONG);
             AppLogger.error("Failed to update customer: ${failure.message}");
           },
           (updatedCustomer) {
@@ -349,12 +361,6 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
       }
     }
 
-    // if (_selectedMachine != null && _selectedMachine!.isNotEmpty) {
-    //   final machine = _machineStorageService.findMachineByName(_selectedMachine!);
-    //   if (machine != null) {
-    //     final isAlreadyAssigned =
-    //         customer.machines?.any((existingMachine) => existingMachine.machine?.id == machine.id) ?? false;
-
     if (!isAlreadyAssigned && machine != null) {
       machines.add({
         'machine': machine.id,
@@ -366,8 +372,6 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
         'invoiceContractNo': _invoiceContractNo,
       });
     }
-    // }
-    // }
 
     return machines;
   }

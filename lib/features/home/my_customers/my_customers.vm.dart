@@ -58,8 +58,7 @@ class MyCustomersViewModel extends BaseViewModel {
         final data = response.data;
         if (data != null && data['data'] != null) {
           final List<dynamic> customersData = data['data'];
-          _customers =
-              customersData.map((json) => Customer.fromJson(json)).toList();
+          _customers = customersData.map((json) => Customer.fromJson(json)).toList();
           _filteredCustomers = _customers;
         } else {
           _customers = [];
@@ -103,17 +102,9 @@ class MyCustomersViewModel extends BaseViewModel {
   void _applyFilters() {
     _filteredCustomers =
         _customers.where((customer) {
-          bool matchesSearch =
-              _searchQuery.isEmpty ||
-              customer.customerName?.toLowerCase().contains(
-                    _searchQuery.toLowerCase(),
-                  ) ==
-                  true;
+          bool matchesSearch = _searchQuery.isEmpty || customer.customerName?.toLowerCase().contains(_searchQuery.toLowerCase()) == true;
 
-          bool matchesStatus =
-              _statusFilter == 'all' ||
-              (customer.isActive == true ? 'active' : 'inactive') ==
-                  _statusFilter.toLowerCase();
+          bool matchesStatus = _statusFilter == 'all' || (customer.isActive == true ? 'active' : 'inactive') == _statusFilter.toLowerCase();
 
           return matchesSearch && matchesStatus;
         }).toList();
@@ -137,15 +128,11 @@ class MyCustomersViewModel extends BaseViewModel {
   void onScanFromCamera() {}
 
   void onSearchByPhone(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const SearchOrganizationView()),
-    );
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SearchOrganizationView()));
   }
 
   void onCustomerTap(BuildContext context, Customer customer) async {
-    await Navigator.of(
-      context,
-    ).pushNamed(Routes.customerDetails, arguments: customer);
+    await Navigator.of(context).pushNamed(Routes.customerDetails, arguments: customer);
 
     await _loadCustomers();
   }

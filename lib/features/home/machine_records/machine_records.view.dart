@@ -149,10 +149,7 @@ class _MachineRecordsViewState extends State<MachineRecordsView> with TickerProv
                 padding: const EdgeInsets.all(12),
                 child: Column(
                   children: [
-                    SlideTransition(
-                      position: _slideAnimation,
-                      child: _isSearchVisible ? _buildSearchBar(context) : const SizedBox.shrink(),
-                    ),
+                    SlideTransition(position: _slideAnimation, child: _isSearchVisible ? _buildSearchBar(context) : const SizedBox.shrink()),
                     Expanded(
                       child:
                           _isLoading
@@ -181,21 +178,10 @@ class _MachineRecordsViewState extends State<MachineRecordsView> with TickerProv
   Widget _buildAppBar(BuildContext context) {
     return AppBar(
       elevation: 0,
-      leading: IconButton(
-        icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
-        onPressed: () => Get.back(),
-      ),
+      leading: IconButton(icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white), onPressed: () => Get.back()),
       titleSpacing: 0,
-      title: Text(
-        'machine_records'.lang,
-        style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-      actions: [
-        IconButton(
-          icon: Image.asset(AppImages.search, width: 24, height: 24, color: AppColors.white),
-          onPressed: _toggleSearch,
-        ),
-      ],
+      title: Text('machine_records'.lang, style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+      actions: [IconButton(icon: Image.asset(AppImages.search, width: 24, height: 24, color: AppColors.white), onPressed: _toggleSearch)],
     );
   }
 
@@ -208,22 +194,10 @@ class _MachineRecordsViewState extends State<MachineRecordsView> with TickerProv
         focusNode: _searchFocusNode,
         decoration: InputDecoration(
           hintText: 'search_machines'.lang,
-          prefixIcon: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Image.asset(AppImages.search, width: 20, height: 20, color: AppColors.gray),
-          ),
-          suffixIcon:
-              _searchController.text.isNotEmpty
-                  ? IconButton(icon: Icon(Icons.clear, color: AppColors.gray), onPressed: _clearSearch)
-                  : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: AppColors.lightGray),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: AppColors.primary),
-          ),
+          prefixIcon: Padding(padding: const EdgeInsets.all(16), child: Image.asset(AppImages.search, width: 20, height: 20, color: AppColors.gray)),
+          suffixIcon: _searchController.text.isNotEmpty ? IconButton(icon: Icon(Icons.clear, color: AppColors.gray), onPressed: _clearSearch) : null,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.lightGray)),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.primary)),
         ),
         onChanged: _onSearchChanged,
       ),
@@ -260,9 +234,7 @@ class _MachineRecordsViewState extends State<MachineRecordsView> with TickerProv
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2)),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2))],
       ),
       child: Row(
         children: [
@@ -286,19 +258,11 @@ class _MachineRecordsViewState extends State<MachineRecordsView> with TickerProv
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Text(
-                      "${"remarks".lang}: ",
-                      style: TextStyle(color: AppColors.black, fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
+                    Text("${"remarks".lang}: ", style: TextStyle(color: AppColors.black, fontSize: 12, fontWeight: FontWeight.bold)),
                     Expanded(
                       child: Text(
                         machine.remarks ?? 'No remarks',
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                        style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400, overflow: TextOverflow.ellipsis),
                       ),
                     ),
                   ],
@@ -337,20 +301,14 @@ class _MachineRecordsViewState extends State<MachineRecordsView> with TickerProv
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2)),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2))],
       ),
       child: Shimmer.fromColors(
         baseColor: Colors.grey[300]!,
         highlightColor: Colors.grey[100]!,
         child: Row(
           children: [
-            Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-            ),
+            Container(width: 56, height: 56, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16))),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -364,29 +322,16 @@ class _MachineRecordsViewState extends State<MachineRecordsView> with TickerProv
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Container(
-                        width: 60,
-                        height: 14,
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4)),
-                      ),
+                      Container(width: 60, height: 14, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
                       const SizedBox(width: 8),
-                      Expanded(
-                        child: Container(
-                          height: 14,
-                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4)),
-                        ),
-                      ),
+                      Expanded(child: Container(height: 14, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4)))),
                     ],
                   ),
                 ],
               ),
             ),
             const SizedBox(width: 8),
-            Container(
-              width: 28,
-              height: 28,
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
-            ),
+            Container(width: 28, height: 28, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10))),
           ],
         ),
       ),
@@ -428,10 +373,7 @@ class _MachineRecordsViewState extends State<MachineRecordsView> with TickerProv
             foregroundColor: AppColors.white,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
             icon: const Icon(Icons.add, size: 20),
-            label: Text(
-              'add_new_models'.lang,
-              style: TextStyle(color: AppColors.white, fontSize: 14, fontWeight: FontWeight.bold),
-            ),
+            label: Text('add_new_models'.lang, style: TextStyle(color: AppColors.white, fontSize: 14, fontWeight: FontWeight.bold)),
           ),
     );
   }

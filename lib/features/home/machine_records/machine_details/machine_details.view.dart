@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_popup/flutter_popup.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
@@ -10,9 +11,7 @@ import 'package:manager/core/models/machine_model.dart';
 import 'package:manager/core/locator.dart';
 import 'package:manager/core/utils/app_logger.dart';
 import 'package:stacked_services/stacked_services.dart';
-import '../../../../services/machine_storage.service.dart';
 import '../add_new_machine_model.view.dart';
-import '../machine_records.view.dart';
 
 class MachineDetailsView extends StatefulWidget {
   final Datum machine;
@@ -26,7 +25,7 @@ class MachineDetailsView extends StatefulWidget {
 class _MachineDetailsViewState extends State<MachineDetailsView> {
   late TextEditingController _remarkController;
   late TextEditingController _notesController;
-  final MachineService _machineService = MachineService();
+  final MachineService _machineService = locator<MachineService>();
   final _navigationService = locator<NavigationService>();
   bool _isDeleting = false;
 
@@ -128,10 +127,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Add machine add-ons like:',
-                  style: TextStyle(color: AppColors.white, fontSize: 11, fontWeight: FontWeight.w500),
-                ),
+                Text('Add machine add-ons like:', style: TextStyle(color: AppColors.white, fontSize: 11, fontWeight: FontWeight.w500)),
                 SizedBox(height: 4),
                 Text(
                   '''• Machine with 2/4 station loader\n• Machine with loader & unloader\n• Machine with Auto detection\n• Machine with Single/double blower (furnace/washing)\netc.''',
@@ -158,10 +154,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'maximum_processing_size'.lang,
-                        style: TextStyle(color: AppColors.textGray, fontSize: 12, fontWeight: FontWeight.w500),
-                      ),
+                      Text('maximum_processing_size'.lang, style: TextStyle(color: AppColors.textGray, fontSize: 12, fontWeight: FontWeight.w500)),
                       SizedBox(height: 10),
 
                       Row(
@@ -194,10 +187,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'minimum_processing_size'.lang,
-                        style: TextStyle(color: AppColors.textGray, fontSize: 12, fontWeight: FontWeight.w500),
-                      ),
+                      Text('minimum_processing_size'.lang, style: TextStyle(color: AppColors.textGray, fontSize: 12, fontWeight: FontWeight.w500)),
                       SizedBox(height: 10),
                       Row(
                         children: [
@@ -258,12 +248,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
         Divider(color: AppColors.lightGray),
         const SizedBox(height: 20),
 
-        _buildInfoRow(
-          AppImages.width,
-          "${'total_power'.lang} (kw)",
-          '${widget.machine.totalPower ?? 'N/A'}',
-          AppColors.primarySuperLight,
-        ),
+        _buildInfoRow(AppImages.width, "${'total_power'.lang} (kw)", '${widget.machine.totalPower ?? 'N/A'}', AppColors.primarySuperLight),
         const SizedBox(height: 24),
 
         CommonTextField(
@@ -285,9 +270,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 36),
       decoration: BoxDecoration(
         color: AppColors.white,
-        boxShadow: [
-          BoxShadow(color: AppColors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, -2)),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, -2))],
       ),
       child: Row(
         children: [
@@ -296,9 +279,43 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
               onPressed:
                   (_isDeleting || !mounted)
                       ? null
-                      : () {
+                      : () async {
                         if (mounted) {
-                          Get.to(() => AddNewMachineModelView(machine: _convertDatumToMap(widget.machine)));
+                          final result = await Get.to<Map<String, dynamic>>(
+                            () => AddNewMachineModelView(machine: _convertDatumToMap(widget.machine)),
+                          );
+
+                          if (result != null && result is Map<String, dynamic>) {
+                            final returnedMachineId = result['_id'] as String?;
+                            if (returnedMachineId != null && returnedMachineId == widget.machine.id) {
+                              AppLogger.info("Machine updated, refreshing data: $result");
+                              setState(() {
+                                widget.machine.machineName = result['machineName'];
+                                widget.machine.modelNumber = result['modelNumber'];
+                                widget.machine.serialNumber = result['serialNumber'];
+                                widget.machine.machineType = result['machine_type'];
+                                widget.machine.totalPower = result['totalPower'];
+                                widget.machine.manualsLink = result['manualsLink'];
+                                widget.machine.notes = result['notes'];
+                                widget.machine.remarks = result['remarks'];
+
+                                if (result['processingDimensions'] != null) {
+                                  final dims = result['processingDimensions'] as Map<String, dynamic>;
+                                  widget.machine.processingDimensions?.maxHeight = dims['maxHeight'];
+                                  widget.machine.processingDimensions?.maxWidth = dims['maxWidth'];
+                                  widget.machine.processingDimensions?.minHeight = dims['minHeight'];
+                                  widget.machine.processingDimensions?.minWidth = dims['minWidth'];
+                                  widget.machine.processingDimensions?.thickness = dims['thickness'];
+                                  widget.machine.processingDimensions?.maxSpeed = dims['maxSpeed'];
+                                }
+
+                                _remarkController.text = result['remarks'] ?? '';
+                                _notesController.text = result['notes'] ?? '';
+                              });
+                            } else {
+                              AppLogger.warning("Machine ID mismatch or invalid response");
+                            }
+                          }
                         }
                       },
               style: ElevatedButton.styleFrom(
@@ -332,10 +349,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                       ? SizedBox(
                         width: 20,
                         height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-                        ),
+                        child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.white)),
                       )
                       : Text('remove'.lang, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
@@ -358,19 +372,9 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                label,
-                style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400),
-              ),
+              Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
               const SizedBox(height: 4),
-              Text(
-                value,
-                style: TextStyle(
-                  color: isWarning ? AppColors.redBack : AppColors.textPrimary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              Text(value, style: TextStyle(color: isWarning ? AppColors.redBack : AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
             ],
           ),
         ),
@@ -382,6 +386,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
     return {
       'machine_name': machine.machineName,
       'model_number': machine.modelNumber,
+      'serial_number': machine.serialNumber,
       'functionality': machine.machineType,
       'max_height': machine.processingDimensions?.maxHeight?.toString(),
       'max_width': machine.processingDimensions?.maxWidth?.toString(),
@@ -411,17 +416,11 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
     try {
       if (widget.machine.id == null || widget.machine.id!.isEmpty) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('invalid_machine_id'.lang),
-            backgroundColor: AppColors.redBack,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('invalid_machine_id'.lang), backgroundColor: AppColors.redBack, behavior: SnackBarBehavior.floating));
         return;
       }
-
-      // await Future.delayed(const Duration(milliseconds: 500));
 
       if (!mounted) return;
 
@@ -432,22 +431,26 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
       result.fold(
         (failure) {
           if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(failure.message),
-              backgroundColor: AppColors.redBack,
-              behavior: SnackBarBehavior.floating,
-            ),
+          Fluttertoast.showToast(
+            msg: failure.message,
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16,
           );
         },
         (success) {
           if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('machine_deactivated_successfully'.lang),
-              backgroundColor: AppColors.color41C293,
-              behavior: SnackBarBehavior.floating,
-            ),
+          Fluttertoast.showToast(
+            msg: 'machine_deactivated_successfully'.lang,
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 3,
+            backgroundColor: AppColors.success,
+            textColor: Colors.white,
+            fontSize: 16,
           );
 
           Get.back(result: true);
@@ -455,12 +458,15 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('unexpected_error_occurred'.lang),
-          backgroundColor: AppColors.redBack,
-          behavior: SnackBarBehavior.floating,
-        ),
+
+      Fluttertoast.showToast(
+        msg: 'unexpected_error_occurred'.lang,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 3,
+        backgroundColor: AppColors.success,
+        textColor: Colors.white,
+        fontSize: 16,
       );
     } finally {
       if (mounted) {
@@ -495,12 +501,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                     height: 32,
                     margin: const EdgeInsets.all(8),
                     decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.redBack),
-                    child: const Center(
-                      child: Text(
-                        '!',
-                        style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                    child: const Center(child: Text('!', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold))),
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -528,10 +529,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
                           padding: EdgeInsets.symmetric(vertical: 14),
                         ),
-                        child: Text(
-                          'cancel'.lang,
-                          style: TextStyle(color: AppColors.darkGray, fontSize: 16, fontWeight: FontWeight.w500),
-                        ),
+                        child: Text('cancel'.lang, style: TextStyle(color: AppColors.darkGray, fontSize: 16, fontWeight: FontWeight.w500)),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -541,7 +539,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                         onPressed:
                             _isDeleting
                                 ? null
-                                : () {
+                                : () async {
                                   Navigator.of(context).pop(true);
                                 },
                         style: ElevatedButton.styleFrom(
@@ -557,19 +555,9 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                                 ? SizedBox(
                                   width: 20,
                                   height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-                                  ),
+                                  child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.white)),
                                 )
-                                : Text(
-                                  'remove'.lang,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                : Text('remove'.lang, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ],
@@ -578,10 +566,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
 
                 Align(
                   alignment: Alignment.center,
-                  child: Text(
-                    'remove_machine_warning'.lang,
-                    style: TextStyle(color: AppColors.redBack, fontSize: 12, fontWeight: FontWeight.w400),
-                  ),
+                  child: Text('remove_machine_warning'.lang, style: TextStyle(color: AppColors.redBack, fontSize: 12, fontWeight: FontWeight.w400)),
                 ),
               ],
             ),

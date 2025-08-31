@@ -59,19 +59,13 @@ class CustomerEditDetailsView extends StatelessWidget {
                 Positioned(
                   bottom: -4,
                   right: -4,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(2),
-                    child: AppImages.getSvgFlag(customer.flag ?? "", width: 14, height: 14),
-                  ),
+                  child: ClipRRect(borderRadius: BorderRadius.circular(2), child: AppImages.getSvgFlag(customer.flag ?? "", width: 14, height: 14)),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 12),
-          Text(
-            customer.customerName ?? 'Unknown Customer',
-            style: TextStyle(color: AppColors.white, fontSize: 14, fontWeight: FontWeight.bold),
-          ),
+          Text(customer.customerName ?? 'Unknown Customer', style: TextStyle(color: AppColors.white, fontSize: 14, fontWeight: FontWeight.bold)),
         ],
       ),
       actions: [
@@ -140,11 +134,7 @@ class CustomerEditDetailsView extends StatelessWidget {
                 color: AppColors.white,
                 padding: const EdgeInsets.all(16),
                 child: Column(
-                  children: [
-                    _buildCustomerInfoSection(context, model),
-                    const SizedBox(height: 24),
-                    _buildMachineOwnershipSection(context, model),
-                  ],
+                  children: [_buildCustomerInfoSection(context, model), const SizedBox(height: 24), _buildMachineOwnershipSection(context, model)],
                 ),
               ),
               Padding(padding: const EdgeInsets.all(16), child: _buildSaveButton(context, model)),
@@ -212,10 +202,7 @@ class CustomerEditDetailsView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          LanguageService.get('phone_number'),
-          style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500),
-        ),
+        Text(LanguageService.get('phone_number'), style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         AbsorbPointer(
           absorbing: true,
@@ -236,22 +223,13 @@ class CustomerEditDetailsView extends StatelessWidget {
               hintStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
               filled: true,
               fillColor: AppColors.colorF8FBFE,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.lightGray),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.lightGray),
-              ),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.lightGray)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.lightGray)),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(color: AppColors.primary, width: 2),
               ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.error),
-              ),
+              errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.error)),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             ),
             validator: (phone) {
@@ -273,10 +251,7 @@ class CustomerEditDetailsView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          LanguageService.get('designation'),
-          style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500),
-        ),
+        Text(LanguageService.get('designation'), style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         FormField<String>(
           validator: (value) {
@@ -324,10 +299,7 @@ class CustomerEditDetailsView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          LanguageService.get('assign_machine'),
-          style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500),
-        ),
+        Text(LanguageService.get('assign_machine'), style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         FormField<String>(
           validator: (value) {
@@ -346,25 +318,16 @@ class CustomerEditDetailsView extends StatelessWidget {
                       model.isLoadingMachines
                           ? Container(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.lightGray),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
+                            decoration: BoxDecoration(border: Border.all(color: AppColors.lightGray), borderRadius: BorderRadius.circular(12)),
                             child: Row(
                               children: [
                                 const SizedBox(
                                   width: 16,
                                   height: 16,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                                  ),
+                                  child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary)),
                                 ),
                                 const SizedBox(width: 12),
-                                Text(
-                                  LanguageService.get('loading_machines'),
-                                  style: const TextStyle(color: AppColors.textSecondary),
-                                ),
+                                Text(LanguageService.get('loading_machines'), style: const TextStyle(color: AppColors.textSecondary)),
                               ],
                             ),
                           )
@@ -377,9 +340,7 @@ class CustomerEditDetailsView extends StatelessWidget {
                             },
                             initialItem: model.selectedMachine,
                             hintText:
-                                model.machineItems.isEmpty
-                                    ? LanguageService.get('no_machines_available')
-                                    : LanguageService.get('select_machine'),
+                                model.machineItems.isEmpty ? LanguageService.get('no_machines_available') : LanguageService.get('select_machine'),
                             decoration: CustomDropdownDecoration(
                               headerStyle: TextStyle(color: AppColors.textPrimary, fontSize: 14),
                               listItemStyle: TextStyle(color: AppColors.textPrimary, fontSize: 14),
@@ -511,18 +472,11 @@ class CustomerEditDetailsView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  label,
-                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400),
-                ),
+                Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
                 const SizedBox(height: 4),
                 Text(
                   value,
-                  style: TextStyle(
-                    color: isNotAvailable ? AppColors.redBack : AppColors.textPrimary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(color: isNotAvailable ? AppColors.redBack : AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500),
                 ),
               ],
             ),
@@ -532,13 +486,7 @@ class CustomerEditDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildClickableWarrantyStatusRow(
-    String iconPath,
-    String label,
-    String value,
-    Color iconColor,
-    VoidCallback onTap,
-  ) {
+  Widget _buildClickableWarrantyStatusRow(String iconPath, String label, String value, Color iconColor, VoidCallback onTap) {
     final bool isEmpty = value.isEmpty;
 
     return InkWell(
@@ -548,10 +496,7 @@ class CustomerEditDetailsView extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppColors.success.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(8),
-            ),
+            decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
             child: Image.asset(iconPath, width: 20, height: 20, color: AppColors.success),
           ),
           const SizedBox(width: 12),
@@ -559,19 +504,9 @@ class CustomerEditDetailsView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  label,
-                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400),
-                ),
+                Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
                 const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: TextStyle(
-                    color: isEmpty ? AppColors.redBack : iconColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                Text(value, style: TextStyle(color: isEmpty ? AppColors.redBack : iconColor, fontSize: 14, fontWeight: FontWeight.w500)),
               ],
             ),
           ),
@@ -597,19 +532,9 @@ class CustomerEditDetailsView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  label,
-                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400),
-                ),
+                Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
                 const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: TextStyle(
-                    color: isEmpty ? AppColors.redBack : AppColors.textPrimary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                Text(value, style: TextStyle(color: isEmpty ? AppColors.redBack : AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
               ],
             ),
           ),
@@ -631,19 +556,9 @@ class CustomerEditDetailsView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                label,
-                style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400),
-              ),
+              Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
               const SizedBox(height: 4),
-              Text(
-                value,
-                style: TextStyle(
-                  color: isWarning ? AppColors.redBack : AppColors.textPrimary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              Text(value, style: TextStyle(color: isWarning ? AppColors.redBack : AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
             ],
           ),
         ),
@@ -698,10 +613,7 @@ class CustomerEditDetailsView extends StatelessWidget {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   elevation: 0,
                 ),
-                child: Text(
-                  LanguageService.get('save'),
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
+                child: Text(LanguageService.get('save'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
               ),
             ),
             const SizedBox(width: 8),
@@ -728,10 +640,7 @@ class CustomerEditDetailsView extends StatelessWidget {
                 ? const SizedBox(
                   height: 20,
                   width: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-                  ),
+                  child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.white)),
                 )
                 : Text(LanguageService.get('save'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
       ),
