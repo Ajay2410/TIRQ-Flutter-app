@@ -38,33 +38,42 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: SafeArea(
-        child: Column(
+    return AbsorbPointer(
+      absorbing: _isDeleting,
+      child: Scaffold(
+        key: _scaffoldKey,
+        body: Stack(
           children: [
-            _buildAppBar(context),
-            Expanded(
-              child: Container(
-                color: AppColors.white,
-                child: Column(
-                  children: [
-                    Padding(padding: const EdgeInsets.all(12), child: _buildCustomerContactCard()),
-                    Expanded(
-                      child: Container(
-                        color: AppColors.scaffoldBackground,
-                        padding: const EdgeInsets.all(12),
-                        child: SingleChildScrollView(child: _buildMachineList(context)),
+            SafeArea(
+              child: Column(
+                children: [
+                  _buildAppBar(context),
+                  Expanded(
+                    child: Container(
+                      color: AppColors.white,
+                      child: Column(
+                        children: [
+                          Padding(padding: const EdgeInsets.all(12), child: _buildCustomerContactCard()),
+                          Expanded(
+                            child: Container(
+                              color: AppColors.scaffoldBackground,
+                              padding: const EdgeInsets.all(12),
+                              child: SingleChildScrollView(child: _buildMachineList(context)),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
+            if (_isDeleting)
+              Positioned.fill(child: Center(child: CircularProgressIndicator(color: AppColors.white, strokeWidth: 2))),
           ],
         ),
+        floatingActionButton: _buildFloatingActionButton(context),
       ),
-      floatingActionButton: _buildFloatingActionButton(context),
     );
   }
 
@@ -381,7 +390,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
   void _showDeleteConfirmation(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext context1) {
         return Dialog(
           insetPadding: EdgeInsets.all(10),
           backgroundColor: AppColors.white,
@@ -441,7 +450,13 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
 
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: _isDeleting ? null : () => _handleDeleteCustomer(context),
+                        onPressed:
+                            _isDeleting
+                                ? null
+                                : () {
+                                  Navigator.of(context1).pop();
+                                  _handleDeleteCustomer(context);
+                                },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.redBack,
                           foregroundColor: Colors.white,
@@ -497,13 +512,9 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     });
 
     try {
-      final navigator = Navigator.of(context);
-
-      navigator.pop();
-      await Future.delayed(const Duration(milliseconds: 500));
-      navigator.pop(true);
+      await Future.delayed(const Duration(seconds: 3));
       // TODO: Implement customer deletion
-      navigator.pop(true);
+      Get.back(result: true);
     } catch (e) {
       Fluttertoast.showToast(
         msg: 'An error occurred: ${e.toString()}',
