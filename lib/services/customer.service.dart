@@ -69,6 +69,45 @@ class CustomerService {
     }
   }
 
+  /// Get a customer by ID
+  ResultFuture<Customer> getCustomerById(String customerId) async {
+    try {
+      AppLogger.info("Fetching customer by ID: $customerId");
+
+      final response = await _apiService.get(
+        url: '${ApiEndpoints.getCustomerById}/$customerId',
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if (data != null) {
+          // The API returns customer data directly, not wrapped in 'data' field
+          final customer = Customer.fromJson(data);
+          AppLogger.info("Customer fetched successfully: ${customer.id}");
+          return Right(customer);
+        } else {
+          AppLogger.error("Invalid response format: $data");
+          return Left(Failure('Invalid response format'));
+        }
+      } else {
+        final errorMessage =
+            response.data?['message'] ?? 'Failed to fetch customer';
+        AppLogger.error(
+          "API error: $errorMessage (Status: ${response.statusCode})",
+        );
+        return Left(Failure(errorMessage));
+      }
+    } on DioException catch (e) {
+      final errorMessage =
+          e.response?.data?['message'] ?? 'Network error occurred';
+      AppLogger.error("DioException while fetching customer: $errorMessage");
+      return Left(Failure(errorMessage));
+    } catch (e) {
+      AppLogger.error("Exception while fetching customer: $e");
+      return Left(Failure('Unexpected error occurred: $e'));
+    }
+  }
+
   /// Get all customers
   ResultFuture<List<Customer>> getCustomers() async {
     try {
@@ -242,6 +281,52 @@ class CustomerService {
       return Left(Failure(errorMessage));
     } catch (e) {
       AppLogger.error("Exception while updating customer: $e");
+      return Left(Failure('Unexpected error occurred: $e'));
+    }
+  }
+
+  /// Remove a machine from a customer
+  ResultFuture<Customer> removeMachine({
+    required String customerId,
+    required String machineId,
+  }) async {
+    try {
+      AppLogger.info("Removing machine $machineId from customer: $customerId");
+
+      final response = await _apiService.post(
+        url: '${ApiEndpoints.removeMachine}/$customerId/$machineId',
+        data: {},
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        if (data != null && data['data'] != null) {
+          final customer = Customer.fromJson(data['data']);
+          AppLogger.info(
+            "Machine removed successfully from customer: ${customer.id}",
+          );
+          return Right(customer);
+        } else {
+          AppLogger.error("Invalid response format: $data");
+          return Left(Failure('Invalid response format'));
+        }
+      } else {
+        final errorMessage =
+            response.data?['message'] ??
+            'Failed to remove machine from customer';
+        AppLogger.error(
+          "API error: $errorMessage (Status: ${response.statusCode})",
+        );
+        return Left(Failure(errorMessage));
+      }
+    } on DioException catch (e) {
+      final errorMessage =
+          e.response?.data?['message'] ?? 'Network error occurred';
+      AppLogger.error("DioException while removing machine: $errorMessage");
+      return Left(Failure(errorMessage));
+    } catch (e) {
+      AppLogger.error("Exception while removing machine: $e");
       return Left(Failure('Unexpected error occurred: $e'));
     }
   }

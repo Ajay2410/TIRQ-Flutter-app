@@ -237,6 +237,73 @@ class MachineService {
     return Left(Failure('Failed to update machine'));
   }
 
+  ResultFuture<Map<String, dynamic>> updateMachineRecord({
+    required String machineId,
+    required Map<String, dynamic> updateData,
+  }) async {
+    try {
+      AppLogger.info("Updating machine record: $machineId");
+      AppLogger.info("Update data: $updateData");
+
+      final response = await apiService.put(
+        url: '${ApiEndpoints.machine}/update/$machineId',
+        data: updateData,
+      );
+
+      AppLogger.info("Update response status: ${response.statusCode}");
+      AppLogger.info("Update response data: ${response.data}");
+      AppLogger.info("Update response data type: ${response.data.runtimeType}");
+
+      // Check if response is successful (200 or 201)
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Check if response has success field
+        if (response.data is Map<String, dynamic>) {
+          final data = response.data as Map<String, dynamic>;
+          AppLogger.info("Response data keys: ${data.keys.toList()}");
+          if (data['success'] == true ||
+              data['message']?.contains('successfully') == true) {
+            // Return the updated machine data
+            final machineData = data['data'] as Map<String, dynamic>?;
+            if (machineData != null) {
+              AppLogger.info(
+                "Machine updated successfully, returning updated data",
+              );
+              return Right(machineData);
+            } else {
+              AppLogger.warning("No machine data in response");
+              return Left(Failure('No machine data in response'));
+            }
+          } else {
+            final message = data['message'] ?? 'Update failed';
+            return Left(Failure(message));
+          }
+        } else if (response.data is String) {
+          // Handle case where response.data is a string (like HTML error page)
+          AppLogger.warning("Response data is string: ${response.data}");
+          return Left(Failure('Unexpected response format: ${response.data}'));
+        } else {
+          // If no success field, assume success for 200/201 status
+          AppLogger.info("No success field found, assuming success");
+          return Left(Failure('No machine data in response'));
+        }
+      } else {
+        final errorMessage =
+            response.data?['message'] ??
+            'Update failed with status ${response.statusCode}';
+        return Left(Failure(errorMessage));
+      }
+    } catch (e) {
+      if (e is DioException) {
+        final errorMessage =
+            e.response?.data?['message'] ?? 'Network error occurred';
+        AppLogger.error("DioException while updating machine: $errorMessage");
+        return Left(Failure(errorMessage));
+      }
+      AppLogger.error("Exception while updating machine: $e");
+      return Left(Failure('Unexpected error occurred: $e'));
+    }
+  }
+
   ResultFuture<bool> deleteMachine(String machineId) async {
     try {
       final response = await apiService.delete(

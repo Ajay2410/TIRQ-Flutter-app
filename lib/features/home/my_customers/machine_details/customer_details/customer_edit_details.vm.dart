@@ -130,11 +130,9 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
         _fullPhoneNumber = customer.phoneNumber!;
       }
 
-      // Set the phone controller with the parsed phone number
       phoneController.text = _fullPhoneNumber;
     }
 
-    // Set initial country code from API response
     if (customer.countryOrigin != null && customer.countryOrigin!.isNotEmpty) {
       _initialCountryCode = customer.countryOrigin!;
     }
@@ -150,7 +148,6 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
-  // Date picker methods
   Future<void> selectPurchaseDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -208,12 +205,8 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
       context: context,
       initialDate:
           _warrantyEndDate ?? _warrantyStartDate!.add(const Duration(days: 1)),
-      firstDate: _warrantyStartDate!.add(
-        const Duration(days: 1),
-      ), // Must be after warranty start date
-      lastDate: DateTime.now().add(
-        const Duration(days: 365 * 10),
-      ), // 10 years from now
+      firstDate: _warrantyStartDate!.add(const Duration(days: 1)),
+      lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
     );
     if (picked != null) {
       _warrantyEndDate = picked;
@@ -221,7 +214,6 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
     }
   }
 
-  // Warranty status toggle
   void toggleWarrantyStatus() {
     if (_warrantyStatus.isEmpty || _warrantyStatus == 'Active') {
       _warrantyStatus = 'Out of warranty';
@@ -231,7 +223,6 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
-  // Update invoice contract number
   void updateInvoiceContractNo(String value) {
     _invoiceContractNo = value;
     notifyListeners();
@@ -258,16 +249,12 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
       AppLogger.info("Form is valid! Updating customer...");
 
       try {
-        // Show loading indicator
         setBusy(true);
 
-        // Build the machines data
         final machines = _buildMachinesData();
 
-        // Prepare phone number with country code
         final fullPhoneNumber = '+$_countryCode$_fullPhoneNumber';
 
-        // Call the update customer API
         final result = await _customerService.updateCustomer(
           customerId: customer.id!,
           phoneNumber: fullPhoneNumber,
@@ -280,7 +267,6 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
 
         result.fold(
           (failure) {
-            // Handle failure
             Fluttertoast.showToast(
               msg: failure.message,
               backgroundColor: Colors.red,
@@ -290,7 +276,6 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
             AppLogger.error("Failed to update customer: ${failure.message}");
           },
           (updatedCustomer) {
-            // Handle success
             Fluttertoast.showToast(
               msg: "Customer updated successfully!",
               backgroundColor: Colors.green,
@@ -301,7 +286,6 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
               "Customer updated successfully: ${updatedCustomer.id}",
             );
 
-            // Navigate back or refresh the page
             Navigator.of(context).pop(updatedCustomer);
           },
         );
@@ -321,11 +305,9 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
     }
   }
 
-  /// Build machines data for the API request
   List<Map<String, dynamic>> _buildMachinesData() {
     final machines = <Map<String, dynamic>>[];
 
-    // First, add all existing machines from the customer
     if (customer.machines != null) {
       for (final existingMachine in customer.machines!) {
         machines.add({
@@ -350,13 +332,11 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
       }
     }
 
-    // Then, add the newly selected machine if it's not already in the list
     if (_selectedMachine != null && _selectedMachine!.isNotEmpty) {
       final machine = _machineStorageService.findMachineByName(
         _selectedMachine!,
       );
       if (machine != null) {
-        // Check if this machine is already assigned to avoid duplicates
         final isAlreadyAssigned =
             customer.machines?.any(
               (existingMachine) => existingMachine.machine?.id == machine.id,
@@ -366,10 +346,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
         if (!isAlreadyAssigned) {
           machines.add({
             'machine': machine.id,
-            'purchaseDate':
-                _purchaseDate!.toIso8601String().split(
-                  'T',
-                )[0], // YYYY-MM-DD format
+            'purchaseDate': _purchaseDate!.toIso8601String().split('T')[0],
             'installationDate':
                 _installationDate!.toIso8601String().split('T')[0],
             'warrantyStart':
@@ -386,7 +363,6 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
   }
 
   bool _validateMachineOwnership() {
-    // Check if all required machine ownership fields are filled
     if (_purchaseDate == null) {
       Fluttertoast.showToast(
         msg: LanguageService.get('purchase_date_required'),

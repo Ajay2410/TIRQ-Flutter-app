@@ -21,12 +21,18 @@ class MyCustomersViewModel extends BaseViewModel {
   String _errorMessage = '';
 
   List<Customer> get customers => _customers;
+
   List<Customer> get filteredCustomers => _filteredCustomers;
+
   String get searchQuery => _searchQuery;
+
   String get statusFilter => _statusFilter;
+
   bool get isLoading => _isLoading;
+
   @override
   bool get hasError => _hasError;
+
   String get errorMessage => _errorMessage;
 
   void init() {
@@ -128,9 +134,7 @@ class MyCustomersViewModel extends BaseViewModel {
     );
   }
 
-  void onScanFromCamera() {
-    // TODO: Implement QR scan functionality
-  }
+  void onScanFromCamera() {}
 
   void onSearchByPhone(BuildContext context) {
     Navigator.of(context).push(
@@ -138,9 +142,11 @@ class MyCustomersViewModel extends BaseViewModel {
     );
   }
 
-  void onCustomerTap(BuildContext context, Customer customer) {
-    Navigator.of(
+  void onCustomerTap(BuildContext context, Customer customer) async {
+    await Navigator.of(
       context,
     ).pushNamed(Routes.customerDetails, arguments: customer);
+
+    await _loadCustomers();
   }
 }

@@ -9,7 +9,6 @@ import 'package:manager/services/machine.service.dart';
 import 'package:manager/core/locator.dart';
 import 'package:manager/core/utils/app_logger.dart';
 import 'package:manager/widgets/common_text_field.dart';
-import 'dart:math';
 
 class AddNewMachineModelView extends StatefulWidget {
   final Map<String, dynamic>? machine;
@@ -27,8 +26,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
 
   final TextEditingController _machineNameController = TextEditingController();
   final TextEditingController _modelNumberController = TextEditingController();
-  final TextEditingController _functionalityController =
-      TextEditingController();
+  final TextEditingController _functionalityController = TextEditingController();
   final TextEditingController _maxHeightController = TextEditingController();
   final TextEditingController _maxWidthController = TextEditingController();
   final TextEditingController _minHeightController = TextEditingController();
@@ -36,17 +34,14 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
   final TextEditingController _thicknessController = TextEditingController();
   final TextEditingController _maxSpeedController = TextEditingController();
   final TextEditingController _totalPowerController = TextEditingController();
-  final TextEditingController _operatingManualsController =
-      TextEditingController();
+  final TextEditingController _operatingManualsController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
+  final TextEditingController _remarksController = TextEditingController();
+  final TextEditingController _serialNumberController = TextEditingController();
 
   String? _selectedFunctionality;
 
-  final List<String> _functionalityOptions = [
-    'fully_automatic'.lang,
-    'semi_automatic'.lang,
-    'manual'.lang,
-  ];
+  final List<String> _functionalityOptions = ['Fully Automatic', 'Semi Automatic', 'Manual'];
 
   @override
   void initState() {
@@ -60,6 +55,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
     final machine = widget.machine!;
     _machineNameController.text = machine['machine_name'] ?? '';
     _modelNumberController.text = machine['model_number'] ?? '';
+    _serialNumberController.text = machine['serial_number'] ?? '';
     _selectedFunctionality = machine['functionality'] ?? '';
     _functionalityController.text = machine['functionality'] ?? '';
     _maxHeightController.text = machine['max_height'] ?? '';
@@ -71,18 +67,14 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
     _totalPowerController.text = machine['total_power'] ?? '';
     _operatingManualsController.text = machine['operating_manuals'] ?? '';
     _notesController.text = machine['notes'] ?? '';
-  }
-
-  String _generateRandomSerialNumber() {
-    final random = Random();
-    final number = random.nextInt(99999) + 10000;
-    return 'SN-$number';
+    _remarksController.text = machine['remarks'] ?? '';
   }
 
   @override
   void dispose() {
     _machineNameController.dispose();
     _modelNumberController.dispose();
+    _serialNumberController.dispose();
     _functionalityController.dispose();
     _maxHeightController.dispose();
     _maxWidthController.dispose();
@@ -93,6 +85,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
     _totalPowerController.dispose();
     _operatingManualsController.dispose();
     _notesController.dispose();
+    _remarksController.dispose();
     super.dispose();
   }
 
@@ -128,14 +121,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
           Container(
             decoration: BoxDecoration(
               color: AppColors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.black.withValues(alpha: 0.05),
-                  offset: const Offset(0, -5),
-                  blurRadius: 10,
-                  spreadRadius: 0,
-                ),
-              ],
+              boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), offset: const Offset(0, -5), blurRadius: 10, spreadRadius: 0)],
             ),
             padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
             child: _buildSaveButton(),
@@ -148,25 +134,11 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
   Widget _buildAppBar(BuildContext context) {
     return AppBar(
       elevation: 0,
-      leading: IconButton(
-        icon: Image.asset(
-          AppImages.back,
-          width: 24,
-          height: 24,
-          color: AppColors.white,
-        ),
-        onPressed: () => Get.back(),
-      ),
+      leading: IconButton(icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white), onPressed: () => Get.back()),
       titleSpacing: 0,
       title: Text(
-        widget.machine != null
-            ? 'edit_machine_model'.lang
-            : 'add_new_machine_model'.lang,
-        style: const TextStyle(
-          color: AppColors.white,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
+        widget.machine != null ? 'edit_machine_model'.lang : 'add_new_machine_model'.lang,
+        style: const TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -199,6 +171,18 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
           },
         ),
         const SizedBox(height: 16),
+        CommonTextField(
+          controller: _serialNumberController,
+          label: 'serial_number'.lang,
+          placeholder: 'SN-12345',
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return '${'serial_number'.lang} ${'required'.lang}';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 16),
         _buildDropdownField(),
       ],
     );
@@ -208,19 +192,11 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'functionality'.lang,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text('functionality'.lang, style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         FormField<String>(
           validator: (value) {
-            if (_selectedFunctionality == null ||
-                _selectedFunctionality!.isEmpty) {
+            if (_selectedFunctionality == null || _selectedFunctionality!.isEmpty) {
               return '${'functionality'.lang} ${'required'.lang}';
             }
             return null;
@@ -242,45 +218,21 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
                       field.validate();
                     }
                   },
-                  controller: TextEditingController(
-                    text: _selectedFunctionality,
-                  ),
+                  controller: TextEditingController(text: _selectedFunctionality),
                   hintText: 'select_functionality'.lang,
-                  hintStyle: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 14,
-                  ),
-                  selectedStyle: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 14,
-                  ),
-                  listItemStyle: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 14,
-                  ),
+                  hintStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                  selectedStyle: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
+                  listItemStyle: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
                   borderRadius: BorderRadius.circular(12),
                   fillColor: AppColors.white,
-                  borderSide: BorderSide(
-                    color:
-                        field.hasError ? AppColors.error : AppColors.lightGray,
-                    width: field.hasError ? 2.0 : 1.0,
-                  ),
+                  borderSide: BorderSide(color: field.hasError ? AppColors.error : AppColors.lightGray, width: field.hasError ? 2.0 : 1.0),
                   errorBorderSide: BorderSide(color: AppColors.error, width: 1),
-                  fieldSuffixIcon: const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: AppColors.textSecondary,
-                  ),
+                  fieldSuffixIcon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
                 ),
                 if (field.hasError)
                   Padding(
                     padding: const EdgeInsets.only(left: 16),
-                    child: Text(
-                      field.errorText!,
-                      style: const TextStyle(
-                        color: AppColors.error,
-                        fontSize: 12,
-                      ),
-                    ),
+                    child: Text(field.errorText!, style: const TextStyle(color: AppColors.error, fontSize: 12)),
                   ),
               ],
             );
@@ -294,23 +246,9 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'processing_dimensions'.lang,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        Text('processing_dimensions'.lang, style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 16),
-        Text(
-          'maximum_processing_size'.lang,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text('maximum_processing_size'.lang, style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -332,12 +270,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
                 },
                 suffixIcon: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Image.asset(
-                    AppImages.height,
-                    width: 20,
-                    height: 20,
-                    color: AppColors.textGray,
-                  ),
+                  child: Image.asset(AppImages.height, width: 20, height: 20, color: AppColors.textGray),
                 ),
               ),
             ),
@@ -359,26 +292,14 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
                 },
                 suffixIcon: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Image.asset(
-                    AppImages.width,
-                    width: 20,
-                    height: 20,
-                    color: AppColors.textGray,
-                  ),
+                  child: Image.asset(AppImages.width, width: 20, height: 20, color: AppColors.textGray),
                 ),
               ),
             ),
           ],
         ),
         const SizedBox(height: 16),
-        Text(
-          'minimum_processing_size'.lang,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text('minimum_processing_size'.lang, style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -400,12 +321,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
                 },
                 suffixIcon: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Image.asset(
-                    AppImages.height,
-                    width: 20,
-                    height: 20,
-                    color: AppColors.textGray,
-                  ),
+                  child: Image.asset(AppImages.height, width: 20, height: 20, color: AppColors.textGray),
                 ),
               ),
             ),
@@ -427,12 +343,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
                 },
                 suffixIcon: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Image.asset(
-                    AppImages.width,
-                    width: 20,
-                    height: 20,
-                    color: AppColors.textGray,
-                  ),
+                  child: Image.asset(AppImages.width, width: 20, height: 20, color: AppColors.textGray),
                 ),
               ),
             ),
@@ -487,12 +398,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
       },
       prefixIcon: Padding(
         padding: const EdgeInsets.all(16),
-        child: Image.asset(
-          AppImages.powerConsumption,
-          width: 20,
-          height: 20,
-          color: AppColors.textGray,
-        ),
+        child: Image.asset(AppImages.powerConsumption, width: 20, height: 20, color: AppColors.textGray),
       ),
     );
   }
@@ -508,6 +414,19 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return '${'operating_manuals'.lang} ${'required'.lang}';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 16),
+        CommonTextField(
+          controller: _remarksController,
+          label: 'remark'.lang,
+          placeholder: 'enter_remark_here'.lang,
+          maxLines: 1,
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return '${'remark'.lang} ${'required'.lang}';
             }
             return null;
           },
@@ -544,9 +463,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(45),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
           elevation: 0,
         ),
         child:
@@ -554,17 +471,11 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
                 ? const SizedBox(
                   width: 20,
                   height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  ),
+                  child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
                 )
                 : Text(
-                  'save_machine_to_record'.lang,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  widget.machine != null ? 'update_machine'.lang : 'save_machine_to_record'.lang,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
       ),
     );
@@ -578,7 +489,23 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
         _isLoading = true;
       });
 
-      final serialNumber = _generateRandomSerialNumber();
+      final isEditMode = widget.machine != null;
+      final machineId = widget.machine?['id'];
+
+      if (isEditMode && machineId == null) {
+        if (mounted) {
+          Fluttertoast.showToast(
+            msg: 'Invalid machine ID for update',
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16,
+          );
+        }
+        return;
+      }
 
       final processingDimensions = {
         'maxHeight': int.tryParse(_maxHeightController.text) ?? 0,
@@ -589,59 +516,110 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
         'maxSpeed': int.tryParse(_maxSpeedController.text) ?? 0,
       };
 
-      final result = await _machineService.createMachineNew(
-        machineName: _machineNameController.text.trim(),
-        modelNumber: _modelNumberController.text.trim(),
-        serialNumber: serialNumber,
-        machineType: _selectedFunctionality ?? 'Fully Automatic',
-        processingDimensions: processingDimensions,
-        totalPower: int.tryParse(_totalPowerController.text) ?? 0,
-        manualsLink: _operatingManualsController.text.trim(),
-        notes: _notesController.text.trim(),
-        status: 'Available',
-        remarks: 'Test',
-      );
+      AppLogger.info("Processing dimensions: $processingDimensions");
+      AppLogger.info("Total power: ${int.tryParse(_totalPowerController.text) ?? 0}");
 
-      result.fold(
-        (failure) {
-          if (mounted) {
-            Fluttertoast.showToast(
-              msg: failure.message,
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 3,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16,
-            );
-          }
-          AppLogger.error("Failed to create machine: ${failure.message}");
-        },
-        (machine) {
-          final isEditMode = widget.machine != null;
-          final message =
-              isEditMode
-                  ? 'Machine updated successfully!'
-                  : 'Machine created successfully!';
+      if (isEditMode) {
+        final updateData = {
+          'machineName': _machineNameController.text.trim(),
+          'modelNumber': _modelNumberController.text.trim(),
+          'serialNumber': _serialNumberController.text.trim(),
+          'machine_type': _selectedFunctionality ?? 'Fully Automatic',
+          'processingDimensions': processingDimensions,
+          'totalPower': int.tryParse(_totalPowerController.text) ?? 0,
+          'manualsLink': _operatingManualsController.text.trim(),
+          'notes': _notesController.text.trim(),
+          'status': 'Available',
+          'remarks': _remarksController.text.trim(),
+        };
 
-          if (mounted) {
-            Fluttertoast.showToast(
-              msg: message,
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 3,
-              backgroundColor: AppColors.success,
-              textColor: Colors.white,
-              fontSize: 16,
-            );
-          }
+        AppLogger.info("Update data being sent: $updateData");
 
-          AppLogger.info("Machine created successfully: ${machine.id}");
-          Get.back(result: machine);
-        },
-      );
+        final result = await _machineService.updateMachineRecord(machineId: machineId!, updateData: updateData);
+
+        result.fold(
+          (failure) {
+            if (mounted) {
+              Fluttertoast.showToast(
+                msg: failure.message,
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 3,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16,
+              );
+            }
+            AppLogger.error("Failed to update machine: ${failure.message}");
+          },
+          (updatedMachineData) {
+            if (mounted) {
+              Fluttertoast.showToast(
+                msg: 'Machine updated successfully!',
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 3,
+                backgroundColor: AppColors.success,
+                textColor: Colors.white,
+                fontSize: 16,
+              );
+            }
+
+            AppLogger.info("Machine updated successfully: $machineId");
+            AppLogger.info("Updated machine data: $updatedMachineData");
+
+            Get.back(result: updatedMachineData);
+          },
+        );
+      } else {
+        final result = await _machineService.createMachineNew(
+          machineName: _machineNameController.text.trim(),
+          modelNumber: _modelNumberController.text.trim(),
+          serialNumber: _serialNumberController.text.trim(),
+          machineType: _selectedFunctionality ?? 'Fully Automatic',
+          processingDimensions: processingDimensions,
+          totalPower: int.tryParse(_totalPowerController.text) ?? 0,
+          manualsLink: _operatingManualsController.text.trim(),
+          notes: _notesController.text.trim(),
+          remarks: _remarksController.text.trim(),
+          status: 'Available',
+        );
+
+        result.fold(
+          (failure) {
+            if (mounted) {
+              Fluttertoast.showToast(
+                msg: failure.message,
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 3,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16,
+              );
+            }
+            AppLogger.error("Failed to create machine: ${failure.message}");
+          },
+          (machine) {
+            if (mounted) {
+              Fluttertoast.showToast(
+                msg: 'Machine created successfully!',
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 3,
+                backgroundColor: AppColors.success,
+                textColor: Colors.white,
+                fontSize: 16,
+              );
+            }
+
+            AppLogger.info("Machine created successfully: ${machine.id}");
+            Get.back(result: machine);
+          },
+        );
+      }
     } catch (e) {
-      AppLogger.error("Exception while creating machine: $e");
+      AppLogger.error("Exception while saving machine: $e");
       if (mounted) {
         Fluttertoast.showToast(
           msg: 'An unexpected error occurred',

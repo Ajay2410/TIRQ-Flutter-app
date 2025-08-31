@@ -379,11 +379,15 @@ class _MachineRecordsViewState extends State<MachineRecordsView>
           ),
           const SizedBox(width: 8),
           GestureDetector(
-            onTap: () {
-              _navigationService.navigateTo(
+            onTap: () async {
+              final result = await _navigationService.navigateTo(
                 Routes.machineDetails,
                 arguments: machine,
               );
+
+              if (result == true) {
+                await _refreshMachines();
+              }
             },
             child: Container(
               padding: const EdgeInsets.all(6),

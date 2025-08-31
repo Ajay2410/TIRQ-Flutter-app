@@ -4,8 +4,11 @@ import 'package:manager/core/models/customer.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/services/language.service.dart';
+import 'package:manager/services/customer.service.dart';
+import 'package:manager/core/locator.dart';
 import 'package:manager/features/home/my_customers/machine_details/machine_details.view.dart';
 import 'package:manager/features/home/my_customers/machine_details/customer_details/customer_edit_details.view.dart';
+import 'package:manager/features/home/my_customers/create_customer/create_new_customer.view.dart';
 
 class CustomerDetailsView extends StatefulWidget {
   final Customer customer;
@@ -21,6 +24,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
   late Customer _currentCustomer;
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
+  final CustomerService _customerService = locator<CustomerService>();
 
   @override
   void initState() {
@@ -32,6 +36,32 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     setState(() {
       _currentCustomer = updatedCustomer;
     });
+  }
+
+  void _navigateToEditCustomer() async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder:
+            (context) => CreateNewCustomerView(
+              isEditMode: true,
+              customerId: _currentCustomer.id,
+            ),
+      ),
+    );
+
+    if (result != null && result is Customer) {
+      _refreshCustomerData(result);
+
+      if (mounted) {
+        _scaffoldKey.currentState?.showSnackBar(
+          SnackBar(
+            content: Text('Customer updated successfully'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -147,12 +177,28 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
           menuPadding: EdgeInsets.zero,
           offset: const Offset(-10, 30),
           onSelected: (String value) {
-            if (value == 'delete') {
+            if (value == 'edit') {
+              _navigateToEditCustomer();
+            } else if (value == 'delete') {
               _showDeleteConfirmation(context);
             }
           },
           itemBuilder:
               (BuildContext context) => [
+                PopupMenuItem<String>(
+                  value: 'edit',
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Text(
+                      'edit'.lang,
+                      style: const TextStyle(
+                        color: AppColors.primary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
                 PopupMenuItem<String>(
                   value: 'delete',
                   child: Container(
@@ -389,8 +435,8 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
               ),
               const SizedBox(width: 8),
               GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
+                onTap: () async {
+                  final result = await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder:
                           (context) => MachineDetailsView(
@@ -399,6 +445,10 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                           ),
                     ),
                   );
+
+                  if (result != null && result is Customer) {
+                    _refreshCustomerData(result);
+                  }
                 },
                 child: Container(
                   padding: const EdgeInsets.all(6),
@@ -662,16 +712,53 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     });
 
     try {
-      final navigator = Navigator.of(context);
+      if (_currentCustomer.id == null || _currentCustomer.id!.isEmpty) {
+        Fluttertoast.showToast(
+          msg: 'invalid_machine_id'.lang,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: AppColors.redBack,
+          textColor: AppColors.white,
+          fontSize: 16,
+        );
+        return;
+      }
 
-      navigator.pop();
-      await Future.delayed(const Duration(milliseconds: 500));
-      navigator.pop(true);
-      // TODO: Implement customer deletion
-      navigator.pop(true);
+      final result = await _customerService.deleteCustomer(
+        _currentCustomer.id!,
+      );
+
+      result.fold(
+        (failure) {
+          Fluttertoast.showToast(
+            msg: failure.message,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: AppColors.redBack,
+            textColor: AppColors.white,
+            fontSize: 16,
+          );
+        },
+        (success) {
+          Fluttertoast.showToast(
+            msg: 'machine_removed_successfully'.lang,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: AppColors.success,
+            textColor: AppColors.white,
+            fontSize: 16,
+          );
+          Navigator.of(context).pop();
+
+          Navigator.of(context).pop(true);
+        },
+      );
     } catch (e) {
       Fluttertoast.showToast(
-        msg: 'An error occurred: ${e.toString()}',
+        msg: 'unexpected_error_occurred'.lang,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
