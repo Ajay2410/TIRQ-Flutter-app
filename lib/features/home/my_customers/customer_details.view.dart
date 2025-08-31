@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:manager/core/models/customer.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
@@ -19,8 +20,7 @@ class CustomerDetailsView extends StatefulWidget {
 class _CustomerDetailsViewState extends State<CustomerDetailsView> {
   bool _isDeleting = false;
   late Customer _currentCustomer;
-  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
-      GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -36,38 +36,44 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: SafeArea(
-        child: Column(
+    return AbsorbPointer(
+      absorbing: _isDeleting,
+      child: Scaffold(
+        key: _scaffoldKey,
+        body: Stack(
           children: [
-            _buildAppBar(context),
-            Expanded(
-              child: Container(
-                color: AppColors.white,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: _buildCustomerContactCard(),
-                    ),
-                    Expanded(
-                      child: Container(
-                        color: AppColors.scaffoldBackground,
-                        padding: const EdgeInsets.all(12),
-                        child: SingleChildScrollView(
-                          child: _buildMachineList(context),
-                        ),
+            SafeArea(
+              child: Column(
+                children: [
+                  _buildAppBar(context),
+                  Expanded(
+                    child: Container(
+                      color: AppColors.white,
+                      child: Column(
+                        children: [
+                          Padding(padding: const EdgeInsets.all(12), child: _buildCustomerContactCard()),
+                          Expanded(
+                            child: Container(
+                              color: AppColors.scaffoldBackground,
+                              padding: const EdgeInsets.all(12),
+                              child: SingleChildScrollView(child: _buildMachineList(context)),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
+            if (_isDeleting)
+              Positioned.fill(
+                child: Center(child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.primary)),
+              ),
           ],
         ),
+        floatingActionButton: _buildFloatingActionButton(context),
       ),
-      floatingActionButton: _buildFloatingActionButton(context),
     );
   }
 
@@ -75,12 +81,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     return AppBar(
       elevation: 0,
       leading: IconButton(
-        icon: Image.asset(
-          AppImages.back,
-          width: 24,
-          height: 24,
-          color: AppColors.white,
-        ),
+        icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
         onPressed: () => Navigator.of(context).pop(),
       ),
       titleSpacing: 0,
@@ -88,28 +89,15 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
         children: [
           Container(
             padding: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.colorF0F2FC,
-            ),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorF0F2FC),
             child: Container(
               height: 26,
               width: 26,
-              decoration: BoxDecoration(
-                color: AppColors.bluebackground,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: AppColors.bluebackground, shape: BoxShape.circle),
               child: Center(
                 child: Text(
-                  _currentCustomer.customerName
-                          ?.substring(0, 2)
-                          .toUpperCase() ??
-                      'NA',
-                  style: const TextStyle(
-                    color: AppColors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  _currentCustomer.customerName?.substring(0, 2).toUpperCase() ?? 'NA',
+                  style: const TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -121,21 +109,11 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
               children: [
                 Text(
                   _currentCustomer.customerName ?? 'Unknown Customer',
-                  style: const TextStyle(
-                    color: AppColors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(color: AppColors.white, fontSize: 14, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  _currentCustomer.designation?.isNotEmpty == true
-                      ? _currentCustomer.designation!
-                      : 'customer'.lang,
-                  style: const TextStyle(
-                    color: AppColors.white,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  _currentCustomer.designation?.isNotEmpty == true ? _currentCustomer.designation! : 'customer'.lang,
+                  style: const TextStyle(color: AppColors.white, fontSize: 11, fontWeight: FontWeight.w400),
                 ),
               ],
             ),
@@ -159,18 +137,12 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Text(
                       'delete'.lang,
-                      style: const TextStyle(
-                        color: AppColors.redBack,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: const TextStyle(color: AppColors.redBack, fontSize: 16, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ),
               ],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           color: AppColors.white,
           shadowColor: AppColors.black.withValues(alpha: 0.1),
           child: const Icon(Icons.more_vert, color: AppColors.white, size: 24),
@@ -187,11 +159,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
         color: AppColors.colorF0F2FC,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
+          BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2)),
         ],
       ),
       child: Row(
@@ -210,9 +178,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                 const SizedBox(height: 12),
                 _buildContactInfoRow(
                   'email'.lang,
-                  _currentCustomer.email?.isNotEmpty == true
-                      ? _currentCustomer.email!
-                      : 'not_available'.lang,
+                  _currentCustomer.email?.isNotEmpty == true ? _currentCustomer.email! : 'not_available'.lang,
                 ),
               ],
             ),
@@ -247,23 +213,9 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+        Text(label, style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
         const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text(value, style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
       ],
     );
   }
@@ -274,20 +226,11 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              AppImages.myCustomers,
-              width: 80,
-              height: 80,
-              color: AppColors.gray,
-            ),
+            Image.asset(AppImages.myCustomers, width: 80, height: 80, color: AppColors.gray),
             const SizedBox(height: 20),
             Text(
               'no_machines_assigned'.lang,
-              style: TextStyle(
-                fontSize: 18,
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(fontSize: 18, color: AppColors.textSecondary, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 10),
             Text(
@@ -301,10 +244,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     }
 
     return Column(
-      children:
-          _currentCustomer.machines!
-              .map((machineData) => _buildMachineCard(context, machineData))
-              .toList(),
+      children: _currentCustomer.machines!.map((machineData) => _buildMachineCard(context, machineData)).toList(),
     );
   }
 
@@ -316,10 +256,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     final modelNumber = machine.modelNumber ?? 'N/A';
     final machineType = machine.machineType ?? 'Unknown Type';
     final isInWarranty = machineData.warrantyStatus == 'Active';
-    final country =
-        _currentCustomer.countryOrigin?.isNotEmpty == true
-            ? _currentCustomer.countryOrigin!
-            : 'N/A';
+    final country = _currentCustomer.countryOrigin?.isNotEmpty == true ? _currentCustomer.countryOrigin! : 'N/A';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -328,11 +265,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
+          BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2)),
         ],
       ),
       child: Column(
@@ -340,32 +273,18 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 16,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.colorF0F2FC,
-                  borderRadius: BorderRadius.circular(16),
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                decoration: BoxDecoration(color: AppColors.colorF0F2FC, borderRadius: BorderRadius.circular(16)),
                 child: Text(
                   country,
-                  style: TextStyle(
-                    color: AppColors.colorBlue,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(color: AppColors.colorBlue, fontSize: 14, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   machineName,
-                  style: TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
 
@@ -392,11 +311,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder:
-                          (context) => MachineDetailsView(
-                            customer: _currentCustomer,
-                            machineElement: machineData,
-                          ),
+                      builder: (context) => MachineDetailsView(customer: _currentCustomer, machineElement: machineData),
                     ),
                   );
                 },
@@ -405,16 +320,9 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                   decoration: BoxDecoration(
                     color: AppColors.softGray,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: AppColors.textGray.withValues(alpha: 0.1),
-                    ),
+                    border: Border.all(color: AppColors.textGray.withValues(alpha: 0.1)),
                   ),
-                  child: Image.asset(
-                    AppImages.arrowRight,
-                    width: 16,
-                    height: 16,
-                    color: AppColors.darkGray,
-                  ),
+                  child: Image.asset(AppImages.arrowRight, width: 16, height: 16, color: AppColors.darkGray),
                 ),
               ),
             ],
@@ -424,13 +332,9 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(
-                child: _buildMachineInfoRow('model_number'.lang, modelNumber),
-              ),
+              Expanded(child: _buildMachineInfoRow('model_number'.lang, modelNumber)),
               const SizedBox(width: 24),
-              Expanded(
-                child: _buildMachineInfoRow('machine_type'.lang, machineType),
-              ),
+              Expanded(child: _buildMachineInfoRow('machine_type'.lang, machineType)),
             ],
           ),
         ],
@@ -442,23 +346,9 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+        Text(label, style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
         const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text(value, style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
       ],
     );
   }
@@ -466,13 +356,9 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
   Widget _buildFloatingActionButton(BuildContext context) {
     return FloatingActionButton.extended(
       onPressed: () async {
-        final result = await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder:
-                (context) =>
-                    CustomerEditDetailsView(customer: _currentCustomer),
-          ),
-        );
+        final result = await Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (context) => CustomerEditDetailsView(customer: _currentCustomer)));
 
         if (result != null && result is Customer) {
           _refreshCustomerData(result);
@@ -494,11 +380,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
       icon: const Icon(Icons.add, size: 20),
       label: Text(
         'assign_new_machine'.lang,
-        style: TextStyle(
-          color: AppColors.white,
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        ),
+        style: TextStyle(color: AppColors.white, fontSize: 14, fontWeight: FontWeight.w500),
       ),
     );
   }
@@ -506,13 +388,11 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
   void _showDeleteConfirmation(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext context1) {
         return Dialog(
           insetPadding: EdgeInsets.all(10),
           backgroundColor: AppColors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(22),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
           elevation: 8,
           child: Container(
             padding: const EdgeInsets.all(24),
@@ -521,26 +401,16 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
               children: [
                 Container(
                   padding: EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.redBack.withValues(alpha: 0.1),
-                  ),
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.redBack.withValues(alpha: 0.1)),
                   child: Container(
                     width: 32,
                     height: 32,
                     margin: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.redBack,
-                    ),
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.redBack),
                     child: const Center(
                       child: Text(
                         '!',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -550,12 +420,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                 Text(
                   'are_you_sure_remove_customer'.lang,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    height: 1.3,
-                  ),
+                  style: const TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500, height: 1.3),
                 ),
                 const SizedBox(height: 20),
 
@@ -563,31 +428,19 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed:
-                            _isDeleting
-                                ? null
-                                : () => Navigator.of(context).pop(),
+                        onPressed: _isDeleting ? null : () => Navigator.of(context).pop(),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.white,
                           foregroundColor: AppColors.darkGray,
                           elevation: 0,
                           shadowColor: Colors.transparent,
-                          side: BorderSide(
-                            color: AppColors.darkGray,
-                            width: 1.5,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(45),
-                          ),
+                          side: BorderSide(color: AppColors.darkGray, width: 1.5),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
                           padding: EdgeInsets.symmetric(vertical: 14),
                         ),
                         child: Text(
                           'cancel'.lang,
-                          style: TextStyle(
-                            color: AppColors.darkGray,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: TextStyle(color: AppColors.darkGray, fontSize: 16, fontWeight: FontWeight.w500),
                         ),
                       ),
                     ),
@@ -598,15 +451,16 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                         onPressed:
                             _isDeleting
                                 ? null
-                                : () => _handleDeleteCustomer(context),
+                                : () {
+                                  Navigator.of(context1).pop();
+                                  _handleDeleteCustomer(context1);
+                                },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.redBack,
                           foregroundColor: Colors.white,
                           elevation: 0,
                           shadowColor: Colors.transparent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(45),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
                           padding: EdgeInsets.symmetric(vertical: 14),
                         ),
                         child:
@@ -616,9 +470,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                                   height: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
-                                    ),
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                   ),
                                 )
                                 : Text(
@@ -639,11 +491,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                   alignment: Alignment.center,
                   child: Text(
                     'remove_customer_warning'.lang,
-                    style: TextStyle(
-                      color: AppColors.redBack,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    style: TextStyle(color: AppColors.redBack, fontSize: 12, fontWeight: FontWeight.w400),
                   ),
                 ),
               ],
@@ -662,13 +510,9 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     });
 
     try {
-      final navigator = Navigator.of(context);
-
-      navigator.pop();
-      await Future.delayed(const Duration(milliseconds: 500));
-      navigator.pop(true);
+      await Future.delayed(const Duration(seconds: 3));
       // TODO: Implement customer deletion
-      navigator.pop(true);
+      Get.back(result: true);
     } catch (e) {
       Fluttertoast.showToast(
         msg: 'An error occurred: ${e.toString()}',

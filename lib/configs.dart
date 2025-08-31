@@ -2,5 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Configurations {
-  String baseUrl = kReleaseMode ? dotenv.env["BASE_URL"] ?? "" : "https://triq.onrender.com/api/";
+  // String baseUrl = kReleaseMode ? dotenv.env["BASE_URL"] ?? "" : "https://triq.onrender.com/api/";
+  String baseUrl = "https://triq.onrender.com/api/";
 }
