@@ -15,9 +15,7 @@ import '../core/utils/failures.dart';
 class OrganizationService {
   final apiService = locator<ApiService>();
 
-  ResultFuture<String> addManufacturer({
-    required String id,
-  }) async {
+  ResultFuture<String> addManufacturer({required String id}) async {
     try {
       final response = await apiService.post(
         url: ApiEndpoints.addManufacturer,
@@ -99,7 +97,7 @@ class OrganizationService {
     required String password,
     required String countryCode,
     required List<Map<String, dynamic>> assignedMachines,
-    String ? contactPerson,
+    String? contactPerson,
   }) async {
     try {
       final response = await apiService.post(
@@ -107,11 +105,11 @@ class OrganizationService {
         data: {
           "name": fullName,
           "email": email,
-          'phone':phone,
+          'phone': phone,
           "password": password,
           "countryCode": countryCode,
           'machinesData': assignedMachines,
-          'contactPerson':contactPerson
+          'contactPerson': contactPerson,
         },
       );
 
@@ -160,20 +158,20 @@ class OrganizationService {
     required String? status,
   }) async {
     // try {
-      final response = await apiService.get(
-        url: ApiEndpoints.getPartners,
-        queryParameters: {'status': status ?? 'All'},
-      );
+    final response = await apiService.get(
+      url: ApiEndpoints.getPartners,
+      queryParameters: {'status': status ?? 'All'},
+    );
 
-      if (response.data['success'] == true) {
-        return Right(
-          (response.data['data'] as List)
-              .map((e) => Relationship.fromJson(e))
-              .toList(),
-        );
-      } else {
-        return Left(Failure(response.data['message']));
-      }
+    if (response.data['success'] == true) {
+      return Right(
+        (response.data['data'] as List)
+            .map((e) => Relationship.fromJson(e))
+            .toList(),
+      );
+    } else {
+      return Left(Failure(response.data['message']));
+    }
     // }
     // catch (e) {
     //   if (e is DioException) {
@@ -252,7 +250,6 @@ class OrganizationService {
     return Left(Failure('Failed to remove manufacturer'));
   }
 
-
   ResultFuture<User> getPendingProcessorById(String id) async {
     try {
       final response = await apiService.get(url: '${ApiEndpoints.org}/$id');
@@ -275,9 +272,7 @@ class OrganizationService {
 
   ResultFuture<Organization> getProfile() async {
     try {
-      final response = await apiService.get(
-        url: ApiEndpoints.profile,
-      );
+      final response = await apiService.get(url: ApiEndpoints.profile);
 
       if (response.data['success'] == true) {
         final profileData = response.data['data'];
@@ -294,11 +289,11 @@ class OrganizationService {
           organizationId: profileData['_id'],
           organizationName: profileData['name'],
           organizationType:
-          profileData['organizationType'] != null
-              ? OrganizationType.values.byName(
-            profileData['organizationType'].toLowerCase(),
-          )
-              : null,
+              profileData['organizationType'] != null
+                  ? OrganizationType.values.byName(
+                    profileData['organizationType'].toLowerCase(),
+                  )
+                  : null,
           userType: getUser().userType,
           userRole: getUser().userRole,
           // Keep the token from existing user

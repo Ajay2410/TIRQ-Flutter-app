@@ -79,4 +79,40 @@ abstract class AppImages {
   // Search Screen Icons
   static const String earthSearch = "assets/images/earth_search.png";
   static const String flag = "assets/images/flag.png";
+
+  // Flag URL construction
+  static String getFlagUrl(String flagPath) {
+    if (flagPath.startsWith('http')) {
+      return flagPath;
+    }
+    final config = locator<Configurations>();
+
+    String baseUrl = config.baseUrl;
+    if (baseUrl.endsWith('/')) {
+      baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+    }
+
+    return '$baseUrl$flagPath';
+  }
+
+  // SVG Flag widget for network loading
+  static Widget getSvgFlag(
+    String flagPath, {
+    double? width,
+    double? height,
+    BoxFit fit = BoxFit.cover,
+  }) {
+    return SvgPicture.network(
+      getFlagUrl(flagPath),
+      width: width,
+      height: height,
+      fit: fit,
+      placeholderBuilder:
+          (context) =>
+              Image.asset(flag, width: width, height: height, fit: fit),
+      errorBuilder:
+          (context, error, stackTrace) =>
+              Image.asset(flag, width: width, height: height, fit: fit),
+    );
+  }
 }

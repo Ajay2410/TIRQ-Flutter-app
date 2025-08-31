@@ -35,6 +35,7 @@ import '../features/home/my_customers/machine_details/customer_details/customer_
 import '../features/home/my_customers/my_customers.view.dart';
 import '../features/home/my_customers/customer_details.view.dart';
 import '../features/home/my_customers/create_customer/create_new_customer.view.dart';
+import '../core/models/customer.dart';
 import '../features/home/employee_home/employee_home.view.dart';
 import '../features/home/organization_home/organization_home.view.dart';
 import '../features/introduction/introduction_view.dart';
@@ -51,7 +52,9 @@ import '../features/tickets/add_ticket/add_ticket.view.dart';
 import '../features/tickets/tickets_list/tickets_list.view.dart';
 import '../features/organization/employees_list/employee_role_cards.view.dart';
 import '../features/home/machine_records/machine_records.view.dart';
+import '../features/home/machine_records/machine_details/machine_details.view.dart';
 import '../features/home/machine_records/add_new_machine_model.view.dart';
+import '../core/models/machine_model.dart';
 
 // TODO: Add imports for the new views when they are created
 // import '../features/home/factories_overview/factories_overview.view.dart';
@@ -161,7 +164,9 @@ class AppRouter extends RouterBase {
     },
     CustomerDetailsView: (data) {
       return MaterialPageRoute(
-        builder: (BuildContext _) => CustomerDetailsView(),
+        builder:
+            (BuildContext _) =>
+                CustomerDetailsView(customer: data.arguments as Customer),
         settings: data,
       );
     },
@@ -585,6 +590,14 @@ class AppRouter extends RouterBase {
         settings: data,
       );
     },
+    MachineDetailsView: (data) {
+      return MaterialPageRoute(
+        builder:
+            (BuildContext _) =>
+                MachineDetailsView(machine: data.arguments as Datum),
+        settings: data,
+      );
+    },
   };
 
   /// Defines the list of routes available in the app.
@@ -642,6 +655,7 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.authSelectionView, page: AuthSelectionView),
     RouteDef(Routes.generalSetting, page: GeneralSettingView),
     RouteDef(Routes.machineRecords, page: MachineRecordsView),
+    RouteDef(Routes.machineDetails, page: MachineDetailsView),
     RouteDef(Routes.addNewMachineModel, page: AddNewMachineModelView),
     RouteDef(Routes.customerEditDetailsView, page: CustomerEditDetailsView),
 

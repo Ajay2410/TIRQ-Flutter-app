@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_popup/flutter_popup.dart';
+import 'package:get/get.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/services/language.service.dart';
+import 'package:manager/services/machine.service.dart';
 import 'package:manager/widgets/common_text_field.dart';
+import 'package:manager/core/models/machine_model.dart';
+import 'package:manager/core/locator.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../add_new_machine_model.view.dart';
+import '../machine_records.view.dart';
 
 class MachineDetailsView extends StatefulWidget {
-  final Map<String, dynamic> machine;
+  final Datum machine;
 
   const MachineDetailsView({super.key, required this.machine});
 
@@ -18,6 +24,9 @@ class MachineDetailsView extends StatefulWidget {
 class _MachineDetailsViewState extends State<MachineDetailsView> {
   late TextEditingController _remarkController;
   late TextEditingController _notesController;
+  final MachineService _machineService = MachineService();
+  final _navigationService = locator<NavigationService>();
+  bool _isDeleting = false;
 
   @override
   void initState() {
@@ -30,6 +39,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
   void dispose() {
     _remarkController.dispose();
     _notesController.dispose();
+    _isDeleting = false;
     super.dispose();
   }
 
@@ -66,11 +76,15 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
           height: 24,
           color: AppColors.white,
         ),
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () {
+          if (mounted) {
+            Get.back();
+          }
+        },
       ),
       titleSpacing: 0,
       title: Text(
-        '${"machine_id".lang} - ${"machine_name".lang}',
+        '${widget.machine.machineName ?? "Unknown Machine"}',
         style: const TextStyle(
           color: AppColors.white,
           fontSize: 16,
@@ -84,10 +98,9 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Machine / Model Name
         CommonTextField(
           controller: TextEditingController(
-            text: '${"machine_id".lang} - ${"machine_name".lang}',
+            text: widget.machine.machineName ?? 'Unknown Machine',
           ),
           label: 'machine_model_name'.lang,
           placeholder: '',
@@ -97,9 +110,10 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
         ),
         const SizedBox(height: 16),
 
-        // Model Number
         CommonTextField(
-          controller: TextEditingController(text: 'machine_id'.lang),
+          controller: TextEditingController(
+            text: widget.machine.modelNumber ?? 'N/A',
+          ),
           label: 'model_number'.lang,
           placeholder: '',
           readOnly: true,
@@ -108,9 +122,10 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
         ),
         const SizedBox(height: 16),
 
-        // Functionality
         CommonTextField(
-          controller: TextEditingController(text: 'fully_automatic'.lang),
+          controller: TextEditingController(
+            text: widget.machine.machineType ?? 'N/A',
+          ),
           label: 'functionality'.lang,
           placeholder: '',
           readOnly: true,
@@ -119,9 +134,8 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
         ),
         const SizedBox(height: 16),
 
-        // Remark
         CommonTextField(
-          controller: _remarkController,
+          controller: _remarkController..text = widget.machine.remarks ?? '',
           label: 'remark'.lang,
           placeholder: 'enter_remark_here'.lang,
           maxLines: 1,
@@ -160,7 +174,6 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
         ),
         const SizedBox(height: 24),
 
-        // Processing Dimensions
         _buildSectionTitle('processing_dimensions'.lang),
         const SizedBox(height: 16),
 
@@ -188,7 +201,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                             child: _buildInfoRow(
                               AppImages.height,
                               'height'.lang,
-                              '1.0',
+                              '${widget.machine.processingDimensions?.maxHeight ?? 'N/A'}',
                               AppColors.color41C293,
                             ),
                           ),
@@ -197,7 +210,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                             child: _buildInfoRow(
                               AppImages.width,
                               'width'.lang,
-                              '1.0',
+                              '${widget.machine.processingDimensions?.maxWidth ?? 'N/A'}',
                               AppColors.primarySuperLight,
                             ),
                           ),
@@ -227,7 +240,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                             child: _buildInfoRow(
                               AppImages.height,
                               'height'.lang,
-                              '1.0',
+                              '${widget.machine.processingDimensions?.minHeight ?? 'N/A'}',
                               AppColors.color41C293,
                             ),
                           ),
@@ -236,7 +249,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                             child: _buildInfoRow(
                               AppImages.width,
                               'width'.lang,
-                              '1.0',
+                              '${widget.machine.processingDimensions?.minWidth ?? 'N/A'}',
                               AppColors.primarySuperLight,
                             ),
                           ),
@@ -260,7 +273,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
               child: _buildInfoRow(
                 AppImages.height,
                 'thickness'.lang,
-                '1.0',
+                '${widget.machine.processingDimensions?.thickness ?? 'N/A'}',
                 AppColors.color41C293,
               ),
             ),
@@ -269,7 +282,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
               child: _buildInfoRow(
                 AppImages.width,
                 'max_speed'.lang,
-                '1.0',
+                '${widget.machine.processingDimensions?.maxSpeed ?? 'N/A'}',
                 AppColors.primarySuperLight,
               ),
             ),
@@ -283,14 +296,13 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
         _buildInfoRow(
           AppImages.width,
           "${'total_power'.lang} (kw)",
-          '1.0',
+          '${widget.machine.totalPower ?? 'N/A'}',
           AppColors.primarySuperLight,
         ),
         const SizedBox(height: 24),
 
-        // Notes/Special Instructions
         CommonTextField(
-          controller: _notesController,
+          controller: _notesController..text = widget.machine.notes ?? '',
           label: 'notes_special_instructions'.lang,
           placeholder: 'link_here'.lang,
           maxLines: 3,
@@ -327,20 +339,22 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
         children: [
           Expanded(
             child: ElevatedButton(
-              onPressed: () {
-                // Navigate to edit screen with current machine data
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder:
-                        (context) =>
-                            AddNewMachineModelView(machine: widget.machine),
-                  ),
-                );
-              },
+              onPressed:
+                  (_isDeleting || !mounted)
+                      ? null
+                      : () {
+                        if (mounted) {
+                          Get.to(
+                            () => AddNewMachineModelView(
+                              machine: _convertDatumToMap(widget.machine),
+                            ),
+                          );
+                        }
+                      },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryLight,
-                elevation: 5,
-
+                backgroundColor:
+                    _isDeleting ? AppColors.lightGray : AppColors.primaryLight,
+                elevation: _isDeleting ? 0 : 5,
                 foregroundColor: AppColors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
@@ -356,22 +370,41 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
           const SizedBox(width: 26),
           Expanded(
             child: ElevatedButton(
-              onPressed: () {
-                _showDeleteConfirmation(context);
-              },
+              onPressed:
+                  (!mounted)
+                      ? null
+                      : () {
+                        _showDeleteConfirmation(context);
+                      },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.redBack,
-                elevation: 5,
+                backgroundColor:
+                    _isDeleting ? AppColors.lightGray : AppColors.redBack,
+                elevation: _isDeleting ? 0 : 5,
                 foregroundColor: AppColors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(45),
                 ),
               ),
-              child: Text(
-                'remove'.lang,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              child:
+                  _isDeleting
+                      ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.white,
+                          ),
+                        ),
+                      )
+                      : Text(
+                        'remove'.lang,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
             ),
           ),
         ],
@@ -425,8 +458,103 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context) {
-    showDialog(
+  Map<String, dynamic> _convertDatumToMap(Datum machine) {
+    return {
+      'machine_name': machine.machineName,
+      'model_number': machine.modelNumber,
+      'functionality': machine.machineType,
+      'max_height': machine.processingDimensions?.maxHeight?.toString(),
+      'max_width': machine.processingDimensions?.maxWidth?.toString(),
+      'min_height': machine.processingDimensions?.minHeight?.toString(),
+      'min_width': machine.processingDimensions?.minWidth?.toString(),
+      'thickness': machine.processingDimensions?.thickness,
+      'max_speed': machine.processingDimensions?.maxSpeed?.toString(),
+      'total_power': machine.totalPower?.toString(),
+      'operating_manuals': machine.manualsLink,
+      'notes': machine.notes,
+      'remarks': machine.remarks,
+      'id': machine.id,
+    };
+  }
+
+  Future<void> _deleteMachine() async {
+    if (_isDeleting) return;
+
+    if (!mounted) return;
+
+    if (mounted) {
+      setState(() {
+        _isDeleting = true;
+      });
+    }
+
+    try {
+      if (widget.machine.id == null || widget.machine.id!.isEmpty) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('invalid_machine_id'.lang),
+            backgroundColor: AppColors.redBack,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        return;
+      }
+
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      if (!mounted) return;
+
+      final result = await _machineService.deleteMachine(widget.machine.id!);
+
+      if (!mounted) return;
+
+      result.fold(
+        (failure) {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(failure.message),
+              backgroundColor: AppColors.redBack,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        },
+        (success) {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('machine_deactivated_successfully'.lang),
+              backgroundColor: AppColors.color41C293,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+
+          Get.off(() => const MachineRecordsView(refreshOnInit: true));
+        },
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('unexpected_error_occurred'.lang),
+          backgroundColor: AppColors.redBack,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isDeleting = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _showDeleteConfirmation(BuildContext context) async {
+    if (!mounted) return;
+
+    final result = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
@@ -441,7 +569,6 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Warning Icon
                 Container(
                   padding: EdgeInsets.all(14),
                   decoration: BoxDecoration(
@@ -470,7 +597,6 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                 ),
                 const SizedBox(height: 15),
 
-                // Main Question Text
                 Text(
                   'are_you_sure_remove_machine'.lang,
                   textAlign: TextAlign.center,
@@ -483,13 +609,13 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                 ),
                 const SizedBox(height: 20),
 
-                // Action Buttons
                 Row(
                   children: [
-                    // Cancel Button
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.white,
                           foregroundColor: AppColors.darkGray,
@@ -516,14 +642,14 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                     ),
                     const SizedBox(width: 16),
 
-                    // Remove Button
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          // Handle delete action here
-                          // You can add your delete logic here
-                        },
+                        onPressed:
+                            _isDeleting
+                                ? null
+                                : () {
+                                  Navigator.of(context).pop(true);
+                                },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.redBack,
                           foregroundColor: Colors.white,
@@ -534,21 +660,32 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                           ),
                           padding: EdgeInsets.symmetric(vertical: 14),
                         ),
-                        child: Text(
-                          'remove'.lang,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                        child:
+                            _isDeleting
+                                ? SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      AppColors.white,
+                                    ),
+                                  ),
+                                )
+                                : Text(
+                                  'remove'.lang,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 20),
 
-                // Warning Message
                 Align(
                   alignment: Alignment.center,
                   child: Text(
@@ -566,5 +703,9 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
         );
       },
     );
+
+    if (result == true && mounted) {
+      await _deleteMachine();
+    }
   }
 }

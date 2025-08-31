@@ -53,8 +53,7 @@ Future<void> clearHive() async {
   final languageSelected = box.get('language_selected', defaultValue: false);
   final selectedLanguage = box.get('selected_language', defaultValue: 'en');
 
-  await Hive.box(AppStrings.triqBox,
-  ).put(AppStrings.triqUser, User());
+  await Hive.box(AppStrings.triqBox).put(AppStrings.triqUser, User());
 
   await box.put('language_selected', languageSelected);
   await box.put('selected_language', selectedLanguage);
@@ -64,7 +63,6 @@ Future<void> clearUserData() async {
   final box = await Hive.openBox(AppStrings.triqBox);
 
   await box.delete(AppStrings.triqUser);
-
 }
 
 User getUser() {
@@ -74,14 +72,15 @@ User getUser() {
 }
 
 Future saveUser(User user) async {
-  await Hive.box(AppStrings.triqBox,
-  ).put(AppStrings.triqUser, user);
+  await Hive.box(AppStrings.triqBox).put(AppStrings.triqUser, user);
 }
 
 // Language selection methods
 bool getLanguageSelectionFlag() {
   try {
-    return Hive.box(AppStrings.triqBox).get('language_selected', defaultValue: false);
+    return Hive.box(
+      AppStrings.triqBox,
+    ).get('language_selected', defaultValue: false);
   } catch (e) {
     AppLogger.error('Error getting language selection flag: $e');
     return false;
@@ -108,7 +107,9 @@ Future<void> saveSelectedLanguage(String languageCode) async {
 String getSelectedLanguage() {
   try {
     AppLogger.info('Getting selected language');
-    return Hive.box(AppStrings.triqBox).get('selected_language', defaultValue: 'English');
+    return Hive.box(
+      AppStrings.triqBox,
+    ).get('selected_language', defaultValue: 'English');
   } catch (e) {
     AppLogger.error('Error getting selected language: $e');
     return 'en';

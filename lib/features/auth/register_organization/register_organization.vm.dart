@@ -136,14 +136,15 @@ class RegisterOrganizationViewModel extends ReactiveViewModel {
       finalOrgType = "Others: ${otherDescriptionController.text}";
     }
 
-    return await authService.registerOrganization(
-      name: nameController.text,
-      type: finalOrgType,
-      phone: _fullPhoneNumber,
-      countryCode: _countryCode, // Pass country code separately
+    return await authService.register(
+      fullName: nameController.text,
       email: emailController.text,
       password: passwordController.text,
-      language: AppMaps.languageMap[_language] ?? "English" , // Add language parameter
+      phone: _fullPhoneNumber,
+      countryCode: _countryCode,
+      role: 'organization',
+      organizationType: finalOrgType,
+      language: AppMaps.languageMap[_language] ?? "English",
     );
   }
 }

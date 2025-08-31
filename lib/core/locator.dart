@@ -15,6 +15,8 @@ import '../services/chat.service.dart';
 import '../services/dashboard.service.dart';
 import '../services/employee_profile.service.dart';
 import '../services/language.service.dart';
+import '../services/machine_storage.service.dart';
+import '../services/customer.service.dart';
 
 /// **Service Locator Setup**
 ///
@@ -59,4 +61,6 @@ void setUpLocators() {
   locator.registerLazySingleton(() => LanguageService());
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => AccountManagerService.instance);
+  locator.registerLazySingleton(() => MachineStorageService());
+  locator.registerLazySingleton(() => CustomerService());
 }

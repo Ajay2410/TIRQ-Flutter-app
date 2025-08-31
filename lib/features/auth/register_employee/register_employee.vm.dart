@@ -104,11 +104,13 @@ class RegisterEmployeeViewModel extends ReactiveViewModel {
   }
 
   ResultFuture<String> registerEmployee() async {
-    return await authService.registerEmployee(
-      name: nameController.text,
-      phone: _fullPhoneNumber,
+    return await authService.register(
+      fullName: nameController.text,
       email: emailController.text,
       password: passwordController.text,
+      phone: _fullPhoneNumber,
+      countryCode: _countryCode,
+      role: 'employee',
     );
   }
 }

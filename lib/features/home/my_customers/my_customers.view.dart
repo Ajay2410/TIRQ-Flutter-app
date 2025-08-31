@@ -4,6 +4,7 @@ import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/services/language.service.dart';
 import 'package:stacked/stacked.dart';
+import 'package:shimmer/shimmer.dart';
 import 'my_customers.vm.dart';
 
 class MyCustomersView extends StatefulWidget {
@@ -55,6 +56,12 @@ class _MyCustomersViewState extends State<MyCustomersView>
         curve: Curves.easeInOut,
       ),
     );
+
+    _searchController.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -294,6 +301,16 @@ class _MyCustomersViewState extends State<MyCustomersView>
               color: AppColors.gray,
             ),
           ),
+          suffixIcon:
+              _searchController.text.isNotEmpty
+                  ? IconButton(
+                    icon: Icon(Icons.clear, color: AppColors.gray),
+                    onPressed: () {
+                      _searchController.clear();
+                      model.clearSearch();
+                    },
+                  )
+                  : null,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(color: AppColors.lightGray),
@@ -309,48 +326,181 @@ class _MyCustomersViewState extends State<MyCustomersView>
   }
 
   Widget _buildCustomersList(BuildContext context, MyCustomersViewModel model) {
-    if (model.filteredCustomers.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              AppImages.myCustomers,
-              width: 80,
-              height: 80,
-              color: AppColors.gray,
-            ),
-            AppGaps.h20,
-            Text(
-              LanguageService.get('no_customers_found'),
-              style: TextStyle(fontSize: 18, color: AppColors.textSecondary),
-            ),
-          ],
-        ),
-      );
+    if (model.isLoading) {
+      return _buildShimmerList();
     }
 
+    if (model.hasError) {
+      return _buildErrorState(context, model);
+    }
+
+    if (model.filteredCustomers.isEmpty) {
+      return _buildEmptyState(context, model);
+    }
+
+    return RefreshIndicator(
+      onRefresh: model.refreshCustomers,
+      backgroundColor: AppColors.white,
+      child: ListView.separated(
+        separatorBuilder: (context, index) {
+          return Divider(color: AppColors.lightGray, thickness: 1);
+        },
+        padding: const EdgeInsets.all(13),
+        itemCount: model.filteredCustomers.length,
+        itemBuilder: (context, index) {
+          final customer = model.filteredCustomers[index];
+          return _buildCustomerCard(customer, model, context);
+        },
+      ),
+    );
+  }
+
+  Widget _buildShimmerList() {
     return ListView.separated(
       separatorBuilder: (context, index) {
         return Divider(color: AppColors.lightGray, thickness: 1);
       },
       padding: const EdgeInsets.all(13),
-      itemCount: model.filteredCustomers.length,
+      itemCount: 10,
       itemBuilder: (context, index) {
-        final customer = model.filteredCustomers[index];
-        return _buildCustomerCard(customer, model);
+        return Shimmer.fromColors(
+          baseColor: AppColors.lightGray,
+          highlightColor: AppColors.white,
+          child: _buildCustomerCardShimmer(),
+        );
       },
     );
   }
 
-  Widget _buildCustomerCard(Customer customer, MyCustomersViewModel model) {
+  Widget _buildCustomerCardShimmer() {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.lightGray,
+          ),
+          child: Container(
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(
+              color: AppColors.lightGray,
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
+        AppGaps.w16,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 16,
+                width: 120,
+                decoration: BoxDecoration(
+                  color: AppColors.lightGray,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              AppGaps.h5,
+              Container(
+                height: 14,
+                width: 200,
+                decoration: BoxDecoration(
+                  color: AppColors.lightGray,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+            ],
+          ),
+        ),
+        AppGaps.w16,
+        Container(
+          height: 20,
+          width: 60,
+          decoration: BoxDecoration(
+            color: AppColors.lightGray,
+            borderRadius: BorderRadius.circular(6),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildErrorState(BuildContext context, MyCustomersViewModel model) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            AppImages.alert,
+            width: 80,
+            height: 80,
+            color: AppColors.redBack,
+          ),
+          AppGaps.h20,
+          Text(
+            LanguageService.get('error_loading_customers'),
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          AppGaps.h10,
+          Text(
+            model.errorMessage,
+            style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+            textAlign: TextAlign.center,
+          ),
+          AppGaps.h20,
+          ElevatedButton(
+            onPressed: model.refreshCustomers,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
+            child: Text(LanguageService.get('retry')),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context, MyCustomersViewModel model) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            AppImages.myCustomers,
+            width: 80,
+            height: 80,
+            color: AppColors.gray,
+          ),
+          AppGaps.h20,
+          Text(
+            LanguageService.get('no_customers_found'),
+            style: TextStyle(fontSize: 18, color: AppColors.textSecondary),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCustomerCard(
+    Customer customer,
+    MyCustomersViewModel model,
+    BuildContext context,
+  ) {
     return InkWell(
-      onTap: () => model.onCustomerTap(customer),
+      onTap: () => model.onCustomerTap(context, customer),
       child: Row(
         children: [
-          // Left side - Company icon and flag
           Container(
-            padding: EdgeInsets.all(6),
+            padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: AppColors.colorF0F2FC,
@@ -366,84 +516,49 @@ class _MyCustomersViewState extends State<MyCustomersView>
                     shape: BoxShape.circle,
                   ),
                   child: ClipOval(
-                    child:
-                        customer.avatar != null &&
-                                customer.avatar!.startsWith('http')
-                            ? Image.network(
-                              customer.avatar!,
-                              width: 50,
-                              height: 50,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  color: AppColors.bluebackground,
-                                  child: Center(
-                                    child: Text(
-                                      customer.name
-                                          .substring(0, 2)
-                                          .toUpperCase(),
-                                      style: const TextStyle(
-                                        color: AppColors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                              loadingBuilder: (
-                                context,
-                                child,
-                                loadingProgress,
-                              ) {
-                                if (loadingProgress == null) return child;
-                                return Container(
-                                  color: AppColors.bluebackground,
-                                  child: const Center(
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.white,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            )
-                            : Container(
-                              color: AppColors.bluebackground,
-                              child: Center(
-                                child: Text(
-                                  customer.companyIcon,
-                                  style: const TextStyle(
-                                    color: AppColors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
+                    child: Container(
+                      color: AppColors.bluebackground,
+                      child: Center(
+                        child: Text(
+                          customer.customerName
+                                  ?.substring(0, 2)
+                                  .toUpperCase() ??
+                              'NA',
+                          style: const TextStyle(
+                            color: AppColors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                // Flag icon at bottom
-                Positioned(
-                  bottom: -4,
-                  right: -4,
-                  child: Image.asset(AppImages.flag, width: 17, height: 17),
-                ),
+                if (customer.flag != null)
+                  Positioned(
+                    bottom: -4,
+                    right: -4,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: AppImages.getSvgFlag(
+                        customer.flag!,
+                        width: 14,
+                        height: 14,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
 
           AppGaps.w16,
 
-          // Middle section - Customer name and description
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  customer.name,
+                  customer.customerName ?? 'Unknown Customer',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -452,11 +567,13 @@ class _MyCustomersViewState extends State<MyCustomersView>
                 ),
                 AppGaps.h5,
                 Text(
-                  customer.description,
+                  _buildCustomerDescription(customer),
                   style: TextStyle(
                     fontSize: 14,
                     color: AppColors.textSecondary,
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -464,23 +581,22 @@ class _MyCustomersViewState extends State<MyCustomersView>
 
           AppGaps.w16,
 
-          // Right side - Status badge
           Container(
             padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
               color:
-                  customer.status == 'Active'
+                  (customer.isActive == true)
                       ? AppColors.success.withValues(alpha: 0.15)
                       : AppColors.redBack.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
-              customer.status,
+              (customer.isActive == true) ? 'Active' : 'Inactive',
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color:
-                    customer.status == 'Active'
+                    (customer.isActive == true)
                         ? AppColors.success
                         : AppColors.redBack,
               ),
@@ -489,6 +605,22 @@ class _MyCustomersViewState extends State<MyCustomersView>
         ],
       ),
     );
+  }
+
+  String _buildCustomerDescription(Customer customer) {
+    if (customer.machines?.isEmpty != false) {
+      return 'No machines assigned';
+    }
+
+    List<String> machineNames = [];
+    for (var machineElement in customer.machines!) {
+      if (machineElement.machine?.machineName != null) {
+        machineNames.add(machineElement.machine!.machineName!);
+      }
+    }
+
+    if (machineNames.isEmpty) return 'No machines assigned';
+    return machineNames.join(', ');
   }
 
   Widget _buildFloatingActionButton(MyCustomersViewModel model) {
@@ -592,7 +724,7 @@ class _MyCustomersViewState extends State<MyCustomersView>
                             ),
                             onTap: () {
                               _toggleAddMenu();
-                              model.onSearchByPhone();
+                              model.onSearchByPhone(context);
                             },
                             iconColor: AppColors.color41C293,
                           ),
@@ -611,7 +743,7 @@ class _MyCustomersViewState extends State<MyCustomersView>
                             ),
                             onTap: () {
                               _toggleAddMenu();
-                              model.onAddNewCustomer();
+                              model.onAddNewCustomer(context);
                             },
                             iconColor: AppColors.color0ABAB5,
                           ),

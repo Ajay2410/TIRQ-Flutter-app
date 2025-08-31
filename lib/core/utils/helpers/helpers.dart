@@ -12,6 +12,7 @@ import '../../../features/qr/scan_qr/scan_qr.view.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../routes/routes.dart';
 import '../app_logger.dart';
+import 'debounce.dart';
 
 Future<String> getCurrentAppVersion() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -26,10 +27,7 @@ navigateToScanQRFromCamera(Function(dynamic) onScanQr) async {
 }
 
 navigateToSearch(SearchViewAttributes attributes) async {
-  locator<NavigationService>().navigateTo(
-    Routes.search,
-    arguments: attributes,
-  );
+  locator<NavigationService>().navigateTo(Routes.search, arguments: attributes);
 }
 
 navigateToScanQRFromGallery(Function(dynamic) onScanQr) async {
@@ -60,7 +58,6 @@ navigateToScanQRFromGallery(Function(dynamic) onScanQr) async {
 }
 
 String formatStatus(String status) {
-
   // Convert camelCase statuses to space-separated words
   switch (status) {
     case 'Pending':
@@ -72,13 +69,12 @@ String formatStatus(String status) {
     case 'OnHold':
       return 'On Hold';
     default:
-    // For other camelCase statuses we might encounter
-    // Use regex to add spaces before capital letters
-    // This will convert camelCase to space-separated words
-      return status.replaceAllMapped(
-        RegExp(r'[A-Z]'),
-            (match) => ' ${match.group(0)}',
-      ).trim();
+      // For other camelCase statuses we might encounter
+      // Use regex to add spaces before capital letters
+      // This will convert camelCase to space-separated words
+      return status
+          .replaceAllMapped(RegExp(r'[A-Z]'), (match) => ' ${match.group(0)}')
+          .trim();
   }
 }
 

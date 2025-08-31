@@ -88,8 +88,8 @@ class OrganizationHomeViewModel extends ReactiveViewModel {
     _navigationService.navigateTo(Routes.customersList);
   }
 
-  void navigateToMyCustomers() async {
-    _navigationService.navigateTo(Routes.myCustomers);
+  void navigateToMyCustomers(BuildContext context) async {
+    Navigator.of(context).pushNamed(Routes.myCustomers);
   }
 
   void navigateToAnalytics() async {

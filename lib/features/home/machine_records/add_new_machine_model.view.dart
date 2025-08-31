@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:manager/packages/animated_custom_dropdown/custom_dropdown.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/services/language.service.dart';
+import 'package:manager/services/machine.service.dart';
+import 'package:manager/core/locator.dart';
+import 'package:manager/core/utils/app_logger.dart';
 import 'package:manager/widgets/common_text_field.dart';
+import 'dart:math';
 
 class AddNewMachineModelView extends StatefulWidget {
-  final Map<String, dynamic>? machine; // Add machine parameter for edit mode
+  final Map<String, dynamic>? machine;
 
   const AddNewMachineModelView({super.key, this.machine});
 
@@ -16,6 +22,9 @@ class AddNewMachineModelView extends StatefulWidget {
 
 class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
   final _formKey = GlobalKey<FormState>();
+  final _machineService = locator<MachineService>();
+  bool _isLoading = false;
+
   final TextEditingController _machineNameController = TextEditingController();
   final TextEditingController _modelNumberController = TextEditingController();
   final TextEditingController _functionalityController =
@@ -42,7 +51,6 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
   @override
   void initState() {
     super.initState();
-    // Populate form fields if editing existing machine
     if (widget.machine != null) {
       _populateFormWithMachineData();
     }
@@ -63,6 +71,12 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
     _totalPowerController.text = machine['total_power'] ?? '';
     _operatingManualsController.text = machine['operating_manuals'] ?? '';
     _notesController.text = machine['notes'] ?? '';
+  }
+
+  String _generateRandomSerialNumber() {
+    final random = Random();
+    final number = random.nextInt(99999) + 10000;
+    return 'SN-$number';
   }
 
   @override
@@ -141,7 +155,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
           height: 24,
           color: AppColors.white,
         ),
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () => Get.back(),
       ),
       titleSpacing: 0,
       title: Text(
@@ -220,13 +234,11 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
                   onChanged: (value) {
                     setState(() {
                       _selectedFunctionality = value;
-                      _functionalityController.text = value ?? '';
+                      _functionalityController.text = value;
                     });
                     field.didChange(value);
-                    // Clear validation error when user makes a selection
-                    if (value != null && value.isNotEmpty) {
+                    if (value.isNotEmpty) {
                       field.reset();
-                      // Trigger immediate validation to clear error border
                       field.validate();
                     }
                   },
@@ -521,12 +533,14 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            // All validations passed, proceed to save
-            _saveMachineToRecord();
-          }
-        },
+        onPressed:
+            _isLoading
+                ? null
+                : () {
+                  if (_formKey.currentState!.validate()) {
+                    _saveMachineToRecord();
+                  }
+                },
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.white,
@@ -535,31 +549,116 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
           ),
           elevation: 0,
         ),
-        child: Text(
-           'save_machine_to_record'.lang,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
+        child:
+            _isLoading
+                ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                )
+                : Text(
+                  'save_machine_to_record'.lang,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
       ),
     );
   }
 
-  void _saveMachineToRecord() {
-    // TODO: Implement save logic
-    // This method will be called when form validation passes
-    // You can add your API call or database save logic here
+  void _saveMachineToRecord() async {
+    if (_isLoading) return;
 
-    // For now, just show a success message
-    final isEditMode = widget.machine != null;
-    final message =
-        isEditMode
-            ? 'Machine updated successfully!'
-            : 'Machine saved successfully!';
+    try {
+      setState(() {
+        _isLoading = true;
+      });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: AppColors.success),
-    );
+      final serialNumber = _generateRandomSerialNumber();
 
-    // Navigate back to previous screen
-    Navigator.of(context).pop();
+      final processingDimensions = {
+        'maxHeight': int.tryParse(_maxHeightController.text) ?? 0,
+        'maxWidth': int.tryParse(_maxWidthController.text) ?? 0,
+        'minHeight': int.tryParse(_minHeightController.text) ?? 0,
+        'minWidth': int.tryParse(_minWidthController.text) ?? 0,
+        'thickness': _thicknessController.text.trim(),
+        'maxSpeed': int.tryParse(_maxSpeedController.text) ?? 0,
+      };
+
+      final result = await _machineService.createMachineNew(
+        machineName: _machineNameController.text.trim(),
+        modelNumber: _modelNumberController.text.trim(),
+        serialNumber: serialNumber,
+        machineType: _selectedFunctionality ?? 'Fully Automatic',
+        processingDimensions: processingDimensions,
+        totalPower: int.tryParse(_totalPowerController.text) ?? 0,
+        manualsLink: _operatingManualsController.text.trim(),
+        notes: _notesController.text.trim(),
+        status: 'Available',
+        remarks: 'Test',
+      );
+
+      result.fold(
+        (failure) {
+          if (mounted) {
+            Fluttertoast.showToast(
+              msg: failure.message,
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 3,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16,
+            );
+          }
+          AppLogger.error("Failed to create machine: ${failure.message}");
+        },
+        (machine) {
+          final isEditMode = widget.machine != null;
+          final message =
+              isEditMode
+                  ? 'Machine updated successfully!'
+                  : 'Machine created successfully!';
+
+          if (mounted) {
+            Fluttertoast.showToast(
+              msg: message,
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 3,
+              backgroundColor: AppColors.success,
+              textColor: Colors.white,
+              fontSize: 16,
+            );
+          }
+
+          AppLogger.info("Machine created successfully: ${machine.id}");
+          Get.back(result: machine);
+        },
+      );
+    } catch (e) {
+      AppLogger.error("Exception while creating machine: $e");
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: 'An unexpected error occurred',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 }

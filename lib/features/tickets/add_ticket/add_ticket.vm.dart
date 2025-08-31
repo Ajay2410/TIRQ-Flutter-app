@@ -36,10 +36,7 @@ class AdditionalInfoSection {
 }
 
 // Enum for maintenance types
-enum MaintenanceType {
-  generalCheckup,
-  fullMachineService,
-}
+enum MaintenanceType { generalCheckup, fullMachineService }
 
 class AddTicketViewModel extends ReactiveViewModel {
   final _navigationService = locator<NavigationService>();
@@ -56,7 +53,7 @@ class AddTicketViewModel extends ReactiveViewModel {
   final TextEditingController problemController = TextEditingController();
   final TextEditingController errorCodeController = TextEditingController();
   final TextEditingController additionalNoteController =
-  TextEditingController();
+      TextEditingController();
 
   // Additional info sections list
   final List<AdditionalInfoSection> _additionalInfoSections = [];
@@ -71,17 +68,20 @@ class AddTicketViewModel extends ReactiveViewModel {
 
   // For machine selection dropdown
   final ReactiveValue<List<Machine>> _availableMachines =
-  ReactiveValue<List<Machine>>([]);
+      ReactiveValue<List<Machine>>([]);
   List<Machine> get availableMachines => _availableMachines.value;
 
   final ReactiveValue<List<Relationship>> _availableRelationships =
-  ReactiveValue<List<Relationship>>([]);
-  List<Relationship> get availableRelationships => _availableRelationships.value;
+      ReactiveValue<List<Relationship>>([]);
+  List<Relationship> get availableRelationships =>
+      _availableRelationships.value;
 
   final ReactiveValue<bool> _isLoadingMachines = ReactiveValue<bool>(false);
   bool get isLoadingMachines => _isLoadingMachines.value;
 
-  final ReactiveValue<bool> _isLoadingRelationships = ReactiveValue<bool>(false);
+  final ReactiveValue<bool> _isLoadingRelationships = ReactiveValue<bool>(
+    false,
+  );
   bool get isLoadingRelationships => _isLoadingRelationships.value;
 
   bool _isFormValid = false;
@@ -139,7 +139,15 @@ class AddTicketViewModel extends ReactiveViewModel {
 
   bool _isVideo(File file) {
     final extension = file.path.toLowerCase().split('.').last;
-    return ['mp4', 'avi', 'mov', 'wmv', 'flv', '3gp', 'mkv'].contains(extension);
+    return [
+      'mp4',
+      'avi',
+      'mov',
+      'wmv',
+      'flv',
+      '3gp',
+      'mkv',
+    ].contains(extension);
   }
 
   // Check if machine warranty is active
@@ -200,7 +208,9 @@ class AddTicketViewModel extends ReactiveViewModel {
     }
 
     if (isMachineWarrantyActive) {
-      return _selectedMaintenanceType == MaintenanceType.fullMachineService ? 50.0 : 0.0;
+      return _selectedMaintenanceType == MaintenanceType.fullMachineService
+          ? 50.0
+          : 0.0;
     } else {
       return 100.0; // Out of warranty charge
     }
@@ -242,27 +252,32 @@ class AddTicketViewModel extends ReactiveViewModel {
   }
 
   void navigateToImageView(String imageUrl) async {
-    _navigationService.navigateTo(Routes.imageViewerView,arguments: imageUrl);
+    _navigationService.navigateTo(Routes.imageViewerView, arguments: imageUrl);
   }
 
   Future<void> loadAvailableMachines() async {
-    if(_relationship == null){
+    if (_relationship == null) {
       return;
     }
     _isLoadingMachines.value = true;
     notifyListeners();
 
-    final result = await _machineService.getMachines(status: '', department: '', manufacturerId: _relationship!.requesterId!, processorId: _relationship!.partnerId!);
+    final result = await _machineService.getMachines(
+      status: '',
+      department: '',
+      manufacturerId: _relationship!.requesterId!,
+      processorId: _relationship!.partnerId!,
+    );
 
     result.fold(
-          (failure) {
+      (failure) {
         AppLogger.error("Failed to load machines: ${failure.message}");
         Fluttertoast.showToast(
           msg: "Failed to load machines: ${failure.message}",
           backgroundColor: Colors.red,
         );
       },
-          (machinesListInfo) {
+      (machinesListInfo) {
         _availableMachines.value = machinesListInfo.machines;
         notifyListeners();
       },
@@ -279,14 +294,14 @@ class AddTicketViewModel extends ReactiveViewModel {
     final result = await _organizationService.getPartners(status: 'active');
 
     result.fold(
-          (failure) {
+      (failure) {
         AppLogger.error("Failed to load relationships: ${failure.message}");
         Fluttertoast.showToast(
           msg: "Failed to load relationships: ${failure.message}",
           backgroundColor: Colors.red,
         );
       },
-          (relationships) {
+      (relationships) {
         _availableRelationships.value = relationships;
         notifyListeners();
       },
@@ -359,24 +374,24 @@ class AddTicketViewModel extends ReactiveViewModel {
     for (int i = 0; i < _localFiles.length; i++) {
       final result = await _fileUploadService.uploadFileWithProgress(
         _localFiles[i],
-            (progress) {
+        (progress) {
           final singleFileContribution = 1.0 / _localFiles.length;
           _uploadProgress.value =
               (i * singleFileContribution) +
-                  (progress * singleFileContribution);
+              (progress * singleFileContribution);
           notifyListeners();
         },
       );
 
       result.fold(
-            (failure) {
+        (failure) {
           AppLogger.error('Failed to upload file: ${failure.message}');
           Fluttertoast.showToast(
             msg: 'Failed to upload file: ${failure.message}',
             backgroundColor: Colors.red,
           );
         },
-            (url) {
+        (url) {
           _attachments.add(url);
           notifyListeners();
         },
@@ -396,7 +411,8 @@ class AddTicketViewModel extends ReactiveViewModel {
           msg: "Please select a machine",
           backgroundColor: Colors.red,
         );
-      } else if (_ticketType == "Maintenance" && _selectedMaintenanceType == null) {
+      } else if (_ticketType == "Maintenance" &&
+          _selectedMaintenanceType == null) {
         Fluttertoast.showToast(
           msg: "Please select a maintenance type",
           backgroundColor: Colors.red,
@@ -423,7 +439,9 @@ class AddTicketViewModel extends ReactiveViewModel {
   void _navigateToPayment() {
     // TODO: Implement navigation to payment page
     // Pass service charge amount and other details
-    AppLogger.info("Navigate to payment with charge: \$${serviceCharge.toStringAsFixed(2)}");
+    AppLogger.info(
+      "Navigate to payment with charge: \$${serviceCharge.toStringAsFixed(2)}",
+    );
 
     // For now, show a placeholder message
     Fluttertoast.showToast(
@@ -458,10 +476,12 @@ class AddTicketViewModel extends ReactiveViewModel {
     String fullDescription = problemController.text;
 
     if (_ticketType == "Maintenance" && _selectedMaintenanceType != null) {
-      String maintenanceTypeText = _selectedMaintenanceType == MaintenanceType.generalCheckup
-          ? "General Checkup"
-          : "Full Machine Service";
-      fullDescription = "Maintenance Type: $maintenanceTypeText\n\n$fullDescription";
+      String maintenanceTypeText =
+          _selectedMaintenanceType == MaintenanceType.generalCheckup
+              ? "General Checkup"
+              : "Full Machine Service";
+      fullDescription =
+          "Maintenance Type: $maintenanceTypeText\n\n$fullDescription";
     }
 
     if (errorCodeController.text.isNotEmpty) {
@@ -469,7 +489,8 @@ class AddTicketViewModel extends ReactiveViewModel {
     }
 
     if (additionalNoteController.text.isNotEmpty) {
-      fullDescription += '\n\nAdditional Notes: ${additionalNoteController.text}';
+      fullDescription +=
+          '\n\nAdditional Notes: ${additionalNoteController.text}';
     }
 
     final result = await _ticketService.createTicket(
@@ -484,14 +505,14 @@ class AddTicketViewModel extends ReactiveViewModel {
     setBusy(false);
 
     result.fold(
-          (failure) {
+      (failure) {
         AppLogger.error("Failed to create ticket: ${failure.message}");
         Fluttertoast.showToast(
           msg: "Failed to create ticket: ${failure.message}",
           backgroundColor: Colors.red,
         );
       },
-          (ticketId) {
+      (ticketId) {
         AppLogger.info("Ticket created successfully!");
         Fluttertoast.showToast(
           msg: "Ticket created successfully!",
@@ -507,18 +528,19 @@ class AddTicketViewModel extends ReactiveViewModel {
     final response = await _dialogService.showCustomDialog(
       variant: DialogType.loader,
       data: LoaderDialogAttributes(
-        task: () =>
-            _chatService.getChatViewAttributesForTicket(ticketId: ticketId),
+        task:
+            () =>
+                _chatService.getChatViewAttributesForTicket(ticketId: ticketId),
         message: "Loading chat...",
       ),
     );
     if (response?.data != null) {
       (response!.data as EitherResult<ChatViewAttributes>).fold(
-            (failure) {
+        (failure) {
           AppLogger.error(failure.message);
           Fluttertoast.showToast(msg: failure.message);
         },
-            (attributes) {
+        (attributes) {
           _navigationService.navigateTo(Routes.chat, arguments: attributes);
         },
       );
@@ -591,7 +613,7 @@ class AddTicketViewModel extends ReactiveViewModel {
     final pickerResult = await _filePickerService.pickMultipleImages();
 
     pickerResult.fold(
-          (failure) {
+      (failure) {
         if (failure.message != 'No images selected') {
           Fluttertoast.showToast(
             msg: failure.message,
@@ -599,7 +621,7 @@ class AddTicketViewModel extends ReactiveViewModel {
           );
         }
       },
-          (files) {
+      (files) {
         final remainingSlots = MAX_IMAGES - currentImageCount;
         final filesToAdd = files.take(remainingSlots).toList();
 
@@ -633,7 +655,7 @@ class AddTicketViewModel extends ReactiveViewModel {
     );
 
     pickerResult.fold(
-          (failure) {
+      (failure) {
         if (failure.message != 'No photo taken') {
           Fluttertoast.showToast(
             msg: failure.message,
@@ -641,7 +663,7 @@ class AddTicketViewModel extends ReactiveViewModel {
           );
         }
       },
-          (file) {
+      (file) {
         addLocalFile(file);
       },
     );
@@ -661,7 +683,7 @@ class AddTicketViewModel extends ReactiveViewModel {
     );
 
     pickerResult.fold(
-          (failure) {
+      (failure) {
         if (failure.message != 'No video selected') {
           Fluttertoast.showToast(
             msg: failure.message,
@@ -669,7 +691,7 @@ class AddTicketViewModel extends ReactiveViewModel {
           );
         }
       },
-          (file) {
+      (file) {
         addLocalFile(file);
       },
     );
@@ -689,7 +711,7 @@ class AddTicketViewModel extends ReactiveViewModel {
     );
 
     pickerResult.fold(
-          (failure) {
+      (failure) {
         if (failure.message != 'No video recorded') {
           Fluttertoast.showToast(
             msg: failure.message,
@@ -697,7 +719,7 @@ class AddTicketViewModel extends ReactiveViewModel {
           );
         }
       },
-          (file) {
+      (file) {
         addLocalFile(file);
       },
     );
@@ -717,7 +739,7 @@ class AddTicketViewModel extends ReactiveViewModel {
     );
 
     pickerResult.fold(
-          (failure) {
+      (failure) {
         if (failure.message != 'No document selected') {
           Fluttertoast.showToast(
             msg: failure.message,
@@ -725,7 +747,7 @@ class AddTicketViewModel extends ReactiveViewModel {
           );
         }
       },
-          (file) {
+      (file) {
         addLocalFile(file);
       },
     );
@@ -736,10 +758,7 @@ class AddTicketViewModel extends ReactiveViewModel {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppSizes.v14),
         border: Border(
-          left: BorderSide(
-            color: AppColors.primary,
-            width: AppSizes.w4,
-          ),
+          left: BorderSide(color: AppColors.primary, width: AppSizes.w4),
         ),
       ),
       child: Column(
@@ -760,10 +779,7 @@ class AddTicketViewModel extends ReactiveViewModel {
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
                 'Images: $currentImageCount/$MAX_IMAGES | Videos: $currentVideoCount/$MAX_VIDEOS',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
               ),
             ),
         ],

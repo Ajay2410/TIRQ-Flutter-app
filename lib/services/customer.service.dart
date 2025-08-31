@@ -1,0 +1,248 @@
+import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
+import 'package:manager/api_endpoints.dart';
+import 'package:manager/core/locator.dart';
+import 'package:manager/core/models/customer.dart';
+import 'package:manager/core/utils/app_logger.dart';
+import 'package:manager/core/utils/failures.dart';
+import 'package:manager/core/utils/type_def.dart';
+import 'package:manager/services/api.service.dart';
+
+class CustomerService {
+  final _apiService = locator<ApiService>();
+
+  /// Create a new customer
+  ResultFuture<Customer> createCustomer({
+    required String phoneNumber,
+    required String email,
+    required String customerName,
+    required String contactPerson,
+    required String designation,
+    required List<Map<String, dynamic>> machines,
+  }) async {
+    try {
+      AppLogger.info("Creating customer: $customerName");
+
+      final Map<String, dynamic> requestData = {
+        'phoneNumber': phoneNumber,
+        'email': email,
+        'customerName': customerName,
+        'contactPerson': contactPerson,
+        'designation': designation,
+        'machines': machines,
+      };
+
+      AppLogger.info("Request data: $requestData");
+
+      final response = await _apiService.post(
+        url: ApiEndpoints.createCustomer,
+        data: requestData,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = response.data;
+
+        if (data != null && data['data'] != null) {
+          final customer = Customer.fromJson(data['data']);
+          AppLogger.info("Customer created successfully: ${customer.id}");
+          return Right(customer);
+        } else {
+          AppLogger.error("Invalid response format: $data");
+          return Left(Failure('Invalid response format'));
+        }
+      } else {
+        final errorMessage =
+            response.data?['message'] ?? 'Failed to create customer';
+        AppLogger.error(
+          "API error: $errorMessage (Status: ${response.statusCode})",
+        );
+        return Left(Failure(errorMessage));
+      }
+    } on DioException catch (e) {
+      final errorMessage =
+          e.response?.data?['message'] ?? 'Network error occurred';
+      AppLogger.error("DioException while creating customer: $errorMessage");
+      return Left(Failure(errorMessage));
+    } catch (e) {
+      AppLogger.error("Exception while creating customer: $e");
+      return Left(Failure('Unexpected error occurred: $e'));
+    }
+  }
+
+  /// Get all customers
+  ResultFuture<List<Customer>> getCustomers() async {
+    try {
+      AppLogger.info("Fetching customers");
+
+      final response = await _apiService.get(url: ApiEndpoints.getCustomers);
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if (data != null && data['data'] != null) {
+          final List<dynamic> customersData = data['data'];
+          final customers =
+              customersData.map((json) => Customer.fromJson(json)).toList();
+          AppLogger.info("Fetched ${customers.length} customers");
+          return Right(customers);
+        } else {
+          AppLogger.warning("No customers found");
+          return Right([]);
+        }
+      } else {
+        final errorMessage =
+            response.data?['message'] ?? 'Failed to fetch customers';
+        AppLogger.error(
+          "API error: $errorMessage (Status: ${response.statusCode})",
+        );
+        return Left(Failure(errorMessage));
+      }
+    } on DioException catch (e) {
+      final errorMessage =
+          e.response?.data?['message'] ?? 'Network error occurred';
+      AppLogger.error("DioException while fetching customers: $errorMessage");
+      return Left(Failure(errorMessage));
+    } catch (e) {
+      AppLogger.error("Exception while fetching customers: $e");
+      return Left(Failure('Unexpected error occurred: $e'));
+    }
+  }
+
+  /// Search customers by query
+  ResultFuture<List<Customer>> searchCustomers(String query) async {
+    try {
+      AppLogger.info("Searching customers with query: $query");
+
+      final response = await _apiService.get(
+        url: ApiEndpoints.searchCustomers,
+        queryParameters: {'search': query},
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if (data != null && data['data'] != null) {
+          final List<dynamic> customersData = data['data'];
+          final customers =
+              customersData.map((json) => Customer.fromJson(json)).toList();
+          AppLogger.info(
+            "Found ${customers.length} customers for query: $query",
+          );
+          return Right(customers);
+        } else {
+          AppLogger.warning("No customers found for query: $query");
+          return Right([]);
+        }
+      } else {
+        final errorMessage =
+            response.data?['message'] ?? 'Failed to search customers';
+        AppLogger.error(
+          "API error: $errorMessage (Status: ${response.statusCode})",
+        );
+        return Left(Failure(errorMessage));
+      }
+    } on DioException catch (e) {
+      final errorMessage =
+          e.response?.data?['message'] ?? 'Network error occurred';
+      AppLogger.error("DioException while searching customers: $errorMessage");
+      return Left(Failure(errorMessage));
+    } catch (e) {
+      AppLogger.error("Exception while searching customers: $e");
+      return Left(Failure('Unexpected error occurred: $e'));
+    }
+  }
+
+  /// Delete a customer
+  ResultFuture<bool> deleteCustomer(String customerId) async {
+    try {
+      AppLogger.info("Deleting customer: $customerId");
+
+      final response = await _apiService.delete(
+        url: '${ApiEndpoints.deleteCustomer}/$customerId',
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if (data != null && data['message'] != null) {
+          AppLogger.info("Customer deleted successfully: $customerId");
+          return const Right(true);
+        } else {
+          AppLogger.error("Invalid response format: $data");
+          return Left(Failure('Invalid response format'));
+        }
+      } else {
+        final errorMessage =
+            response.data?['message'] ?? 'Failed to delete customer';
+        AppLogger.error(
+          "API error: $errorMessage (Status: ${response.statusCode})",
+        );
+        return Left(Failure(errorMessage));
+      }
+    } on DioException catch (e) {
+      final errorMessage =
+          e.response?.data?['message'] ?? 'Network error occurred';
+      AppLogger.error("DioException while deleting customer: $errorMessage");
+      return Left(Failure(errorMessage));
+    } catch (e) {
+      AppLogger.error("Exception while deleting customer: $e");
+      return Left(Failure('Unexpected error occurred: $e'));
+    }
+  }
+
+  /// Update an existing customer
+  ResultFuture<Customer> updateCustomer({
+    required String customerId,
+    required String phoneNumber,
+    required String email,
+    required String customerName,
+    required String contactPerson,
+    required String designation,
+    required List<Map<String, dynamic>> machines,
+  }) async {
+    try {
+      AppLogger.info("Updating customer: $customerName (ID: $customerId)");
+
+      final Map<String, dynamic> requestData = {
+        'phoneNumber': phoneNumber,
+        'email': email,
+        'customerName': customerName,
+        'contactPerson': contactPerson,
+        'designation': designation,
+        'machines': machines,
+      };
+
+      AppLogger.info("Request data: $requestData");
+
+      final response = await _apiService.put(
+        url: '${ApiEndpoints.updateCustomer}/$customerId',
+        data: requestData,
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        if (data != null && data['data'] != null) {
+          final customer = Customer.fromJson(data['data']);
+          AppLogger.info("Customer updated successfully: ${customer.id}");
+          return Right(customer);
+        } else {
+          AppLogger.error("Invalid response format: $data");
+          return Left(Failure('Invalid response format'));
+        }
+      } else {
+        final errorMessage =
+            response.data?['message'] ?? 'Failed to update customer';
+        AppLogger.error(
+          "API error: $errorMessage (Status: ${response.statusCode})",
+        );
+        return Left(Failure(errorMessage));
+      }
+    } on DioException catch (e) {
+      final errorMessage =
+          e.response?.data?['message'] ?? 'Network error occurred';
+      AppLogger.error("DioException while updating customer: $errorMessage");
+      return Left(Failure(errorMessage));
+    } catch (e) {
+      AppLogger.error("Exception while updating customer: $e");
+      return Left(Failure('Unexpected error occurred: $e'));
+    }
+  }
+}

@@ -491,7 +491,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
         // Navigate based on the card route
         if (card.route == '/customers') {
           // Navigate to My Customers screen using view model
-          model.navigateToMyCustomers();
+          model.navigateToMyCustomers(context);
         }
         // TODO: Implement other navigation routes when needed
       },

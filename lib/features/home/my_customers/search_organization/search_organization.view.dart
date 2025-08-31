@@ -3,9 +3,8 @@ import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/services/language.service.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
-import '../../../../core/locator.dart';
-import '../machine_details/customer_details/customer_edit_details.view.dart';
+import 'package:manager/core/models/customer.dart';
+import 'package:manager/features/home/my_customers/machine_details/customer_details/customer_edit_details.view.dart';
 import 'search_organization.vm.dart';
 
 class SearchOrganizationView extends StatefulWidget {
@@ -33,7 +32,7 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
   }
 
   void _onSearchChanged() {
-    // This will be handled by the ViewModel
+    // Search functionality handled by ViewModel
   }
 
   @override
@@ -46,21 +45,16 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
 
           body: Column(
             children: [
-              // Search Bar
               Container(
                 color: AppColors.scaffoldBackground,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
                 child: _buildSearchTextField(context, model),
               ),
 
-              // Content Area
               Expanded(
                 child: Container(
                   color: AppColors.scaffoldBackground,
-                  child:
-                      model.searchResults.isEmpty
-                          ? _buildEmptyState()
-                          : _buildSearchResults(model),
+                  child: _buildSearchContent(model),
                 ),
               ),
             ],
@@ -99,8 +93,6 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
     SearchOrganizationViewModel model,
   ) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(14),
@@ -115,7 +107,6 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
       ),
       child: Row(
         children: [
-          // Search icon
           Padding(
             padding: const EdgeInsets.all(16),
             child: Image.asset(
@@ -125,7 +116,6 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
               color: AppColors.black,
             ),
           ),
-          // Text field
           Expanded(
             child: TextFormField(
               controller: _searchController,
@@ -140,7 +130,7 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
                 _searchFocusNode.unfocus();
               },
               decoration: const InputDecoration(
-                hintText: 'Search organizations...',
+                hintText: 'Search customers by name, phone, or email...',
                 hintStyle: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 16,
@@ -157,16 +147,28 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
               ),
             ),
           ),
-          // Clear button
           if (_searchController.text.isNotEmpty)
             GestureDetector(
               onTap: () {
                 _searchController.clear();
                 model.clearSearch();
+                model.cancelSearch();
               },
               child: const Padding(
                 padding: EdgeInsets.all(16),
                 child: Icon(Icons.close, color: AppColors.black, size: 20),
+              ),
+            ),
+          if (model.isLoading)
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                ),
               ),
             ),
         ],
@@ -185,32 +187,65 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
     );
   }
 
-  Widget _buildSearchResults(SearchOrganizationViewModel model) {
+  Widget _buildSearchContent(SearchOrganizationViewModel model) {
+    if (model.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
+        ),
+      );
+    }
+
+    if (model.errorMessage != null) {
+      return Center(
+        child: Text(
+          model.errorMessage!,
+          style: const TextStyle(color: AppColors.error),
+        ),
+      );
+    }
+
+    if (model.searchResults.isEmpty) {
+      return _buildEmptyState();
+    }
+
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: model.searchResults.length,
+      itemCount: model.searchResults.length + 1, // +1 for the header
       separatorBuilder:
-          (context, index) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: const Divider(color: AppColors.lightGray, height: 1),
-          ),
+          (context, index) =>
+              index == 0
+                  ? SizedBox()
+                  : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: const Divider(color: AppColors.lightGray, height: 1),
+                  ),
       itemBuilder: (context, index) {
-        final result = model.searchResults[index];
-        return _buildSearchResultItem(result);
+        if (index == 0) {
+          return SizedBox(height: 10);
+        }
+        final result = model.searchResults[index - 1];
+        return Container(
+          color: AppColors.white,
+          padding: EdgeInsets.all(10),
+          child: _buildSearchResultItem(result),
+        );
       },
     );
   }
 
-  Widget _buildSearchResultItem(Map<String, String> result) {
+  Widget _buildSearchResultItem(Customer result) {
     return InkWell(
       onTap: () {
-        final navigationService = locator<NavigationService>();
-
-        navigationService.navigateToView(const CustomerEditDetailsView());
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CustomerEditDetailsView(customer: result),
+          ),
+        );
       },
       child: Row(
         children: [
-          // Left side - Company icon and flag
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
@@ -228,84 +263,36 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
                     shape: BoxShape.circle,
                   ),
                   child: ClipOval(
-                    child:
-                        result['avatar'] != null &&
-                                result['avatar']!.startsWith('http')
-                            ? Image.network(
-                              result['avatar']!,
-                              width: 50,
-                              height: 50,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  color: AppColors.bluebackground,
-                                  child: Center(
-                                    child: Text(
-                                      result['name']
-                                              ?.substring(0, 2)
-                                              .toUpperCase() ??
-                                          '',
-                                      style: const TextStyle(
-                                        color: AppColors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                              loadingBuilder: (
-                                context,
-                                child,
-                                loadingProgress,
-                              ) {
-                                if (loadingProgress == null) return child;
-                                return Container(
-                                  color: AppColors.bluebackground,
-                                  child: const Center(
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.white,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            )
-                            : Container(
-                              color: AppColors.bluebackground,
-                              child: Center(
-                                child: Text(
-                                  result['name']
-                                          ?.substring(0, 2)
-                                          .toUpperCase() ??
-                                      '',
-                                  style: const TextStyle(
-                                    color: AppColors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
+                    child: Container(
+                      color: AppColors.bluebackground,
+                      child: Center(
+                        child: Text(
+                          result.customerName?.substring(0, 2).toUpperCase() ??
+                              '',
+                          style: const TextStyle(
+                            color: AppColors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                // Flag icon at bottom
-                Positioned(
-                  bottom: -4,
-                  right: -4,
-                  child: Image.asset(AppImages.flag, width: 17, height: 17),
-                ),
+                if (result.flag != null)
+                  Positioned(
+                    bottom: -4,
+                    right: -4,
+                    child: Image.asset(AppImages.flag, width: 17, height: 17),
+                  ),
               ],
             ),
           ),
 
           const SizedBox(width: 16),
 
-          // Middle section - Customer name and description
           Text(
-            result['name'] ?? '',
+            result.customerName ?? '',
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,

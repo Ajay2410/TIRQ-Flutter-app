@@ -23,9 +23,9 @@ class UserAdapter extends TypeAdapter<User> {
       organizationId: fields[6] as String?,
       organizationName: fields[4] as String?,
       id: fields[2] as String?,
-      userType: UserType.values[fields[7] as int? ?? 0],
-      organizationType: OrganizationType.values[fields[8] as int? ?? 0],
-      userRole: UserRole.values[fields[9] as int? ?? 0],
+      userType: fields[7] as UserType?,
+      organizationType: fields[8] as OrganizationType?,
+      userRole: fields[9] as UserRole?,
       phone: fields[10] as String?,
       logoUrl: fields[12] as String?,
       fcmToken: fields[13] as String?,
@@ -37,13 +37,14 @@ class UserAdapter extends TypeAdapter<User> {
       fullName: fields[19] as String?,
       isEmailVerified: fields[20] as bool?,
       isPhoneVerified: fields[21] as bool?,
+      countryCode: fields[22] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(20)
+      ..writeByte(21)
       ..writeByte(1)
       ..write(obj.token)
       ..writeByte(2)
@@ -57,11 +58,11 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(6)
       ..write(obj.organizationId)
       ..writeByte(7)
-      ..write(obj.userType?.index ?? 0)
+      ..write(obj.userType)
       ..writeByte(8)
-      ..write(obj.organizationType?.index ?? 0)
+      ..write(obj.organizationType)
       ..writeByte(9)
-      ..write(obj.userRole?.index ?? 0)
+      ..write(obj.userRole)
       ..writeByte(10)
       ..write(obj.phone)
       ..writeByte(12)
@@ -83,7 +84,9 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(20)
       ..write(obj.isEmailVerified)
       ..writeByte(21)
-      ..write(obj.isPhoneVerified);
+      ..write(obj.isPhoneVerified)
+      ..writeByte(22)
+      ..write(obj.countryCode);
   }
 
   @override

@@ -1,15 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:manager/core/models/customer.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/services/language.service.dart';
 import 'package:manager/features/home/my_customers/machine_details/machine_details.view.dart';
+import 'package:manager/features/home/my_customers/machine_details/customer_details/customer_edit_details.view.dart';
 
-class CustomerDetailsView extends StatelessWidget {
-  const CustomerDetailsView({super.key});
+class CustomerDetailsView extends StatefulWidget {
+  final Customer customer;
+
+  const CustomerDetailsView({super.key, required this.customer});
+
+  @override
+  State<CustomerDetailsView> createState() => _CustomerDetailsViewState();
+}
+
+class _CustomerDetailsViewState extends State<CustomerDetailsView> {
+  bool _isDeleting = false;
+  late Customer _currentCustomer;
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _currentCustomer = widget.customer;
+  }
+
+  void _refreshCustomerData(Customer updatedCustomer) {
+    setState(() {
+      _currentCustomer = updatedCustomer;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: SafeArea(
         child: Column(
           children: [
@@ -23,7 +51,6 @@ class CustomerDetailsView extends StatelessWidget {
                       padding: const EdgeInsets.all(12),
                       child: _buildCustomerContactCard(),
                     ),
-                    const SizedBox(height: 16),
                     Expanded(
                       child: Container(
                         color: AppColors.scaffoldBackground,
@@ -40,7 +67,7 @@ class CustomerDetailsView extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: _buildFloatingActionButton(),
+      floatingActionButton: _buildFloatingActionButton(context),
     );
   }
 
@@ -60,7 +87,7 @@ class CustomerDetailsView extends StatelessWidget {
       title: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(2),
+            padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: AppColors.colorF0F2FC,
@@ -74,8 +101,11 @@ class CustomerDetailsView extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  'CR',
-                  style: TextStyle(
+                  _currentCustomer.customerName
+                          ?.substring(0, 2)
+                          .toUpperCase() ??
+                      'NA',
+                  style: const TextStyle(
                     color: AppColors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -90,16 +120,18 @@ class CustomerDetailsView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Leslie Alexander',
-                  style: TextStyle(
+                  _currentCustomer.customerName ?? 'Unknown Customer',
+                  style: const TextStyle(
                     color: AppColors.white,
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  'glass_processor'.lang,
-                  style: TextStyle(
+                  _currentCustomer.designation?.isNotEmpty == true
+                      ? _currentCustomer.designation!
+                      : 'customer'.lang,
+                  style: const TextStyle(
                     color: AppColors.white,
                     fontSize: 11,
                     fontWeight: FontWeight.w400,
@@ -116,7 +148,6 @@ class CustomerDetailsView extends StatelessWidget {
           offset: const Offset(-10, 30),
           onSelected: (String value) {
             if (value == 'delete') {
-              // Handle delete action
               _showDeleteConfirmation(context);
             }
           },
@@ -164,6 +195,7 @@ class CustomerDetailsView extends StatelessWidget {
         ],
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Column(
@@ -171,10 +203,17 @@ class CustomerDetailsView extends StatelessWidget {
               children: [
                 _buildContactInfoRow(
                   'contact_person'.lang,
-                  'not_available'.lang,
+                  _currentCustomer.contactPerson?.isNotEmpty == true
+                      ? _currentCustomer.contactPerson!
+                      : 'not_available'.lang,
                 ),
                 const SizedBox(height: 12),
-                _buildContactInfoRow('email'.lang, 'delta@gmail.com'),
+                _buildContactInfoRow(
+                  'email'.lang,
+                  _currentCustomer.email?.isNotEmpty == true
+                      ? _currentCustomer.email!
+                      : 'not_available'.lang,
+                ),
               ],
             ),
           ),
@@ -183,9 +222,19 @@ class CustomerDetailsView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildContactInfoRow('designation'.lang, 'not_available'.lang),
+                _buildContactInfoRow(
+                  'designation'.lang,
+                  _currentCustomer.designation?.isNotEmpty == true
+                      ? _currentCustomer.designation!
+                      : 'not_available'.lang,
+                ),
                 const SizedBox(height: 12),
-                _buildContactInfoRow('phone'.lang, '+91 123 4346 568'),
+                _buildContactInfoRow(
+                  'phone'.lang,
+                  _currentCustomer.phoneNumber?.isNotEmpty == true
+                      ? _currentCustomer.phoneNumber!
+                      : 'not_available'.lang,
+                ),
               ],
             ),
           ),
@@ -220,74 +269,58 @@ class CustomerDetailsView extends StatelessWidget {
   }
 
   Widget _buildMachineList(BuildContext context) {
-    final machines = [
-      {
-        'country': 'US',
-        'model': 'DEF-MODEL-DEF',
-        'modelNumber': 'DEF',
-        'machineType': 'fully_automatic'.lang,
-        'isInWarranty': false,
-      },
-      {
-        'country': 'US',
-        'model': 'DEF-MODEL-DEF',
-        'modelNumber': 'DEF',
-        'machineType': 'fully_automatic'.lang,
-        'isInWarranty': true,
-      },
-      {
-        'country': 'US',
-        'model': 'DEF-MODEL-DEF',
-        'modelNumber': 'DEF',
-        'machineType': 'fully_automatic'.lang,
-        'isInWarranty': true,
-      },
-      {
-        'country': 'US',
-        'model': 'DEF-MODEL-DEF',
-        'modelNumber': 'DEF',
-        'machineType': 'fully_automatic'.lang,
-        'isInWarranty': true,
-      },
-      {
-        'country': 'US',
-        'model': 'DEF-MODEL-DEF',
-        'modelNumber': 'DEF',
-        'machineType': 'fully_automatic'.lang,
-        'isInWarranty': false,
-      },
-      {
-        'country': 'US',
-        'model': 'DEF-MODEL-DEF',
-        'modelNumber': 'DEF',
-        'machineType': 'fully_automatic'.lang,
-        'isInWarranty': true,
-      },
-      {
-        'country': 'US',
-        'model': 'DEF-MODEL-DEF',
-        'modelNumber': 'DEF',
-        'machineType': 'fully_automatic'.lang,
-        'isInWarranty': true,
-      },
-      {
-        'country': 'US',
-        'model': 'DEF-MODEL-DEF',
-        'modelNumber': 'DEF',
-        'machineType': 'fully_automatic'.lang,
-        'isInWarranty': true,
-      },
-    ];
+    if (_currentCustomer.machines?.isEmpty != false) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              AppImages.myCustomers,
+              width: 80,
+              height: 80,
+              color: AppColors.gray,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'no_machines_assigned'.lang,
+              style: TextStyle(
+                fontSize: 18,
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'this_customer_has_no_machines'.lang,
+              style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
 
     return Column(
       children:
-          machines
-              .map((machine) => _buildMachineCard(context, machine))
+          _currentCustomer.machines!
+              .map((machineData) => _buildMachineCard(context, machineData))
               .toList(),
     );
   }
 
-  Widget _buildMachineCard(BuildContext context, Map<String, dynamic> machine) {
+  Widget _buildMachineCard(BuildContext context, MachineElement machineData) {
+    final machine = machineData.machine;
+    if (machine == null) return const SizedBox.shrink();
+
+    final machineName = machine.machineName ?? 'Unknown Machine';
+    final modelNumber = machine.modelNumber ?? 'N/A';
+    final machineType = machine.machineType ?? 'Unknown Type';
+    final isInWarranty = machineData.warrantyStatus == 'Active';
+    final country =
+        _currentCustomer.countryOrigin?.isNotEmpty == true
+            ? _currentCustomer.countryOrigin!
+            : 'N/A';
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(10),
@@ -316,7 +349,7 @@ class CustomerDetailsView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Text(
-                  machine['country'],
+                  country,
                   style: TextStyle(
                     color: AppColors.colorBlue,
                     fontSize: 14,
@@ -327,7 +360,7 @@ class CustomerDetailsView extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  machine['model'],
+                  machineName,
                   style: TextStyle(
                     color: AppColors.textPrimary,
                     fontSize: 16,
@@ -340,22 +373,17 @@ class CustomerDetailsView extends StatelessWidget {
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
                   color:
-                      machine['isInWarranty']
+                      isInWarranty
                           ? AppColors.success.withValues(alpha: 0.15)
                           : AppColors.redBack.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  machine['isInWarranty']
-                      ? 'in_warranty'.lang
-                      : 'out_of_warranty'.lang,
+                  isInWarranty ? 'in_warranty'.lang : 'out_of_warranty'.lang,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color:
-                        machine['isInWarranty']
-                            ? AppColors.success
-                            : AppColors.redBack,
+                    color: isInWarranty ? AppColors.success : AppColors.redBack,
                   ),
                 ),
               ),
@@ -366,30 +394,14 @@ class CustomerDetailsView extends StatelessWidget {
                     MaterialPageRoute(
                       builder:
                           (context) => MachineDetailsView(
-                            machine: {
-                              'customerName': 'Leslie Alexander',
-                              'machineType': 'glass_processor'.lang,
-                              'model': machine['model'],
-                              'modelNumber': machine['modelNumber'],
-                              'machineType': machine['machineType'],
-                              'maxHeight': '1.0',
-                              'maxWidth': '1.0',
-                              'minHeight': '1.0',
-                              'minWidth': '1.0',
-                              'powerConsumption': '11.0 kw',
-                              'purchaseDate': 'Jul 01, 2025',
-                              'installationDate': 'Jul 01, 2025',
-                              'warrantyStart': 'Jul 01, 2025',
-                              'warrantyEnd': 'Jul 01, 2025',
-                              'isInWarranty': machine['isInWarranty'],
-                              'invoiceNumber': '999',
-                            },
+                            customer: _currentCustomer,
+                            machineElement: machineData,
                           ),
                     ),
                   );
                 },
                 child: Container(
-                  padding: EdgeInsets.all(6),
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: AppColors.softGray,
                     borderRadius: BorderRadius.circular(10),
@@ -413,17 +425,11 @@ class CustomerDetailsView extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: _buildMachineInfoRow(
-                  'model_number'.lang,
-                  machine['modelNumber'],
-                ),
+                child: _buildMachineInfoRow('model_number'.lang, modelNumber),
               ),
               const SizedBox(width: 24),
               Expanded(
-                child: _buildMachineInfoRow(
-                  'machine_type'.lang,
-                  machine['machineType'],
-                ),
+                child: _buildMachineInfoRow('machine_type'.lang, machineType),
               ),
             ],
           ),
@@ -457,9 +463,31 @@ class CustomerDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildFloatingActionButton() {
+  Widget _buildFloatingActionButton(BuildContext context) {
     return FloatingActionButton.extended(
-      onPressed: () {},
+      onPressed: () async {
+        final result = await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder:
+                (context) =>
+                    CustomerEditDetailsView(customer: _currentCustomer),
+          ),
+        );
+
+        if (result != null && result is Customer) {
+          _refreshCustomerData(result);
+
+          if (mounted) {
+            _scaffoldKey.currentState?.showSnackBar(
+              SnackBar(
+                content: Text('Customer updated successfully'),
+                backgroundColor: Colors.green,
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
+        }
+      },
       backgroundColor: AppColors.primary,
       foregroundColor: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
@@ -491,7 +519,6 @@ class CustomerDetailsView extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Warning Icon
                 Container(
                   padding: EdgeInsets.all(14),
                   decoration: BoxDecoration(
@@ -520,7 +547,6 @@ class CustomerDetailsView extends StatelessWidget {
                 ),
                 const SizedBox(height: 15),
 
-                // Main Question Text
                 Text(
                   'are_you_sure_remove_customer'.lang,
                   textAlign: TextAlign.center,
@@ -533,13 +559,14 @@ class CustomerDetailsView extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
 
-                // Action Buttons
                 Row(
                   children: [
-                    // Cancel Button
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed:
+                            _isDeleting
+                                ? null
+                                : () => Navigator.of(context).pop(),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.white,
                           foregroundColor: AppColors.darkGray,
@@ -566,14 +593,12 @@ class CustomerDetailsView extends StatelessWidget {
                     ),
                     const SizedBox(width: 16),
 
-                    // Remove Button
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          // Handle delete action here
-                          // You can add your delete logic here
-                        },
+                        onPressed:
+                            _isDeleting
+                                ? null
+                                : () => _handleDeleteCustomer(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.redBack,
                           foregroundColor: Colors.white,
@@ -584,21 +609,32 @@ class CustomerDetailsView extends StatelessWidget {
                           ),
                           padding: EdgeInsets.symmetric(vertical: 14),
                         ),
-                        child: Text(
-                          'remove'.lang,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                        child:
+                            _isDeleting
+                                ? SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
+                                    ),
+                                  ),
+                                )
+                                : Text(
+                                  'remove'.lang,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 20),
 
-                // Warning Message
                 Align(
                   alignment: Alignment.center,
                   child: Text(
@@ -616,5 +652,37 @@ class CustomerDetailsView extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _handleDeleteCustomer(BuildContext context) async {
+    if (_isDeleting) return;
+
+    setState(() {
+      _isDeleting = true;
+    });
+
+    try {
+      final navigator = Navigator.of(context);
+
+      navigator.pop();
+      await Future.delayed(const Duration(milliseconds: 500));
+      navigator.pop(true);
+      // TODO: Implement customer deletion
+      navigator.pop(true);
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: 'An error occurred: ${e.toString()}',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: AppColors.redBack,
+        textColor: AppColors.white,
+        fontSize: 16,
+      );
+    } finally {
+      setState(() {
+        _isDeleting = false;
+      });
+    }
   }
 }

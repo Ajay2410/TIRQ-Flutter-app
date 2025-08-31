@@ -1,124 +1,83 @@
 import 'package:manager/core/models/customer.dart';
-import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
+import 'package:flutter/material.dart';
 import '../../../core/locator.dart';
 import '../../../routes/routes.dart';
+import '../../../services/api.service.dart';
+import '../../../api_endpoints.dart';
+import '../../../services/language.service.dart';
 import 'search_organization/search_organization.view.dart';
 import 'create_customer/create_new_customer.view.dart';
 
 class MyCustomersViewModel extends BaseViewModel {
-  final _navigationService = locator<NavigationService>();
+  final _apiService = locator<ApiService>();
+
   List<Customer> _customers = [];
   List<Customer> _filteredCustomers = [];
   String _searchQuery = '';
   String _statusFilter = 'all';
+  bool _isLoading = false;
+  bool _hasError = false;
+  String _errorMessage = '';
 
   List<Customer> get customers => _customers;
   List<Customer> get filteredCustomers => _filteredCustomers;
   String get searchQuery => _searchQuery;
   String get statusFilter => _statusFilter;
+  bool get isLoading => _isLoading;
+  @override
+  bool get hasError => _hasError;
+  String get errorMessage => _errorMessage;
 
   void init() {
+    _searchQuery = '';
+    _statusFilter = 'all';
     _loadCustomers();
   }
 
-  void _loadCustomers() {
-    // Mock data - replace with actual API call
-    _customers = [
-      Customer(
-        id: '1',
-        name: 'Leslie Alexander',
-        companyIcon: 'C&R',
-        flag: AppImages.egyptFlag,
-        description: 'Model No 1, Model No 2, Model No 3',
-        status: 'Active',
-        avatar:
-            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-      ),
-      Customer(
-        id: '2',
-        name: 'Courtney Henry',
-        companyIcon: 'SPPPIC',
-        flag: AppImages.egyptFlag,
-        description: 'Model No 1, Model No 2, Model No 3',
-        status: 'Active',
-        avatar:
-            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-      ),
-      Customer(
-        id: '3',
-        name: 'Leslie Alexander',
-        companyIcon: 'C&R',
-        flag: AppImages.egyptFlag,
-        description: 'Model No 1, Model No 2, Model No 3',
-        status: 'Active',
-        avatar:
-            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-      ),
-      Customer(
-        id: '4',
-        name: 'Courtney Henry',
-        companyIcon: 'SPPPIC',
-        flag: AppImages.egyptFlag,
-        description: 'Depart Name/ Tag line',
-        status: 'Active',
-        avatar:
-            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
-      ),
-      Customer(
-        id: '5',
-        name: 'Leslie Alexander',
-        companyIcon: 'C&R',
-        flag: AppImages.egyptFlag,
-        description: 'Depart Name/ Tag line',
-        status: 'Active',
-        avatar:
-            'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face',
-      ),
-      Customer(
-        id: '6',
-        name: 'Courtney Henry',
-        companyIcon: 'SPPPIC',
-        flag: AppImages.egyptFlag,
-        description: 'Depart Name/ Tag line',
-        status: 'Inactive',
-        avatar:
-            'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face',
-      ),
-      Customer(
-        id: '7',
-        name: 'Leslie Alexander',
-        companyIcon: 'C&R',
-        flag: AppImages.egyptFlag,
-        description: 'Model No 1, Model No 2, Model No 3',
-        status: 'Inactive',
-        avatar:
-            'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face',
-      ),
-      Customer(
-        id: '8',
-        name: 'Courtney Henry',
-        companyIcon: 'SPPPIC',
-        flag: AppImages.egyptFlag,
-        description: 'Depart Name/ Tag line',
-        status: 'Inactive',
-        avatar:
-            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face',
-      ),
-      Customer(
-        id: '9',
-        name: 'Leslie Alexander',
-        companyIcon: 'C&R',
-        flag: AppImages.egyptFlag,
-        description: 'Depart Name/ Tag line',
-        status: 'Active',
-        avatar:
-            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-      ),
-    ];
-    _filteredCustomers = _customers;
+  void clearSearch() {
+    _searchQuery = '';
+    _applyFilters();
+  }
+
+  Future<void> _loadCustomers() async {
+    _setLoading(true);
+    _hasError = false;
+    _errorMessage = '';
+
+    try {
+      final response = await _apiService.get(url: ApiEndpoints.getCustomers);
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if (data != null && data['data'] != null) {
+          final List<dynamic> customersData = data['data'];
+          _customers =
+              customersData.map((json) => Customer.fromJson(json)).toList();
+          _filteredCustomers = _customers;
+        } else {
+          _customers = [];
+          _filteredCustomers = [];
+        }
+      } else {
+        _hasError = true;
+        _errorMessage = LanguageService.get('failed_to_load_customers');
+      }
+    } catch (e) {
+      _hasError = true;
+      _errorMessage = 'Error: ${e.toString()}';
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  void _setLoading(bool loading) {
+    _isLoading = loading;
     notifyListeners();
+  }
+
+  Future<void> refreshCustomers() async {
+    await _loadCustomers();
   }
 
   void onSearchChanged(String query) {
@@ -127,7 +86,6 @@ class MyCustomersViewModel extends BaseViewModel {
   }
 
   void onStatusFilterChanged(String status) {
-    // If the same filter is pressed again, set it to 'all' (toggle behavior)
     if (_statusFilter == status) {
       _statusFilter = 'all';
     } else {
@@ -140,16 +98,16 @@ class MyCustomersViewModel extends BaseViewModel {
     _filteredCustomers =
         _customers.where((customer) {
           bool matchesSearch =
-              customer.name.toLowerCase().contains(
-                _searchQuery.toLowerCase(),
-              ) ||
-              customer.description.toLowerCase().contains(
-                _searchQuery.toLowerCase(),
-              );
+              _searchQuery.isEmpty ||
+              customer.customerName?.toLowerCase().contains(
+                    _searchQuery.toLowerCase(),
+                  ) ==
+                  true;
 
           bool matchesStatus =
               _statusFilter == 'all' ||
-              customer.status.toLowerCase() == _statusFilter.toLowerCase();
+              (customer.isActive == true ? 'active' : 'inactive') ==
+                  _statusFilter.toLowerCase();
 
           return matchesSearch && matchesStatus;
         }).toList();
@@ -157,23 +115,32 @@ class MyCustomersViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onAddNewCustomer() {
-    // Navigate to add customer screen
-    _navigationService.navigateToView(const CreateNewCustomerView());
+  void onAddNewCustomer(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder:
+            (context) => CreateNewCustomerView(
+              onCustomerCreated: () {
+                _loadCustomers();
+              },
+            ),
+      ),
+    );
   }
 
   void onScanFromCamera() {
-    // Navigate to camera/gallery scanner
-    // _navigationService.navigateTo(Routes.scanQr);
+    // TODO: Implement QR scan functionality
   }
 
-  void onSearchByPhone() {
-    // Navigate to search by phone/email screen
-    _navigationService.navigateToView(const SearchOrganizationView());
+  void onSearchByPhone(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const SearchOrganizationView()),
+    );
   }
 
-  void onCustomerTap(Customer customer) {
-    // Navigate to customer details screen
-    _navigationService.navigateTo(Routes.customerDetails, arguments: customer);
+  void onCustomerTap(BuildContext context, Customer customer) {
+    Navigator.of(
+      context,
+    ).pushNamed(Routes.customerDetails, arguments: customer);
   }
 }

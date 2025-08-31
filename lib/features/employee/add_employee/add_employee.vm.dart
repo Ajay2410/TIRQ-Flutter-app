@@ -30,18 +30,24 @@ class AddEmployeeViewModel extends ReactiveViewModel {
   final _organizationService = locator<OrganizationService>();
 
   final formKey = GlobalKey<FormState>();
-  final TextEditingController relationshipTypeController = TextEditingController();
-  final TextEditingController customRelationshipTypeController = TextEditingController();
+  final TextEditingController relationshipTypeController =
+      TextEditingController();
+  final TextEditingController customRelationshipTypeController =
+      TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-  final TextEditingController employeeIdController = TextEditingController(); // Added controller for Employee ID
+  final TextEditingController employeeIdController =
+      TextEditingController(); // Added controller for Employee ID
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController teamController = TextEditingController();
-  final TextEditingController employmentTypeController = TextEditingController();
+  final TextEditingController employmentTypeController =
+      TextEditingController();
   final TextEditingController shiftTimingController = TextEditingController();
-  final TextEditingController factoryLocationController = TextEditingController();
-  final TextEditingController customFactoryLocationController = TextEditingController();
+  final TextEditingController factoryLocationController =
+      TextEditingController();
+  final TextEditingController customFactoryLocationController =
+      TextEditingController();
   final TextEditingController startDateTimeController = TextEditingController();
   final TextEditingController endDateTimeController = TextEditingController();
 
@@ -58,7 +64,9 @@ class AddEmployeeViewModel extends ReactiveViewModel {
   final ReactiveValue<String> _shiftTiming = ReactiveValue('');
   final ReactiveValue<List<Relationship>> _manufacturers = ReactiveValue([]);
   final ReactiveValue<List<Machine>> _machines = ReactiveValue([]);
-  final ReactiveValue<Relationship?> _selectedManufacturer = ReactiveValue(null);
+  final ReactiveValue<Relationship?> _selectedManufacturer = ReactiveValue(
+    null,
+  );
   final ReactiveValue<Machine?> _selectedMachine = ReactiveValue(null);
   final ReactiveValue<bool> _isLoadingManufacturers = ReactiveValue(false);
   final ReactiveValue<bool> _isLoadingMachines = ReactiveValue(false);
@@ -112,22 +120,22 @@ class AddEmployeeViewModel extends ReactiveViewModel {
     'Part time',
     'Contract',
     'Intern',
-    'Consultant'
+    'Consultant',
   ];
 
-  final List<String> shiftOptions = [
-    'Morning',
-    'Evening',
-    'Night'
-  ];
+  final List<String> shiftOptions = ['Morning', 'Evening', 'Night'];
 
   List<Country> get filteredCountries {
     if (_countrySearchQuery.isEmpty) {
       return countries.toList();
     }
-    return countries.where((country) =>
-        country.name.toLowerCase().contains(_countrySearchQuery.toLowerCase())
-    ).toList();
+    return countries
+        .where(
+          (country) => country.name.toLowerCase().contains(
+            _countrySearchQuery.toLowerCase(),
+          ),
+        )
+        .toList();
   }
 
   // Setters
@@ -157,16 +165,17 @@ class AddEmployeeViewModel extends ReactiveViewModel {
         );
         if (response?.data != null) {
           ((response?.data) as EitherResult<Employee>).fold(
-                (exception) {
+            (exception) {
               Fluttertoast.showToast(msg: exception.message.toString());
               _navigationService.back();
             },
-                (employee) async {
+            (employee) async {
               _employee = employee;
               _phoneNumber.value = employee.phone ?? '';
               _email.value = employee.email ?? '';
               _name.value = employee.name ?? '';
-              _employeeId.value = employee.employeeId ?? ''; // Fixed: Set employee ID
+              _employeeId.value =
+                  employee.employeeId ?? ''; // Fixed: Set employee ID
               _employmentStatus.value = employee.employmentStatus ?? '';
               _role.value = employee.role ?? '';
 
@@ -179,7 +188,9 @@ class AddEmployeeViewModel extends ReactiveViewModel {
               if (employee.role != null) {
                 try {
                   final position = UserRole.values.firstWhere(
-                        (pos) => pos.displayName.toLowerCase() == employee.role?.toLowerCase(),
+                    (pos) =>
+                        pos.displayName.toLowerCase() ==
+                        employee.role?.toLowerCase(),
                   );
                   selectedRole = position;
                 } catch (e) {
@@ -190,7 +201,9 @@ class AddEmployeeViewModel extends ReactiveViewModel {
               // Handle multiple relationship types
               if (employee.employeeType != null) {
                 List<String> types = employee.employeeType!.split(',');
-                List<String> standardTypes = getRelationshipTypesForRole(selectedRole);
+                List<String> standardTypes = getRelationshipTypesForRole(
+                  selectedRole,
+                );
 
                 for (String type in types) {
                   type = type.trim();
@@ -217,10 +230,7 @@ class AddEmployeeViewModel extends ReactiveViewModel {
     if (role == UserRole.plantHead) {
       relationshipTypes = ["Director / Factory Owner"];
     } else if (role == UserRole.lineInCharge) {
-      relationshipTypes = [
-        "Director / Factory Owner",
-        "Plant Head",
-      ];
+      relationshipTypes = ["Director / Factory Owner", "Plant Head"];
     } else if (role == UserRole.maintenanceHead) {
       relationshipTypes = [
         "Director / Factory Owner",
@@ -269,7 +279,7 @@ class AddEmployeeViewModel extends ReactiveViewModel {
         "Director / Factory Owner",
         "Head of Global Service",
         "Country Service Manager",
-        "Local Service Engineers"
+        "Local Service Engineers",
       ];
     }
 
@@ -333,9 +343,10 @@ class AddEmployeeViewModel extends ReactiveViewModel {
     final isValid = formKey.currentState?.validate() ?? false;
     final hasRequiredFields =
         _selectedRelationshipTypes.isNotEmpty &&
-            (!_selectedRelationshipTypes.contains('Other') ||
-                (_selectedRelationshipTypes.contains('Other') && customRelationshipTypeController.text.isNotEmpty)) &&
-            startDateTime != null;
+        (!_selectedRelationshipTypes.contains('Other') ||
+            (_selectedRelationshipTypes.contains('Other') &&
+                customRelationshipTypeController.text.isNotEmpty)) &&
+        startDateTime != null;
 
     if (_isFormValid != (isValid && hasRequiredFields)) {
       _isFormValid = isValid && hasRequiredFields;
@@ -357,7 +368,8 @@ class AddEmployeeViewModel extends ReactiveViewModel {
     } else {
       if (relationshipTypeController.text.isEmpty) {
         Fluttertoast.showToast(msg: 'Please select a type');
-      } else if (relationshipTypeController.text == 'Other' && customRelationshipTypeController.text.isEmpty) {
+      } else if (relationshipTypeController.text == 'Other' &&
+          customRelationshipTypeController.text.isEmpty) {
         Fluttertoast.showToast(msg: 'Please specify a type');
       } else if (startDateTime == null) {
         Fluttertoast.showToast(msg: 'Please select a start date');
@@ -400,7 +412,10 @@ class AddEmployeeViewModel extends ReactiveViewModel {
       lastDate: DateTime(2100),
     );
     if (date != null) {
-      startDateTimeController.text = date.toLocal().toIso8601String().substring(0, 10);
+      startDateTimeController.text = date.toLocal().toIso8601String().substring(
+        0,
+        10,
+      );
       startDateTime = date;
       notifyListeners();
       _updateFormValidity();
@@ -415,7 +430,10 @@ class AddEmployeeViewModel extends ReactiveViewModel {
       lastDate: DateTime(2100),
     );
     if (date != null) {
-      endDateTimeController.text = date.toLocal().toIso8601String().substring(0, 10);
+      endDateTimeController.text = date.toLocal().toIso8601String().substring(
+        0,
+        10,
+      );
       endDateTime = date;
       notifyListeners();
       _updateFormValidity();
@@ -450,7 +468,8 @@ class AddEmployeeViewModel extends ReactiveViewModel {
   }
 
   String getActualRelationshipType() {
-    if (relationshipTypeController.text == 'Other' && customRelationshipTypeController.text.isNotEmpty) {
+    if (relationshipTypeController.text == 'Other' &&
+        customRelationshipTypeController.text.isNotEmpty) {
       return customRelationshipTypeController.text.trim();
     }
     return relationshipTypeController.text.trim();
@@ -464,14 +483,16 @@ class AddEmployeeViewModel extends ReactiveViewModel {
       final result = await _organizationService.getProfile();
 
       result.fold(
-            (failure) {
-          AppLogger.error("Failed to load factory locations: ${failure.message}");
+        (failure) {
+          AppLogger.error(
+            "Failed to load factory locations: ${failure.message}",
+          );
           Fluttertoast.showToast(
             msg: "Failed to load factory locations: ${failure.message}",
             backgroundColor: Colors.red,
           );
         },
-            (organization) {
+        (organization) {
           if (organization.units != null && organization.units!.isNotEmpty) {
             _factoryLocations.value = organization.units!;
           } else {
@@ -499,14 +520,14 @@ class AddEmployeeViewModel extends ReactiveViewModel {
     final result = await _organizationService.getPartners(status: 'active');
 
     result.fold(
-          (failure) {
+      (failure) {
         AppLogger.error("Failed to load manufacturers: ${failure.message}");
         Fluttertoast.showToast(
           msg: "Failed to load manufacturers: ${failure.message}",
           backgroundColor: Colors.red,
         );
       },
-          (relationships) {
+      (relationships) {
         _manufacturers.value = relationships;
         notifyListeners();
       },
@@ -528,7 +549,7 @@ class AddEmployeeViewModel extends ReactiveViewModel {
     notifyListeners();
 
     final manufacturer = _manufacturers.value.firstWhere(
-          (m) => m.partnerId == manufacturerId,
+      (m) => m.partnerId == manufacturerId,
       orElse: () => throw Exception('Manufacturer not found'),
     );
 
@@ -540,14 +561,14 @@ class AddEmployeeViewModel extends ReactiveViewModel {
     );
 
     result.fold(
-          (failure) {
+      (failure) {
         AppLogger.error("Failed to load machines: ${failure.message}");
         Fluttertoast.showToast(
           msg: "Failed to load machines: ${failure.message}",
           backgroundColor: Colors.red,
         );
       },
-          (machinesListInfo) {
+      (machinesListInfo) {
         _machines.value = machinesListInfo.machines;
         notifyListeners();
       },
@@ -599,9 +620,9 @@ class AddEmployeeViewModel extends ReactiveViewModel {
 
   bool get isSelectionValid => _selectedMachine.value != null;
 
-  void onManufacturerSelected(Relationship? manufacturer) => selectManufacturer(manufacturer);
+  void onManufacturerSelected(Relationship? manufacturer) =>
+      selectManufacturer(manufacturer);
   void onMachineSelected(Machine? machine) => selectMachine(machine);
-
 
   Future submitDetails() async {
     // Get the actual relationship types
@@ -631,7 +652,7 @@ class AddEmployeeViewModel extends ReactiveViewModel {
           countryCode: _countryCode,
           reportingTo: relationshipTypes.join(','),
           assignMachine: selectedMachine?.id,
-          factoryUnitId : selectedFactoryLocation?.id,
+          factoryUnitId: selectedFactoryLocation?.id,
           employeeId: employeeIdController.text, // Fixed: Use controller text
           employmentType: selectedEmploymentType,
           shiftTiming: shiftTimingController.text,
@@ -653,7 +674,7 @@ class AddEmployeeViewModel extends ReactiveViewModel {
           role: selectedRole!.displayName,
           reportingTo: relationshipTypes.join(','),
           assignMachine: selectedMachine?.id,
-          factoryUnitId : selectedFactoryLocation?.id,
+          factoryUnitId: selectedFactoryLocation?.id,
           employeeId: employeeIdController.text,
           employmentType: selectedEmploymentType,
           shiftTiming: shiftTimingController.text,
@@ -661,10 +682,10 @@ class AddEmployeeViewModel extends ReactiveViewModel {
       }
 
       response.fold(
-            (exception) {
+        (exception) {
           Fluttertoast.showToast(msg: exception.message.toString());
         },
-            (success) async {
+        (success) async {
           Fluttertoast.showToast(msg: 'Employee added successfully!');
           _navigationService.back();
         },

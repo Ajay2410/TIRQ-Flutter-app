@@ -86,7 +86,8 @@ dependencies:
   geolocator:
   flutter_facebook_auth: ^7.1.1
   flutter_popup: ^3.3.9
-
+  dropdown_flutter: ^1.0.1
+  phone_input: ^1.0.0
 
 dev_dependencies:
   flutter_test:

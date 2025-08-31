@@ -241,7 +241,7 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha:0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                           offset: Offset(0, -1),
                           blurRadius: 3,
                         ),
@@ -274,9 +274,7 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
                                 style: TextButton.styleFrom(
                                   foregroundColor: AppColors.textSecondary,
                                 ),
-                                child: Text(
-                                  LanguageService.get("clear_all"),
-                                ),
+                                child: Text(LanguageService.get("clear_all")),
                               ),
                             SizedBox(width: 8),
                             // Done button
@@ -290,9 +288,7 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
                                   vertical: 12,
                                 ),
                               ),
-                              child: Text(
-                                LanguageService.get("done"),
-                              ),
+                              child: Text(LanguageService.get("done")),
                             ),
                           ],
                         ),
@@ -322,14 +318,18 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
           SizedBox(
             width: 24,
             height: 24,
-            child:
-            Checkbox(
+            child: Checkbox(
               value: isSelected,
               onChanged: (value) => onToggle(value ?? false),
               activeColor: AppColors.white,
-              side: BorderSide(width: 2, color: AppColors.primary), // Make border more visible
+              side: BorderSide(
+                width: 2,
+                color: AppColors.primary,
+              ), // Make border more visible
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0), // Slightly rounded corners
+                borderRadius: BorderRadius.circular(
+                  4.0,
+                ), // Slightly rounded corners
               ),
             ),
             //   Checkbox(
@@ -376,8 +376,7 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
 
                 // Location
                 if (machine.location != null) ...[
-                  _buildInfoSection(
-                      LanguageService.get("location"), [
+                  _buildInfoSection(LanguageService.get("location"), [
                     if (machine.location!.building != null)
                       "${LanguageService.get('building')}: ${machine.location!.building}",
                     if (machine.location!.floor != null)
@@ -410,7 +409,7 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
       margin: EdgeInsets.only(right: 8),
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: (color ?? AppColors.primary).withValues(alpha:0.1),
+        color: (color ?? AppColors.primary).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(

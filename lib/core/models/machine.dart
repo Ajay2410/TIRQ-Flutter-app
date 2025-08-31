@@ -476,7 +476,7 @@ class Warranty extends Equatable {
       expirationDate: json['expirationDate'],
       purchaseDate: json['purchaseDate'],
       invoiceNo: json['invoiceNo'],
-      installationDate: json['installationDate']
+      installationDate: json['installationDate'],
     );
   }
 
@@ -498,6 +498,6 @@ class Warranty extends Equatable {
     expirationDate,
     purchaseDate,
     invoiceNo,
-    installationDate
+    installationDate,
   ];
 }

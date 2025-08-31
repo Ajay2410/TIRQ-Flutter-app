@@ -16,33 +16,43 @@ class AuthService {
   final apiService = locator<ApiService>();
   final _navigationService = locator<NavigationService>();
 
-  ResultFuture<String> registerOrganization({
-    required String name,
-    required String type,
-    required String phone,
+  ResultFuture<String> register({
+    required String fullName,
     required String email,
     required String password,
-    required String countryCode,      // Separate parameter for country code
+    required String phone,
+    required String countryCode,
+    required String role,
+    String? organizationType,
     String? language,
   }) async {
     try {
+      final data = {
+        'fullName': fullName,
+        'email': email,
+        'password': password,
+        'phone': phone,
+        'countryCode': countryCode,
+        'role': role,
+      };
+
+      // Add organization-specific fields if registering as organization
+      if (role == 'organization' && organizationType != null) {
+        data['organizationType'] = organizationType;
+        if (language != null) {
+          data['language'] = language;
+        }
+      }
+
       final response = await apiService.post(
-        url: ApiEndpoints.registerOrganization,
-        data: {
-          'name': name,
-          'organizationType': type,
-          'phone': phone,
-          'email': email,
-          'password': password,
-          'countryCode': countryCode,
-          'language': language,
-        },
+        url: ApiEndpoints.register,
+        data: data,
       );
 
-      if (response.data['success'] == true) {
-        return Right(response.data['organizationId']);
+      if (response.data['msg'] == 'Registered. Verify email and phone OTP.') {
+        return Right('Registration successful');
       } else {
-        return Left(Failure(response.data['message']));
+        return Left(Failure(response.data['message'] ?? 'Registration failed'));
       }
     } catch (e) {
       if (e is DioException) {
@@ -52,40 +62,7 @@ class AuthService {
         );
       }
     }
-    return Left(Failure('Failed to register organization'));
-  }
-
-  ResultFuture<String> registerEmployee({
-    required String name,
-    required String phone,
-    required String email,
-    required String password,
-  }) async {
-    try {
-      final response = await apiService.post(
-        url: ApiEndpoints.registerEmployee,
-        data: {
-          'fullName': name,
-          'phone': phone,
-          'email': email,
-          'password': password,
-        },
-      );
-
-      if (response.data['success'] == true) {
-        return Right(response.data['employeeId']);
-      } else {
-        return Left(Failure(response.data['message']));
-      }
-    } catch (e) {
-      if (e is DioException) {
-        AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(
-          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
-        );
-      }
-    }
-    return Left(Failure('Failed to register employee'));
+    return Left(Failure('Failed to register'));
   }
 
   ResultFuture<User> verifyEmail({
@@ -195,9 +172,21 @@ class AuthService {
       );
 
       if (response.data['success'] == true) {
-        return Right(User.fromJson(response.data['user']));
-      }
+        // Extract user data and token from response
+        final userData = response.data['user'] as Map<String, dynamic>;
+        final token = response.data['token'] as String?;
 
+        // Create user with token included
+        final user = User.fromJson(userData);
+        if (token != null) {
+          // Update user with token and save to storage
+          final userWithToken = user.copyWith(token: token);
+          await saveUser(userWithToken);
+          return Right(userWithToken);
+        }
+
+        return Right(user);
+      }
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
@@ -209,10 +198,7 @@ class AuthService {
     return Left(Failure('Failed to login user'));
   }
 
-  ResultFuture<User> googleLogin({
-    required String email,
-    String ? token,
-  }) async {
+  ResultFuture<User> googleLogin({required String email, String? token}) async {
     try {
       final response = await apiService.post(
         url: ApiEndpoints.googleLogin,
@@ -220,9 +206,21 @@ class AuthService {
       );
 
       if (response.data['success'] == true) {
-        return Right(User.fromJson(response.data['user']));
-      }
+        // Extract user data and token from response
+        final userData = response.data['user'] as Map<String, dynamic>;
+        final responseToken = response.data['token'] as String?;
 
+        // Create user with token included
+        final user = User.fromJson(userData);
+        if (responseToken != null) {
+          // Update user with token and save to storage
+          final userWithToken = user.copyWith(token: responseToken);
+          await saveUser(userWithToken);
+          return Right(userWithToken);
+        }
+
+        return Right(user);
+      }
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
@@ -236,7 +234,7 @@ class AuthService {
 
   ResultFuture<User> facebookLogin({
     required String email,
-    String ? token,
+    String? token,
   }) async {
     try {
       final response = await apiService.post(
@@ -245,9 +243,21 @@ class AuthService {
       );
 
       if (response.data['success'] == true) {
-        return Right(User.fromJson(response.data['user']));
-      }
+        // Extract user data and token from response
+        final userData = response.data['user'] as Map<String, dynamic>;
+        final responseToken = response.data['token'] as String?;
 
+        // Create user with token included
+        final user = User.fromJson(userData);
+        if (responseToken != null) {
+          // Update user with token and save to storage
+          final userWithToken = user.copyWith(token: responseToken);
+          await saveUser(userWithToken);
+          return Right(userWithToken);
+        }
+
+        return Right(user);
+      }
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
@@ -258,7 +268,6 @@ class AuthService {
     }
     return Left(Failure('Failed to login user'));
   }
-
 
   ResultFuture<User> otpLogin({
     required String email,
@@ -271,9 +280,21 @@ class AuthService {
       );
 
       if (response.data['success'] == true) {
-        return Right(User.fromJson(response.data['user']));
-      }
+        // Extract user data and token from response
+        final userData = response.data['user'] as Map<String, dynamic>;
+        final responseToken = response.data['token'] as String?;
 
+        // Create user with token included
+        final user = User.fromJson(userData);
+        if (responseToken != null) {
+          // Update user with token and save to storage
+          final userWithToken = user.copyWith(token: responseToken);
+          await saveUser(userWithToken);
+          return Right(userWithToken);
+        }
+
+        return Right(user);
+      }
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
@@ -285,9 +306,7 @@ class AuthService {
     return Left(Failure('Failed to login user'));
   }
 
-  Future<Object> sendOtp({
-    required String email
-  }) async {
+  Future<Object> sendOtp({required String email}) async {
     try {
       final response = await apiService.post(
         url: ApiEndpoints.sendOtp,
@@ -297,7 +316,6 @@ class AuthService {
       if (response.data['success'] == true) {
         return true;
       }
-
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
@@ -309,9 +327,7 @@ class AuthService {
     return Left(Failure('User not found'));
   }
 
-  ResultFuture<bool> sendPasswordResetOtp({
-    required String email,
-  }) async {
+  ResultFuture<bool> sendPasswordResetOtp({required String email}) async {
     try {
       final response = await apiService.post(
         url: ApiEndpoints.forgotPassword,
@@ -334,8 +350,6 @@ class AuthService {
     return Left(Failure('Failed to send password reset OTP'));
   }
 
-
-
   ResultFuture<bool> updateFcmToken({
     required String token,
     required String? oldToken,
@@ -343,7 +357,7 @@ class AuthService {
     try {
       final response = await apiService.post(
         url: ApiEndpoints.updateFcmToken,
-        data: {'oldToken': oldToken??'', 'newToken': token,},
+        data: {'oldToken': oldToken ?? '', 'newToken': token},
       );
 
       if (response.data['success'] == true) {
@@ -352,7 +366,7 @@ class AuthService {
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        if(e.response?.statusCode == 401){
+        if (e.response?.statusCode == 401) {
           await clearHive();
           await _navigationService.clearStackAndShow(Routes.login);
         }
@@ -399,7 +413,9 @@ class AuthService {
     try {
       // You might need a separate endpoint for this or use the existing otpLogin
       final response = await apiService.post(
-        url: ApiEndpoints.otpLogin, // Temporary - you might need a different endpoint
+        url:
+            ApiEndpoints
+                .otpLogin, // Temporary - you might need a different endpoint
         data: {'email': email, 'otp': otp},
       );
 
@@ -418,11 +434,4 @@ class AuthService {
     }
     return Left(Failure('Failed to verify password reset OTP'));
   }
-
-
-
-
-
-
-
 }

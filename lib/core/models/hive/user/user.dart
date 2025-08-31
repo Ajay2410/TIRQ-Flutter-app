@@ -66,6 +66,9 @@ class User extends Equatable {
   @HiveField(21)
   final bool? isPhoneVerified;
 
+  @HiveField(22)
+  final String? countryCode;
+
   const User({
     this.email,
     this.token,
@@ -87,6 +90,7 @@ class User extends Equatable {
     this.fullName,
     this.isEmailVerified,
     this.isPhoneVerified,
+    this.countryCode,
   });
 
   @override
@@ -112,6 +116,7 @@ class User extends Equatable {
     fullName,
     isEmailVerified,
     isPhoneVerified,
+    countryCode,
   ];
 
   // For backward compatibility
@@ -129,34 +134,30 @@ class User extends Equatable {
       organizationId: json['organizationId'] as String?,
       organizationName: json['organizationName'] as String?,
       id: userId as String?,
-      userRole:
-      json['role'] == null
-          ? null
-          : UserRole.values.firstWhere(
-            (role) => role.displayName == json['role'],
-        orElse: () => throw ArgumentError('Unknown user role: $json'),
-      ),
+      userRole: _extractUserRole(json),
       userType:
-      json['userType'] == null
-          ? null
-          : UserType.values.byName(json['userType'] as String),
+          json['userType'] == null
+              ? null
+              : UserType.values.byName(json['userType'] as String),
       organizationType:
-      json['organizationType'] == null
-          ? null
-          : OrganizationType.values.byName(
-        (json['organizationType'] as String).toLowerCase(),
-      ),
+          json['organizationType'] == null
+              ? null
+              : OrganizationType.values.byName(
+                (json['organizationType'] as String).toLowerCase(),
+              ),
       // Handle both logo and logoUrl fields from backend
       logoUrl: json['logo'] ?? json['logoUrl'] as String?,
       fcmToken: json['fcmToken'] as String?,
       industry: json['industry'] as String?,
       language: json['language'] as String?,
-      address: json['address'] != null ? Address.fromJson(json['address']) : null,
+      address:
+          json['address'] != null ? Address.fromJson(json['address']) : null,
       yourName: json['yourName'] as String?,
       designation: json['designation'] as String?,
       fullName: json['fullName'] as String?,
       isEmailVerified: json['isEmailVerified'] as bool?,
       isPhoneVerified: json['isPhoneVerified'] as bool?,
+      countryCode: json['countryCode'] as String?,
     );
   }
 
@@ -181,7 +182,62 @@ class User extends Equatable {
     'fullName': fullName,
     'isEmailVerified': isEmailVerified,
     'isPhoneVerified': isPhoneVerified,
+    'countryCode': countryCode,
   };
+
+  /// Extract user role from the API response
+  /// Handles both old format (single role string) and new format (roles array)
+  static UserRole? _extractUserRole(Map<String, dynamic> json) {
+    // Try to get role from the new roles array format
+    if (json['roles'] != null && json['roles'] is List) {
+      final roles = json['roles'] as List;
+      if (roles.isNotEmpty) {
+        final firstRole = roles.first;
+        if (firstRole is Map<String, dynamic> && firstRole['name'] != null) {
+          final roleName = firstRole['name'] as String;
+          try {
+            // Try to find by display name first
+            for (final role in UserRole.values) {
+              if (role.displayName.toLowerCase() == roleName.toLowerCase()) {
+                return role;
+              }
+            }
+            // Try to find by enum name
+            for (final role in UserRole.values) {
+              if (role.name.toLowerCase() == roleName.toLowerCase()) {
+                return role;
+              }
+            }
+          } catch (e) {
+            return null;
+          }
+        }
+      }
+    }
+
+    // Fallback to old single role format
+    if (json['role'] != null) {
+      final roleName = json['role'] as String;
+      try {
+        // Try to find by display name first
+        for (final role in UserRole.values) {
+          if (role.displayName == roleName) {
+            return role;
+          }
+        }
+        // Try to find by enum name
+        for (final role in UserRole.values) {
+          if (role.name == roleName) {
+            return role;
+          }
+        }
+      } catch (e) {
+        return null;
+      }
+    }
+
+    return null;
+  }
 
   User copyWith({
     String? token,
@@ -204,6 +260,7 @@ class User extends Equatable {
     String? fullName,
     bool? isEmailVerified,
     bool? isPhoneVerified,
+    String? countryCode,
   }) {
     return User(
       token: token ?? this.token,
@@ -224,6 +281,9 @@ class User extends Equatable {
       yourName: yourName ?? this.yourName,
       designation: designation ?? this.designation,
       fullName: fullName ?? this.fullName,
+      isEmailVerified: isEmailVerified ?? this.isEmailVerified,
+      isPhoneVerified: isPhoneVerified ?? this.isPhoneVerified,
+      countryCode: countryCode ?? this.countryCode,
     );
   }
 }
@@ -316,7 +376,6 @@ enum UserRole {
   // Common Roles
   superAdmin('superAdmin'),
 
-
   //processor roles
   plantHead("Plant Head"),
   lineInCharge("Line InCharge"),
@@ -342,7 +401,7 @@ enum UserRole {
 
   static UserRole fromJson(String json) {
     return values.firstWhere(
-          (role) => role.displayName == json,
+      (role) => role.displayName == json,
       orElse: () => throw ArgumentError('Unknown user role: $json'),
     );
   }
@@ -354,25 +413,34 @@ enum UserRole {
   static List<UserRole> rolesForOrganization(OrganizationType type) {
     switch (type) {
       case OrganizationType.manufacturer:
-         return values.where((role) => ![
-          UserRole.headOfGlobalService,
-          UserRole.countryServiceManager,
-          UserRole.localServiceEngineers,
-          UserRole.installationEngineers,
-        ].contains(role)).toList();
+        return values
+            .where(
+              (role) =>
+                  ![
+                    UserRole.headOfGlobalService,
+                    UserRole.countryServiceManager,
+                    UserRole.localServiceEngineers,
+                    UserRole.installationEngineers,
+                  ].contains(role),
+            )
+            .toList();
       default:
-        return values.where((role) => ![
-          UserRole.plantHead,
-          UserRole.lineInCharge,
-          UserRole.maintenanceHead,
-          UserRole.maintenanceEngineer,
-          UserRole.machineOperator,
-          UserRole.labour,
-        ].contains(role)).toList();
+        return values
+            .where(
+              (role) =>
+                  ![
+                    UserRole.plantHead,
+                    UserRole.lineInCharge,
+                    UserRole.maintenanceHead,
+                    UserRole.maintenanceEngineer,
+                    UserRole.machineOperator,
+                    UserRole.labour,
+                  ].contains(role),
+            )
+            .toList();
     }
   }
 }
-
 
 enum EmployeeType {
   technician,
