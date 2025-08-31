@@ -31,9 +31,7 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
     super.dispose();
   }
 
-  void _onSearchChanged() {
-    // Search functionality handled by ViewModel
-  }
+  void _onSearchChanged() {}
 
   @override
   Widget build(BuildContext context) {
@@ -212,7 +210,7 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
 
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: model.searchResults.length + 1, // +1 for the header
+      itemCount: model.searchResults.length + 1,
       separatorBuilder:
           (context, index) =>
               index == 0

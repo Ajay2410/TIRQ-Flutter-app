@@ -35,7 +35,7 @@ abstract class ApiEndpoints {
   static const String login = 'auth/login';
   static const String acceptRequest = 'org/accept-partner';
   static const String declineRequest = 'org/reject-partner';
-  static const String machine = 'machine';
+  static const String machine = 'machines';
   static const String createMachine = 'machines/create';
   static const String assignMachine = 'machine/assign-machine';
 
@@ -64,8 +64,10 @@ abstract class ApiEndpoints {
   static const String removeProcessor = 'org/remove';
 
   static const String getCustomers = 'customers/get-customers';
+  static const String getCustomerById = 'customers/getCustomerById';
   static const String createCustomer = 'customers/create-customer';
   static const String updateCustomer = 'customers/update-customer';
   static const String deleteCustomer = 'customers/delete-customer';
   static const String searchCustomers = 'customers/search-customers';
+  static const String removeMachine = 'customers/remove-machine';
 }

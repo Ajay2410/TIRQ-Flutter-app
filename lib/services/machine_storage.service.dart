@@ -6,8 +6,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:manager/core/locator.dart';
 
 class MachineStorageService {
-  static final MachineStorageService _instance =
-      MachineStorageService._internal();
+  static final MachineStorageService _instance = MachineStorageService._internal();
   factory MachineStorageService() => _instance;
   MachineStorageService._internal();
 
@@ -25,8 +24,8 @@ class MachineStorageService {
   bool get isInitialized => _isInitialized;
 
   /// Initialize machines data - called only once per app lifecycle
-  Future<void> initializeMachines() async {
-    if (_isInitialized) {
+  Future<void> initializeMachines({bool isUpdate = false}) async {
+    if (_isInitialized && !isUpdate) {
       AppLogger.info("Machines already initialized, skipping...");
       return;
     }
@@ -104,18 +103,13 @@ class MachineStorageService {
 
   /// Get machine names for dropdown (commonly used)
   List<String> getMachineNames() {
-    return _machines
-        .map((machine) => machine.machineName ?? '')
-        .where((name) => name.isNotEmpty)
-        .toList();
+    return _machines.map((machine) => machine.machineName ?? '').where((name) => name.isNotEmpty).toList();
   }
 
   /// Find machine by name
   Datum? findMachineByName(String machineName) {
     try {
-      return _machines.firstWhere(
-        (machine) => machine.machineName == machineName,
-      );
+      return _machines.firstWhere((machine) => machine.machineName == machineName);
     } catch (e) {
       return null;
     }

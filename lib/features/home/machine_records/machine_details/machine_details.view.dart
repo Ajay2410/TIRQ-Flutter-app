@@ -8,7 +8,9 @@ import 'package:manager/services/machine.service.dart';
 import 'package:manager/widgets/common_text_field.dart';
 import 'package:manager/core/models/machine_model.dart';
 import 'package:manager/core/locator.dart';
+import 'package:manager/core/utils/app_logger.dart';
 import 'package:stacked_services/stacked_services.dart';
+import '../../../../services/machine_storage.service.dart';
 import '../add_new_machine_model.view.dart';
 import '../machine_records.view.dart';
 
@@ -448,7 +450,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
             ),
           );
 
-          Get.off(() => const MachineRecordsView(refreshOnInit: true));
+          Get.back(result: true);
         },
       );
     } catch (e) {

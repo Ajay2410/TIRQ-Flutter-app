@@ -1,5 +1,6 @@
 import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:phone_input/phone_input_package.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/services/language.service.dart';
@@ -73,21 +74,24 @@ class CreateNewCustomerView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, CreateNewCustomerViewModel model) {
     return Container(
-      color: AppColors.scaffoldBackground,
+      width: double.infinity,
+      height: double.infinity,
+      color: AppColors.white,
       child: SingleChildScrollView(
         child: Form(
           key: model.formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                color: AppColors.white,
+              Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
                     _buildCustomerInfoSection(context, model),
-                    const SizedBox(height: 24),
-                    _buildMachineOwnershipSection(context, model),
+                    if (!model.isEditMode) ...[
+                      const SizedBox(height: 24),
+                      _buildMachineOwnershipSection(context, model),
+                    ],
                   ],
                 ),
               ),
@@ -109,17 +113,15 @@ class CreateNewCustomerView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (isEditMode == false) ...[
-          CommonTextField(
-            controller: model.organizationNameController,
-            label: LanguageService.get('organization_name'),
-            placeholder: LanguageService.get('name'),
-            validator: CommonValidators.required(
-              LanguageService.get('please_enter_organization_name'),
-            ),
+        CommonTextField(
+          controller: model.contactPersonController,
+          label: LanguageService.get('contact_person'),
+          placeholder: LanguageService.get('person_name'),
+          validator: CommonValidators.required(
+            LanguageService.get('please_enter_contact_person'),
           ),
-          const SizedBox(height: 16),
-        ],
+        ),
+        const SizedBox(height: 16),
         _buildPhoneField(context, model),
         const SizedBox(height: 16),
         CommonTextField(
@@ -132,18 +134,11 @@ class CreateNewCustomerView extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        CommonTextField(
-          controller: model.contactPersonController,
-          label: LanguageService.get('contact_person'),
-          placeholder: LanguageService.get('person_name'),
-          validator: CommonValidators.required(
-            LanguageService.get('please_enter_contact_person'),
-          ),
-        ),
-        const SizedBox(height: 16),
         _buildDesignationDropdown(context, model),
-        const SizedBox(height: 16),
-        _buildMachineDropdown(context, model),
+        if (!model.isEditMode) ...[
+          const SizedBox(height: 16),
+          _buildMachineDropdown(context, model),
+        ],
       ],
     );
   }
@@ -180,6 +175,9 @@ class CreateNewCustomerView extends StatelessWidget {
                     nsn: model.displayPhoneNumber,
                   )
                   : null,
+          key: ValueKey(
+            'phone_${model.isEditMode}_${model.displayPhoneNumber}_${model.countryCode}',
+          ),
           onChanged: (phone) {
             if (phone != null) {
               model.updatePhoneNumber(phone);

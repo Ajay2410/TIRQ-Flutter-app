@@ -32,7 +32,6 @@ class SearchOrganizationViewModel extends BaseViewModel {
       return;
     }
 
-    // Don't search if query is too short
     if (query.trim().length < 2) {
       return;
     }

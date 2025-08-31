@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phone_input/phone_input_package.dart';
 import 'package:manager/core/locator.dart';
 import 'package:manager/core/models/machine_model.dart';
+import 'package:manager/core/models/customer.dart';
 import 'package:manager/core/utils/app_logger.dart';
 import 'package:manager/services/language.service.dart';
 import 'package:manager/services/machine_storage.service.dart';
@@ -29,8 +30,6 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
     this.customerId,
   });
 
-  final TextEditingController organizationNameController =
-      TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController contactPersonController = TextEditingController();
@@ -69,6 +68,9 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
   String get fullPhoneNumber => _fullPhoneNumber;
   String _countryCode = '';
   String get countryCode => _countryCode;
+
+  List<MachineElement>? _existingMachines;
+  List<MachineElement>? get existingMachines => _existingMachines;
 
   String get displayPhoneNumber =>
       _fullPhoneNumber.isNotEmpty ? _fullPhoneNumber : '';
@@ -132,89 +134,163 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
   void init() async {
     await _machineStorageService.initializeMachines();
 
-    if (isEditMode && machineData != null) {
-      AppLogger.error("Machine data in edit mode: $machineData");
-
-      organizationNameController.text = machineData!['customerName'] ?? '';
-      emailController.text = machineData!['email'] ?? '';
-      contactPersonController.text = machineData!['contactPerson'] ?? '';
-      _selectedDesignation = machineData!['designation'] ?? '';
-      _selectedMachine = machineData!['machineType'] ?? '';
-
-      if (machineData!['purchaseDate'] != null) {
-        try {
-          _purchaseDate = DateTime.parse(machineData!['purchaseDate']);
-        } catch (e) {
-          AppLogger.error(
-            "Error parsing purchase date: ${machineData!['purchaseDate']}",
-          );
-        }
+    if (isEditMode) {
+      if (customerId != null) {
+        await _loadCustomerData();
+      } else if (machineData != null) {
+        _loadMachineData();
       }
-
-      if (machineData!['installationDate'] != null) {
-        try {
-          _installationDate = DateTime.parse(machineData!['installationDate']);
-        } catch (e) {
-          AppLogger.error(
-            "Error parsing installation date: ${machineData!['installationDate']}",
-          );
-        }
-      }
-
-      if (machineData!['warrantyStartDate'] != null) {
-        try {
-          _warrantyStartDate = DateTime.parse(
-            machineData!['warrantyStartDate'],
-          );
-        } catch (e) {
-          AppLogger.error(
-            "Error parsing warranty start date: ${machineData!['warrantyStartDate']}",
-          );
-        }
-      }
-
-      if (machineData!['warrantyEndDate'] != null) {
-        try {
-          _warrantyEndDate = DateTime.parse(machineData!['warrantyEndDate']);
-        } catch (e) {
-          AppLogger.error(
-            "Error parsing warranty end date: ${machineData!['warrantyEndDate']}",
-          );
-        }
-      }
-
-      if (machineData!['warrantyStatus'] != null) {
-        _warrantyStatus = machineData!['warrantyStatus'];
-      }
-
-      if (machineData!['invoiceContractNo'] != null) {
-        _invoiceContractNo = machineData!['invoiceContractNo'];
-      }
-
-      AppLogger.error(
-        "Populated values - Organization: ${organizationNameController.text}, Email: ${emailController.text}, Contact: ${contactPersonController.text}, Designation: $_selectedDesignation, Machine: $_selectedMachine",
-      );
-
-      if (machineData!['phone'] != null) {
-        String phone = machineData!['phone'].toString();
-        if (phone.startsWith('+')) {
-          if (phone.length >= 3) {
-            _countryCode = phone.substring(1, 3);
-            _fullPhoneNumber = phone.substring(3);
-          }
-        } else {
-          _fullPhoneNumber = phone;
-        }
-      }
-
-      notifyListeners();
     } else {
       _purchaseDate = DateTime.now();
       _installationDate = DateTime.now();
       _warrantyStartDate = DateTime.now();
-
       notifyListeners();
     }
+  }
+
+  Future<void> _loadCustomerData() async {
+    try {
+      final result = await _customerService.getCustomerById(customerId!);
+      result.fold(
+        (failure) {
+          AppLogger.error("Failed to load customer data: $failure");
+        },
+        (customer) {
+          emailController.text = customer.email ?? '';
+          contactPersonController.text = customer.contactPerson ?? '';
+          _selectedDesignation = customer.designation ?? '';
+
+          if (customer.phoneNumber != null) {
+            String phone = customer.phoneNumber!;
+            AppLogger.info("Processing phone number: $phone");
+
+            if (phone.startsWith('+')) {
+              if (phone.contains(' ')) {
+                List<String> parts = phone.split(' ');
+                if (parts.length >= 2) {
+                  _countryCode = parts[0].substring(1);
+                  _fullPhoneNumber = parts[1];
+                  AppLogger.info(
+                    "Parsed phone with space - Country: $_countryCode, Number: $_fullPhoneNumber",
+                  );
+                }
+              } else {
+                if (phone.length >= 3) {
+                  _countryCode = phone.substring(1, 3);
+                  _fullPhoneNumber = phone.substring(3);
+                  AppLogger.info(
+                    "Parsed phone without space - Country: $_countryCode, Number: $_fullPhoneNumber",
+                  );
+                }
+              }
+            } else {
+              _fullPhoneNumber = phone;
+              AppLogger.info(
+                "Parsed phone without + - Number: $_fullPhoneNumber",
+              );
+            }
+
+            AppLogger.info(
+              "Final phone data - Country: $_countryCode, Number: $_fullPhoneNumber, Display: $displayPhoneNumber",
+            );
+          } else {
+            AppLogger.warning("No phone number found in customer data");
+          }
+
+          if (customer.machines != null && customer.machines!.isNotEmpty) {
+            _existingMachines = customer.machines;
+            AppLogger.info(
+              "Customer has ${customer.machines!.length} machines",
+            );
+            AppLogger.info("Existing machines data loaded for editing");
+          } else {
+            AppLogger.info("No existing machines found for customer");
+          }
+
+          AppLogger.info("All customer data loaded, notifying listeners");
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      AppLogger.error("Exception while loading customer data: $e");
+    }
+  }
+
+  void _loadMachineData() {
+    if (machineData == null) return;
+
+    AppLogger.error("Machine data in edit mode: $machineData");
+
+    emailController.text = machineData!['email'] ?? '';
+    contactPersonController.text = machineData!['contactPerson'] ?? '';
+    _selectedDesignation = machineData!['designation'] ?? '';
+    _selectedMachine = machineData!['machineType'] ?? '';
+
+    if (machineData!['purchaseDate'] != null) {
+      try {
+        _purchaseDate = DateTime.parse(machineData!['purchaseDate']);
+      } catch (e) {
+        AppLogger.error(
+          "Error parsing purchase date: ${machineData!['purchaseDate']}",
+        );
+      }
+    }
+
+    if (machineData!['installationDate'] != null) {
+      try {
+        _installationDate = DateTime.parse(machineData!['installationDate']);
+      } catch (e) {
+        AppLogger.error(
+          "Error parsing installation date: ${machineData!['installationDate']}",
+        );
+      }
+    }
+
+    if (machineData!['warrantyStartDate'] != null) {
+      try {
+        _warrantyStartDate = DateTime.parse(machineData!['warrantyStartDate']);
+      } catch (e) {
+        AppLogger.error(
+          "Error parsing warranty start date: ${machineData!['warrantyStartDate']}",
+        );
+      }
+    }
+
+    if (machineData!['warrantyEndDate'] != null) {
+      try {
+        _warrantyEndDate = DateTime.parse(machineData!['warrantyEndDate']);
+      } catch (e) {
+        AppLogger.error(
+          "Error parsing warranty end date: ${machineData!['warrantyEndDate']}",
+        );
+      }
+    }
+
+    if (machineData!['warrantyStatus'] != null) {
+      _warrantyStatus = machineData!['warrantyStatus'];
+    }
+
+    if (machineData!['invoiceContractNo'] != null) {
+      _invoiceContractNo = machineData!['invoiceContractNo'];
+    }
+
+    AppLogger.error(
+      "Populated values - Email: ${emailController.text}, Contact: ${contactPersonController.text}, Designation: $_selectedDesignation, Machine: $_selectedMachine",
+    );
+
+    if (machineData!['phone'] != null) {
+      String phone = machineData!['phone'].toString();
+      if (phone.startsWith('+')) {
+        if (phone.length >= 3) {
+          _countryCode = phone.substring(1, 3);
+          _fullPhoneNumber = phone.substring(3);
+        }
+      } else {
+        _fullPhoneNumber = phone;
+      }
+    }
+
+    notifyListeners();
   }
 
   void updatePhoneNumber(PhoneNumber phoneNumber) {
@@ -340,6 +416,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
         _validateMachineOwnership()) {
       if (isEditMode) {
         AppLogger.error("Form is valid! Updating customer...");
+        await _updateCustomer(context);
       } else {
         AppLogger.error("Form is valid! Creating customer...");
         await _createCustomer(context);
@@ -380,7 +457,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       final result = await _customerService.createCustomer(
         phoneNumber: '+$_countryCode $_fullPhoneNumber',
         email: emailController.text.trim(),
-        customerName: organizationNameController.text.trim(),
+        customerName: contactPersonController.text.trim(),
         contactPerson: contactPersonController.text.trim(),
         designation: _selectedDesignation ?? '',
         machines: machines,
@@ -424,7 +501,93 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
     }
   }
 
+  Future<void> _updateCustomer(BuildContext context) async {
+    try {
+      setBusy(true);
+
+      final List<Map<String, dynamic>> machines = [];
+
+      if (_existingMachines != null && _existingMachines!.isNotEmpty) {
+        AppLogger.info(
+          "Preserving ${_existingMachines!.length} existing machines for update",
+        );
+        for (var machineElement in _existingMachines!) {
+          final machineData = {
+            'machine': machineElement.machine?.id ?? '',
+            'purchaseDate':
+                machineElement.purchaseDate?.toIso8601String().split('T')[0] ??
+                '',
+            'installationDate':
+                machineElement.installationDate?.toIso8601String().split(
+                  'T',
+                )[0] ??
+                '',
+            'warrantyStart':
+                machineElement.warrantyStart?.toIso8601String().split('T')[0] ??
+                '',
+            'warrantyEnd':
+                machineElement.warrantyEnd?.toIso8601String().split('T')[0] ??
+                '',
+            'warrantyStatus': machineElement.warrantyStatus ?? 'Active',
+            'invoiceContractNo': machineElement.invoiceContractNo ?? '',
+          };
+          machines.add(machineData);
+          AppLogger.info("Machine data: $machineData");
+        }
+      } else {
+        AppLogger.warning("No existing machines found for update");
+      }
+
+      final result = await _customerService.updateCustomer(
+        customerId: customerId!,
+        phoneNumber: '+$_countryCode $_fullPhoneNumber',
+        email: emailController.text.trim(),
+        customerName: contactPersonController.text.trim(),
+        contactPerson: contactPersonController.text.trim(),
+        designation: _selectedDesignation ?? '',
+        machines: machines,
+      );
+
+      result.fold(
+        (failure) {
+          AppLogger.error("Failed to update customer: ${failure.message}");
+          Fluttertoast.showToast(
+            msg: failure.message,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            toastLength: Toast.LENGTH_SHORT,
+          );
+        },
+        (customer) {
+          AppLogger.error("Customer updated successfully: ${customer.id}");
+          Fluttertoast.showToast(
+            msg: LanguageService.get('customer_updated_successfully'),
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            toastLength: Toast.LENGTH_SHORT,
+          );
+
+          Navigator.of(context).pop(customer);
+        },
+      );
+    } catch (e) {
+      AppLogger.error("Exception while updating customer: $e");
+      Fluttertoast.showToast(
+        msg: 'Unexpected error occurred: $e',
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_SHORT,
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
   bool _validateMachineOwnership() {
+    if (isEditMode) {
+      return true;
+    }
+
     if (_purchaseDate == null) {
       Fluttertoast.showToast(
         msg: LanguageService.get('purchase_date_required'),
@@ -490,7 +653,6 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
 
   @override
   void dispose() {
-    organizationNameController.dispose();
     phoneController.dispose();
     emailController.dispose();
     contactPersonController.dispose();

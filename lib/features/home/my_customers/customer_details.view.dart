@@ -5,7 +5,9 @@ import 'package:manager/core/models/customer.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/services/language.service.dart';
-import 'package:manager/features/home/my_customers/machine_details/machine_details.view.dart';
+import 'package:manager/services/customer.service.dart';
+import 'package:manager/core/locator.dart';
+import 'package:manager/features/home/my_customers/machine_details/customer_machine_details.view.dart';
 import 'package:manager/features/home/my_customers/machine_details/customer_details/customer_edit_details.view.dart';
 
 class CustomerDetailsView extends StatefulWidget {
@@ -36,44 +38,33 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    return AbsorbPointer(
-      absorbing: _isDeleting,
-      child: Scaffold(
-        key: _scaffoldKey,
-        body: Stack(
+    return Scaffold(
+      key: _scaffoldKey,
+      body: SafeArea(
+        child: Column(
           children: [
-            SafeArea(
-              child: Column(
-                children: [
-                  _buildAppBar(context),
-                  Expanded(
-                    child: Container(
-                      color: AppColors.white,
-                      child: Column(
-                        children: [
-                          Padding(padding: const EdgeInsets.all(12), child: _buildCustomerContactCard()),
-                          Expanded(
-                            child: Container(
-                              color: AppColors.scaffoldBackground,
-                              padding: const EdgeInsets.all(12),
-                              child: SingleChildScrollView(child: _buildMachineList(context)),
-                            ),
-                          ),
-                        ],
+            _buildAppBar(context),
+            Expanded(
+              child: Container(
+                color: AppColors.white,
+                child: Column(
+                  children: [
+                    Padding(padding: const EdgeInsets.all(12), child: _buildCustomerContactCard()),
+                    Expanded(
+                      child: Container(
+                        color: AppColors.scaffoldBackground,
+                        padding: const EdgeInsets.all(12),
+                        child: SingleChildScrollView(child: _buildMachineList(context)),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-            if (_isDeleting)
-              Positioned.fill(
-                child: Center(child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.primary)),
-              ),
           ],
         ),
-        floatingActionButton: _buildFloatingActionButton(context),
       ),
+      floatingActionButton: _buildFloatingActionButton(context),
     );
   }
 
@@ -311,7 +302,9 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => MachineDetailsView(customer: _currentCustomer, machineElement: machineData),
+                      builder:
+                          (context) =>
+                              CustomerMachineDetailsView(customer: _currentCustomer, machineElement: machineData),
                     ),
                   );
                 },
@@ -388,7 +381,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
   void _showDeleteConfirmation(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context1) {
+      builder: (BuildContext context) {
         return Dialog(
           insetPadding: EdgeInsets.all(10),
           backgroundColor: AppColors.white,
@@ -448,13 +441,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
 
                     Expanded(
                       child: ElevatedButton(
-                        onPressed:
-                            _isDeleting
-                                ? null
-                                : () {
-                                  Navigator.of(context1).pop();
-                                  _handleDeleteCustomer(context1);
-                                },
+                        onPressed: _isDeleting ? null : () => _handleDeleteCustomer(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.redBack,
                           foregroundColor: Colors.white,
@@ -510,9 +497,13 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     });
 
     try {
-      await Future.delayed(const Duration(seconds: 3));
+      final navigator = Navigator.of(context);
+
+      navigator.pop();
+      await Future.delayed(const Duration(milliseconds: 500));
+      navigator.pop(true);
       // TODO: Implement customer deletion
-      Get.back(result: true);
+      navigator.pop(true);
     } catch (e) {
       Fluttertoast.showToast(
         msg: 'An error occurred: ${e.toString()}',

@@ -20,14 +20,12 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
 
   final formKey = GlobalKey<FormState>();
 
-  final TextEditingController organizationNameController =
-      TextEditingController();
+  final TextEditingController organizationNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController contactPersonController = TextEditingController();
   final TextEditingController designationController = TextEditingController();
-  final TextEditingController invoiceContractNoController =
-      TextEditingController();
+  final TextEditingController invoiceContractNoController = TextEditingController();
 
   String? _selectedDesignation;
   String? get selectedDesignation => _selectedDesignation;
@@ -105,9 +103,12 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
   String _initialCountryCode = 'IN';
   String get initialCountryCode => _initialCountryCode;
 
-  void init() async {
-    await _machineStorageService.initializeMachines();
+  MachineElement? editMachineElement;
+
+  void init({MachineElement? machineElement}) async {
+    editMachineElement = machineElement;
     _populateCustomerData();
+    await _machineStorageService.initializeMachines();
   }
 
   void _populateCustomerData() {
@@ -127,30 +128,42 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
           _fullPhoneNumber = customer.phoneNumber!.substring(1);
         }
       } else {
-        _fullPhoneNumber = customer.phoneNumber!;
+        _fullPhoneNumber = customer.phoneNumber ?? "";
       }
 
-      // Set the phone controller with the parsed phone number
-      phoneController.text = _fullPhoneNumber;
+      if (_fullPhoneNumber.length > 10) {
+        phoneController.text = _fullPhoneNumber.substring((customer.phoneNumber ?? "").length - 11);
+      } else {
+        phoneController.text = _fullPhoneNumber;
+      }
     }
 
-    // Set initial country code from API response
     if (customer.countryOrigin != null && customer.countryOrigin!.isNotEmpty) {
       _initialCountryCode = customer.countryOrigin!;
     }
 
-    _purchaseDate = DateTime.now();
-    _installationDate = DateTime.now();
-    _warrantyStartDate = DateTime.now();
-    _warrantyEndDate = null;
-    _warrantyStatus = 'Active';
-    _invoiceContractNo = '';
-    invoiceContractNoController.text = _invoiceContractNo;
+    if (editMachineElement != null) {
+      _selectedMachine = editMachineElement?.machine?.machineName;
+      _purchaseDate = editMachineElement?.purchaseDate;
+      _installationDate = editMachineElement?.installationDate;
+      _warrantyStartDate = editMachineElement?.warrantyStart;
+      _warrantyEndDate = editMachineElement?.warrantyEnd;
+      _warrantyStatus = editMachineElement?.warrantyStatus ?? "Active";
+      _invoiceContractNo = editMachineElement?.invoiceContractNo ?? "";
+      invoiceContractNoController.text = _invoiceContractNo;
+    } else {
+      _purchaseDate = DateTime.now();
+      _installationDate = DateTime.now();
+      _warrantyStartDate = DateTime.now();
+      _warrantyEndDate = null;
+      _warrantyStatus = 'Active';
+      _invoiceContractNo = '';
+      invoiceContractNoController.text = _invoiceContractNo;
+    }
 
     notifyListeners();
   }
 
-  // Date picker methods
   Future<void> selectPurchaseDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -206,14 +219,9 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
 
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate:
-          _warrantyEndDate ?? _warrantyStartDate!.add(const Duration(days: 1)),
-      firstDate: _warrantyStartDate!.add(
-        const Duration(days: 1),
-      ), // Must be after warranty start date
-      lastDate: DateTime.now().add(
-        const Duration(days: 365 * 10),
-      ), // 10 years from now
+      initialDate: _warrantyEndDate ?? _warrantyStartDate!.add(const Duration(days: 1)),
+      firstDate: _warrantyStartDate!.add(const Duration(days: 1)),
+      lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
     );
     if (picked != null) {
       _warrantyEndDate = picked;
@@ -221,7 +229,6 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
     }
   }
 
-  // Warranty status toggle
   void toggleWarrantyStatus() {
     if (_warrantyStatus.isEmpty || _warrantyStatus == 'Active') {
       _warrantyStatus = 'Out of warranty';
@@ -231,7 +238,6 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
-  // Update invoice contract number
   void updateInvoiceContractNo(String value) {
     _invoiceContractNo = value;
     notifyListeners();
@@ -253,21 +259,16 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
   }
 
   Future<void> onSavePressed(BuildContext context) async {
-    if (formKey.currentState?.validate() == true &&
-        _validateMachineOwnership()) {
+    if (formKey.currentState?.validate() == true && _validateMachineOwnership()) {
       AppLogger.info("Form is valid! Updating customer...");
 
       try {
-        // Show loading indicator
         setBusy(true);
 
-        // Build the machines data
         final machines = _buildMachinesData();
 
-        // Prepare phone number with country code
         final fullPhoneNumber = '+$_countryCode$_fullPhoneNumber';
 
-        // Call the update customer API
         final result = await _customerService.updateCustomer(
           customerId: customer.id!,
           phoneNumber: fullPhoneNumber,
@@ -280,7 +281,6 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
 
         result.fold(
           (failure) {
-            // Handle failure
             Fluttertoast.showToast(
               msg: failure.message,
               backgroundColor: Colors.red,
@@ -290,18 +290,14 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
             AppLogger.error("Failed to update customer: ${failure.message}");
           },
           (updatedCustomer) {
-            // Handle success
             Fluttertoast.showToast(
               msg: "Customer updated successfully!",
               backgroundColor: Colors.green,
               textColor: Colors.white,
               toastLength: Toast.LENGTH_LONG,
             );
-            AppLogger.info(
-              "Customer updated successfully: ${updatedCustomer.id}",
-            );
+            AppLogger.info("Customer updated successfully: ${updatedCustomer.id}");
 
-            // Navigate back or refresh the page
             Navigator.of(context).pop(updatedCustomer);
           },
         );
@@ -321,72 +317,62 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
     }
   }
 
-  /// Build machines data for the API request
   List<Map<String, dynamic>> _buildMachinesData() {
     final machines = <Map<String, dynamic>>[];
+    bool isAlreadyAssigned = false;
+    final machine = _machineStorageService.findMachineByName(_selectedMachine!);
 
-    // First, add all existing machines from the customer
     if (customer.machines != null) {
       for (final existingMachine in customer.machines!) {
-        machines.add({
-          'machine': existingMachine.machine?.id,
-          'purchaseDate':
-              existingMachine.purchaseDate?.toIso8601String().split('T')[0] ??
-              '',
-          'installationDate':
-              existingMachine.installationDate?.toIso8601String().split(
-                'T',
-              )[0] ??
-              '',
-          'warrantyStart':
-              existingMachine.warrantyStart?.toIso8601String().split('T')[0] ??
-              '',
-          'warrantyEnd':
-              existingMachine.warrantyEnd?.toIso8601String().split('T')[0] ??
-              '',
-          'warrantyStatus': existingMachine.warrantyStatus ?? '',
-          'invoiceContractNo': existingMachine.invoiceContractNo ?? '',
-        });
-      }
-    }
-
-    // Then, add the newly selected machine if it's not already in the list
-    if (_selectedMachine != null && _selectedMachine!.isNotEmpty) {
-      final machine = _machineStorageService.findMachineByName(
-        _selectedMachine!,
-      );
-      if (machine != null) {
-        // Check if this machine is already assigned to avoid duplicates
-        final isAlreadyAssigned =
-            customer.machines?.any(
-              (existingMachine) => existingMachine.machine?.id == machine.id,
-            ) ??
-            false;
-
-        if (!isAlreadyAssigned) {
+        if (existingMachine.machine?.id == machine?.id) {
+          isAlreadyAssigned = true;
           machines.add({
-            'machine': machine.id,
-            'purchaseDate':
-                _purchaseDate!.toIso8601String().split(
-                  'T',
-                )[0], // YYYY-MM-DD format
-            'installationDate':
-                _installationDate!.toIso8601String().split('T')[0],
-            'warrantyStart':
-                _warrantyStartDate!.toIso8601String().split('T')[0],
+            'machine': machine?.id,
+            'purchaseDate': _purchaseDate!.toIso8601String().split('T')[0],
+            'installationDate': _installationDate!.toIso8601String().split('T')[0],
+            'warrantyStart': _warrantyStartDate!.toIso8601String().split('T')[0],
             'warrantyEnd': _warrantyEndDate!.toIso8601String().split('T')[0],
             'warrantyStatus': _warrantyStatus,
             'invoiceContractNo': _invoiceContractNo,
+          });
+        } else {
+          machines.add({
+            'machine': existingMachine.machine?.id,
+            'purchaseDate': existingMachine.purchaseDate?.toIso8601String().split('T')[0] ?? '',
+            'installationDate': existingMachine.installationDate?.toIso8601String().split('T')[0] ?? '',
+            'warrantyStart': existingMachine.warrantyStart?.toIso8601String().split('T')[0] ?? '',
+            'warrantyEnd': existingMachine.warrantyEnd?.toIso8601String().split('T')[0] ?? '',
+            'warrantyStatus': existingMachine.warrantyStatus ?? '',
+            'invoiceContractNo': existingMachine.invoiceContractNo ?? '',
           });
         }
       }
     }
 
+    // if (_selectedMachine != null && _selectedMachine!.isNotEmpty) {
+    //   final machine = _machineStorageService.findMachineByName(_selectedMachine!);
+    //   if (machine != null) {
+    //     final isAlreadyAssigned =
+    //         customer.machines?.any((existingMachine) => existingMachine.machine?.id == machine.id) ?? false;
+
+    if (!isAlreadyAssigned && machine != null) {
+      machines.add({
+        'machine': machine.id,
+        'purchaseDate': _purchaseDate!.toIso8601String().split('T')[0],
+        'installationDate': _installationDate!.toIso8601String().split('T')[0],
+        'warrantyStart': _warrantyStartDate!.toIso8601String().split('T')[0],
+        'warrantyEnd': _warrantyEndDate!.toIso8601String().split('T')[0],
+        'warrantyStatus': _warrantyStatus,
+        'invoiceContractNo': _invoiceContractNo,
+      });
+    }
+    // }
+    // }
+
     return machines;
   }
 
   bool _validateMachineOwnership() {
-    // Check if all required machine ownership fields are filled
     if (_purchaseDate == null) {
       Fluttertoast.showToast(
         msg: LanguageService.get('purchase_date_required'),
