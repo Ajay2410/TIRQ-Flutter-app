@@ -22,6 +22,7 @@ abstract class AppColors {
   static const Color secondaryDark = Color(0xFF5746A6);
   static const Color secondaryVariant = Color(0xFF43307F);
   static const Color appbarVarient = Color(0xFF003382);
+
   // Accent Colors
   static const Color accent = Color(0xFFff6b6b);
   static const Color accentLight = Color(0xFFFFA8A8);
@@ -73,12 +74,20 @@ abstract class AppColors {
 
   // icon background color
   static const Color bluebackground = Color(0xFF4ED7F1);
+  static const Color periwinklePurple = Color(0xFF8F86F0);
   static const Color greenbackground = Color(0xFF76BA99);
   static const Color redbackground = Color(0xFFE97777);
   static const Color darkGreenBack = Color(0xFF3A98B9);
   static const Color redBack = Color(0xFFC52E2E);
+  static const Color skyBlue = Color(0xFF4ED6F0);
+  static const Color forestGreen = Color(0xFF537D5D);
   static const Color colorBlue = Color(0xFF314E8D);
+  static const Color amberOrange = Color(0xFFFEB040);
   static const Color colorF0F2FC = Color(0xFFF0F2FC);
+  static const Color crimsonRed = Color(0xFFDF4747);
+  static const Color indigoBlue = Color(0xFF687EE4);
+  static const Color mintGreen = Color(0xFF41C392);
+  static const Color oliveGreen = Color(0xFF9E9F0C);
 
   // Dialog Colors
   static const Color warningRed = Color(0xFFD93025);

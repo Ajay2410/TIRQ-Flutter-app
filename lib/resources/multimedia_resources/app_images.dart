@@ -10,15 +10,11 @@ abstract class AppImages {
   static const String cornerCircle = "assets/images/corner-circle.svg";
   static const String back = "assets/images/back.png";
 
-  static const String contactBookActive =
-      "assets/images/contact-book-active1.png";
-  static const String contactBookInactive =
-      "assets/images/contact-book-inactive1.png";
+  static const String contactBookActive = "assets/images/contact-book-active1.png";
+  static const String contactBookInactive = "assets/images/contact-book-inactive1.png";
 
-  static const String conversationActive =
-      "assets/images/conversation-active1.png";
-  static const String conversationInactive =
-      "assets/images/conversation-inactive1.png";
+  static const String conversationActive = "assets/images/conversation-active1.png";
+  static const String conversationInactive = "assets/images/conversation-inactive1.png";
 
   static const String homeActive = "assets/images/home-active1.png";
   static const String homeInactive = "assets/images/home-inactive1.png";
@@ -38,13 +34,13 @@ abstract class AppImages {
   static const String myCustomers = "assets/icons/my_customers.png";
   static const String myTeam = "assets/icons/my_team.png";
   static const String tasks = "assets/icons/tasks.png";
+  static const String machineSuppliers = "assets/icons/machine_suppliers.png";
+  static const String glassFlowSystem = "assets/icons/glass_flow_system.png";
   static const String piInvoice = "assets/icons/pi_invoice.png";
-  static const String analyticsDashboard =
-      "assets/icons/analytics_dashboard.png";
+  static const String analyticsDashboard = "assets/icons/analytics_dashboard.png";
   static const String machineRecords = "assets/icons/machine_records.png";
   static const String feedbackRating = "assets/icons/feedback_rating.png";
-  static const String installationTracker =
-      "assets/icons/installation_tracker.png";
+  static const String installationTracker = "assets/icons/installation_tracker.png";
   static const String feedbackSurvey = "assets/icons/feedback_survay.png";
 
   // My Customers Screen Icons
@@ -96,23 +92,14 @@ abstract class AppImages {
   }
 
   // SVG Flag widget for network loading
-  static Widget getSvgFlag(
-    String flagPath, {
-    double? width,
-    double? height,
-    BoxFit fit = BoxFit.cover,
-  }) {
+  static Widget getSvgFlag(String flagPath, {double? width, double? height, BoxFit fit = BoxFit.cover}) {
     return SvgPicture.network(
       getFlagUrl(flagPath),
       width: width,
       height: height,
       fit: fit,
-      placeholderBuilder:
-          (context) =>
-              Image.asset(flag, width: width, height: height, fit: fit),
-      errorBuilder:
-          (context, error, stackTrace) =>
-              Image.asset(flag, width: width, height: height, fit: fit),
+      placeholderBuilder: (context) => Image.asset(flag, width: width, height: height, fit: fit),
+      errorBuilder: (context, error, stackTrace) => Image.asset(flag, width: width, height: height, fit: fit),
     );
   }
 }

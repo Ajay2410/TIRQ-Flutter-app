@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:manager/core/models/hive/user/user.dart';
+
 import 'package:manager/core/storage/storage.dart';
 import 'package:manager/core/utils/app_logger.dart';
 import 'package:manager/features/tickets/add_ticket/add_ticket.view.dart';
@@ -41,9 +42,9 @@ class TicketsListViewModel extends ReactiveViewModel {
 
   // Reactive values
   final ReactiveValue<List<TicketCardAttributes>> _tickets =
-  ReactiveValue<List<TicketCardAttributes>>([]);
+      ReactiveValue<List<TicketCardAttributes>>([]);
   final ReactiveValue<List<TicketCardAttributes>> _filteredTickets =
-  ReactiveValue<List<TicketCardAttributes>>([]);
+      ReactiveValue<List<TicketCardAttributes>>([]);
   final ReactiveValue<bool> _isLoading = ReactiveValue<bool>(false);
 
   List<TicketCardAttributes> get tickets => _filteredTickets.value;
@@ -92,7 +93,9 @@ class TicketsListViewModel extends ReactiveViewModel {
     _refreshSubscription = _ticketService.refreshStream.listen((trigger) {
       if (trigger && !_ticketService.isRefreshing) {
         //  Fetching tickets from API 684408b318d422ee67af8012, 'processorId': 684408b318d422ee67af8012
-        AppLogger.highlight("Received refresh trigger, refreshing tickets list");
+        AppLogger.highlight(
+          "Received refresh trigger, refreshing tickets list",
+        );
         loadTickets();
       }
     });
@@ -119,9 +122,10 @@ class TicketsListViewModel extends ReactiveViewModel {
       );
 
       result.fold(
-            (failure) {
+        (failure) {
           // Don't show toast for "already refreshing" error if not forced
-          if (failure.message != 'Refresh already in progress' || forceRefresh) {
+          if (failure.message != 'Refresh already in progress' ||
+              forceRefresh) {
             Fluttertoast.showToast(
               msg: 'Failed to load tickets: ${failure.message}',
             );
@@ -132,46 +136,48 @@ class TicketsListViewModel extends ReactiveViewModel {
             _filteredTickets.value = [];
           }
         },
-            (ticketList) async {
+        (ticketList) async {
           // Convert Ticket objects to TicketCardAttributes for the UI
           List<TicketCardAttributes> ticketCards =
-          ticketList.map((ticket) {
-            // Calculate time elapsed
-            String timeElapsed = _calculateTimeElapsed(ticket.createdAt);
+              ticketList.map((ticket) {
+                // Calculate time elapsed
+                String timeElapsed = _calculateTimeElapsed(ticket.createdAt);
 
-            // Determine if ticket can be pinged/held based on last ping time
-            bool canInteract = _canInteractWithTicket(ticket);
+                // Determine if ticket can be pinged/held based on last ping time
+                bool canInteract = _canInteractWithTicket(ticket);
 
-            // Get customer name (using machine owner or organization name)
-            String customerName =
-            getUser().organizationType == OrganizationType.processor
-                ? ticket.manufacturerInfo?.name ?? 'Unknown Customer'
-                : ticket.processorInfo?.name ?? 'Unknown Customer';
+                // Get customer name (using machine owner or organization name)
+                String customerName =
+                    getUser().organizationType == OrganizationType.processor
+                        ? ticket.manufacturerInfo?.name ?? 'Unknown Customer'
+                        : ticket.processorInfo?.name ?? 'Unknown Customer';
 
-            // Get country code (placeholder - in a real app, you'd get this from customer data)
-            String countryCode = _getCountryCode(customerName);
+                // Get country code from ticket data
+                String countryCode = _getCountryCode(ticket);
 
-            return TicketCardAttributes(
-              lastPingTime: ticket.lastPingTime,
-              onPingPressed: canInteract &&
-                  getUser().organizationType == OrganizationType.processor
-                  ? () => pingTicket(ticket.id)
-                  : canInteract
-                  ? () => holdTicket(ticket.id)
-                  : null,
-              onChatPressed: () => navigateToChatView(ticket.id),
-              id: ticket.id ?? 'Unknown',
-              ticket: ticket,
-              customerName: customerName,
-              countryCode: countryCode,
-              machineName: ticket.machine?.machineName ?? 'Unknown Machine',
-              elapsedTime: timeElapsed,
-              errorDescription:
-              ticket.description ?? 'No error description available',
-              onTicketTap: (id) => viewTicketDetails(id, ticket),
-              onAddRemarkTap: (id)=>addRemark(id),
-            );
-          }).toList();
+                return TicketCardAttributes(
+                  lastPingTime: ticket.lastPingTime,
+                  onPingPressed:
+                      canInteract &&
+                              getUser().organizationType ==
+                                  OrganizationType.processor
+                          ? () => pingTicket(ticket.id)
+                          : canInteract
+                          ? () => holdTicket(ticket.id)
+                          : null,
+                  onChatPressed: () => navigateToChatView(ticket.id),
+                  id: ticket.id,
+                  ticket: ticket,
+                  customerName: customerName,
+                  countryCode: countryCode,
+                  machineName: ticket.machine?.machineName ?? 'Unknown Machine',
+                  elapsedTime: timeElapsed,
+                  errorDescription:
+                      ticket.description ?? 'No error description available',
+                  onTicketTap: (id) => viewTicketDetails(id, ticket),
+                  onAddRemarkTap: (id) => addRemark(id),
+                );
+              }).toList();
           _tickets.value.clear();
           notifyListeners();
           _tickets.value = ticketCards;
@@ -219,29 +225,35 @@ class TicketsListViewModel extends ReactiveViewModel {
     setBusy(true);
     notifyListeners();
 
-    final dialogResponse  = await _dialogService.showCustomDialog<ResolveRequestResponse,ResolveRequestDialogAttributes>(
-        variant: DialogType.resolveRequest,
-        data: ResolveRequestDialogAttributes(
-          title: 'Add Remark',
-          description: '',
-          cancelText: 'Cancel',
-          confirmText: 'Move to Resolved',
-        )
+    final dialogResponse = await _dialogService.showCustomDialog<
+      ResolveRequestResponse,
+      ResolveRequestDialogAttributes
+    >(
+      variant: DialogType.resolveRequest,
+      data: ResolveRequestDialogAttributes(
+        title: 'Add Remark',
+        description: '',
+        cancelText: 'Cancel',
+        confirmText: 'Move to Resolved',
+      ),
     );
     if (dialogResponse?.confirmed != true) {
       return;
     }
 
-    final response = await _ticketService.resolveTicket(id: ticketId,closingRemark: dialogResponse!.data!.remarks);
+    final response = await _ticketService.resolveTicket(
+      id: ticketId,
+      closingRemark: dialogResponse!.data!.remarks,
+    );
     response.fold(
-          (failure) {
+      (failure) {
         AppLogger.error(failure.message);
         Fluttertoast.showToast(
           msg: 'Failed to resolve ticket: ${failure.message}',
           backgroundColor: AppColors.error,
         );
       },
-          (ticket) {
+      (ticket) {
         Fluttertoast.showToast(
           msg: 'Ticket resolved successfully',
           backgroundColor: AppColors.success,
@@ -261,69 +273,17 @@ class TicketsListViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
-  // Helper method to get country code (in a real app, this would come from your data)
-  String _getCountryCode(String customerName) {
-    // This is just a placeholder - in a real app, you'd get the actual country code from your data
-    // For demonstration, we'll return random country codes based on the first letter
-    final firstLetter =
-    customerName.isNotEmpty ? customerName[0].toUpperCase() : 'U';
-
-    switch (firstLetter) {
-      case 'A':
-        return 'US';
-      case 'B':
-        return 'GB';
-      case 'C':
-        return 'CA';
-      case 'D':
-        return 'DE';
-      case 'E':
-        return 'ES';
-      case 'F':
-        return 'FR';
-      case 'G':
-        return 'GR';
-      case 'H':
-        return 'HK';
-      case 'I':
-        return 'IT';
-      case 'J':
-        return 'JP';
-      case 'K':
-        return 'KR';
-      case 'L':
-        return 'LU';
-      case 'M':
-        return 'MX';
-      case 'N':
-        return 'NL';
-      case 'O':
-        return 'NZ';
-      case 'P':
-        return 'PT';
-      case 'Q':
-        return 'QA';
-      case 'R':
-        return 'RU';
-      case 'S':
-        return 'SE';
-      case 'T':
-        return 'TR';
-      case 'U':
-        return 'UA';
-      case 'V':
-        return 'VN';
-      case 'W':
-        return 'WS';
-      case 'X':
-        return 'CN';
-      case 'Y':
-        return 'YE';
-      case 'Z':
-        return 'ZA';
-      default:
-        return 'US';
+  // Helper method to get country code from ticket data
+  String _getCountryCode(Ticket ticket) {
+    // Try to get country code from processor or manufacturer info
+    if (ticket.processorInfo?.countryCode != null) {
+      return ticket.processorInfo!.countryCode!;
     }
+    if (ticket.manufacturerInfo?.countryCode != null) {
+      return ticket.manufacturerInfo!.countryCode!;
+    }
+    // Return default country code if not available
+    return 'US';
   }
 
   String _calculateTimeElapsed(String? createdAt) {
@@ -352,12 +312,13 @@ class TicketsListViewModel extends ReactiveViewModel {
     // Apply search query
     if (_searchQuery.isNotEmpty) {
       final query = _searchQuery.toLowerCase();
-      filtered = filtered.where((ticket) {
-        return (ticket.customerName.toLowerCase().contains(query)) ||
-            (ticket.id.toLowerCase().contains(query)) ||
-            (ticket.machineName.toLowerCase().contains(query)) ||
-            (ticket.errorDescription.toLowerCase().contains(query));
-      }).toList();
+      filtered =
+          filtered.where((ticket) {
+            return (ticket.customerName.toLowerCase().contains(query)) ||
+                (ticket.id.toLowerCase().contains(query)) ||
+                (ticket.machineName.toLowerCase().contains(query)) ||
+                (ticket.errorDescription.toLowerCase().contains(query));
+          }).toList();
     }
 
     _filteredTickets.value = filtered;
@@ -371,7 +332,7 @@ class TicketsListViewModel extends ReactiveViewModel {
   }
 
   void navigateToCreateOrEditTicketView() async {
-    final result = await _navigationService.navigateTo(
+    await _navigationService.navigateTo(
       Routes.addTicket,
       arguments: AddTicketViewAttributes(),
     );
@@ -395,14 +356,15 @@ class TicketsListViewModel extends ReactiveViewModel {
     setBusy(true);
     notifyListeners();
 
-    final dialogResponse  = await _dialogService.showCustomDialog(
-        variant: DialogType.resolveRequest,
-        data: ResolveRequestDialogAttributes(
-          title: 'Resolve Ticket',
-          description: 'Is the issue completely resolved and do you want to close the ticket?',
-          cancelText: 'Cancel',
-          confirmText: 'Yes, Resolve',
-        )
+    final dialogResponse = await _dialogService.showCustomDialog(
+      variant: DialogType.resolveRequest,
+      data: ResolveRequestDialogAttributes(
+        title: 'Resolve Ticket',
+        description:
+            'Is the issue completely resolved and do you want to close the ticket?',
+        cancelText: 'Cancel',
+        confirmText: 'Yes, Resolve',
+      ),
     );
     if (dialogResponse?.confirmed != true) {
       return;
@@ -410,14 +372,14 @@ class TicketsListViewModel extends ReactiveViewModel {
 
     final response = await _ticketService.resolveTicket(id: ticketId);
     response.fold(
-          (failure) {
+      (failure) {
         AppLogger.error(failure.message);
         Fluttertoast.showToast(
           msg: 'Failed to resolve ticket: ${failure.message}',
           backgroundColor: AppColors.error,
         );
       },
-          (ticket) {
+      (ticket) {
         Fluttertoast.showToast(
           msg: 'Ticket resolved successfully',
           backgroundColor: AppColors.success,
@@ -429,7 +391,7 @@ class TicketsListViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
-  Future  requestResolveTicket(String ticketId) async {
+  Future requestResolveTicket(String ticketId) async {
     if (_ticketService.isRefreshing) {
       Fluttertoast.showToast(
         msg: 'Please wait, tickets are being refreshed',
@@ -443,14 +405,14 @@ class TicketsListViewModel extends ReactiveViewModel {
 
     final response = await _ticketService.requestResolveTicket(id: ticketId);
     response.fold(
-          (failure) {
+      (failure) {
         AppLogger.error(failure.message);
         Fluttertoast.showToast(
           msg: 'Failed to request resolution of ticket: ${failure.message}',
           backgroundColor: AppColors.error,
         );
       },
-          (ticket) {
+      (ticket) {
         Fluttertoast.showToast(
           msg: 'Request sent successfully',
           backgroundColor: AppColors.success,
@@ -468,17 +430,42 @@ class TicketsListViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
-
   void viewTicketDetails(String ticketId, Ticket ticket) async {
     if (getUser().organizationType == OrganizationType.manufacturer) {
       await _dialogService.showCustomDialog(
         variant: DialogType.ticketDetails,
         data: TicketDetailsDialogAttributes(
-            ticket: ticket,
-            onResolvePressed: (ticketId)async  {
-              // Handle resolve action
-              AppLogger.info("Resolved ticket $ticketId");
+          ticket: ticket,
+          onResolvePressed: (ticketId) async {
+            // Handle resolve action
+            AppLogger.info("Resolved ticket $ticketId");
 
+            await resolveTicket(ticketId);
+            loadTickets();
+          },
+          onHoldPressed: (ticketId, holdDuration) {
+            holdTicketWithDuration(ticketId, holdDuration);
+          },
+          onChatPressed: (ticketId) {
+            navigateToChatView(ticketId);
+          },
+          navigateToImageViewer: (imageUrl) {
+            navigateToImageView(imageUrl);
+          },
+          onRequestResolvePressed: (ticketId) {
+            requestResolveTicket(ticketId);
+          },
+        ),
+      );
+    } else {
+      if (ticket.status == 'Resolved') {
+        await _dialogService.showCustomDialog(
+          variant: DialogType.ticketDetails,
+          data: TicketDetailsDialogAttributes(
+            ticket: ticket,
+            onResolvePressed: (ticketId) async {
+              // Handle resolve action
+              AppLogger.highlight("Resolved ticket $ticketId");
               await resolveTicket(ticketId);
               loadTickets();
             },
@@ -491,35 +478,9 @@ class TicketsListViewModel extends ReactiveViewModel {
             navigateToImageViewer: (imageUrl) {
               navigateToImageView(imageUrl);
             },
-          onRequestResolvePressed: (ticketId){
+            onRequestResolvePressed: (ticketId) {
               requestResolveTicket(ticketId);
-          }
-        ),
-      );
-    } else {
-      if(ticket.status=='Resolved') {
-        await _dialogService.showCustomDialog(
-          variant: DialogType.ticketDetails,
-          data: TicketDetailsDialogAttributes(
-              ticket: ticket,
-              onResolvePressed: (ticketId) async {
-                // Handle resolve action
-                AppLogger.highlight("Resolved ticket $ticketId");
-                await resolveTicket(ticketId);
-                loadTickets();
-              },
-              onHoldPressed: (ticketId, holdDuration) {
-                holdTicketWithDuration(ticketId, holdDuration);
-              },
-              onChatPressed: (ticketId) {
-                navigateToChatView(ticketId);
-              },
-              navigateToImageViewer: (imageUrl) {
-                navigateToImageView(imageUrl);
-              },
-              onRequestResolvePressed: (ticketId){
-                requestResolveTicket(ticketId);
-              }
+            },
           ),
         );
         return;
@@ -527,18 +488,20 @@ class TicketsListViewModel extends ReactiveViewModel {
       final response = await _dialogService.showCustomDialog(
         variant: DialogType.loader,
         data: LoaderDialogAttributes(
-          task: () =>
-              _chatService.getChatViewAttributesForTicket(ticketId: ticketId),
+          task:
+              () => _chatService.getChatViewAttributesForTicket(
+                ticketId: ticketId,
+              ),
           message: "Loading chat...",
         ),
       );
       if (response?.data != null) {
         (response!.data as EitherResult<ChatViewAttributes>).fold(
-              (failure) {
+          (failure) {
             AppLogger.error(failure.message);
             Fluttertoast.showToast(msg: failure.message);
           },
-              (attributes) {
+          (attributes) {
             _navigationService.navigateTo(Routes.chat, arguments: attributes);
           },
         );
@@ -546,24 +509,25 @@ class TicketsListViewModel extends ReactiveViewModel {
     }
     loadTickets();
   }
+
   void navigateToChatView(String ticketId) async {
     final response = await _dialogService.showCustomDialog(
       variant: DialogType.loader,
       data: LoaderDialogAttributes(
-        task: () =>
-            _chatService.getChatViewAttributesForTicket(ticketId: ticketId),
+        task:
+            () =>
+                _chatService.getChatViewAttributesForTicket(ticketId: ticketId),
         message: "Loading chat...",
       ),
     );
     if (response?.data != null) {
       (response!.data as EitherResult<ChatViewAttributes>).fold(
-            (failure) {
+        (failure) {
           AppLogger.error(failure.message);
           Fluttertoast.showToast(msg: failure.message);
         },
-            (attributes) {
-                _navigationService.navigateTo(
-                    Routes.chat, arguments: attributes);
+        (attributes) {
+          _navigationService.navigateTo(Routes.chat, arguments: attributes);
         },
       );
     }
@@ -583,14 +547,17 @@ class TicketsListViewModel extends ReactiveViewModel {
     }
 
     final response = await _ticketService.holdTicket(
-        id: ticketId, nextPingTime: holdDuration);
+      id: ticketId,
+      nextPingTime: holdDuration,
+    );
     response.fold(
-          (failure) {
+      (failure) {
         AppLogger.error(failure.message);
         Fluttertoast.showToast(
-            msg: 'Failed to Reschedule ticket: ${failure.message}');
+          msg: 'Failed to Reschedule ticket: ${failure.message}',
+        );
       },
-          (ticket) {
+      (ticket) {
         loadTickets(forceRefresh: true);
         Fluttertoast.showToast(
           msg: 'Ticket Reschedule for $holdDuration',
@@ -598,15 +565,6 @@ class TicketsListViewModel extends ReactiveViewModel {
         );
       },
     );
-  }
-
-  // Helper method to format duration
-  String _formatDuration(Duration duration) {
-    if (duration.inHours >= 24) {
-      return '${duration.inDays} day${duration.inDays != 1 ? 's' : ''}';
-    } else {
-      return '${duration.inHours} hour${duration.inHours != 1 ? 's' : ''}';
-    }
   }
 
   void holdTicket(String ticketId) async {
@@ -624,12 +582,13 @@ class TicketsListViewModel extends ReactiveViewModel {
       nextPingTime: '1 Hour',
     );
     response.fold(
-          (failure) {
+      (failure) {
         AppLogger.error(failure.message);
         Fluttertoast.showToast(
-            msg: 'Failed to hold ticket: ${failure.message}');
+          msg: 'Failed to hold ticket: ${failure.message}',
+        );
       },
-          (ticket) {
+      (ticket) {
         loadTickets(forceRefresh: true);
         Fluttertoast.showToast(
           msg: 'Ticket temporarily held',
@@ -650,11 +609,11 @@ class TicketsListViewModel extends ReactiveViewModel {
 
     final response = await _ticketService.pingTicket(id: ticketId);
     response.fold(
-          (failure) {
+      (failure) {
         AppLogger.error(failure.message);
         Fluttertoast.showToast(msg: 'Failed to ping : ${failure.message}');
       },
-          (ticket) {
+      (ticket) {
         loadTickets(forceRefresh: true);
         Fluttertoast.showToast(
           msg: 'Ticket pinged successfully',

@@ -7,7 +7,9 @@ import 'package:manager/core/locator.dart';
 
 class MachineStorageService {
   static final MachineStorageService _instance = MachineStorageService._internal();
+
   factory MachineStorageService() => _instance;
+
   MachineStorageService._internal();
 
   final _machineService = locator<MachineService>();
@@ -20,7 +22,9 @@ class MachineStorageService {
 
   // Getters
   List<Datum> get machines => _machines;
+
   bool get isLoading => _isLoading;
+
   bool get isInitialized => _isInitialized;
 
   /// Initialize machines data - called only once per app lifecycle
@@ -39,10 +43,7 @@ class MachineStorageService {
       _isInitialized = true;
     } catch (e) {
       AppLogger.error("Exception while initializing machines: $e");
-      _dialogService.showDialog(
-        title: LanguageService.get('error'),
-        description: LanguageService.get('failed_to_load_machines'),
-      );
+      _dialogService.showDialog(title: LanguageService.get('error'), description: LanguageService.get('failed_to_load_machines'));
     } finally {
       _isLoading = false;
     }
@@ -65,10 +66,7 @@ class MachineStorageService {
       await _fetchMachinesFromAPI();
     } catch (e) {
       AppLogger.error("Exception while refreshing machines: $e");
-      _dialogService.showDialog(
-        title: LanguageService.get('error'),
-        description: LanguageService.get('failed_to_load_machines'),
-      );
+      _dialogService.showDialog(title: LanguageService.get('error'), description: LanguageService.get('failed_to_load_machines'));
     } finally {
       _isLoading = false;
     }
@@ -81,15 +79,11 @@ class MachineStorageService {
     result.fold(
       (failure) {
         AppLogger.error("Failed to load machines: ${failure.message}");
-        _dialogService.showDialog(
-          title: LanguageService.get('error'),
-          description: LanguageService.get('failed_to_load_machines'),
-        );
+        _dialogService.showDialog(title: LanguageService.get('error'), description: LanguageService.get('failed_to_load_machines'));
         throw Exception(failure.message);
       },
       (machineModel) {
         _machines = machineModel.data ?? [];
-        AppLogger.info("Loaded ${_machines.length} machines from API (in-memory only)");
       },
     );
   }

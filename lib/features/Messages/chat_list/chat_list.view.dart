@@ -15,7 +15,8 @@ class ChatListView extends StatefulWidget {
   State<ChatListView> createState() => _ChatListViewState();
 }
 
-class _ChatListViewState extends State<ChatListView> with TickerProviderStateMixin {
+class _ChatListViewState extends State<ChatListView>
+    with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   late AnimationController _animationController;
@@ -34,10 +35,9 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0.0, -0.5),
       end: const Offset(0.0, 0.0),
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -73,117 +73,140 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
     return ViewModelBuilder<ChatListViewModel>.reactive(
       viewModelBuilder: () => ChatListViewModel(),
       onViewModelReady: (model) => model.init(),
-      builder: (context, model, child) => Scaffold(
-        backgroundColor: AppColors.textOnPrimary,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: AppColors.primary,
-          iconTheme: IconThemeData(color: AppColors.white),
-          title: Text(
-            LanguageService.get("messages"),
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              color: AppColors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          actions: [
-            IconButton(
-              onPressed: _toggleSearch,
-              icon: Icon(
-                _isSearchVisible ? Icons.close : Icons.search,
-                color: AppColors.white,
+      builder:
+          (context, model, child) => Scaffold(
+            backgroundColor: AppColors.textOnPrimary,
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: AppColors.primary,
+              iconTheme: IconThemeData(color: AppColors.white),
+              title: Text(
+                LanguageService.get("messages"),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  color: AppColors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            IconButton(
-              icon: Icon(Icons.archive_outlined, color: AppColors.white),
-              onPressed: () => model.navigateToArchivedChats(),
-              tooltip: LanguageService.get("archived_messages"),
-            ),
-            IconButton(
-              icon: Icon(Icons.add, color: AppColors.white),
-              onPressed: () {
-                Navigator.of(context).pushNamed(Routes.createGroupChat);
-              },
-              tooltip: LanguageService.get("create_new_chat"),
-            ),
-          ],
-          bottom: TabBar(
-            controller: _tabController,
-            indicatorColor: AppColors.white,
-            indicatorWeight: 3,
-            labelColor: AppColors.white,
-            unselectedLabelColor: AppColors.white.withValues(alpha: 0.7),
-            labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
-            tabs: [
-              Tab(
-                text: LanguageService.get("tickets"),
-                icon: Icon(Icons.support_agent, size: 20),
-              ),
-              Tab(
-                text: LanguageService.get("departmental"),
-                icon: Icon(Icons.business, size: 20),
-              ),
-              Tab(
-                text: LanguageService.get("external"),
-                icon: Icon(Icons.public, size: 20),
-              ),
-            ],
-          ),
-        ),
-        body: Column(
-          children: [
-            SlideTransition(
-              position: _slideAnimation,
-              child: _isSearchVisible ? _buildSearchBar(context, model) : const SizedBox.shrink(),
-            ),
-            Expanded(
-              child: model.isLoading
-                  ? Center(child: CircularProgressIndicator(color: AppColors.primary))
-                  : TabBarView(
+              actions: [
+                IconButton(
+                  onPressed: _toggleSearch,
+                  icon: Icon(
+                    _isSearchVisible ? Icons.close : Icons.search,
+                    color: AppColors.white,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.archive_outlined, color: AppColors.white),
+                  onPressed: () => model.navigateToArchivedChats(),
+                  tooltip: LanguageService.get("archived_messages"),
+                ),
+                IconButton(
+                  icon: Icon(Icons.add, color: AppColors.white),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(Routes.createGroupChat);
+                  },
+                  tooltip: LanguageService.get("create_new_chat"),
+                ),
+              ],
+              bottom: TabBar(
                 controller: _tabController,
-                children: [
-                  _buildChatList(
-                    context,
-                    model,
-                    model.getFilteredTicketChats(),
-                    LanguageService.get("no_ticket_conversations"),
-                    LanguageService.get("ticket_chats_appear_here"),
-                    Icons.support_agent,
+                indicatorColor: AppColors.white,
+                indicatorWeight: 3,
+                labelColor: AppColors.white,
+                unselectedLabelColor: AppColors.white.withValues(alpha: 0.7),
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                unselectedLabelStyle: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 16,
+                ),
+                tabs: [
+                  Tab(
+                    text: LanguageService.get("tickets"),
+                    icon: Icon(Icons.support_agent, size: 20),
                   ),
-                  _buildChatList(
-                    context,
-                    model,
-                    model.getFilteredDepartmentalChats(),
-                    LanguageService.get("no_departmental_conversations"),
-                    LanguageService.get("departmental_chats_appear_here"),
-                    Icons.business,
+                  Tab(
+                    text: LanguageService.get("departmental"),
+                    icon: Icon(Icons.business, size: 20),
                   ),
-                  _buildChatList(
-                    context,
-                    model,
-                    model.getFilteredExternalChats(),
-                    LanguageService.get("no_external_conversations"),
-                    LanguageService.get("external_chats_appear_here"),
-                    Icons.public,
+                  Tab(
+                    text: LanguageService.get("external"),
+                    icon: Icon(Icons.public, size: 20),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
+            body: Column(
+              children: [
+                SlideTransition(
+                  position: _slideAnimation,
+                  child:
+                      _isSearchVisible
+                          ? _buildSearchBar(context, model)
+                          : const SizedBox.shrink(),
+                ),
+                Expanded(
+                  child:
+                      model.isLoading
+                          ? Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                            ),
+                          )
+                          : TabBarView(
+                            controller: _tabController,
+                            children: [
+                              _buildChatList(
+                                context,
+                                model,
+                                model.getFilteredTicketChats(),
+                                LanguageService.get("no_ticket_conversations"),
+                                LanguageService.get("ticket_chats_appear_here"),
+                                Icons.support_agent,
+                              ),
+                              _buildChatList(
+                                context,
+                                model,
+                                model.getFilteredDepartmentalChats(),
+                                LanguageService.get(
+                                  "no_departmental_conversations",
+                                ),
+                                LanguageService.get(
+                                  "departmental_chats_appear_here",
+                                ),
+                                Icons.business,
+                              ),
+                              _buildChatList(
+                                context,
+                                model,
+                                model.getFilteredExternalChats(),
+                                LanguageService.get(
+                                  "no_external_conversations",
+                                ),
+                                LanguageService.get(
+                                  "external_chats_appear_here",
+                                ),
+                                Icons.public,
+                              ),
+                            ],
+                          ),
+                ),
+              ],
+            ),
+          ),
     );
   }
 
   Widget _buildChatList(
-      BuildContext context,
-      ChatListViewModel model,
-      List<ChatViewAttributes> chats,
-      String emptyTitle,
-      String emptySubtitle,
-      IconData emptyIcon,
-      ) {
+    BuildContext context,
+    ChatListViewModel model,
+    List<ChatViewAttributes> chats,
+    String emptyTitle,
+    String emptySubtitle,
+    IconData emptyIcon,
+  ) {
     if (chats.isEmpty) {
       return _buildEmptyState(context, emptyTitle, emptySubtitle, emptyIcon);
     }
@@ -204,7 +227,10 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
 
   Widget _buildSearchBar(BuildContext context, ChatListViewModel model) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppSizes.w20, vertical: AppSizes.h16),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.w20,
+        vertical: AppSizes.h16,
+      ),
       decoration: BoxDecoration(
         color: AppColors.white,
         boxShadow: [
@@ -231,27 +257,31 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
             borderRadius: BorderRadius.circular(AppSizes.v12),
             borderSide: BorderSide.none,
           ),
-          contentPadding: EdgeInsets.symmetric(vertical: AppSizes.h12, horizontal: AppSizes.w16),
-          suffixIcon: _searchController.text.isNotEmpty
-              ? IconButton(
-            icon: Icon(Icons.clear, color: AppColors.gray),
-            onPressed: () {
-              _searchController.clear();
-              model.clearSearch();
-            },
-          )
-              : null,
+          contentPadding: EdgeInsets.symmetric(
+            vertical: AppSizes.h12,
+            horizontal: AppSizes.w16,
+          ),
+          suffixIcon:
+              _searchController.text.isNotEmpty
+                  ? IconButton(
+                    icon: Icon(Icons.clear, color: AppColors.gray),
+                    onPressed: () {
+                      _searchController.clear();
+                      model.clearSearch();
+                    },
+                  )
+                  : null,
         ),
       ),
     );
   }
 
   Widget _buildEmptyState(
-      BuildContext context,
-      String title,
-      String subtitle,
-      IconData icon,
-      ) {
+    BuildContext context,
+    String title,
+    String subtitle,
+    IconData icon,
+  ) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -279,9 +309,9 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
           SizedBox(height: AppSizes.h8),
           Text(
             subtitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppColors.textSecondary,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
         ],
@@ -289,20 +319,30 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
     );
   }
 
-  Widget _buildChatItem(BuildContext context, ChatListViewModel model, ChatViewAttributes chatRoom) {
-    final lastMessageTime = chatRoom.ticket?.createdAt != null
-        ? DateTime.parse(chatRoom.ticket!.createdAt!)
-        : chatRoom.createdAt;
+  Widget _buildChatItem(
+    BuildContext context,
+    ChatListViewModel model,
+    ChatViewAttributes chatRoom,
+  ) {
+    final lastMessageTime =
+        chatRoom.ticket?.createdAt != null
+            ? DateTime.parse(chatRoom.ticket!.createdAt!)
+            : chatRoom.createdAt;
     final formatter = DateFormat('MMM d • h:mm a');
     final differenceInMinutes = formatter.format(lastMessageTime);
 
     return InkWell(
       onTap: () => model.navigateToChat(chatRoom),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: AppSizes.h12, horizontal: AppSizes.w16),
+        padding: EdgeInsets.symmetric(
+          vertical: AppSizes.h12,
+          horizontal: AppSizes.w16,
+        ),
         decoration: BoxDecoration(
           color: AppColors.white,
-          border: Border(bottom: BorderSide(color: AppColors.lightGray, width: 1)),
+          border: Border(
+            bottom: BorderSide(color: AppColors.lightGray, width: 1),
+          ),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -319,9 +359,8 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                       Expanded(
                         child: Text(
                           _getChatTitle(chatRoom),
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -341,19 +380,22 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                       Expanded(
                         child: Text(
                           _getLastMessagePreview(chatRoom),
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: AppColors.textSecondary),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       SizedBox(width: AppSizes.w8),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: AppSizes.w8, vertical: AppSizes.h2),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSizes.w8,
+                          vertical: AppSizes.h2,
+                        ),
                         decoration: BoxDecoration(
-                          color: _getStatusColor(chatRoom.ticket?.status ?? chatRoom.status)
-                              .withValues(alpha: 0.1),
+                          color: _getStatusColor(
+                            chatRoom.ticket?.status ?? chatRoom.status,
+                          ).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(AppSizes.v12),
                         ),
                         child: Text(
@@ -361,7 +403,9 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                               ? formatStatus(chatRoom.ticket!.status!)
                               : chatRoom.status,
                           style: TextStyle(
-                            color: _getStatusColor(chatRoom.ticket?.status ?? chatRoom.status),
+                            color: _getStatusColor(
+                              chatRoom.ticket?.status ?? chatRoom.status,
+                            ),
                             fontSize: AppSizes.v12,
                           ),
                         ),
@@ -406,10 +450,7 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
             backgroundColor: avatarColor.withValues(alpha: 0.2),
             child: Text(
               chatRoom.participants[0].name.substring(0, 1).toUpperCase(),
-              style: TextStyle(
-                color: avatarColor,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(color: avatarColor, fontWeight: FontWeight.bold),
             ),
           ),
           Positioned(
@@ -421,11 +462,7 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                 color: AppColors.white,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                avatarIcon,
-                size: 12,
-                color: avatarColor,
-              ),
+              child: Icon(avatarIcon, size: 12, color: avatarColor),
             ),
           ),
         ],
@@ -434,10 +471,7 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
       return CircleAvatar(
         radius: AppSizes.v24,
         backgroundColor: avatarColor.withValues(alpha: 0.2),
-        child: Icon(
-          avatarIcon,
-          color: avatarColor,
-        ),
+        child: Icon(avatarIcon, color: avatarColor),
       );
     }
   }
@@ -462,14 +496,14 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppSizes.w6, vertical: AppSizes.h2),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.w6,
+        vertical: AppSizes.h2,
+      ),
       decoration: BoxDecoration(
         color: typeColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppSizes.v8),
-        border: Border.all(
-          color: typeColor.withValues(alpha: 0.3),
-          width: 1,
-        ),
+        border: Border.all(color: typeColor.withValues(alpha: 0.3), width: 1),
       ),
       child: Text(
         typeLabel,
@@ -483,7 +517,8 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
   }
 
   String _getChatTitle(ChatViewAttributes chatRoom) {
-    if (chatRoom.chatRoomType?.toLowerCase() == "ticket" && chatRoom.ticket?.ticketId != null) {
+    if (chatRoom.chatRoomType?.toLowerCase() == "ticket" &&
+        chatRoom.ticket?.ticketId != null) {
       return chatRoom.ticket!.ticketId!;
     } else if (chatRoom.chatRoomType?.toLowerCase() == "withinorg") {
       if (chatRoom.groupName?.isNotEmpty == true) {
@@ -504,7 +539,9 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
     if (chatRoom.ticket?.description != null) {
       return chatRoom.ticket!.description!;
     } else if (chatRoom.participants.isNotEmpty) {
-      return chatRoom.participants.map((participant) => participant.name).join(", ");
+      return chatRoom.participants
+          .map((participant) => participant.name)
+          .join(", ");
     }
     return LanguageService.get("placeholder_last_message");
   }

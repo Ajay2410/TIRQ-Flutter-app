@@ -44,7 +44,10 @@ class AuthService {
         }
       }
 
-      final response = await apiService.post(url: ApiEndpoints.register, data: data);
+      final response = await apiService.post(
+        url: ApiEndpoints.register,
+        data: data,
+      );
 
       if (response.data['msg'] == 'Registered. Verify email and phone OTP.') {
         return Right('Registration successful');
@@ -54,31 +57,80 @@ class AuthService {
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to register'));
   }
 
-  ResultFuture<User> verifyEmail({required String email, required String otp}) async {
+  ResultFuture<User> verifyEmail({
+    required String email,
+    required String otp,
+  }) async {
     try {
-      final response = await apiService.post(url: ApiEndpoints.verifyEmail, data: {'email': email, 'otp': otp});
+      final response = await apiService.post(
+        url: ApiEndpoints.verifyEmail,
+        data: {'email': email, 'otp': otp},
+      );
 
-      if (response.data['success'] == true) {
-        return Right(User.fromJson(response.data['user']));
+      if (response.statusCode == 200) {
+        try {
+          final userData = response.data['user'] as Map<String, dynamic>;
+          final token = response.data['token'] as String?;
+
+          AppLogger.info(
+            'Email verification successful - Token: ${token != null ? 'Present' : 'Missing'}',
+          );
+          AppLogger.info('User data: $userData');
+
+          final user = User.fromJson(userData);
+          if (token != null) {
+            final userWithToken = user.copyWith(token: token);
+            await saveUser(userWithToken);
+            AppLogger.info(
+              'User saved successfully with token after email verification',
+            );
+            return Right(userWithToken);
+          }
+
+          AppLogger.info(
+            'User created successfully without token after email verification',
+          );
+          return Right(user);
+        } catch (e) {
+          AppLogger.error('Error processing email verification response: $e');
+          return Left(
+            Failure('Error processing email verification response: $e'),
+          );
+        }
+      } else {
+        AppLogger.error('Email verification failed: ${response.data}');
+        return Left(
+          Failure(response.data['message'] ?? 'Email verification failed'),
+        );
       }
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to verify email'));
   }
 
-  ResultFuture<User> verifyPhone({required String phone, required String otp}) async {
+  ResultFuture<User> verifyPhone({
+    required String phone,
+    required String otp,
+  }) async {
     try {
-      final response = await apiService.post(url: ApiEndpoints.verifyPhone, data: {'phone': phone, 'otp': otp});
+      final response = await apiService.post(
+        url: ApiEndpoints.verifyPhone,
+        data: {'phone': phone, 'otp': otp},
+      );
 
       if (response.data['success'] == true) {
         return Right(User.fromJson(response.data['user']));
@@ -86,7 +138,9 @@ class AuthService {
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to verify email'));
@@ -94,7 +148,10 @@ class AuthService {
 
   ResultFuture<bool> forgotPassword({required String email}) async {
     try {
-      final response = await apiService.post(url: ApiEndpoints.forgotPassword, data: {'email': email});
+      final response = await apiService.post(
+        url: ApiEndpoints.forgotPassword,
+        data: {'email': email},
+      );
 
       if (response.data['success'] == true) {
         return Right(true);
@@ -102,13 +159,19 @@ class AuthService {
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to verify email'));
   }
 
-  ResultFuture<bool> resetPassword({required String email, required String otp, required String newPassword}) async {
+  ResultFuture<bool> resetPassword({
+    required String email,
+    required String otp,
+    required String newPassword,
+  }) async {
     try {
       final response = await apiService.post(
         url: ApiEndpoints.resetPassword, // You need to add this endpoint
@@ -123,36 +186,62 @@ class AuthService {
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to reset password'));
   }
 
-  ResultFuture<User> login({required String email, required String password}) async {
+  ResultFuture<User> login({
+    required String email,
+    required String password,
+  }) async {
     try {
-      final response = await apiService.post(url: ApiEndpoints.login, data: {'email': email, 'password': password});
+      final response = await apiService.post(
+        url: ApiEndpoints.login,
+        data: {'email': email, 'password': password},
+      );
 
       if (response.data['success'] == true) {
-        // Extract user data and token from response
-        final userData = response.data['user'] as Map<String, dynamic>;
-        final token = response.data['token'] as String?;
+        try {
+          // Extract user data and token from response
+          final userData = response.data['user'] as Map<String, dynamic>;
+          final token = response.data['token'] as String?;
 
-        // Create user with token included
-        final user = User.fromJson(userData);
-        if (token != null) {
-          // Update user with token and save to storage
-          final userWithToken = user.copyWith(token: token);
-          await saveUser(userWithToken);
-          return Right(userWithToken);
+          AppLogger.info(
+            'Login successful - Token: ${token != null ? 'Present' : 'Missing'}',
+          );
+          AppLogger.info('User data: $userData');
+
+          // Create user with token included
+          final user = User.fromJson(userData);
+          if (token != null) {
+            // Update user with token and save to storage
+            final userWithToken = user.copyWith(token: token);
+            await saveUser(userWithToken);
+            AppLogger.info('User saved successfully with token');
+            return Right(userWithToken);
+          }
+
+          AppLogger.info('User created successfully without token');
+          return Right(user);
+        } catch (e) {
+          AppLogger.error('Error processing login response: $e');
+          return Left(Failure('Error processing login response: $e'));
         }
-
-        return Right(user);
+      } else {
+        // Log the response for debugging
+        AppLogger.error('Login failed: ${response.data}');
+        return Left(Failure(response.data['message'] ?? 'Login failed'));
       }
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to login user'));
@@ -184,13 +273,18 @@ class AuthService {
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to login user'));
   }
 
-  ResultFuture<User> facebookLogin({required String email, String? token}) async {
+  ResultFuture<User> facebookLogin({
+    required String email,
+    String? token,
+  }) async {
     try {
       final response = await apiService.post(
         url: ApiEndpoints.googleLogin,
@@ -216,15 +310,23 @@ class AuthService {
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to login user'));
   }
 
-  ResultFuture<User> otpLogin({required String email, required String otp}) async {
+  ResultFuture<User> otpLogin({
+    required String email,
+    required String otp,
+  }) async {
     try {
-      final response = await apiService.post(url: ApiEndpoints.otpLogin, data: {'email': email, 'otp': otp});
+      final response = await apiService.post(
+        url: ApiEndpoints.otpLogin,
+        data: {'email': email, 'otp': otp},
+      );
 
       if (response.data['success'] == true) {
         // Extract user data and token from response
@@ -245,7 +347,9 @@ class AuthService {
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to login user'));
@@ -253,7 +357,10 @@ class AuthService {
 
   Future<Object> sendOtp({required String email}) async {
     try {
-      final response = await apiService.post(url: ApiEndpoints.sendOtp, data: {'email': email});
+      final response = await apiService.post(
+        url: ApiEndpoints.sendOtp,
+        data: {'email': email},
+      );
 
       if (response.data['success'] == true) {
         return true;
@@ -261,7 +368,9 @@ class AuthService {
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('User not found'));
@@ -269,7 +378,10 @@ class AuthService {
 
   ResultFuture<bool> sendPasswordResetOtp({required String email}) async {
     try {
-      final response = await apiService.post(url: ApiEndpoints.forgotPassword, data: {'email': email});
+      final response = await apiService.post(
+        url: ApiEndpoints.forgotPassword,
+        data: {'email': email},
+      );
 
       if (response.data['success'] == true) {
         return Right(true);
@@ -279,13 +391,18 @@ class AuthService {
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to send password reset OTP'));
   }
 
-  ResultFuture<bool> updateFcmToken({required String token, required String? oldToken}) async {
+  ResultFuture<bool> updateFcmToken({
+    required String token,
+    required String? oldToken,
+  }) async {
     try {
       final response = await apiService.post(
         url: ApiEndpoints.updateFcmToken,
@@ -302,7 +419,9 @@ class AuthService {
           await clearHive();
           await _navigationService.clearStackAndShow(Routes.login);
         }
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to login user'));
@@ -310,7 +429,10 @@ class AuthService {
 
   ResultFuture<bool> logout(String? fcmToken) async {
     try {
-      final response = await apiService.post(url: ApiEndpoints.logout, data: {'fcmToken': fcmToken ?? ''});
+      final response = await apiService.post(
+        url: ApiEndpoints.logout,
+        data: {'fcmToken': fcmToken ?? ''},
+      );
 
       if (response.data['success'] == true) {
         await clearHive();
@@ -321,21 +443,30 @@ class AuthService {
       }
     } catch (e) {
       if (e is DioException) {
-        AppLogger.error(e.response?.data?['message'].toString() ?? 'Something went wrong');
+        AppLogger.error(
+          e.response?.data?['message'].toString() ?? 'Something went wrong',
+        );
         // Still clear local data and redirect to login on error
         await clearHive();
         await _navigationService.clearStackAndShow(Routes.login);
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to logout user'));
   }
 
-  ResultFuture<bool> verifyPasswordResetOtp({required String email, required String otp}) async {
+  ResultFuture<bool> verifyPasswordResetOtp({
+    required String email,
+    required String otp,
+  }) async {
     try {
       // You might need a separate endpoint for this or use the existing otpLogin
       final response = await apiService.post(
-        url: ApiEndpoints.otpLogin, // Temporary - you might need a different endpoint
+        url:
+            ApiEndpoints
+                .otpLogin, // Temporary - you might need a different endpoint
         data: {'email': email, 'otp': otp},
       );
 
@@ -347,7 +478,9 @@ class AuthService {
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to verify password reset OTP'));

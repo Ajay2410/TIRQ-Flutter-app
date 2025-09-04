@@ -34,12 +34,7 @@ class _TasksHomeViewState extends State<TasksHomeView>
                 ],
               ),
             ),
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.person),
-              ),
-            ],
+            actions: [IconButton(onPressed: () {}, icon: Icon(Icons.person))],
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,

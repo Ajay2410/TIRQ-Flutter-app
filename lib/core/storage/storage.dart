@@ -41,6 +41,11 @@ Future setupStorage() async {
     await Hive.initFlutter();
     Hive.registerAdapter(UserAdapter());
     Hive.registerAdapter(SavedAccountAdapter());
+    Hive.registerAdapter(RoleAdapter());
+    Hive.registerAdapter(AddressAdapter());
+    Hive.registerAdapter(UserTypeAdapter());
+    Hive.registerAdapter(OrganizationTypeAdapter());
+    Hive.registerAdapter(UserRoleAdapter());
     await Hive.openBox(AppStrings.triqBox);
   } catch (e) {
     AppLogger.error(e);

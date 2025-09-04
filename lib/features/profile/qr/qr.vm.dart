@@ -174,7 +174,7 @@ class QRViewModel extends ReactiveViewModel {
       // Request permission
       final result = await Permission.storage.request();
       final resultPhotos = await Permission.photos.request();
-      if (result.isGranted||resultPhotos.isGranted) {
+      if (result.isGranted || resultPhotos.isGranted) {
         return true;
       }
 
@@ -194,10 +194,9 @@ class QRViewModel extends ReactiveViewModel {
   }
 
   void navigateToAddPartner(String id) async {
-
     AppLogger.info("idfhjkl $id");
 
-   _navigationService.back();
+    _navigationService.back();
 
     await _navigationService.navigateTo(
       Routes.addPartner,
