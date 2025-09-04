@@ -5,6 +5,7 @@ import 'package:manager/core/locator.dart';
 import 'package:manager/core/storage/storage.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/services/user.service.dart';
+import 'package:manager/services/language.service.dart';
 import '../introduction/introduction_view.dart';
 
 class LanguageSelectionView extends StatefulWidget {
@@ -65,10 +66,7 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
   void initState() {
     super.initState();
     _animationController = AnimationController(duration: const Duration(milliseconds: 1000), vsync: this);
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
     _buttonAnimationController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
     _buttonScaleAnimation = Tween<double>(
@@ -77,10 +75,7 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
     ).animate(CurvedAnimation(parent: _buttonAnimationController, curve: Curves.elasticOut));
 
     _searchAnimationController = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
-    _searchAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _searchAnimationController, curve: Curves.easeInOut));
+    _searchAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _searchAnimationController, curve: Curves.easeInOut));
 
     _animationController.forward();
   }
@@ -148,26 +143,20 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Welcome', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Colors.black)),
+              Text(LanguageService.get('welcome'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Colors.black)),
               Container(
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(13)),
                 child:
                     !isSearchVisible
-                        ? IconButton(
-                          icon: SvgPicture.asset('assets/svg/search-normal.svg', width: 50, height: 50),
-                          onPressed: _toggleSearch,
-                        )
-                        : IconButton(
-                          icon: Icon(Icons.close, color: AppColors.black, size: 25),
-                          onPressed: _toggleSearch,
-                        ),
+                        ? IconButton(icon: SvgPicture.asset('assets/svg/search-normal.svg', width: 50, height: 50), onPressed: _toggleSearch)
+                        : IconButton(icon: Icon(Icons.close, color: AppColors.black, size: 25), onPressed: _toggleSearch),
               ),
             ],
           ),
           Text(
-            'Choose your preferred App language to continue',
+            LanguageService.get('choose_language_description'),
             style: TextStyle(fontSize: 12, color: AppColors.textGray, fontWeight: FontWeight.w400),
           ),
         ],
@@ -198,7 +187,7 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
                 });
               },
               decoration: InputDecoration(
-                hintText: 'Search language',
+                hintText: LanguageService.get('search_language'),
                 hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
                 prefixIcon: Icon(Icons.search, color: Colors.grey.shade500, size: 20),
                 suffixIcon:
@@ -249,13 +238,8 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
               decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: isSelected ? AppColors.primary : Colors.transparent,
-                  width: isSelected ? 2 : 1,
-                ),
-                boxShadow: [
-                  BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2)),
-                ],
+                border: Border.all(color: isSelected ? AppColors.primary : Colors.transparent, width: isSelected ? 2 : 1),
+                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2))],
               ),
               child: Stack(
                 children: [
@@ -264,10 +248,7 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
                     children: [
                       // Flag
                       Center(
-                        child: SizedBox(
-                          height: 33,
-                          child: Center(child: Text(language['flag'] ?? '🏳️', style: const TextStyle(fontSize: 28))),
-                        ),
+                        child: SizedBox(height: 33, child: Center(child: Text(language['flag'] ?? '🏳️', style: const TextStyle(fontSize: 28)))),
                       ),
                       const SizedBox(height: 8),
                       // Country name
@@ -324,7 +305,7 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
             padding: EdgeInsets.symmetric(horizontal: AppSizes.w18, vertical: AppSizes.h8),
           ),
-          child: const Text('Continue', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          child: Text(LanguageService.get('continue'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         ),
       ),
     );
@@ -338,23 +319,15 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
       await saveLanguageSelectionFlag();
       // Navigate to login screen
       if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => IntroductionView(),
-            settings: const RouteSettings(name: '/introduction'),
-          ),
-        );
+        Navigator.of(
+          context,
+        ).pushReplacement(MaterialPageRoute(builder: (context) => IntroductionView(), settings: const RouteSettings(name: '/introduction')));
       }
     } catch (e) {
       print('Error saving language selection: $e');
       // Consider showing a user-friendly error message
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to save language selection. Please try again.'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(LanguageService.get('language_save_error')), backgroundColor: Colors.red));
       }
     }
   }

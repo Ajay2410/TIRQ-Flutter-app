@@ -24,27 +24,35 @@ class RegisterViewModel extends ReactiveViewModel {
   final TextEditingController passwordController = TextEditingController();
 
   bool _isOrganization = true;
+
   bool get isOrganization => _isOrganization;
 
   String? _organizationType;
+
   String? get organizationType => _organizationType;
 
   String? _language = "English";
+
   String? get language => _language;
 
   bool _isFormValid = false;
+
   bool get isFormValid => _isFormValid;
 
   bool _didAgree = true;
+
   bool get didAgree => _didAgree;
 
   bool _obscurePassword = true;
+
   bool get obscurePassword => _obscurePassword;
 
   String _fullPhoneNumber = '';
+
   String get fullPhoneNumber => _fullPhoneNumber;
 
   String _countryCode = '';
+
   String get countryCode => _countryCode;
 
   void init() {
@@ -118,10 +126,10 @@ class RegisterViewModel extends ReactiveViewModel {
 
     if (_isOrganization) {
       // Organization validation
-      bool isOtherValid = _organizationType != "Others" ||
-          (_organizationType == "Others" && otherDescriptionController.text.isNotEmpty);
+      bool isOtherValid = _organizationType != "Others" || (_organizationType == "Others" && otherDescriptionController.text.isNotEmpty);
 
-      isValid = nameController.text.isNotEmpty &&
+      isValid =
+          nameController.text.isNotEmpty &&
           emailController.text.isNotEmpty &&
           phoneController.text.isNotEmpty &&
           passwordController.text.isNotEmpty &&
@@ -130,7 +138,8 @@ class RegisterViewModel extends ReactiveViewModel {
           isOtherValid;
     } else {
       // Employee validation
-      isValid = nameController.text.isNotEmpty &&
+      isValid =
+          nameController.text.isNotEmpty &&
           emailController.text.isNotEmpty &&
           phoneController.text.isNotEmpty &&
           passwordController.text.isNotEmpty &&
@@ -148,21 +157,16 @@ class RegisterViewModel extends ReactiveViewModel {
       AppLogger.info("Form is valid! Submitting...");
       setBusy(true);
 
-      final response = _isOrganization
-          ? await registerOrganization()
-          : await registerEmployee();
+      final response = _isOrganization ? await registerOrganization() : await registerEmployee();
 
       response.fold(
-            (exception) {
+        (exception) {
           Fluttertoast.showToast(msg: exception.message.toString());
         },
-            (success) {
+        (success) {
           _navigationService.navigateTo(
             Routes.otpVerification,
-            arguments: OtpVerificationViewAttributes(
-              isOrganization: _isOrganization,
-              email: emailController.text,
-            ),
+            arguments: OtpVerificationViewAttributes(isOrganization: _isOrganization, email: emailController.text),
           );
         },
       );
@@ -174,11 +178,12 @@ class RegisterViewModel extends ReactiveViewModel {
   }
 
   ResultFuture<String> registerOrganization() async {
-    // Prepare organization type with description if "Others" is selected
     String finalOrgType = _organizationType!;
     if (_organizationType == "Others" && otherDescriptionController.text.isNotEmpty) {
       finalOrgType = "Others: ${otherDescriptionController.text}";
     }
+
+    String role = _organizationType == "Machine Manufacturer" ? "organization" : "processor";
 
     return await authService.register(
       fullName: nameController.text,
@@ -186,7 +191,7 @@ class RegisterViewModel extends ReactiveViewModel {
       password: passwordController.text,
       phone: _fullPhoneNumber,
       countryCode: _countryCode,
-      role: 'organization',
+      role: role,
       organizationType: finalOrgType,
       language: AppMaps.languageMap[_language] ?? "English",
     );

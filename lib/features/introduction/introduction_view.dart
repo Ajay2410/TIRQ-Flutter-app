@@ -33,12 +33,12 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
   late Animation<double> _imageScaleAnimation; // New animation for image scaling
   late Animation<double> _imageFadeAnimation; // New animation for image fading
 
-  final List<IntroPage> _pages = [
+  List<IntroPage> get _pages => [
     IntroPage(
-      title: "Tracking",
+      title: LanguageService.get("tracking"),
       subtitle: "T",
       subtitleImagePath: "assets/images/T.png",
-      description: "Real-time tracking of service tickets, requests, and employee activities",
+      description: LanguageService.get("tracking_description"),
       icon: Icons.track_changes_rounded,
       primaryColor: Color(0xFF042c74),
       secondaryColor: Color(0xFF013ead),
@@ -48,10 +48,10 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
       imagePath: "assets/images/intro1.png",
     ),
     IntroPage(
-      title: "Resolution",
+      title: LanguageService.get("resolution"),
       subtitle: "R",
       subtitleImagePath: "assets/images/R.png",
-      description: "Rapid resolution and streamlined handling of issues",
+      description: LanguageService.get("resolution_description"),
       icon: Icons.check_circle_rounded,
       primaryColor: Color(0xFF388E3C),
       secondaryColor: Color(0xFF4CAF50),
@@ -61,10 +61,10 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
       imagePath: "assets/images/intro2.png",
     ),
     IntroPage(
-      title: "Integration",
+      title: LanguageService.get("integration"),
       subtitle: "I",
       subtitleImagePath: "assets/images/I.png",
-      description: "Unified platform connecting customers, service teams, and management",
+      description: LanguageService.get("integration_description"),
       icon: Icons.hub_rounded,
       primaryColor: Color(0xFF1976D2),
       secondaryColor: Color(0xFF2196F3),
@@ -74,10 +74,10 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
       imagePath: "assets/images/intro3.png",
     ),
     IntroPage(
-      title: "Quality",
+      title: LanguageService.get("quality"),
       subtitle: "Q",
       subtitleImagePath: "assets/images/Q.png",
-      description: "Delivering world-class standards and globally trusted service excellence",
+      description: LanguageService.get("quality_description"),
       icon: Icons.diamond_rounded,
       primaryColor: Color(0xFFff6b6b),
       secondaryColor: Color(0xFFFFA8A8),
@@ -113,51 +113,27 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
     // Image transition animation controller
     _imageTransitionController = AnimationController(duration: Duration(milliseconds: 800), vsync: this);
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack));
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack));
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(parent: _animationController, curve: Interval(0.2, 1.0, curve: Curves.easeInOut)));
 
-    _slideUpAnimation = Tween<double>(
-      begin: 30.0,
-      end: 0.0,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic));
+    _slideUpAnimation = Tween<double>(begin: 30.0, end: 0.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic));
 
-    _backgroundAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _backgroundController, curve: Curves.easeInOut));
+    _backgroundAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _backgroundController, curve: Curves.easeInOut));
 
-    _floatingAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _floatingController, curve: Curves.easeInOut));
+    _floatingAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _floatingController, curve: Curves.easeInOut));
 
-    _pulseAnimation = Tween<double>(
-      begin: 0.98,
-      end: 1.02,
-    ).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut));
+    _pulseAnimation = Tween<double>(begin: 0.98, end: 1.02).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut));
 
-    _rippleAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _rippleController, curve: Curves.easeOut));
+    _rippleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _rippleController, curve: Curves.easeOut));
 
     // Image transition animations
-    _imageScaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.1,
-    ).animate(CurvedAnimation(parent: _imageTransitionController, curve: Curves.easeInOut));
+    _imageScaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(CurvedAnimation(parent: _imageTransitionController, curve: Curves.easeInOut));
 
-    _imageFadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _imageTransitionController, curve: Curves.easeInOut));
+    _imageFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _imageTransitionController, curve: Curves.easeInOut));
 
     _animationController.forward();
     _backgroundController.repeat(reverse: true);
@@ -227,11 +203,7 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
       ),
       child: Scaffold(
         backgroundColor: AppColors.white,
-        body: SafeArea(
-          child: Column(
-            children: [_buildHeader(), Expanded(child: _buildPageContent()), _buildNavigationButtons(currentPage)],
-          ),
-        ),
+        body: SafeArea(child: Column(children: [_buildHeader(), Expanded(child: _buildPageContent()), _buildNavigationButtons(currentPage)])),
       ),
     );
   }
@@ -256,17 +228,10 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                         animation: _backgroundController,
                         builder: (context, child) {
                           return Transform.scale(
-                            scale:
-                                _imageScaleAnimation.value *
-                                (1.0 + _backgroundAnimation.value * 0.03), // Subtle breathing effect
+                            scale: _imageScaleAnimation.value * (1.0 + _backgroundAnimation.value * 0.03), // Subtle breathing effect
                             child: Opacity(
                               opacity: _imageFadeAnimation.value,
-                              child: Image.asset(
-                                _pages[_currentIndex].imagePath,
-                                height: Get.height * 0.5,
-                                width: Get.width,
-                                fit: BoxFit.fitHeight,
-                              ),
+                              child: Image.asset(_pages[_currentIndex].imagePath, height: Get.height * 0.5, width: Get.width, fit: BoxFit.fitHeight),
                             ),
                           );
                         },
@@ -303,9 +268,7 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                           decoration: BoxDecoration(
                             color: Color(0xFF042c74),
                             shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(color: Color(0xFF042c74).withOpacity(0.3), blurRadius: 8, spreadRadius: 2),
-                            ],
+                            boxShadow: [BoxShadow(color: Color(0xFF042c74).withOpacity(0.3), blurRadius: 8, spreadRadius: 2)],
                           ),
                         ),
                       ),
@@ -341,10 +304,7 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                       duration: Duration(milliseconds: 300),
                       padding: EdgeInsets.symmetric(vertical: 8),
 
-                      child: Text(
-                        LanguageService.get("Skip"),
-                        style: TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.bold),
-                      ),
+                      child: Text(LanguageService.get("skip"), style: TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],
@@ -510,10 +470,7 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
   Widget _buildPageIndicators() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(_pages.length, (index) => _buildDotIndicator(index)),
-      ),
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: List.generate(_pages.length, (index) => _buildDotIndicator(index))),
     );
   }
 
@@ -579,9 +536,7 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                             end: Alignment.bottomRight,
                           ),
                           borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            BoxShadow(color: Color(0xFF042c74).withOpacity(0.3), blurRadius: 12, offset: Offset(0, 4)),
-                          ],
+                          boxShadow: [BoxShadow(color: Color(0xFF042c74).withOpacity(0.3), blurRadius: 12, offset: Offset(0, 4))],
                         ),
                         child: Text(
                           LanguageService.get("continue"),
@@ -623,13 +578,7 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                                       end: Alignment.bottomRight,
                                     ),
                                     shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Color(0xFF042c74).withOpacity(0.3),
-                                        blurRadius: 12,
-                                        offset: Offset(0, 4),
-                                      ),
-                                    ],
+                                    boxShadow: [BoxShadow(color: Color(0xFF042c74).withOpacity(0.3), blurRadius: 12, offset: Offset(0, 4))],
                                   ),
                                   child: Icon(Icons.arrow_forward, color: Colors.white, size: 18),
                                 ),
@@ -641,10 +590,7 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                                     height: 60 + (_rippleAnimation.value * 20),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Color(0xFF042c74).withOpacity(0.3 * (1 - _rippleAnimation.value)),
-                                        width: 2,
-                                      ),
+                                      border: Border.all(color: Color(0xFF042c74).withOpacity(0.3 * (1 - _rippleAnimation.value)), width: 2),
                                     ),
                                   ),
                               ],
