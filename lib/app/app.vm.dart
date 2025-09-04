@@ -12,7 +12,7 @@ class AppViewModel extends ReactiveViewModel {
   }
 
   Widget homeNavigation() {
-    if (!isFirstTimeUser()) {
+    if (isFirstTimeUser()) {
       return LanguageSelectionView();
     }
 

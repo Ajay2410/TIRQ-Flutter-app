@@ -39,6 +39,7 @@ class RegisterView extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          SizedBox(height: AppSizes.h12),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start, // This moves items to the top
@@ -89,7 +90,7 @@ class RegisterView extends StatelessWidget {
       margin: EdgeInsets.only(bottom: AppSizes.h15, top : AppSizes.h10),
       decoration: BoxDecoration(
         color: AppColors.lightGray.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(AppSizes.v13),
+        borderRadius: BorderRadius.circular(AppSizes.v45),
       ),
       child: Row(
         children: [
@@ -101,8 +102,8 @@ class RegisterView extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: model.isOrganization ? AppColors.primary : Colors.transparent,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(AppSizes.v13),
-                    bottomLeft: Radius.circular(AppSizes.v13),
+                    topLeft: Radius.circular(AppSizes.v45),
+                    bottomLeft: Radius.circular(AppSizes.v45),
                   ),
 
                 ),
@@ -126,8 +127,8 @@ class RegisterView extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: !model.isOrganization ? AppColors.primary : Colors.transparent,
                   borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(AppSizes.v13),
-                    bottomRight: Radius.circular(AppSizes.v13),
+                    topRight: Radius.circular(AppSizes.v45),
+                    bottomRight: Radius.circular(AppSizes.v45),
                   ),
 
                 ),
@@ -476,7 +477,7 @@ class RegisterView extends StatelessWidget {
           ),
         )
             : Text(
-          LanguageService.get("register"),
+          LanguageService.get("continue"),
           style: TextStyle(
             color: AppColors.white,
             fontWeight: FontWeight.w600,

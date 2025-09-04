@@ -180,23 +180,26 @@ class RegisterViewModel extends ReactiveViewModel {
       finalOrgType = "Others: ${otherDescriptionController.text}";
     }
 
-    return await authService.registerOrganization(
-      name: nameController.text,
-      type: finalOrgType,
-      phone: _fullPhoneNumber,
-      countryCode: _countryCode,
+    return await authService.register(
+      fullName: nameController.text,
       email: emailController.text,
       password: passwordController.text,
+      phone: _fullPhoneNumber,
+      countryCode: _countryCode,
+      role: 'organization',
+      organizationType: finalOrgType,
       language: AppMaps.languageMap[_language] ?? "English",
     );
   }
 
   ResultFuture<String> registerEmployee() async {
-    return await authService.registerEmployee(
-      name: nameController.text,
-      phone: _fullPhoneNumber,
+    return await authService.register(
+      fullName: nameController.text,
       email: emailController.text,
       password: passwordController.text,
+      phone: _fullPhoneNumber,
+      countryCode: _countryCode,
+      role: 'employee',
     );
   }
 

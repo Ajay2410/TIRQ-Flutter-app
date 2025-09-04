@@ -1,11 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lottie/lottie.dart';
-import 'package:manager/core/models/widgets/home/home_card_model.dart';
+import 'package:get/get.dart';
+
+import 'package:manager/core/models/hive/user/user.dart';
 import 'package:manager/features/home/organization_home/organization_home.vm.dart';
+import 'package:manager/routes/routes.dart';
 import 'package:manager/services/language.service.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
@@ -13,8 +14,16 @@ import 'package:stacked/stacked.dart';
 import '../../../resources/app_resources/app_resources.dart';
 import '../../../resources/multimedia_resources/resources.dart';
 
-class OrganizationHomeView extends StatelessWidget {
+class OrganizationHomeView extends StatefulWidget {
   const OrganizationHomeView({super.key});
+
+  @override
+  State<OrganizationHomeView> createState() => _OrganizationHomeViewState();
+}
+
+class _OrganizationHomeViewState extends State<OrganizationHomeView> {
+  String selectedUnit = 'Unit 1';
+  int currentCarouselIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -23,63 +32,42 @@ class OrganizationHomeView extends StatelessWidget {
       onViewModelReady: (OrganizationHomeViewModel model) => model.init(),
       disposeViewModel: false,
       builder: (
-          BuildContext context,
-          OrganizationHomeViewModel model,
-          Widget? child,
-          ) {
-        final ScrollController scrollController = ScrollController();
-
+        BuildContext context,
+        OrganizationHomeViewModel model,
+        Widget? child,
+      ) {
         return Scaffold(
-          backgroundColor: Colors.transparent,
-          extendBodyBehindAppBar: true,
-          body: Stack(
-            children: [
-              Container(
+          backgroundColor: AppColors.white,
+          body: SafeArea(
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: Get.height,
+                  width: Get.width,
                   child: Column(
                     children: [
-                      _buildHeaderBackground(context, model, scrollController),
-                      _buildLowerBackground(context),
+                      Container(
+                        height: Get.height * 0.3,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              AppColors.primaryDark,
+                              AppColors.primaryLight,
+                            ],
+                            stops: [0.0254, 1.0334],
+                          ),
+                        ),
+                      ),
                     ],
-                  )
-              ),
-              _buildContent(context, model, scrollController),
-              // Animated AppBar that disappears on scroll
-              _buildAnimatedAppBar(context, model, scrollController),
-            ],
-          ),
-        );
-      },
-    );
-  }
+                  ),
+                ),
 
-  Widget _buildAnimatedAppBar(BuildContext context, OrganizationHomeViewModel model, ScrollController scrollController) {
-    return AnimatedBuilder(
-      animation: scrollController,
-      builder: (context, child) {
-        // Calculate opacity based on scroll position
-        double opacity = 1.0;
-        if (scrollController.hasClients) {
-          // Start fading out after scrolling 50 pixels
-          double fadeStartOffset = 50.0;
-          // Complete fade out at 150 pixels
-          double fadeEndOffset = 150.0;
-
-          if (scrollController.offset >= fadeStartOffset) {
-            opacity = 1.0 - ((scrollController.offset - fadeStartOffset) / (fadeEndOffset - fadeStartOffset));
-            opacity = opacity.clamp(0.0, 1.0);
-          }
-        }
-
-        return Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: AnimatedOpacity(
-            opacity: opacity,
-            duration: Duration(milliseconds: 100),
-            child: Container(
-              height: kToolbarHeight + MediaQuery.of(context).padding.top + 10,
-              child: _buildAppBarContent(context, model),
+                Column(
+                  children: [Expanded(child: _buildContent(context, model))],
+                ),
+              ],
             ),
           ),
         );
@@ -87,233 +75,775 @@ class OrganizationHomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildAppBarContent(BuildContext context, OrganizationHomeViewModel model) {
+  Widget _buildHeader(BuildContext context, OrganizationHomeViewModel model) {
     String greeting = _getGreetingBasedOnTime();
 
-    return Container(
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 10,
-        left: 16.0,
-        right: 16.0,
-      ),
-      child: Row(
-        children: [
-          // Profile picture
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: AppColors.white.withValues(alpha: 0.3),
-                width: 2,
+    return Column(
+      children: [
+        // Blue header with user info and controls
+        SizedBox(height: MediaQuery.of(context).padding.top),
+
+        // Main header content
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Row(
+            children: [
+              // Profile picture
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AppColors.white.withValues(alpha: 0.3),
+                    width: 2,
+                  ),
+                ),
+                child: ClipOval(
+                  child:
+                      model.user.logoUrl != null
+                          ? Image.network(
+                            model.user.logoUrl!,
+                            fit: BoxFit.cover,
+                            errorBuilder:
+                                (context, error, stackTrace) =>
+                                    _buildDefaultAvatar(),
+                          )
+                          : _buildDefaultAvatar(),
+                ),
               ),
-            ),
-            child: ClipOval(
-              child: model.user.logoUrl != null
-                  ? Image.network(
-                model.user.logoUrl!,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                    _buildDefaultAvatar(),
-              )
-                  : _buildDefaultAvatar(),
-            ),
-          ),
-          SizedBox(width: AppSizes.w8),
-          // Weather icon and greeting text
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
+
+              SizedBox(width: 16),
+
+              // Greeting and name
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      children: [
+                        Text(
+                          greeting,
+                          style: TextStyle(
+                            color: AppColors.white.withValues(alpha: 0.9),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 4),
                     Text(
-                      greeting,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.white.withValues(alpha: 0.9),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 11,
+                      model.user.name ?? model.user.fullName ?? 'User',
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ).animate().fadeIn(duration: 500.ms),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
-                SizedBox(height: 2),
-                Text(
-                  model.user.name ?? model.user.fullName ?? 'User',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: AppColors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ).animate().fadeIn(duration: 500.ms, delay: 200.ms),
-              ],
-            ),
-          ),
-          // Unit selector
-          Container(
-            width: 70,
-            padding: EdgeInsets.symmetric(
-              horizontal: 5,
-              vertical: 5,
-            ),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(6),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.black.withValues(alpha: 0.1),
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Unit 1',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 11,
+              ),
+              // Unit selector
+              _buildDropdownFormField(
+                context,
+                value: selectedUnit,
+                label: LanguageService.get('unit'),
+                items: [
+                  {"value": "Unit 1", "display": "Unit 1"},
+                  {"value": "Unit 2", "display": "Unit 2"},
+                  {"value": "Unit 3", "display": "Unit 3"},
+                  {
+                    "value": "+ Add New",
+                    "display": LanguageService.get('add_new'),
+                  },
+                ],
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      selectedUnit = newValue;
+                    });
+                  }
+                },
+                validator: null,
+              ),
+              SizedBox(width: 12),
+
+              // Notification icon
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.primarySuperLight.withValues(alpha: 0.04),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: AppColors.white.withValues(alpha: 0.10),
                   ),
                 ),
-                Spacer(),
-                Icon(
-                  Icons.keyboard_arrow_down,
-                  color: AppColors.black.withValues(alpha: 0.7),
-                  size: 18,
+                child: Icon(
+                  Icons.notifications_outlined,
+                  color: AppColors.white,
+                  size: 20,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          // Notification icon
-          SizedBox(width: AppSizes.w16),
-          Container(
-            margin: EdgeInsets.only(right: 0),
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppColors.white.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.notifications_outlined,
-              color: AppColors.white,
-              size: 22,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLowerBackground(BuildContext context) {
-    return Container(
-      color: AppColors.white,
-      height: double.infinity,
-    );
-  }
-
-  Widget _buildHeaderBackground(BuildContext context, OrganizationHomeViewModel model, ScrollController scrollController) {
-    return Container(
-      height: MediaQuery.of(context).size.height / 4,
-      width: MediaQuery.of(context).size.width,
-      child: SafeArea(
-        child: Center(
-          child: _buildProfileLogo(),
         ),
-      ),
+
+        SizedBox(
+          width: 95,
+          height: 56,
+          child: Image.asset(AppImages.triqLogo3, fit: BoxFit.contain),
+        ),
+        SizedBox(height: 12),
+      ],
     );
   }
 
-  // Helper method to build default avatar
   Widget _buildDefaultAvatar() {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white.withValues(alpha: 0.2),
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        Icons.person,
-        color: AppColors.white,
-        size: 24,
-      ),
+      child: Icon(Icons.person, color: AppColors.white, size: 24),
     );
   }
 
-  Widget _buildProfileLogo() {
-    return Container(
-      width: AppSizes.v110,
-      height: AppSizes.v65,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(AppImages.triqLogo3),
-          fit: BoxFit.cover,
+  Widget _buildContent(BuildContext context, OrganizationHomeViewModel model) {
+    return Column(
+      children: [
+        _buildHeader(context, model),
+
+        Expanded(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildDashboardCards(context, model),
+                SizedBox(height: 30),
+                _buildPromotionalBanner(context),
+              ],
+            ),
+          ),
         ),
-      ),
-    ).animate().scale(duration: 500.ms, curve: Curves.easeOutBack);
+      ],
+    );
   }
 
-  Widget _buildContent(
-      BuildContext context,
-      OrganizationHomeViewModel model,
-      ScrollController scrollController,
-      ) {
-    return SingleChildScrollView(
-      controller: scrollController,
-      physics: const ClampingScrollPhysics(),
+  Widget _buildDashboardCards(
+    BuildContext context,
+    OrganizationHomeViewModel model,
+  ) {
+    // if (model.isLoading) {
+    //   return Center(child: LottieBuilder.asset("assets/lotties/globe.json"));
+    // }
+    //
+    // if (model.dashboard == null || model.dashboard!.cards.isEmpty) {
+    //   return Center(
+    //     child: Column(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: [
+    //         Icon(Icons.dashboard_outlined, color: AppColors.gray, size: 50),
+    //         SizedBox(height: 16),
+    //         Text(
+    //           "${LanguageService.get('no_dashboard_data')} ${LanguageService.get('or_not_added_to_any_organization')}",
+    //           style: Theme.of(
+    //             context,
+    //           ).textTheme.titleMedium?.copyWith(color: AppColors.gray),
+    //           textAlign: TextAlign.center,
+    //         ),
+    //         SizedBox(height: 16),
+    //         TextButton(
+    //           onPressed: () => model.fetchDashboardData(),
+    //           child: Text(LanguageService.get("refresh")),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
+
+    return Column(
+      children: [
+        // First Card - Main Action Grid (2-row grid)
+        _buildMainActionCard(context, model),
+
+        SizedBox(height: 20),
+
+        // Second Card - Secondary Features Grid (2-row grid)
+        _buildSecondaryFeaturesCard(context, model),
+      ],
+    );
+  }
+
+  List<DashboardCardData> _getMainActionsForRole(UserRole? userRole) {
+    // Define all possible actions with their properties
+    final Map<String, DashboardCardData> allActions = {
+      'tickets_summary': DashboardCardData(
+        title: LanguageService.get('tickets_summary'),
+        icon: AppImages.ticketSummary,
+        color: AppColors.bluebackground,
+        route: '/tickets',
+      ),
+      'my_customers': DashboardCardData(
+        title: LanguageService.get('my_customers'),
+        icon: AppImages.myCustomers,
+        color: AppColors.skyBlue,
+        route: '/customers',
+      ),
+      'my_teams': DashboardCardData(
+        title: LanguageService.get('my_teams'),
+        icon: AppImages.myTeam,
+        color: AppColors.greenbackground,
+        route: '/teams',
+      ),
+      'tasks': DashboardCardData(
+        title: LanguageService.get('tasks'),
+        icon: AppImages.tasks,
+        color: AppColors.redbackground,
+        route: '/tasks',
+      ),
+      'pi_invoice': DashboardCardData(
+        title: LanguageService.get('pi_invoice'),
+        icon: AppImages.piInvoice,
+        color: AppColors.darkGreenBack,
+        route: '/pi-invoice',
+        isComingSoon: true,
+      ),
+      'machine_suppliers': DashboardCardData(
+        title: LanguageService.get('machine_suppliers'),
+        icon: AppImages.machineSuppliers,
+        color: AppColors.skyBlue,
+        route: '/machine-suppliers',
+      ),
+      'glass_flow_system': DashboardCardData(
+        title: LanguageService.get('glass_flow_system'),
+        icon: AppImages.glassFlowSystem,
+        color: AppColors.forestGreen,
+        route: '/glass-flow-system',
+        isComingSoon: true,
+      ),
+    };
+
+    // Define role-based action order using enum
+    List<String> actionOrder;
+    switch (userRole) {
+      case UserRole.organization:
+        // Organization role actions in order: Tickets Summary, My Teams, Tasks, PI & Invoice
+        actionOrder = [
+          'tickets_summary',
+          'my_customers',
+          'my_teams',
+          'tasks',
+          'pi_invoice',
+        ];
+        break;
+      case UserRole.processor:
+        // Processor role actions in order: Tickets Summary, Tasks, Machine Suppliers, My Teams, PI & Invoice, Glass Flow System
+        actionOrder = [
+          'tickets_summary',
+          'tasks',
+          'machine_suppliers',
+          'my_teams',
+          'pi_invoice',
+          'glass_flow_system',
+        ];
+        break;
+      default:
+        // Default fallback - show all features if role is not recognized
+        actionOrder = [
+          'tickets_summary',
+          'my_customers',
+          'my_teams',
+          'tasks',
+          'pi_invoice',
+        ];
+        break;
+    }
+
+    // Return actions in the specified order
+    return actionOrder
+        .where((actionKey) => allActions.containsKey(actionKey))
+        .map((actionKey) => allActions[actionKey]!)
+        .toList();
+  }
+
+  Widget _buildMainActionCard(
+    BuildContext context,
+    OrganizationHomeViewModel model,
+  ) {
+    final userRole = model.user.primaryRole;
+    final List<DashboardCardData> mainActions = _getMainActionsForRole(
+      userRole,
+    );
+
+    return Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: MediaQuery.of(context).size.height / 5),
-          AnimatedBuilder(
-            animation: scrollController,
-            builder: (context, child) {
-              double opacity = (scrollController.hasClients
-                  ? (scrollController.offset /
-                  (MediaQuery.of(context).size.height / 4))
-                  : 0.0)
-                  .clamp(0.0, 1.0);
-              return Center(
-                child: Container(
-                  width: MediaQuery.of(context).size.width - 25,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.lerp(
-                      BorderRadius.only(
-                        topLeft: Radius.circular(AppSizes.v30),
-                        topRight: Radius.circular(AppSizes.v30),
-                      ),
-                      BorderRadius.zero,
-                      opacity,
-                    ),
-                    color: AppColors.transparent,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        blurRadius: 20,
-                        offset: const Offset(0, -10),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: AppSizes.h10),
-                      _buildCardGrid(context, model),
-                      SizedBox(height: AppSizes.h30),
-                      _buildCarouselSection(context),
-                      SizedBox(height: AppSizes.h20 + kBottomNavigationBarHeight),
-                    ],
-                  ),
-                ),
-              );
+          GridView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 0.85,
+            ),
+            itemCount: mainActions.length,
+            itemBuilder: (context, index) {
+              final card = mainActions[index];
+              return _buildDashboardCard(context, card, index, model);
             },
           ),
         ],
       ),
+    );
+  }
+
+  List<DashboardCardData> _getSecondaryFeaturesForRole(UserRole? userRole) {
+    // Define all possible secondary features with their properties
+    final Map<String, DashboardCardData> allSecondaryFeatures = {
+      'analytics_dashboard': DashboardCardData(
+        title: LanguageService.get('analytics_dashboard'),
+        icon: AppImages.analyticsDashboard,
+        color: AppColors.amberOrange,
+        route: '/analytics',
+      ),
+      'machine_records': DashboardCardData(
+        title: LanguageService.get('machine_records'),
+        icon: AppImages.machineRecords,
+        color: AppColors.crimsonRed,
+        route: '/machines',
+      ),
+      'machine_overview': DashboardCardData(
+        title: LanguageService.get('machine_overview'),
+        icon: AppImages.machineRecords,
+        color: AppColors.crimsonRed,
+        route: '/machine-overview',
+      ),
+      'feedback_rating': DashboardCardData(
+        title: LanguageService.get('feedback_rating'),
+        icon: AppImages.feedbackRating,
+        color: AppColors.mintGreen,
+        route: '/feedback',
+      ),
+      'installation_tracker': DashboardCardData(
+        title: LanguageService.get('installation_tracker'),
+        icon: AppImages.installationTracker,
+        color: AppColors.indigoBlue,
+        route: '/installations',
+      ),
+      'feedback_survey': DashboardCardData(
+        title: LanguageService.get('feedback_survey'),
+        icon: AppImages.feedbackSurvey,
+        color: AppColors.oliveGreen,
+        route: '/survey',
+      ),
+    };
+
+    // Define role-based secondary features order using enum
+    List<String> featureOrder;
+    switch (userRole) {
+      case UserRole.organization:
+        // Organization role secondary features: Analytics Dashboard, Machine Records, Feedback & Ratings, Installation Tracker, Feedback Survey
+        featureOrder = [
+          'analytics_dashboard',
+          'machine_records',
+          'feedback_rating',
+          'installation_tracker',
+          'feedback_survey',
+        ];
+        break;
+      case UserRole.processor:
+        // Processor role secondary features: Analytics Dashboard, Machine Overview, Installation Tracker, Feedback Survey
+        featureOrder = [
+          'analytics_dashboard',
+          'machine_overview',
+          'installation_tracker',
+          'feedback_survey',
+        ];
+        break;
+      default:
+        // Default fallback - show all features if role is not recognized
+        featureOrder = [
+          'analytics_dashboard',
+          'machine_records',
+          'feedback_rating',
+          'installation_tracker',
+          'feedback_survey',
+        ];
+        break;
+    }
+
+    // Return features in the specified order
+    return featureOrder
+        .where((featureKey) => allSecondaryFeatures.containsKey(featureKey))
+        .map((featureKey) => allSecondaryFeatures[featureKey]!)
+        .toList();
+  }
+
+  Widget _buildSecondaryFeaturesCard(
+    BuildContext context,
+    OrganizationHomeViewModel model,
+  ) {
+    final userRole = model.user.primaryRole;
+    final List<DashboardCardData> secondaryFeatures =
+        _getSecondaryFeaturesForRole(userRole);
+
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          childAspectRatio: 0.85,
+        ),
+        itemCount: secondaryFeatures.length,
+        itemBuilder: (context, index) {
+          final card = secondaryFeatures[index];
+          return _buildSecondaryFeatureCard(context, card, index, model);
+        },
+      ),
+    );
+  }
+
+  Widget _buildSecondaryFeatureCard(
+    BuildContext context,
+    DashboardCardData card,
+    int index,
+    OrganizationHomeViewModel model,
+  ) {
+    return GestureDetector(
+          onTap: () {
+            // Navigate based on the card route
+            switch (card.route) {
+              case '/analytics':
+                break;
+              case '/machines':
+                model.navigateToMachineRecords();
+                break;
+              case '/machine-overview':
+                break;
+              case '/feedback':
+                break;
+              case '/installations':
+                break;
+              case '/survey':
+                break;
+              default:
+                // Handle unknown routes
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      '${card.title} - Feature not implemented yet',
+                    ),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+                break;
+            }
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Icon container with colored background
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: card.color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                padding: EdgeInsets.all(10),
+                child: Center(
+                  child: Image.asset(
+                    card.icon,
+                    width: 25,
+                    height: 25,
+                    color: card.color,
+                  ),
+                ),
+              ),
+              SizedBox(height: 8),
+              // Title
+              Text(
+                card.title,
+                style: TextStyle(
+                  color: AppColors.black,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  height: 1.2,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        )
+        .animate(delay: (index * 100).ms)
+        .fadeIn(duration: 400.ms)
+        .slideY(
+          begin: 0.3,
+          end: 0,
+          curve: Curves.easeOutQuad,
+          duration: Duration(milliseconds: 200 + (index * 50)),
+        );
+  }
+
+  Widget _buildDashboardCard(
+    BuildContext context,
+    DashboardCardData card,
+    int index,
+    OrganizationHomeViewModel model,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        // Navigate based on the card route
+        switch (card.route) {
+          case '/tickets':
+            break;
+          case '/teams':
+            break;
+          case '/tasks':
+            break;
+          case '/pi-invoice':
+            break;
+          case '/machine-suppliers':
+            break;
+          case '/glass-flow-system':
+            break;
+          case '/customers':
+            Navigator.of(context).pushNamed(Routes.myCustomers);
+            break;
+          default:
+            // Handle unknown routes or show coming soon message
+            if (card.isComingSoon) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${card.title} - Coming Soon!'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            }
+            break;
+        }
+      },
+      child: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: card.color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(13),
+            ),
+            child: Stack(
+              fit: StackFit.expand,
+              clipBehavior: Clip.none,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Icon container
+                    Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      padding: EdgeInsets.all(10),
+                      child: Center(
+                        child: Image.asset(
+                          card.icon,
+                          width: 25,
+                          height: 25,
+                          color: card.color,
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 8),
+
+                    // Title
+                    Text(
+                      card.title,
+                      style: TextStyle(
+                        color: AppColors.black,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        height: 1.2,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+
+                // Coming Soon badge
+                if (card.isComingSoon)
+                  Positioned(
+                    top: -8,
+                    right: -16,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryDark.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        LanguageService.get('coming_soon'),
+                        style: TextStyle(
+                          color: AppColors.primaryDark,
+                          fontSize: 8,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          )
+          .animate(delay: (index * 100).ms)
+          .fadeIn(duration: 400.ms)
+          .slideY(
+            begin: 0.3,
+            end: 0,
+            curve: Curves.easeOutQuad,
+            duration: Duration(milliseconds: 200 + (index * 50)),
+          ),
+    );
+  }
+
+  Widget _buildPromotionalBanner(BuildContext context) {
+    final List<Map<String, dynamic>> carouselItems = [
+      {
+        'title': LanguageService.get('special_offer'),
+        'subtitle': LanguageService.get('limited_time_only'),
+        'description': LanguageService.get('up_to_80_off'),
+        'colors': [AppColors.yellow, AppColors.yellow, AppColors.yellow],
+        'imageUrl':
+            'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=200&fit=crop',
+      },
+      {
+        'title': LanguageService.get('new_features'),
+        'subtitle': LanguageService.get('coming_soon_feature'),
+        'description': LanguageService.get('enhanced_experience'),
+        'colors': [
+          AppColors.bluebackground,
+          AppColors.greenbackground,
+          AppColors.darkGreenBack,
+        ],
+        'imageUrl':
+            'https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=200&fit=crop',
+      },
+      {
+        'title': LanguageService.get('premium_support'),
+        'subtitle': LanguageService.get('available_now'),
+        'description': LanguageService.get('24_7_assistance'),
+        'colors': [
+          AppColors.bluebackground,
+          AppColors.redbackground,
+          AppColors.greenbackground,
+        ],
+        'imageUrl':
+            'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=200&fit=crop',
+      },
+    ];
+
+    return Column(
+      children: [
+        CarouselSlider(
+          options: CarouselOptions(
+            height: 120,
+            viewportFraction: 1.0,
+            enableInfiniteScroll: true,
+            autoPlay: true,
+            autoPlayInterval: Duration(seconds: 4),
+            autoPlayAnimationDuration: Duration(milliseconds: 800),
+            onPageChanged: (index, reason) {
+              setState(() {
+                currentCarouselIndex = index;
+              });
+            },
+          ),
+          items:
+              carouselItems.map((item) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.network(
+                        item['imageUrl'],
+                        width: Get.width * 0.9,
+                        height: double.infinity,
+                        fit: BoxFit.fill,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: item['colors'],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
+              }).toList(),
+        ),
+        SizedBox(height: 12),
+        // Carousel indicators
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:
+              carouselItems.asMap().entries.map((entry) {
+                return Container(
+                  width: currentCarouselIndex == entry.key ? 20 : 3,
+                  height: 3,
+                  margin: EdgeInsets.symmetric(horizontal: 4.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color:
+                        currentCarouselIndex == entry.key
+                            ? AppColors.primary
+                            : AppColors.gray.withValues(alpha: 0.4),
+                  ),
+                );
+              }).toList(),
+        ),
+      ],
     );
   }
 
@@ -322,284 +852,119 @@ class OrganizationHomeView extends StatelessWidget {
     final hour = DateTime.now().hour;
 
     if (hour < 12) {
-      return ' 🌞 ${LanguageService.get("GOOD_MORNING")}';
+      return LanguageService.get('good_morning');
     } else if (hour < 17) {
-      return '🌤️ ${LanguageService.get("GOOD_AFTERNOON")}';
+      return LanguageService.get('good_afternoon');
     } else {
-      return ' 🌆 ${LanguageService.get("GOOD_EVENING")}';
+      return LanguageService.get('good_evening');
     }
   }
 
-  Widget _buildCardGrid(BuildContext context, OrganizationHomeViewModel model) {
-    if (model.isLoading) {
-      return LottieBuilder.asset("assets/lotties/globe.json");
-    }
-
-    if (model.dashboard == null || model.dashboard!.cards.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.dashboard_outlined,
-              color: AppColors.gray,
-              size: AppSizes.v50,
-            ),
-            SizedBox(height: AppSizes.h16),
-            Text(
-              "${LanguageService.get('no_dashboard_data')} ${LanguageService.get('or_not_added_to_any_organization')}",
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: AppColors.gray,
-              ),
-            ),
-            SizedBox(height: AppSizes.h10),
-            TextButton(
-              onPressed: () => model.fetchDashboardData(),
-              child: Text(LanguageService.get("refresh")),
-            ),
-          ],
-        ),
-      );
-    }
-
-    // Split cards into sections
-    final allCards = model.dashboard!.cards;
-    final firstSectionCards = allCards.take(6).toList();
-    final remainingCards = allCards.skip(6).toList();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // First section - First 6 cards
-        if (firstSectionCards.isNotEmpty) ...[
-          _buildCardSection(context, model, firstSectionCards, 0),
-          if (remainingCards.isNotEmpty) SizedBox(height: AppSizes.h12),
-        ],
-
-        // Second section - Remaining cards
-        if (remainingCards.isNotEmpty) ...[
-          _buildCardSection(context, model, remainingCards, firstSectionCards.length),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildCardSection(
-      BuildContext context,
-      OrganizationHomeViewModel model,
-      List<dynamic> cards,
-      int startIndex,
-      ) {
+  Widget _buildDropdownFormField(
+    BuildContext context, {
+    required String? value,
+    required String label,
+    required List<Map<String, String>> items,
+    required Function(String?) onChanged,
+    String? Function(String?)? validator,
+  }) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppSizes.w16),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-        border: Border.all(
-          color: Colors.grey.withOpacity(0.2),
-          width: 1,
-        ),
-      ),
-      child: GridView.builder(
-        shrinkWrap: true,
-        padding: EdgeInsets.symmetric(horizontal: AppSizes.w16),
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          mainAxisSpacing: AppSizes.h16,
-          crossAxisSpacing: AppSizes.w16,
-          childAspectRatio: 0.85,
-        ),
-        itemCount: cards.length,
-        itemBuilder: (context, index) {
-          final dashboardCard = cards[index];
-          final homeCard = model.dashboardCardToHomeCard(dashboardCard);
-          return _buildHomeCard(context, model, homeCard, startIndex + index);
-        },
-      ),
-    );
-  }
-
-  Widget _buildHomeCard(
-      BuildContext context,
-      OrganizationHomeViewModel model,
-      HomeCardModel homeCard,
-      int index,
-      ) {
-    final cardColor = Color(homeCard.colorCode);
-
-    return GestureDetector(
-      onTap: () => model.navigateToRoute(homeCard.route, null),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(AppSizes.v16),
-          splashColor: cardColor.withValues(alpha: 0.1),
-          highlightColor: cardColor.withValues(alpha: 0.05),
-          onTap: () => model.navigateToRoute(homeCard.route, null),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.all(AppSizes.h8),
-                width: AppSizes.v130,
-                height: AppSizes.v110,
-                decoration: BoxDecoration(
-                  color: cardColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(AppSizes.v16),
-                ),
-                child: Center(
-                  child: Column(
-                    children: [
-                      CustomSvgIcon(
-                        svgName: homeCard.iconUrl ?? 'default_icon.svg',
-                        backgroundColor: cardColor.withValues(alpha: 0.2),
-                        iconColor: cardColor,
-                        size: AppSizes.v55,
-                        backgroundType: "circle",
-                        isFilled: false,
-                      ),
-                      SizedBox(height: AppSizes.h10),
-                      Text(
-                        homeCard.title,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 10,
-                          color: AppColors.black,
-                          height: 1,
-                        ),
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      )
-          .animate(delay: (index * 100).ms)
-          .fadeIn(duration: 400.ms)
-          .slideY(
-        begin: 0.3,
-        end: 0,
-        curve: Curves.easeOutQuad,
-        duration: Duration(milliseconds: 200 + (index * 50)),
-      ),
-    );
-  }
-
-  Widget _buildCarouselSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: AppSizes.w4, bottom: AppSizes.h12),
-          child: Text(
-            LanguageService.get("announcements"),
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-          ).animate().fadeIn(duration: 500.ms),
-        ),
-        CarouselSlider(
-          options: CarouselOptions(
-            height: MediaQuery.of(context).size.height / 4,
-            viewportFraction: 1,
-            enlargeCenterPage: true,
-            autoPlay: true,
-            autoPlayInterval: const Duration(seconds: 5),
-            autoPlayAnimationDuration: const Duration(milliseconds: 1000),
-            pauseAutoPlayOnTouch: true,
-          ),
-          items: [
-            _buildCarouselItem(
-              'https://img.freepik.com/free-vector/black-friday-sale-banner-torn-paper-style-design_1017-34746.jpg',
-              LanguageService.get("special_promotion"),
-              Icons.discount_rounded,
-            ),
-            _buildCarouselItem(
-              'https://img.freepik.com/free-vector/festa-junina-festival-banner_1017-19195.jpg?semt=ais_hybrid&w=740',
-              LanguageService.get("upcoming_event"),
-              Icons.event_rounded,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCarouselItem(String imageUrl, String title, IconData icon) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppSizes.v20),
-      ),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(AppSizes.v20),
-            child: CachedNetworkImage(
-              imageUrl: imageUrl,
-              fit: BoxFit.cover,
-              placeholder:
-                  (context, url) => Container(color: AppColors.lightGray),
-              errorWidget:
-                  (context, url, error) => Container(
-                color: AppColors.lightGray,
-                child: Icon(Icons.error, color: AppColors.gray),
-              ),
-            ),
-          ).animate().fadeIn(duration: 500.ms),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppSizes.v20),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.transparent,
-                  Colors.black.withValues(alpha: 0.7),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Padding(
-              padding: EdgeInsets.all(AppSizes.h16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: AppColors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Icon(icon, color: AppColors.white, size: 30),
-                ],
-              ),
-            ),
+            color: AppColors.black.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: Offset(0, 2),
           ),
         ],
       ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          isDense: true,
+          value: value,
+          hint: Text(
+            label,
+            style: TextStyle(color: AppColors.gray, fontSize: 12),
+          ),
+          onChanged: onChanged,
+          style: TextStyle(
+            color: AppColors.black,
+            fontWeight: FontWeight.w600,
+            fontSize: 12,
+          ),
+          icon: Icon(
+            Icons.keyboard_arrow_down,
+            color: AppColors.black.withValues(alpha: 0.7),
+            size: 16,
+          ),
+          dropdownColor: AppColors.white,
+          elevation: 8,
+          borderRadius: BorderRadius.circular(8),
+          items:
+              items.map<DropdownMenuItem<String>>((item) {
+                bool isAddNew = item['value'] == '+ Add New';
+                bool isSelected = item['value'] == value;
+
+                return DropdownMenuItem<String>(
+                  value: item['value'],
+                  child:
+                      isAddNew
+                          ? Row(
+                            children: [
+                              Icon(
+                                Icons.add,
+                                color: AppColors.primary,
+                                size: 16,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                item['display']!,
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          )
+                          : Text(
+                            item['display']!,
+                            style: TextStyle(
+                              color:
+                                  isSelected ? AppColors.black : AppColors.gray,
+                              fontWeight:
+                                  isSelected
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                          ),
+                );
+              }).toList(),
+        ),
+      ),
     );
   }
+}
+
+// Data class for dashboard cards
+class DashboardCardData {
+  final String title;
+  final String icon;
+  final Color color;
+  final String route;
+  final bool isComingSoon;
+
+  DashboardCardData({
+    required this.title,
+    required this.icon,
+    required this.color,
+    required this.route,
+    this.isComingSoon = false,
+  });
 }
 
 class HomeCardShimmer extends StatelessWidget {
@@ -608,21 +973,19 @@ class HomeCardShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppSizes.v20),
-      ),
-      margin: EdgeInsets.only(bottom: AppSizes.h8),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+      margin: EdgeInsets.only(bottom: 8),
       child: Shimmer.fromColors(
-        baseColor: AppColors.lightGray.withOpacity(0.4),
+        baseColor: AppColors.lightGray.withValues(alpha: 0.4),
         highlightColor: AppColors.white,
         period: const Duration(milliseconds: 1500),
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.white,
-            borderRadius: BorderRadius.circular(AppSizes.v20),
+            borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: AppColors.gray.withOpacity(0.2),
+                color: AppColors.gray.withValues(alpha: 0.2),
                 blurRadius: 3,
                 offset: const Offset(2, 2),
                 spreadRadius: 0,
@@ -637,16 +1000,16 @@ class HomeCardShimmer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    width: AppSizes.w100,
-                    height: AppSizes.h16,
+                    width: 100,
+                    height: 16,
                     decoration: BoxDecoration(
                       color: AppColors.white,
-                      borderRadius: BorderRadius.circular(AppSizes.v4),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                   ),
                   Container(
-                    width: AppSizes.v24,
-                    height: AppSizes.v24,
+                    width: 24,
+                    height: 24,
                     decoration: BoxDecoration(
                       color: AppColors.white,
                       shape: BoxShape.circle,
@@ -654,33 +1017,33 @@ class HomeCardShimmer extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: AppSizes.h12),
+              SizedBox(height: 12),
 
               // Description lines
               Container(
                 width: double.infinity,
-                height: AppSizes.h10,
+                height: 10,
                 decoration: BoxDecoration(
                   color: AppColors.white,
-                  borderRadius: BorderRadius.circular(AppSizes.v4),
+                  borderRadius: BorderRadius.circular(4),
                 ),
               ),
-              SizedBox(height: AppSizes.h8),
+              SizedBox(height: 8),
               Container(
-                width: AppSizes.w150,
-                height: AppSizes.h10,
+                width: 150,
+                height: 10,
                 decoration: BoxDecoration(
                   color: AppColors.white,
-                  borderRadius: BorderRadius.circular(AppSizes.v4),
+                  borderRadius: BorderRadius.circular(4),
                 ),
               ),
-              SizedBox(height: AppSizes.h8),
+              SizedBox(height: 8),
               Container(
-                width: AppSizes.w120,
-                height: AppSizes.h10,
+                width: 120,
+                height: 10,
                 decoration: BoxDecoration(
                   color: AppColors.white,
-                  borderRadius: BorderRadius.circular(AppSizes.v4),
+                  borderRadius: BorderRadius.circular(4),
                 ),
               ),
 
@@ -690,12 +1053,12 @@ class HomeCardShimmer extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
-                  margin: EdgeInsets.only(top: AppSizes.h12),
-                  width: AppSizes.w80,
-                  height: AppSizes.h24,
+                  margin: EdgeInsets.only(top: 12),
+                  width: 80,
+                  height: 24,
                   decoration: BoxDecoration(
                     color: AppColors.white,
-                    borderRadius: BorderRadius.circular(AppSizes.v16),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                 ),
               ),
@@ -732,21 +1095,21 @@ class CustomSvgIcon extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         color: isFilled ? backgroundColor : Colors.transparent,
-        borderRadius: backgroundType == "circle"
-            ? BorderRadius.circular(size / 2)
-            : BorderRadius.circular(size / 4),
-        border: !isFilled
-            ? Border.all(color: backgroundColor, width: 2)
-            : null,
+        borderRadius:
+            backgroundType == "circle"
+                ? BorderRadius.circular(size / 2)
+                : BorderRadius.circular(size / 4),
+        border: !isFilled ? Border.all(color: backgroundColor, width: 2) : null,
       ),
       child: Center(
         child: SvgPicture.asset(
           'assets/svg/$svgName',
           width: size * 0.5,
           height: size * 0.5,
-          colorFilter: iconColor != null
-              ? ColorFilter.mode(iconColor!, BlendMode.srcIn)
-              : null,
+          colorFilter:
+              iconColor != null
+                  ? ColorFilter.mode(iconColor!, BlendMode.srcIn)
+                  : null,
         ),
       ),
     );

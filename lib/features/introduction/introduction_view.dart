@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import '../../resources/app_resources/app_resources.dart';
 import '../../services/language.service.dart';
 import '../auth/login/login.view.dart';
@@ -217,11 +218,19 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
   @override
   Widget build(BuildContext context) {
     final currentPage = _pages[_currentIndex];
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      body: SafeArea(
-        child: Column(
-          children: [_buildHeader(), Expanded(child: _buildPageContent()), _buildNavigationButtons(currentPage)],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: AppColors.scaffoldBackground,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: AppColors.white,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: AppColors.white,
+        body: SafeArea(
+          child: Column(
+            children: [_buildHeader(), Expanded(child: _buildPageContent()), _buildNavigationButtons(currentPage)],
+          ),
         ),
       ),
     );
@@ -230,7 +239,7 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
   Widget _buildHeader() {
     return ClipRRect(
       child: SizedBox(
-        height: 380,
+        height: Get.height * 0.5,
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -254,9 +263,9 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                               opacity: _imageFadeAnimation.value,
                               child: Image.asset(
                                 _pages[_currentIndex].imagePath,
-                                height: 408,
-                                width: 380,
-                                fit: BoxFit.cover,
+                                height: Get.height * 0.5,
+                                width: Get.width,
+                                fit: BoxFit.fitHeight,
                               ),
                             ),
                           );

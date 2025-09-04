@@ -1,4 +1,3 @@
-
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 import 'package:manager/core/models/employee.dart';
@@ -12,6 +11,7 @@ import 'package:stacked_services/stacked_services.dart';
 import '../../../core/locator.dart';
 import '../../../core/models/hive/user/user.dart';
 import '../../../core/storage/storage.dart';
+import '../../../resources/app_resources/app_resources.dart';
 import '../../../services/account.service.dart';
 import '../../../services/auth.service.dart';
 import '../../../services/employee_profile.service.dart';
@@ -50,29 +50,26 @@ class ProfileViewModel extends ReactiveViewModel {
     notifyListeners();
     // Fetch organization profile
     try {
-      if(getUser().userType == UserType.employee){
-
+      if (getUser().userType == UserType.employee) {
         final response = await _employeeProfileService.getProfile();
         response.fold(
-              (exception) {
+          (exception) {
             // Just log the error, don't show toast since this is background refresh
             // User might already be seeing other content
           },
-              (emp) {
-           _employeeProfile.value = emp;
+          (emp) {
+            _employeeProfile.value = emp;
           },
         );
-
-      }
-      else {
+      } else {
         final response = await _organizationService.getProfile();
 
         response.fold(
-              (exception) {
+          (exception) {
             // Just log the error, don't show toast since this is background refresh
             // User might already be seeing other content
           },
-              (org) {
+          (org) {
             _organization.value = org;
           },
         );
@@ -102,12 +99,8 @@ class ProfileViewModel extends ReactiveViewModel {
     }
   }
 
-
   void onBackPress() async {
-    await _navigationService.clearStackAndShow(
-      Routes.stage,
-      arguments: StageViewAttributes(selectedBottomNavIndex: 0),
-    );
+    await _navigationService.clearStackAndShow(Routes.stage, arguments: StageViewAttributes(selectedBottomNavIndex: 0));
   }
 
   void navigateToEmployeeProfileView() async {
@@ -134,11 +127,10 @@ class ProfileViewModel extends ReactiveViewModel {
     }
 
     String? fcmToken = getUser().fcmToken;
-    await _authService.logout(fcmToken);
+    _authService.logout(fcmToken);
 
     try {
-      final userBox = await Hive.openBox<User>('user');
-      await userBox.clear();
+      await Hive.box(AppStrings.triqBox).delete(AppStrings.triqUser);
     } catch (e) {
       AppLogger.error('Error clearing user data: $e');
     }
@@ -153,6 +145,4 @@ class ProfileViewModel extends ReactiveViewModel {
 
   @override
   List<ReactiveServiceMixin> get reactiveServices => [];
-
-
 }

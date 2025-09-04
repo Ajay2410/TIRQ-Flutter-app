@@ -37,96 +37,108 @@ class _ContactsListViewState extends State<ContactsListView>
     return ViewModelBuilder<ContactsListViewModel>.reactive(
       viewModelBuilder: () => ContactsListViewModel(),
       onViewModelReady: (model) => model.init(),
-      builder: (context, model, child) => Scaffold(
-        backgroundColor: AppColors.textOnPrimary,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: AppColors.primary,
-          iconTheme: IconThemeData(color: AppColors.white),
-          title: Text(
-            'Contacts',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              color: AppColors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          bottom: TabBar(
-            controller: _tabController,
-            indicatorColor: AppColors.white,
-            indicatorWeight: 3,
-            labelColor: AppColors.white,
-            unselectedLabelColor: AppColors.white.withValues(alpha: 0.7),
-            labelStyle: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-            unselectedLabelStyle: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 16,
-            ),
-            tabs: [
-              Tab(
-                text: LanguageService.get("departmental"),
-                icon: Icon(Icons.business, size: 20),
+      builder:
+          (context, model, child) => Scaffold(
+            backgroundColor: AppColors.textOnPrimary,
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: AppColors.primary,
+              iconTheme: IconThemeData(color: AppColors.white),
+              title: Text(
+                'Contacts',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  color: AppColors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              Tab(
-                text:  LanguageService.get("external"),
-                icon: Icon(Icons.public, size: 20),
-              ),
-            ],
-          ),
-        ),
-        body: Column(
-          children: [
-            // _buildSearchBar(context, model),
-            Expanded(
-              child: model.isLoading
-                  ? Center(child: CircularProgressIndicator(color: AppColors.primary))
-                  : TabBarView(
+              bottom: TabBar(
                 controller: _tabController,
-                children: [
-                  // Departmental Tab - Show Employees
-                  _buildEmployeeList(
-                    context,
-                    model,
-                    model.employees,
-                    LanguageService.get("no_employees_found"),
-                    LanguageService.get("organization_employees_will_appear_here"),
-                    Icons.business,
+                indicatorColor: AppColors.white,
+                indicatorWeight: 3,
+                labelColor: AppColors.white,
+                unselectedLabelColor: AppColors.white.withValues(alpha: 0.7),
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                unselectedLabelStyle: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 16,
+                ),
+                tabs: [
+                  Tab(
+                    text: LanguageService.get("departmental"),
+                    icon: Icon(Icons.business, size: 20),
                   ),
-                  // External Tab - Show External Chats
-                  _buildExternalChatList(
-                    context,
-                    model,
-                    model.externalChatRooms,
-                    LanguageService.get("no_external_conversations"),
-                    LanguageService.get("external_organization_appear_here"),
-                    Icons.public,
+                  Tab(
+                    text: LanguageService.get("external"),
+                    icon: Icon(Icons.public, size: 20),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed(Routes.createGroupChat);
-          },
-          backgroundColor: AppColors.primary,
-          child: Icon(Icons.add, color: AppColors.white),
-        ),
-      ),
+            body: Column(
+              children: [
+                // _buildSearchBar(context, model),
+                Expanded(
+                  child:
+                      model.isLoading
+                          ? Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                            ),
+                          )
+                          : TabBarView(
+                            controller: _tabController,
+                            children: [
+                              // Departmental Tab - Show Employees
+                              _buildEmployeeList(
+                                context,
+                                model,
+                                model.employees,
+                                LanguageService.get("no_employees_found"),
+                                LanguageService.get(
+                                  "organization_employees_will_appear_here",
+                                ),
+                                Icons.business,
+                              ),
+                              // External Tab - Show External Chats
+                              _buildExternalChatList(
+                                context,
+                                model,
+                                model.externalChatRooms,
+                                LanguageService.get(
+                                  "no_external_conversations",
+                                ),
+                                LanguageService.get(
+                                  "external_organization_appear_here",
+                                ),
+                                Icons.public,
+                              ),
+                            ],
+                          ),
+                ),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(Routes.createGroupChat);
+              },
+              backgroundColor: AppColors.primary,
+              child: Icon(Icons.add, color: AppColors.white),
+            ),
+          ),
     );
   }
 
   Widget _buildEmployeeList(
-      BuildContext context,
-      ContactsListViewModel model,
-      List<Employee> employees,
-      String emptyTitle,
-      String emptySubtitle,
-      IconData emptyIcon,
-      ) {
+    BuildContext context,
+    ContactsListViewModel model,
+    List<Employee> employees,
+    String emptyTitle,
+    String emptySubtitle,
+    IconData emptyIcon,
+  ) {
     if (employees.isEmpty) {
       return _buildEmptyState(context, emptyTitle, emptySubtitle, emptyIcon);
     }
@@ -146,13 +158,13 @@ class _ContactsListViewState extends State<ContactsListView>
   }
 
   Widget _buildExternalChatList(
-      BuildContext context,
-      ContactsListViewModel model,
-      List<ChatViewAttributes> chats,
-      String emptyTitle,
-      String emptySubtitle,
-      IconData emptyIcon,
-      ) {
+    BuildContext context,
+    ContactsListViewModel model,
+    List<ChatViewAttributes> chats,
+    String emptyTitle,
+    String emptySubtitle,
+    IconData emptyIcon,
+  ) {
     if (chats.isEmpty) {
       return _buildEmptyState(context, emptyTitle, emptySubtitle, emptyIcon);
     }
@@ -171,13 +183,17 @@ class _ContactsListViewState extends State<ContactsListView>
     );
   }
 
-  Widget _buildEmployeeItem(BuildContext context, ContactsListViewModel model, Employee employee) {
+  Widget _buildEmployeeItem(
+    BuildContext context,
+    ContactsListViewModel model,
+    Employee employee,
+  ) {
     return InkWell(
       onTap: () => model.createIndividualChat(employee),
       child: Container(
         padding: EdgeInsets.symmetric(
-            vertical: AppSizes.h12,
-            horizontal: AppSizes.w16
+          vertical: AppSizes.h12,
+          horizontal: AppSizes.w16,
         ),
         decoration: BoxDecoration(
           color: AppColors.white,
@@ -220,11 +236,13 @@ class _ContactsListViewState extends State<ContactsListView>
                   // Employee status
                   Container(
                     padding: EdgeInsets.symmetric(
-                        horizontal: AppSizes.w8,
-                        vertical: AppSizes.h2
+                      horizontal: AppSizes.w8,
+                      vertical: AppSizes.h2,
                     ),
                     decoration: BoxDecoration(
-                      color: _getEmployeeStatusColor(employee).withValues(alpha: 0.1),
+                      color: _getEmployeeStatusColor(
+                        employee,
+                      ).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(AppSizes.v12),
                     ),
                     child: Text(
@@ -239,20 +257,23 @@ class _ContactsListViewState extends State<ContactsListView>
               ),
             ),
             // Online indicator or action icon
-            Icon(
-              Icons.chat_bubble_outline,
-              color: AppColors.primary,
-              size: 20,
-            ),
+            Icon(Icons.chat_bubble_outline, color: AppColors.primary, size: 20),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildExternalChatItem(BuildContext context, ContactsListViewModel model, ChatViewAttributes chatRoom) {
+  Widget _buildExternalChatItem(
+    BuildContext context,
+    ContactsListViewModel model,
+    ChatViewAttributes chatRoom,
+  ) {
     // Format date for last message timestamp
-    final lastMessageTime = chatRoom.ticket?.createdAt!=null?DateTime.parse(chatRoom.ticket!.createdAt!):chatRoom.createdAt;
+    final lastMessageTime =
+        chatRoom.ticket?.createdAt != null
+            ? DateTime.parse(chatRoom.ticket!.createdAt!)
+            : chatRoom.createdAt;
     final formatter = DateFormat('MMM d • h:mm a');
     final differenceInMinutes = formatter.format(lastMessageTime);
 
@@ -260,8 +281,8 @@ class _ContactsListViewState extends State<ContactsListView>
       onTap: () => model.navigateToChat(chatRoom),
       child: Container(
         padding: EdgeInsets.symmetric(
-            vertical: AppSizes.h12,
-            horizontal: AppSizes.w16
+          vertical: AppSizes.h12,
+          horizontal: AppSizes.w16,
         ),
         decoration: BoxDecoration(
           color: AppColors.white,
@@ -287,9 +308,8 @@ class _ContactsListViewState extends State<ContactsListView>
                       Expanded(
                         child: Text(
                           _getChatTitle(chatRoom),
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -310,26 +330,31 @@ class _ContactsListViewState extends State<ContactsListView>
                       Expanded(
                         child: Text(
                           _getLastMessagePreview(chatRoom),
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: AppColors.textSecondary),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: AppSizes.w8,
-                            vertical: AppSizes.h2
+                          horizontal: AppSizes.w8,
+                          vertical: AppSizes.h2,
                         ),
                         decoration: BoxDecoration(
-                          color: _getStatusColor(chatRoom.ticket?.status??chatRoom.status).withValues(alpha: 0.1),
+                          color: _getStatusColor(
+                            chatRoom.ticket?.status ?? chatRoom.status,
+                          ).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(AppSizes.v12),
                         ),
                         child: Text(
-                          chatRoom.ticket?.status!=null?formatStatus(chatRoom.ticket!.status!):chatRoom.status,
+                          chatRoom.ticket?.status != null
+                              ? formatStatus(chatRoom.ticket!.status!)
+                              : chatRoom.status,
                           style: TextStyle(
-                            color: _getStatusColor(chatRoom.ticket?.status??chatRoom.status),
+                            color: _getStatusColor(
+                              chatRoom.ticket?.status ?? chatRoom.status,
+                            ),
                             fontSize: AppSizes.v12,
                           ),
                         ),
@@ -346,11 +371,11 @@ class _ContactsListViewState extends State<ContactsListView>
   }
 
   Widget _buildEmptyState(
-      BuildContext context,
-      String title,
-      String subtitle,
-      IconData icon,
-      ) {
+    BuildContext context,
+    String title,
+    String subtitle,
+    IconData icon,
+  ) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -378,9 +403,9 @@ class _ContactsListViewState extends State<ContactsListView>
           SizedBox(height: AppSizes.h8),
           Text(
             subtitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppColors.textSecondary,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
         ],
@@ -388,17 +413,13 @@ class _ContactsListViewState extends State<ContactsListView>
     );
   }
 
-
   Widget _buildEmployeeAvatar(Employee employee) {
     return CircleAvatar(
       radius: AppSizes.v24,
       backgroundColor: AppColors.primary.withValues(alpha: 0.2),
       child: Text(
         _getEmployeeName(employee).substring(0, 1).toUpperCase(),
-        style: TextStyle(
-          color: AppColors.primary,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -423,10 +444,7 @@ class _ContactsListViewState extends State<ContactsListView>
       return CircleAvatar(
         radius: AppSizes.v24,
         backgroundColor: AppColors.secondary.withValues(alpha: 0.2),
-        child: Icon(
-          Icons.people,
-          color: AppColors.secondary,
-        ),
+        child: Icon(Icons.people, color: AppColors.secondary),
       );
     }
   }
@@ -461,9 +479,9 @@ class _ContactsListViewState extends State<ContactsListView>
 
   // Helper methods for external chats
   String _getChatTitle(ChatViewAttributes chatRoom) {
-    if (chatRoom.organization?.name?.isNotEmpty==true) {
+    if (chatRoom.organization?.name?.isNotEmpty == true) {
       return chatRoom.organization!.name!;
-    } else if (chatRoom.ticket?.ticketId!=null) {
+    } else if (chatRoom.ticket?.ticketId != null) {
       return chatRoom.ticket!.ticketId!;
     } else {
       return "Chat #${chatRoom.id.substring(0, 6)}";
@@ -472,9 +490,9 @@ class _ContactsListViewState extends State<ContactsListView>
 
   String _getLastMessagePreview(ChatViewAttributes chatRoom) {
     // This would come from the actual last message
-    if (chatRoom.ticket?.ticketId!=null) {
+    if (chatRoom.ticket?.ticketId != null) {
       return chatRoom.ticket!.ticketId!;
-    }else if (chatRoom.participants.isNotEmpty) {
+    } else if (chatRoom.participants.isNotEmpty) {
       return chatRoom.participants.map((org) => org.name).join(", ");
     }
     // For now we'll use placeholder text

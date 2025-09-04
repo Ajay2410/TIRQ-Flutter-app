@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:manager/core/storage/storage.dart';
 import 'package:manager/core/utils/app_logger.dart';
 import 'package:manager/features/auth/otp_verification/otp_verification.view.dart';
 import 'package:manager/features/stage/stage.view.dart';
@@ -34,7 +33,8 @@ class OtpVerificationViewModel extends ReactiveViewModel {
 
   void _updateFormValidity() {
     // Check if OTP is 6 digits (assuming 6-digit OTP)
-    final isValid = email.isNotEmpty &&
+    final isValid =
+        email.isNotEmpty &&
         otpController.text.isNotEmpty &&
         otpController.text.length == 6;
 
@@ -44,7 +44,6 @@ class OtpVerificationViewModel extends ReactiveViewModel {
   }
 
   Future verifyEmail() async {
-
     AppLogger.info("cdftyhnjkl ${otpController.text}");
 
     if (!isFormValid) return;
@@ -58,12 +57,15 @@ class OtpVerificationViewModel extends ReactiveViewModel {
     );
 
     response.fold(
-          (exception) {
+      (exception) {
         Fluttertoast.showToast(msg: exception.message.toString());
       },
-          (user) async {
-        await saveUser(user);
-        await _navigationService.clearStackAndShow(Routes.stage,arguments: StageViewAttributes(selectedBottomNavIndex: 2));
+      (user) async {
+        // User is already saved in auth service, just navigate
+        await _navigationService.clearStackAndShow(
+          Routes.stage,
+          arguments: StageViewAttributes(selectedBottomNavIndex: 2),
+        );
       },
     );
     setBusy(false);

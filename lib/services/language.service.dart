@@ -14,9 +14,8 @@ class LanguageService {
     try {
       String jsonString = await rootBundle.loadString('assets/lang/language.json');
       _data = json.decode(jsonString);
-
     } catch (e) {
-      AppLogger.error('Error loading language file: $e');
+      AppLogger.error('Error loading language file: ${e.toString()}');
     }
   }
 

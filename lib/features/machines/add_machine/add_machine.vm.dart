@@ -37,26 +37,31 @@ class AddMachineViewModel extends ReactiveViewModel {
   final TextEditingController heightController = TextEditingController();
   final TextEditingController depthController = TextEditingController();
   final TextEditingController dimensionUnitController = TextEditingController(
-      text: 'mm');
+    text: 'mm',
+  );
 
   // Power controller
   final TextEditingController powerController = TextEditingController();
 
   // Warranty controllers
-  final TextEditingController warrantyStartDateController = TextEditingController();
-  final TextEditingController warrantyExpiryDateController = TextEditingController();
+  final TextEditingController warrantyStartDateController =
+      TextEditingController();
+  final TextEditingController warrantyExpiryDateController =
+      TextEditingController();
   final TextEditingController warrantyStatusController = TextEditingController(
-      text: 'Active');
+    text: 'Active',
+  );
   final List<String> warrantyStatusOptions = ['Active', 'Expired', 'N/A'];
 
   // Purchase Date controller
   final TextEditingController purchaseDateController = TextEditingController();
-  final TextEditingController installationDateController = TextEditingController();
+  final TextEditingController installationDateController =
+      TextEditingController();
 
   final TextEditingController maximumAreaController = TextEditingController();
   final TextEditingController minimumAreaController = TextEditingController();
-  final TextEditingController dimensionAreaUnitController = TextEditingController(text: 'mm');
-
+  final TextEditingController dimensionAreaUnitController =
+      TextEditingController(text: 'mm');
 
   // Date variables
   DateTime? warrantyStartDate;
@@ -92,22 +97,31 @@ class AddMachineViewModel extends ReactiveViewModel {
   void init(AddMachineViewAttributes attributes) {
     if (attributes.id.isNotEmpty) {
       machineId = attributes.id;
-      processorId  = attributes.processorId;
+      processorId = attributes.processorId;
       _isEditing = true;
-      _loadMachineData(machineId: attributes.id,processorId: attributes.processorId);
+      _loadMachineData(
+        machineId: attributes.id,
+        processorId: attributes.processorId,
+      );
     }
   }
 
-  void _loadMachineData({required String machineId, String? processorId}) async {
+  void _loadMachineData({
+    required String machineId,
+    String? processorId,
+  }) async {
     setBusy(true);
-    final result = await _machineService.getMachineById(machineId: machineId,processorId: processorId);
+    final result = await _machineService.getMachineById(
+      machineId: machineId,
+      processorId: processorId,
+    );
 
     result.fold(
-          (exception) {
+      (exception) {
         Fluttertoast.showToast(msg: exception.toString());
         _navigationService.back();
       },
-          (machine) {
+      (machine) {
         // Populate existing controllers
         machineNameController.text = machine.machineName ?? '';
         modelNumberController.text = machine.modelNumber ?? '';
@@ -117,36 +131,47 @@ class AddMachineViewModel extends ReactiveViewModel {
           // Power
           if (machine.technicalSpecifications!.powerRequirements != null) {
             powerController.text =
-                machine.technicalSpecifications!.powerRequirements!
-                    .powerConsumption?.toString() ?? '';
+                machine
+                    .technicalSpecifications!
+                    .powerRequirements!
+                    .powerConsumption
+                    ?.toString() ??
+                '';
           }
 
           // Machine Type
-          _selectedMachineType = machine.technicalSpecifications!.machineType ??
+          _selectedMachineType =
+              machine.technicalSpecifications!.machineType ??
               MachineType.fullyAutomatic;
 
           // Dimensions
           if (machine.technicalSpecifications!.dimensions != null) {
             widthController.text =
                 machine.technicalSpecifications!.dimensions!.width
-                    ?.toString() ?? '';
+                    ?.toString() ??
+                '';
             heightController.text =
                 machine.technicalSpecifications!.dimensions!.height
-                    ?.toString() ?? '';
+                    ?.toString() ??
+                '';
             depthController.text =
                 machine.technicalSpecifications!.dimensions!.depth
-                    ?.toString() ?? '';
+                    ?.toString() ??
+                '';
             dimensionUnitController.text =
                 machine.technicalSpecifications!.dimensions!.unit ?? 'cm';
             maximumAreaController.text =
                 machine.technicalSpecifications!.processingArea!.max
-                    ?.toString() ?? '';
+                    ?.toString() ??
+                '';
             minimumAreaController.text =
                 machine.technicalSpecifications!.processingArea!.min
-                    ?.toString() ?? '';
+                    ?.toString() ??
+                '';
             dimensionAreaUnitController.text =
                 machine.technicalSpecifications!.processingArea!.unit
-                    ?.toString() ?? '';
+                    ?.toString() ??
+                '';
           }
 
           // Load additional info sections
@@ -156,7 +181,8 @@ class AddMachineViewModel extends ReactiveViewModel {
               final section = AdditionalInfoSection(
                 titleController: TextEditingController(text: info.title ?? ''),
                 descriptionController: TextEditingController(
-                    text: info.description ?? ''),
+                  text: info.description ?? '',
+                ),
               );
               _additionalInfoSections.add(section);
             }
@@ -164,14 +190,15 @@ class AddMachineViewModel extends ReactiveViewModel {
         }
 
         // Load warranty information
-        if (machine.warranty != null && machine.warranty!=null) {
+        if (machine.warranty != null && machine.warranty != null) {
           warrantyStatusController.text = machine.warranty?.status ?? 'Active';
 
           if (machine.warranty?.startDate != null) {
             try {
               warrantyStartDate = DateTime.parse(machine.warranty!.startDate!);
-              warrantyStartDateController.text =
-                  _formatDate(warrantyStartDate!);
+              warrantyStartDateController.text = _formatDate(
+                warrantyStartDate!,
+              );
             } catch (e) {
               // Handle parsing error
             }
@@ -179,10 +206,12 @@ class AddMachineViewModel extends ReactiveViewModel {
 
           if (machine.warranty!.expirationDate != null) {
             try {
-              warrantyExpiryDate =
-                  DateTime.parse(machine.warranty!.expirationDate!);
-              warrantyExpiryDateController.text =
-                  _formatDate(warrantyExpiryDate!);
+              warrantyExpiryDate = DateTime.parse(
+                machine.warranty!.expirationDate!,
+              );
+              warrantyExpiryDateController.text = _formatDate(
+                warrantyExpiryDate!,
+              );
             } catch (e) {
               // Handle parsing error
             }
@@ -200,14 +229,16 @@ class AddMachineViewModel extends ReactiveViewModel {
 
           if (machine.warranty!.installationDate != null) {
             try {
-              installationDate = DateTime.parse(machine.warranty!.installationDate!);
+              installationDate = DateTime.parse(
+                machine.warranty!.installationDate!,
+              );
               installationDateController.text = _formatDate(installationDate!);
             } catch (e) {
               // Handle parsing error
             }
           }
 
-          invoiceNoController.text = machine.warranty?.invoiceNo??'';
+          invoiceNoController.text = machine.warranty?.invoiceNo ?? '';
         }
 
         notifyListeners();
@@ -237,10 +268,25 @@ class AddMachineViewModel extends ReactiveViewModel {
   }
 
   Future<void> selectWarrantyExpiryDate(BuildContext context) async {
+    final DateTime firstDate = DateTime(2000);
+    DateTime initialDate;
+
+    if (warrantyExpiryDate != null) {
+      // If we have an existing expiry date, use it but ensure it's not before firstDate
+      initialDate =
+          warrantyExpiryDate!.isBefore(firstDate)
+              ? firstDate
+              : warrantyExpiryDate!;
+    } else {
+      // If no expiry date, use warrantyStartDate or DateTime.now(), whichever is later
+      final DateTime fallbackDate = warrantyStartDate ?? DateTime.now();
+      initialDate = fallbackDate.isBefore(firstDate) ? firstDate : fallbackDate;
+    }
+
     final date = await showDatePicker(
       context: context,
-      initialDate: warrantyExpiryDate ?? (warrantyStartDate ?? DateTime.now()),
-      firstDate: DateTime(2000),
+      initialDate: initialDate,
+      firstDate: firstDate,
       lastDate: DateTime(2100),
     );
 
@@ -318,7 +364,7 @@ class AddMachineViewModel extends ReactiveViewModel {
   bool _isSaving = false;
   bool get isSaving => _isSaving;
 
-  setSaving(bool value){
+  setSaving(bool value) {
     _isSaving = value;
     notifyListeners();
   }
@@ -347,10 +393,10 @@ class AddMachineViewModel extends ReactiveViewModel {
       'unit': dimensionUnitController.text.trim(),
     };
 
-    final Map<String, dynamic> processingArea =  {
-    'max': double.tryParse(maximumAreaController.text) ?? 0,
-    'min': double.tryParse(minimumAreaController.text) ?? 0,
-    'unit': dimensionAreaUnitController.text.trim(),
+    final Map<String, dynamic> processingArea = {
+      'max': double.tryParse(maximumAreaController.text) ?? 0,
+      'min': double.tryParse(minimumAreaController.text) ?? 0,
+      'unit': dimensionAreaUnitController.text.trim(),
     };
 
     final Map<String, dynamic> powerRequirements = {
@@ -362,16 +408,16 @@ class AddMachineViewModel extends ReactiveViewModel {
 
     // Process additional info sections
     List<Map<String, dynamic>> additionalInfo =
-    _additionalInfoSections.map((section) {
-      return {
-        'title': section.titleController.text.trim(),
-        'description': section.descriptionController.text.trim(),
-      };
-    }).toList();
+        _additionalInfoSections.map((section) {
+          return {
+            'title': section.titleController.text.trim(),
+            'description': section.descriptionController.text.trim(),
+          };
+        }).toList();
 
     final Map<String, dynamic> technicalSpecifications = {
       'dimensions': dimensions,
-      'processingArea':processingArea,
+      'processingArea': processingArea,
       'powerRequirements': powerRequirements,
       'machineType': _selectedMachineType.name,
       'additionalInfo': additionalInfo,
@@ -396,10 +442,10 @@ class AddMachineViewModel extends ReactiveViewModel {
 
     setBusy(false);
     response.fold(
-          (exception) {
+      (exception) {
         Fluttertoast.showToast(msg: exception.toString());
       },
-          (success) {
+      (success) {
         Fluttertoast.showToast(msg: 'Machine created successfully!');
         _navigationService.back();
       },
@@ -430,12 +476,13 @@ class AddMachineViewModel extends ReactiveViewModel {
           'phase': 1,
         },
         'machineType': _selectedMachineType.name,
-        'additionalInfo': _additionalInfoSections.map((section) {
-          return {
-            'title': section.titleController.text.trim(),
-            'description': section.descriptionController.text.trim(),
-          };
-        }).toList(),
+        'additionalInfo':
+            _additionalInfoSections.map((section) {
+              return {
+                'title': section.titleController.text.trim(),
+                'description': section.descriptionController.text.trim(),
+              };
+            }).toList(),
       },
       'warranty': {
         'status': warrantyStatusController.text.trim(),
@@ -453,10 +500,10 @@ class AddMachineViewModel extends ReactiveViewModel {
 
     setBusy(false);
     response.fold(
-          (exception) {
+      (exception) {
         Fluttertoast.showToast(msg: exception.toString());
       },
-          (success) {
+      (success) {
         Fluttertoast.showToast(msg: 'Machine updated successfully!');
         _navigationService.back();
       },

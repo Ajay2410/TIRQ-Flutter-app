@@ -109,7 +109,7 @@ class QRView extends StatelessWidget {
       child: Column(
         children: [
           Text(
-           LanguageService.get("scan_qr_to_connect"),
+            LanguageService.get("scan_qr_to_connect"),
             textAlign: TextAlign.center,
             style: TextStyle(
               color: AppColors.white.withValues(alpha: 0.9),
@@ -398,7 +398,7 @@ class QRView extends StatelessWidget {
           ),
           children: [
             TextSpan(
-              text:  LanguageService.get("terms_conditions"),
+              text: LanguageService.get("terms_conditions"),
               style: TextStyle(
                 color: AppColors.primary,
                 fontWeight: FontWeight.w600,
@@ -408,7 +408,7 @@ class QRView extends StatelessWidget {
             ),
             TextSpan(text: LanguageService.get("and")),
             TextSpan(
-              text:  LanguageService.get("privacy_policy"),
+              text: LanguageService.get("privacy_policy"),
               style: TextStyle(
                 color: AppColors.primary,
                 fontWeight: FontWeight.w600,

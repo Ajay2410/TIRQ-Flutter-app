@@ -16,13 +16,13 @@ abstract class AppColors {
   static const Color primaryVariant = Color(0xFF2681E1);
   static const Color primarySuperLight = Color(0xFF687FE5);
 
-
   // Secondary Colors
   static const Color secondary = primary;
   static const Color secondaryLight = Color(0xFFb5a8d5);
   static const Color secondaryDark = Color(0xFF5746A6);
   static const Color secondaryVariant = Color(0xFF43307F);
-   static const Color appbarVarient = Color(0xFF003382);
+  static const Color appbarVarient = Color(0xFF003382);
+
   // Accent Colors
   static const Color accent = Color(0xFFff6b6b);
   static const Color accentLight = Color(0xFFFFA8A8);
@@ -34,7 +34,6 @@ abstract class AppColors {
   static const Color darkGray = Color(0xFF616161);
   static const Color softGray = Color(0xFFF5F5F5);
   static const Color mediumGray = Color(0xFFBDBDBD);
-
 
   static const Color softGreen = Color(0xFF4CAF50);
   static const Color backgroundlightgreen = Color(0xFF3A98B9);
@@ -67,19 +66,40 @@ abstract class AppColors {
   static const Color inactive = Color(0xFFEEEEEE);
   static const Color overlay = Color(0x66000000);
 
-
-
   static const Color pink = Color(0xFFED75E3); // 40% black for overlays
   static const Color lightGreen = Color(0xFF6CCA9B); // 40% black for overlays
   static const Color yellow = Color(0xFFF3B33E); // 40% black for overlays
   static const Color darkGreen = Color(0xFFB7BE79); // 40% black for overlays
   static const Color darkPink = Color(0xFFD28591); // 40% black for overlays
 
+  // icon background color
+  static const Color bluebackground = Color(0xFF4ED7F1);
+  static const Color periwinklePurple = Color(0xFF8F86F0);
+  static const Color greenbackground = Color(0xFF76BA99);
+  static const Color redbackground = Color(0xFFE97777);
+  static const Color darkGreenBack = Color(0xFF3A98B9);
+  static const Color redBack = Color(0xFFC52E2E);
+  static const Color skyBlue = Color(0xFF4ED6F0);
+  static const Color forestGreen = Color(0xFF537D5D);
+  static const Color colorBlue = Color(0xFF314E8D);
+  static const Color amberOrange = Color(0xFFFEB040);
+  static const Color colorF0F2FC = Color(0xFFF0F2FC);
+  static const Color crimsonRed = Color(0xFFDF4747);
+  static const Color indigoBlue = Color(0xFF687EE4);
+  static const Color mintGreen = Color(0xFF41C392);
+  static const Color oliveGreen = Color(0xFF9E9F0C);
 
-// icon background color
-static const Color bluebackground = Color(0xFF4ED7F1);
-static const Color greenbackground = Color(0xFF76BA99);
-static const Color redbackground = Color(0xFFE97777);
-  static const Color darkGreenBack=Color(0xFF3A98B9);
-  
+  // Dialog Colors
+  static const Color warningRed = Color(0xFFD93025);
+  static const Color warningLightRed = Color(0xFFFCE8E6);
+
+  // Additional Colors
+  static const Color orange = Color(0xFFFF9800);
+  static const Color colorFF6868 = Color(0xFFFF6868);
+  static const Color colorF2A22E = Color(0xFFF2A22E);
+  static const Color color41C293 = Color(0xFF41C293);
+  static const Color colorFFB141 = Color(0xFFFFB141);
+  static const Color color0ABAB5 = Color(0xFF0ABAB5);
+  static const Color purple = Color(0xFF9C27B0);
+  static const Color colorF8FBFE = Color(0xFFF8FBFE);
 }

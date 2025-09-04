@@ -55,13 +55,15 @@ class ChatListViewModel extends BaseViewModel {
 
   // Archived filter methods
   List<ChatViewAttributes> getArchivedTicketChats() {
-    return _archivedChatRooms.where((chat) =>
-    chat.chatRoomType?.toLowerCase() == "ticket").toList();
+    return _archivedChatRooms
+        .where((chat) => chat.chatRoomType?.toLowerCase() == "ticket")
+        .toList();
   }
 
   List<ChatViewAttributes> getArchivedDepartmentalChats() {
-    return _archivedChatRooms.where((chat) =>
-    chat.chatRoomType?.toLowerCase() == "withinorg").toList();
+    return _archivedChatRooms
+        .where((chat) => chat.chatRoomType?.toLowerCase() == "withinorg")
+        .toList();
   }
 
   List<ChatViewAttributes> getArchivedExternalChats() {
@@ -73,7 +75,8 @@ class ChatListViewModel extends BaseViewModel {
 
   // Archived count methods
   int get archivedTicketChatsCount => getArchivedTicketChats().length;
-  int get archivedDepartmentalChatsCount => getArchivedDepartmentalChats().length;
+  int get archivedDepartmentalChatsCount =>
+      getArchivedDepartmentalChats().length;
   int get archivedExternalChatsCount => getArchivedExternalChats().length;
   int get totalArchivedChatsCount => _archivedChatRooms.length;
 
@@ -96,27 +99,39 @@ class ChatListViewModel extends BaseViewModel {
     final tickets = getTicketChats();
     if (_searchQuery.isEmpty) return tickets;
 
-    return tickets.where((chat) =>
-    _getChatTitle(chat).toLowerCase().contains(_searchQuery) ||
-        _getLastMessagePreview(chat).toLowerCase().contains(_searchQuery)).toList();
+    return tickets
+        .where(
+          (chat) =>
+              _getChatTitle(chat).toLowerCase().contains(_searchQuery) ||
+              _getLastMessagePreview(chat).toLowerCase().contains(_searchQuery),
+        )
+        .toList();
   }
 
   List<ChatViewAttributes> getFilteredDepartmentalChats() {
     final departmental = getDepartmentalChats();
     if (_searchQuery.isEmpty) return departmental;
 
-    return departmental.where((chat) =>
-    _getChatTitle(chat).toLowerCase().contains(_searchQuery) ||
-        _getLastMessagePreview(chat).toLowerCase().contains(_searchQuery)).toList();
+    return departmental
+        .where(
+          (chat) =>
+              _getChatTitle(chat).toLowerCase().contains(_searchQuery) ||
+              _getLastMessagePreview(chat).toLowerCase().contains(_searchQuery),
+        )
+        .toList();
   }
 
   List<ChatViewAttributes> getFilteredExternalChats() {
     final external = getExternalChats();
     if (_searchQuery.isEmpty) return external;
 
-    return external.where((chat) =>
-    _getChatTitle(chat).toLowerCase().contains(_searchQuery) ||
-        _getLastMessagePreview(chat).toLowerCase().contains(_searchQuery)).toList();
+    return external
+        .where(
+          (chat) =>
+              _getChatTitle(chat).toLowerCase().contains(_searchQuery) ||
+              _getLastMessagePreview(chat).toLowerCase().contains(_searchQuery),
+        )
+        .toList();
   }
 
   void init() async {
@@ -141,26 +156,29 @@ class ChatListViewModel extends BaseViewModel {
       final result = await _chatService.getChatRooms();
 
       result.fold(
-            (failure) {
+        (failure) {
           AppLogger.error('Failed to get chat rooms: ${failure.message}');
           _chatRooms = [];
 
           Fluttertoast.showToast(
-            msg: "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
+            msg:
+                "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: AppColors.error,
             textColor: AppColors.white,
           );
         },
-            (response) {
+        (response) {
           _chatRooms = response;
           AppLogger.info('Successfully loaded ${response.length} chat rooms');
 
-          AppLogger.info('Chat types distribution: '
-              'Tickets: ${ticketChatsCount}, '
-              'Departmental: ${departmentalChatsCount}, '
-              'External: ${externalChatsCount}');
+          AppLogger.info(
+            'Chat types distribution: '
+            'Tickets: ${ticketChatsCount}, '
+            'Departmental: ${departmentalChatsCount}, '
+            'External: ${externalChatsCount}',
+          );
 
           final roomTypes = <String, int>{};
           for (final chat in _chatRooms) {
@@ -198,8 +216,10 @@ class ChatListViewModel extends BaseViewModel {
       final result = await _chatService.getArchivedChatRooms();
 
       result.fold(
-            (failure) {
-          AppLogger.error('Failed to get archived chat rooms: ${failure.message}');
+        (failure) {
+          AppLogger.error(
+            'Failed to get archived chat rooms: ${failure.message}',
+          );
           _archivedChatRooms = [];
 
           Fluttertoast.showToast(
@@ -210,9 +230,11 @@ class ChatListViewModel extends BaseViewModel {
             textColor: AppColors.white,
           );
         },
-            (response) {
+        (response) {
           _archivedChatRooms = response;
-          AppLogger.info('Successfully loaded ${response.length} archived chat rooms');
+          AppLogger.info(
+            'Successfully loaded ${response.length} archived chat rooms',
+          );
         },
       );
     } catch (e) {
@@ -233,22 +255,18 @@ class ChatListViewModel extends BaseViewModel {
   }
 
   void navigateToChat(ChatViewAttributes chatRoom) async {
-    await _navigationService.navigateTo(
-      Routes.chat,
-      arguments: chatRoom,
-    );
+    await _navigationService.navigateTo(Routes.chat, arguments: chatRoom);
     init();
   }
 
   void navigateToArchivedChats() {
-    _navigationService.navigateTo(
-      Routes.archivedChats,
-    );
+    _navigationService.navigateTo(Routes.archivedChats);
   }
 
   // Helper methods for search functionality
   String _getChatTitle(ChatViewAttributes chatRoom) {
-    if (chatRoom.chatRoomType?.toLowerCase() == "ticket" && chatRoom.ticket?.ticketId != null) {
+    if (chatRoom.chatRoomType?.toLowerCase() == "ticket" &&
+        chatRoom.ticket?.ticketId != null) {
       return chatRoom.ticket!.ticketId!;
     } else if (chatRoom.chatRoomType?.toLowerCase() == "withinorg") {
       if (chatRoom.groupName?.isNotEmpty == true) {
@@ -266,10 +284,13 @@ class ChatListViewModel extends BaseViewModel {
   }
 
   String _getLastMessagePreview(ChatViewAttributes chatRoom) {
-    if (chatRoom.chatRoomType?.toLowerCase() == "ticket" && chatRoom.ticket?.description != null) {
+    if (chatRoom.chatRoomType?.toLowerCase() == "ticket" &&
+        chatRoom.ticket?.description != null) {
       return chatRoom.ticket!.description!;
     } else if (chatRoom.participants.isNotEmpty) {
-      return chatRoom.participants.map((participant) => participant.name).join(", ");
+      return chatRoom.participants
+          .map((participant) => participant.name)
+          .join(", ");
     }
     return LanguageService.get("no_messages_yet");
   }
