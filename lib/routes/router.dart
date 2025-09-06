@@ -35,6 +35,7 @@ import '../features/home/my_customers/machine_details/customer_details/customer_
 import '../features/home/my_customers/my_customers.view.dart';
 import '../features/home/my_customers/customer_details.view.dart';
 import '../features/home/my_customers/create_customer/create_new_customer.view.dart';
+import '../features/home/machine_supplier/machine_supplier.view.dart';
 import '../core/models/customer.dart';
 import '../features/home/employee_home/employee_home.view.dart';
 import '../features/home/organization_home/organization_home.view.dart';
@@ -54,6 +55,9 @@ import '../features/organization/employees_list/employee_role_cards.view.dart';
 import '../features/home/machine_records/machine_records.view.dart';
 import '../features/home/machine_records/machine_details/machine_details.view.dart';
 import '../features/home/machine_records/add_new_machine_model.view.dart';
+import '../features/home/machine_overview/machine_overview.view.dart';
+import '../features/home/machine_overview/machine_overview_details/machine_overview_details.view.dart';
+import '../core/models/machine_overview_model.dart';
 import '../core/models/machine_model.dart';
 
 // TODO: Add imports for the new views when they are created
@@ -159,6 +163,12 @@ class AppRouter extends RouterBase {
     MyCustomersView: (data) {
       return MaterialPageRoute(
         builder: (BuildContext _) => MyCustomersView(),
+        settings: data,
+      );
+    },
+    MachineSupplierView: (data) {
+      return MaterialPageRoute(
+        builder: (BuildContext _) => MachineSupplierView(),
         settings: data,
       );
     },
@@ -598,6 +608,20 @@ class AppRouter extends RouterBase {
         settings: data,
       );
     },
+    MachineOverviewView: (data) {
+      return MaterialPageRoute(
+        builder: (BuildContext _) => MachineOverviewView(),
+      );
+    },
+    MachineOverviewDetailsView: (data) {
+      return MaterialPageRoute(
+        builder:
+            (BuildContext _) => MachineOverviewDetailsView(
+              machine: data.arguments as MachineOverviewList?,
+            ),
+        settings: data,
+      );
+    },
   };
 
   /// Defines the list of routes available in the app.
@@ -615,6 +639,7 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.employeeHome, page: EmployeeHomeView),
     RouteDef(Routes.customersList, page: CustomersListView),
     RouteDef(Routes.myCustomers, page: MyCustomersView),
+    RouteDef(Routes.machineSupplier, page: MachineSupplierView),
     RouteDef(Routes.createNewCustomer, page: CreateNewCustomerView),
     RouteDef(Routes.customerDetails, page: CustomerDetailsView),
     RouteDef(Routes.ticketsList, page: TicketsListView),
@@ -655,6 +680,8 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.authSelectionView, page: AuthSelectionView),
     RouteDef(Routes.generalSetting, page: GeneralSettingView),
     RouteDef(Routes.machineRecords, page: MachineRecordsView),
+    RouteDef(Routes.machineOverview, page: MachineOverviewView),
+    RouteDef(Routes.machineOverviewDetails, page: MachineOverviewDetailsView),
     RouteDef(Routes.machineDetails, page: MachineDetailsView),
     RouteDef(Routes.addNewMachineModel, page: AddNewMachineModelView),
     RouteDef(Routes.customerEditDetailsView, page: CustomerEditDetailsView),

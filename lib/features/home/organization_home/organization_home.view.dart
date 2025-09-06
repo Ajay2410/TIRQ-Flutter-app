@@ -284,7 +284,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
       'tickets_summary': DashboardCardData(
         title: LanguageService.get('tickets_summary'),
         icon: AppImages.ticketSummary,
-        color: AppColors.bluebackground,
+        color: AppColors.mediumPeriwinkle,
         route: '/tickets',
       ),
       'my_customers': DashboardCardData(
@@ -552,6 +552,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                 model.navigateToMachineRecords();
                 break;
               case '/machine-overview':
+                model.navigateToMachineOverview();
                 break;
               case '/feedback':
                 break;
@@ -640,6 +641,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
           case '/pi-invoice':
             break;
           case '/machine-suppliers':
+            Navigator.of(context).pushNamed(Routes.machineSupplier);
             break;
           case '/glass-flow-system':
             break;

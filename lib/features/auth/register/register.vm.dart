@@ -18,7 +18,8 @@ class RegisterViewModel extends ReactiveViewModel {
 
   final formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController otherDescriptionController = TextEditingController();
+  final TextEditingController otherDescriptionController =
+      TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -126,7 +127,10 @@ class RegisterViewModel extends ReactiveViewModel {
 
     if (_isOrganization) {
       // Organization validation
-      bool isOtherValid = _organizationType != "Others" || (_organizationType == "Others" && otherDescriptionController.text.isNotEmpty);
+      bool isOtherValid =
+          _organizationType != "Others" ||
+          (_organizationType == "Others" &&
+              otherDescriptionController.text.isNotEmpty);
 
       isValid =
           nameController.text.isNotEmpty &&
@@ -157,7 +161,10 @@ class RegisterViewModel extends ReactiveViewModel {
       AppLogger.info("Form is valid! Submitting...");
       setBusy(true);
 
-      final response = _isOrganization ? await registerOrganization() : await registerEmployee();
+      final response =
+          _isOrganization
+              ? await registerOrganization()
+              : await registerEmployee();
 
       response.fold(
         (exception) {
@@ -166,7 +173,10 @@ class RegisterViewModel extends ReactiveViewModel {
         (success) {
           _navigationService.navigateTo(
             Routes.otpVerification,
-            arguments: OtpVerificationViewAttributes(isOrganization: _isOrganization, email: emailController.text),
+            arguments: OtpVerificationViewAttributes(
+              isOrganization: _isOrganization,
+              email: emailController.text,
+            ),
           );
         },
       );
@@ -179,11 +189,15 @@ class RegisterViewModel extends ReactiveViewModel {
 
   ResultFuture<String> registerOrganization() async {
     String finalOrgType = _organizationType!;
-    if (_organizationType == "Others" && otherDescriptionController.text.isNotEmpty) {
+    if (_organizationType == "Others" &&
+        otherDescriptionController.text.isNotEmpty) {
       finalOrgType = "Others: ${otherDescriptionController.text}";
     }
 
-    String role = _organizationType == "Machine Manufacturer" ? "organization" : "processor";
+    String role =
+        _organizationType == "Machine Manufacturer"
+            ? "organization"
+            : "processor";
 
     return await authService.register(
       fullName: nameController.text,

@@ -88,6 +88,10 @@ abstract class AppColors {
   static const Color indigoBlue = Color(0xFF687EE4);
   static const Color mintGreen = Color(0xFF41C392);
   static const Color oliveGreen = Color(0xFF9E9F0C);
+  static const Color lavenderMist = Color(0xFFF1F2FD);
+  static const Color mediumPeriwinkle = Color(0xFF8F87F0);
+  static const Color lightCoral = Color(0xFFE97776);
+  static const Color blueLagoon = Color(0xFF3A99B8);
 
   // Dialog Colors
   static const Color warningRed = Color(0xFFD93025);

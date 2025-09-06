@@ -10,7 +10,6 @@ import 'package:manager/widgets/common_text_field.dart';
 import 'package:manager/core/models/machine_model.dart';
 import 'package:manager/core/locator.dart';
 import 'package:manager/core/utils/app_logger.dart';
-import 'package:stacked_services/stacked_services.dart';
 import '../add_new_machine_model.view.dart';
 
 class MachineDetailsView extends StatefulWidget {
@@ -26,7 +25,6 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
   late TextEditingController _remarkController;
   late TextEditingController _notesController;
   final MachineService _machineService = locator<MachineService>();
-  final _navigationService = locator<NavigationService>();
   bool _isDeleting = false;
 
   @override
@@ -226,19 +224,19 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
           children: [
             Expanded(
               child: _buildInfoRow(
-                AppImages.height,
+                AppImages.thickness,
                 'thickness'.lang,
                 '${widget.machine.processingDimensions?.thickness ?? 'N/A'}',
-                AppColors.color41C293,
+                AppColors.lightCoral,
               ),
             ),
             SizedBox(width: 14),
             Expanded(
               child: _buildInfoRow(
-                AppImages.width,
+                AppImages.maxSpeed,
                 'max_speed'.lang,
                 '${widget.machine.processingDimensions?.maxSpeed ?? 'N/A'}',
-                AppColors.primarySuperLight,
+                AppColors.blueLagoon,
               ),
             ),
           ],
@@ -248,7 +246,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
         Divider(color: AppColors.lightGray),
         const SizedBox(height: 20),
 
-        _buildInfoRow(AppImages.width, "${'total_power'.lang} (kw)", '${widget.machine.totalPower ?? 'N/A'}', AppColors.primarySuperLight),
+        _buildInfoRow(AppImages.powerConsumption, "${'total_power'.lang} (kw)", '${widget.machine.totalPower ?? 'N/A'}', AppColors.primarySuperLight),
         const SizedBox(height: 24),
 
         CommonTextField(
@@ -285,7 +283,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                             () => AddNewMachineModelView(machine: _convertDatumToMap(widget.machine)),
                           );
 
-                          if (result != null && result is Map<String, dynamic>) {
+                          if (result != null) {
                             final returnedMachineId = result['_id'] as String?;
                             if (returnedMachineId != null && returnedMachineId == widget.machine.id) {
                               AppLogger.info("Machine updated, refreshing data: $result");

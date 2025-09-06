@@ -39,7 +39,9 @@ class MachineService {
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to get machines'));
@@ -53,24 +55,36 @@ class MachineService {
       );
 
       if (response.data['success'] == true) {
-        return Right((response.data['data'] as List).map((e) => Machine.fromJson(e)).toList());
+        return Right(
+          (response.data['data'] as List)
+              .map((e) => Machine.fromJson(e))
+              .toList(),
+        );
       } else {
         return Left(Failure(response.data['message']));
       }
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to get machines'));
   }
 
-  ResultFuture<Machine> getMachineById({required String machineId, String? processorId}) async {
+  ResultFuture<Machine> getMachineById({
+    required String machineId,
+    String? processorId,
+  }) async {
     try {
       final response = await apiService.get(
         url: ApiEndpoints.machine,
-        queryParameters: {'machineId': machineId, 'processorId': processorId ?? ''},
+        queryParameters: {
+          'machineId': machineId,
+          'processorId': processorId ?? '',
+        },
       );
 
       if (response.data['success'] == true) {
@@ -81,7 +95,9 @@ class MachineService {
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to get machine details'));
@@ -105,7 +121,8 @@ class MachineService {
           'serialNumber': modelNumber,
           "operatingHours": operatingHours,
           "technicalSpecifications": technicalSpecifications,
-          if (assignedTechnicians != null && assignedTechnicians.isNotEmpty) "assignedTechnicians": assignedTechnicians,
+          if (assignedTechnicians != null && assignedTechnicians.isNotEmpty)
+            "assignedTechnicians": assignedTechnicians,
         },
       );
 
@@ -117,7 +134,9 @@ class MachineService {
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to create machine'));
@@ -154,7 +173,10 @@ class MachineService {
 
       AppLogger.info("Request data: $requestData");
 
-      final response = await apiService.post(url: ApiEndpoints.createMachine, data: requestData);
+      final response = await apiService.post(
+        url: ApiEndpoints.createMachine,
+        data: requestData,
+      );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data;
@@ -168,12 +190,16 @@ class MachineService {
           return Left(Failure('Invalid response format'));
         }
       } else {
-        final errorMessage = response.data?['message'] ?? 'Failed to create machine';
-        AppLogger.error("API error: $errorMessage (Status: ${response.statusCode})");
+        final errorMessage =
+            response.data?['message'] ?? 'Failed to create machine';
+        AppLogger.error(
+          "API error: $errorMessage (Status: ${response.statusCode})",
+        );
         return Left(Failure(errorMessage));
       }
     } on DioException catch (e) {
-      final errorMessage = e.response?.data?['message'] ?? 'Network error occurred';
+      final errorMessage =
+          e.response?.data?['message'] ?? 'Network error occurred';
       AppLogger.error("DioException while creating machine: $errorMessage");
       return Left(Failure(errorMessage));
     } catch (e) {
@@ -203,7 +229,9 @@ class MachineService {
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
     }
     return Left(Failure('Failed to update machine'));
@@ -217,7 +245,10 @@ class MachineService {
       AppLogger.info("Updating machine record: $machineId");
       AppLogger.info("Update data: $updateData");
 
-      final response = await apiService.put(url: '${ApiEndpoints.machine}/update/$machineId', data: updateData);
+      final response = await apiService.put(
+        url: '${ApiEndpoints.machine}/update/$machineId',
+        data: updateData,
+      );
 
       AppLogger.info("Update response status: ${response.statusCode}");
       AppLogger.info("Update response data: ${response.data}");
@@ -229,11 +260,14 @@ class MachineService {
         if (response.data is Map<String, dynamic>) {
           final data = response.data as Map<String, dynamic>;
           AppLogger.info("Response data keys: ${data.keys.toList()}");
-          if (data['success'] == true || data['message']?.contains('successfully') == true) {
+          if (data['success'] == true ||
+              data['message']?.contains('successfully') == true) {
             // Return the updated machine data
             final machineData = data['data'] as Map<String, dynamic>?;
             if (machineData != null) {
-              AppLogger.info("Machine updated successfully, returning updated data");
+              AppLogger.info(
+                "Machine updated successfully, returning updated data",
+              );
               return Right(machineData);
             } else {
               AppLogger.warning("No machine data in response");
@@ -253,12 +287,15 @@ class MachineService {
           return Left(Failure('No machine data in response'));
         }
       } else {
-        final errorMessage = response.data?['message'] ?? 'Update failed with status ${response.statusCode}';
+        final errorMessage =
+            response.data?['message'] ??
+            'Update failed with status ${response.statusCode}';
         return Left(Failure(errorMessage));
       }
     } catch (e) {
       if (e is DioException) {
-        final errorMessage = e.response?.data?['message'] ?? 'Network error occurred';
+        final errorMessage =
+            e.response?.data?['message'] ?? 'Network error occurred';
         AppLogger.error("DioException while updating machine: $errorMessage");
         return Left(Failure(errorMessage));
       }
@@ -269,7 +306,9 @@ class MachineService {
 
   ResultFuture<bool> deleteMachine(String machineId) async {
     try {
-      final response = await apiService.delete(url: '${ApiEndpoints.deleteMachine}/$machineId');
+      final response = await apiService.delete(
+        url: '${ApiEndpoints.deleteMachine}/$machineId',
+      );
 
       if (response.statusCode == 200
       // || response.statusCode == 204
@@ -312,12 +351,16 @@ class MachineService {
       if (response.data['success'] == true || response.statusCode == 200) {
         return Right(MachineModel.fromJson(response.data));
       } else {
-        return Left(Failure(response.data['message'] ?? 'Failed to get machines'));
+        return Left(
+          Failure(response.data['message'] ?? 'Failed to get machines'),
+        );
       }
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
       }
       return Left(Failure('Failed to get machines: ${e.toString()}'));
     }

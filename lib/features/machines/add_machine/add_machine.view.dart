@@ -68,7 +68,7 @@ class AddMachineView extends StatelessWidget {
                   // Machine Details Card
                   _buildCard(
                     context,
-                    title: LanguageService.get("machine_details"),
+                    title: LanguageService.get("machine_overview_details"),
                     icon: Icons.precision_manufacturing,
                     children: [
                       Row(

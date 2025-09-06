@@ -40,6 +40,9 @@ abstract class Routes {
   /// Route for the My Customers screen.
   static const String myCustomers = '/myCustomers';
 
+  /// Route for the Machine Supplier screen.
+  static const String machineSupplier = '/machineSupplier';
+
   /// Route for the Create New Customer screen.
   static const String createNewCustomer = '/createNewCustomer';
 
@@ -183,6 +186,8 @@ abstract class Routes {
 
   /// Route for the Machine Records screen.
   static const String machineRecords = '/machineRecords';
+  static const String machineOverview = '/machine-overview';
+  static const String machineOverviewDetails = '/machine-overview-details';
   static const String machineDetails = '/machineDetails';
   static const String addNewMachineModel = '/addNewMachineModel';
   static const String customerEditDetailsView = '/customerEditDetailsView';

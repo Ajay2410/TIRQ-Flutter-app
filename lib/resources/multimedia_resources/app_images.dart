@@ -10,11 +10,15 @@ abstract class AppImages {
   static const String cornerCircle = "assets/images/corner-circle.svg";
   static const String back = "assets/images/back.png";
 
-  static const String contactBookActive = "assets/images/contact-book-active1.png";
-  static const String contactBookInactive = "assets/images/contact-book-inactive1.png";
+  static const String contactBookActive =
+      "assets/images/contact-book-active1.png";
+  static const String contactBookInactive =
+      "assets/images/contact-book-inactive1.png";
 
-  static const String conversationActive = "assets/images/conversation-active1.png";
-  static const String conversationInactive = "assets/images/conversation-inactive1.png";
+  static const String conversationActive =
+      "assets/images/conversation-active1.png";
+  static const String conversationInactive =
+      "assets/images/conversation-inactive1.png";
 
   static const String homeActive = "assets/images/home-active1.png";
   static const String homeInactive = "assets/images/home-inactive1.png";
@@ -37,10 +41,12 @@ abstract class AppImages {
   static const String machineSuppliers = "assets/icons/machine_suppliers.png";
   static const String glassFlowSystem = "assets/icons/glass_flow_system.png";
   static const String piInvoice = "assets/icons/pi_invoice.png";
-  static const String analyticsDashboard = "assets/icons/analytics_dashboard.png";
+  static const String analyticsDashboard =
+      "assets/icons/analytics_dashboard.png";
   static const String machineRecords = "assets/icons/machine_records.png";
   static const String feedbackRating = "assets/icons/feedback_rating.png";
-  static const String installationTracker = "assets/icons/installation_tracker.png";
+  static const String installationTracker =
+      "assets/icons/installation_tracker.png";
   static const String feedbackSurvey = "assets/icons/feedback_survay.png";
 
   // My Customers Screen Icons
@@ -60,6 +66,8 @@ abstract class AppImages {
   static const String machineType = "assets/icons/machine_type.png";
   static const String height = "assets/icons/height.png";
   static const String width = "assets/icons/width.png";
+  static const String thickness = "assets/icons/thickness.png";
+  static const String maxSpeed = "assets/icons/max_speed.png";
   static const String powerConsumption = "assets/icons/power_consumption.png";
   static const String purchaseDate = "assets/icons/purchase_date.png";
   static const String installationDate = "assets/icons/installation_date.png";
@@ -92,14 +100,23 @@ abstract class AppImages {
   }
 
   // SVG Flag widget for network loading
-  static Widget getSvgFlag(String flagPath, {double? width, double? height, BoxFit fit = BoxFit.cover}) {
+  static Widget getSvgFlag(
+    String flagPath, {
+    double? width,
+    double? height,
+    BoxFit fit = BoxFit.cover,
+  }) {
     return SvgPicture.network(
       getFlagUrl(flagPath),
       width: width,
       height: height,
       fit: fit,
-      placeholderBuilder: (context) => Image.asset(flag, width: width, height: height, fit: fit),
-      errorBuilder: (context, error, stackTrace) => Image.asset(flag, width: width, height: height, fit: fit),
+      placeholderBuilder:
+          (context) =>
+              Image.asset(flag, width: width, height: height, fit: fit),
+      errorBuilder:
+          (context, error, stackTrace) =>
+              Image.asset(flag, width: width, height: height, fit: fit),
     );
   }
 }

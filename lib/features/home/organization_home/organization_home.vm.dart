@@ -116,6 +116,10 @@ class OrganizationHomeViewModel extends ReactiveViewModel {
     _navigationService.navigateTo(Routes.machineRecords);
   }
 
+  void navigateToMachineOverview() async {
+    _navigationService.navigateTo(Routes.machineOverview);
+  }
+
   // Add these new route navigation methods for the quick action menu
   void showQuickActionMenu(BuildContext context) {
     // This method is called by the floating action button

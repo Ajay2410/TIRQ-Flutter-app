@@ -70,4 +70,7 @@ abstract class ApiEndpoints {
   static const String deleteCustomer = 'customers/delete-customer';
   static const String searchCustomers = 'customers/search-customers';
   static const String removeMachine = 'customers/remove-machine';
+  static const String getMachineSupplier = 'machinesupplier/getMachineSupplier';
+  static const String getMachineOverview = 'machinesupplier/getMachineOverview';
+  static const String getMachineById = 'machines/getById';
 }
