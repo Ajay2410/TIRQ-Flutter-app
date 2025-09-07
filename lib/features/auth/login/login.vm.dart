@@ -519,7 +519,6 @@
         );
       } catch (e) {
         AppLogger.error('Password reset OTP error: $e');
-        Fluttertoast.showToast(msg: 'Failed to send OTP. Please try again.');
       } finally {
         _isBusyForgotPassword = false;
         notifyListeners();
@@ -767,7 +766,6 @@
         }
       } catch (e) {
         AppLogger.error('Send OTP for login error: $e');
-        Fluttertoast.showToast(msg: 'Failed to send OTP. Please try again.');
       } finally {
         _isBusyForgotPassword = false;
         notifyListeners();
@@ -782,7 +780,6 @@
       final response = await login();
       response.fold(
             (failure) {
-          Fluttertoast.showToast(msg: failure.message);
         },
             (user) async {
           await saveUser(user);
@@ -846,11 +843,9 @@
           Fluttertoast.showToast(msg: 'OTP sent successfully');
           notifyListeners();
         } else {
-          Fluttertoast.showToast(msg: 'Failed to send OTP');
         }
       } catch (e) {
         AppLogger.error('Send OTP Error: $e');
-        Fluttertoast.showToast(msg: 'Failed to send OTP');
       }
 
       setBusy(false);

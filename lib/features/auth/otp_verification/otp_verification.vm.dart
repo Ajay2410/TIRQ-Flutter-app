@@ -33,10 +33,7 @@ class OtpVerificationViewModel extends ReactiveViewModel {
 
   void _updateFormValidity() {
     // Check if OTP is 6 digits (assuming 6-digit OTP)
-    final isValid =
-        email.isNotEmpty &&
-        otpController.text.isNotEmpty &&
-        otpController.text.length == 6;
+    final isValid = email.isNotEmpty && otpController.text.isNotEmpty && otpController.text.length == 6;
 
     if (_isFormValid != isValid) {
       _isFormValid = isValid;
@@ -58,14 +55,10 @@ class OtpVerificationViewModel extends ReactiveViewModel {
 
     response.fold(
       (exception) {
-        Fluttertoast.showToast(msg: exception.message.toString());
       },
       (user) async {
         // User is already saved in auth service, just navigate
-        await _navigationService.clearStackAndShow(
-          Routes.stage,
-          arguments: StageViewAttributes(selectedBottomNavIndex: 2),
-        );
+        await _navigationService.clearStackAndShow(Routes.stage, arguments: StageViewAttributes(selectedBottomNavIndex: 2));
       },
     );
     setBusy(false);
