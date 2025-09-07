@@ -2,43 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/services/language.service.dart';
-import 'supplier_machine_details/supplier_machine_details.view.dart';
+import 'package:manager/core/models/machine_supplier_details_model.dart';
+import 'package:stacked/stacked.dart';
+import 'package:shimmer/shimmer.dart';
+import 'machine_supplier_details.vm.dart';
 
 class MachineSupplierDetailsView extends StatefulWidget {
-  const MachineSupplierDetailsView({super.key});
+  final String customerId;
+
+  const MachineSupplierDetailsView({super.key, required this.customerId});
 
   @override
-  State<MachineSupplierDetailsView> createState() =>
-      _MachineSupplierDetailsViewState();
+  State<MachineSupplierDetailsView> createState() => _MachineSupplierDetailsViewState();
 }
 
-class _MachineSupplierDetailsViewState
-    extends State<MachineSupplierDetailsView> {
-  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
-      GlobalKey<ScaffoldMessengerState>();
-
-  // Dummy data
-  final String _customerName = 'Machine Supplier 1';
-  final String _contactPerson = 'John Smith';
-  final String _email = 'john.smith@example.com';
-  final String _designation = 'Technical Manager';
-  final String _phoneNumber = '+1 234 567 8900';
-  final List<Map<String, dynamic>> _machines = [
-    {
-      'name': 'Machine 1',
-      'modelNumber': '4777',
-      'machineType': 'Semi Automatic',
-      'warrantyStatus': 'Active',
-      'country': 'USA',
-    },
-    {
-      'name': 'Machine 2',
-      'modelNumber': '4778',
-      'machineType': 'Fully Automatic',
-      'warrantyStatus': 'Inactive',
-      'country': 'Germany',
-    },
-  ];
+class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView> {
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -47,78 +26,79 @@ class _MachineSupplierDetailsViewState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildAppBar(context),
-            Expanded(
-              child: Container(
-                color: AppColors.white,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: _buildCustomerContactCard(),
-                    ),
-                    Expanded(
-                      child: Container(
-                        color: AppColors.scaffoldBackground,
-                        padding: const EdgeInsets.all(12),
-                        child: SingleChildScrollView(
-                          child: _buildMachineList(context),
+    return ViewModelBuilder<MachineSupplierDetailsViewModel>.reactive(
+      viewModelBuilder: () => MachineSupplierDetailsViewModel(),
+      onViewModelReady: (MachineSupplierDetailsViewModel model) => model.init(widget.customerId),
+      disposeViewModel: false,
+      builder: (BuildContext context, MachineSupplierDetailsViewModel model, Widget? child) {
+        return Scaffold(
+          key: _scaffoldKey,
+          body: SafeArea(
+            child: Column(
+              children: [
+                _buildAppBar(context, model),
+                Expanded(
+                  child: Container(
+                    color: AppColors.white,
+                    child: Column(
+                      children: [
+                        Padding(padding: const EdgeInsets.all(12), child: _buildCustomerContactCard(model)),
+                        Expanded(
+                          child: Container(
+                            color: AppColors.scaffoldBackground,
+                            padding: const EdgeInsets.all(12),
+                            child: _buildMachineList(context, model),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(BuildContext context, MachineSupplierDetailsViewModel model) {
     return AppBar(
       elevation: 0,
       leading: IconButton(
-        icon: Image.asset(
-          AppImages.back,
-          width: 24,
-          height: 24,
-          color: AppColors.white,
-        ),
+        icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
         onPressed: () => Navigator.of(context).pop(),
       ),
       titleSpacing: 0,
       title: Text(
-        _customerName,
-        style: const TextStyle(
-          color: AppColors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
+        model.customerDetails?.customerName ?? 'Loading...',
+        style: const TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.bold),
       ),
     );
   }
 
-  Widget _buildCustomerContactCard() {
+  Widget _buildCustomerContactCard(MachineSupplierDetailsViewModel model) {
+    final customer = model.customerDetails;
+
+    if (model.isLoading) {
+      return _buildShimmerContactCard();
+    }
+
+    if (model.hasError) {
+      return _buildErrorState(model);
+    }
+
+    if (customer == null) {
+      return _buildEmptyState();
+    }
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.colorF0F2FC,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2))],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,9 +107,9 @@ class _MachineSupplierDetailsViewState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildContactInfoRow('contact_person'.lang, _contactPerson),
+                _buildContactInfoRow('contact_person'.lang, customer.contactPerson ?? 'N/A'),
                 const SizedBox(height: 12),
-                _buildContactInfoRow('email'.lang, _email),
+                _buildContactInfoRow('email'.lang, customer.email ?? 'N/A'),
               ],
             ),
           ),
@@ -138,9 +118,9 @@ class _MachineSupplierDetailsViewState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildContactInfoRow('designation'.lang, _designation),
+                _buildContactInfoRow('designation'.lang, customer.designation ?? 'N/A'),
                 const SizedBox(height: 12),
-                _buildContactInfoRow('phone'.lang, _phoneNumber),
+                _buildContactInfoRow('phone'.lang, customer.phoneNumber ?? 'N/A'),
               ],
             ),
           ),
@@ -153,75 +133,50 @@ class _MachineSupplierDetailsViewState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+        Text(label, style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
         const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text(value, style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
       ],
     );
   }
 
-  Widget _buildMachineList(BuildContext context) {
-    if (_machines.isEmpty) {
+  Widget _buildMachineList(BuildContext context, MachineSupplierDetailsViewModel model) {
+    if (model.isLoading) {
+      return _buildShimmerMachineList();
+    }
+
+    if (model.hasError) {
+      return _buildErrorState(model);
+    }
+
+    final machines = model.customerDetails?.machines ?? [];
+
+    if (machines.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              AppImages.myCustomers,
-              width: 80,
-              height: 80,
-              color: AppColors.gray,
-            ),
+            Image.asset(AppImages.myCustomers, width: 80, height: 80, color: AppColors.gray),
             const SizedBox(height: 20),
-            Text(
-              'no_machines_assigned'.lang,
-              style: TextStyle(
-                fontSize: 18,
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            Text('no_machines_assigned'.lang, style: TextStyle(fontSize: 18, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
             const SizedBox(height: 10),
-            Text(
-              'this_customer_has_no_machines'.lang,
-              style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
-              textAlign: TextAlign.center,
-            ),
+            Text('this_customer_has_no_machines'.lang, style: TextStyle(fontSize: 14, color: AppColors.textSecondary), textAlign: TextAlign.center),
           ],
         ),
       );
     }
 
-    return Column(
-      children:
-          _machines
-              .map((machineData) => _buildMachineCard(context, machineData))
-              .toList(),
+    return SingleChildScrollView(
+      child: Column(children: machines.map((machineElement) => _buildMachineCard(context, machineElement, model)).toList()),
     );
   }
 
-  Widget _buildMachineCard(
-    BuildContext context,
-    Map<String, dynamic> machineData,
-  ) {
-    final machineName = machineData['name'] ?? 'Unknown Machine';
-    final modelNumber = machineData['modelNumber'] ?? 'N/A';
-    final machineType = machineData['machineType'] ?? 'Unknown Type';
-    final isInWarranty = machineData['warrantyStatus'] == 'Active';
+  Widget _buildMachineCard(BuildContext context, MachineElement machineElement, MachineSupplierDetailsViewModel model) {
+    final machine = machineElement.machine;
+    final machineName = machine?.machineName ?? 'Unknown Machine';
+    final modelNumber = machine?.modelNumber ?? 'N/A';
+    final machineType = machine?.machineType ?? 'Unknown Type';
+    final isInWarranty = machineElement.warrantyStatus == 'Active';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -229,90 +184,45 @@ class _MachineSupplierDetailsViewState
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2))],
       ),
       child: Column(
         children: [
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 16,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.colorF0F2FC,
-                  borderRadius: BorderRadius.circular(16),
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                decoration: BoxDecoration(color: AppColors.colorF0F2FC, borderRadius: BorderRadius.circular(16)),
                 child: Text(
-                  machineName.substring(0, 2).toUpperCase() ?? 'NA',
-                  style: TextStyle(
-                    color: AppColors.colorBlue,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  machineName.length >= 2 ? machineName.substring(0, 2).toUpperCase() : 'NA',
+                  style: TextStyle(color: AppColors.colorBlue, fontSize: 14, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  machineName,
-                  style: TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              Expanded(child: Text(machineName, style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold))),
 
               Container(
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  color:
-                      isInWarranty
-                          ? AppColors.success.withValues(alpha: 0.15)
-                          : AppColors.redBack.withValues(alpha: 0.2),
+                  color: isInWarranty ? AppColors.success.withValues(alpha: 0.15) : AppColors.redBack.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
                   isInWarranty ? 'in_warranty'.lang : 'out_of_warranty'.lang,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: isInWarranty ? AppColors.success : AppColors.redBack,
-                  ),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: isInWarranty ? AppColors.success : AppColors.redBack),
                 ),
               ),
               const SizedBox(width: 8),
               GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const SupplierMachineDetailsView(),
-                    ),
-                  );
-                },
+                onTap: () => model.onMachineTap(context, machineElement),
                 child: Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: AppColors.softGray,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: AppColors.textGray.withValues(alpha: 0.1),
-                    ),
+                    border: Border.all(color: AppColors.textGray.withValues(alpha: 0.1)),
                   ),
-                  child: Image.asset(
-                    AppImages.arrowRight,
-                    width: 16,
-                    height: 16,
-                    color: AppColors.darkGray,
-                  ),
+                  child: Image.asset(AppImages.arrowRight, width: 16, height: 16, color: AppColors.darkGray),
                 ),
               ),
             ],
@@ -322,13 +232,9 @@ class _MachineSupplierDetailsViewState
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(
-                child: _buildMachineInfoRow('model_number'.lang, modelNumber),
-              ),
+              Expanded(child: _buildMachineInfoRow('model_number'.lang, modelNumber)),
               const SizedBox(width: 24),
-              Expanded(
-                child: _buildMachineInfoRow('machine_type'.lang, machineType),
-              ),
+              Expanded(child: _buildMachineInfoRow('machine_type'.lang, machineType)),
             ],
           ),
         ],
@@ -340,24 +246,180 @@ class _MachineSupplierDetailsViewState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+        Text(label, style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
         const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text(value, style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
       ],
+    );
+  }
+
+  Widget _buildShimmerContactCard() {
+    return Shimmer.fromColors(
+      baseColor: AppColors.lightGray,
+      highlightColor: AppColors.white,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.colorF0F2FC,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2))],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Contact Person label
+                  Container(height: 12, width: 80, color: AppColors.lightGray),
+                  const SizedBox(height: 4),
+                  // Contact Person value
+                  Container(height: 14, width: 120, color: AppColors.lightGray),
+                  const SizedBox(height: 12),
+                  // Email label
+                  Container(height: 12, width: 40, color: AppColors.lightGray),
+                  const SizedBox(height: 4),
+                  // Email value
+                  Container(height: 14, width: 150, color: AppColors.lightGray),
+                ],
+              ),
+            ),
+            const SizedBox(width: 24),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Designation label
+                  Container(height: 12, width: 70, color: AppColors.lightGray),
+                  const SizedBox(height: 4),
+                  // Designation value
+                  Container(height: 14, width: 100, color: AppColors.lightGray),
+                  const SizedBox(height: 12),
+                  // Phone label
+                  Container(height: 12, width: 35, color: AppColors.lightGray),
+                  const SizedBox(height: 4),
+                  // Phone value
+                  Container(height: 14, width: 130, color: AppColors.lightGray),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShimmerMachineList() {
+    return Column(children: List.generate(3, (index) => _buildShimmerMachineCard()));
+  }
+
+  Widget _buildShimmerMachineCard() {
+    return Shimmer.fromColors(
+      baseColor: AppColors.lightGray,
+      highlightColor: AppColors.white,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2))],
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(16)),
+                  child: Container(height: 14, width: 20, color: AppColors.lightGray),
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: Container(height: 16, color: AppColors.lightGray)),
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(6)),
+                  child: Container(height: 12, width: 50, color: AppColors.lightGray),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(10)),
+                  child: Container(height: 16, width: 16, color: AppColors.lightGray),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Container(height: 1, color: AppColors.lightGray),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(height: 12, width: 80, color: AppColors.lightGray),
+                      const SizedBox(height: 4),
+                      Container(height: 12, width: 100, color: AppColors.lightGray),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 24),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(height: 12, width: 70, color: AppColors.lightGray),
+                      const SizedBox(height: 4),
+                      Container(height: 12, width: 120, color: AppColors.lightGray),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(MachineSupplierDetailsViewModel model) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(AppImages.alert, width: 80, height: 80, color: AppColors.redBack),
+          const SizedBox(height: 20),
+          Text('Error loading customer details', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+          const SizedBox(height: 10),
+          Text(model.errorMessage, style: TextStyle(fontSize: 14, color: AppColors.textSecondary), textAlign: TextAlign.center),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: model.refreshCustomerDetails,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
+            child: Text('Retry'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(AppImages.myCustomers, width: 80, height: 80, color: AppColors.gray),
+          const SizedBox(height: 20),
+          Text('No customer details found', style: TextStyle(fontSize: 18, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
+        ],
+      ),
     );
   }
 }

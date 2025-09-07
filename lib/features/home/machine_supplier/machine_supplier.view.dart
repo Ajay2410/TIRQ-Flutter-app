@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/services/language.service.dart';
+import 'package:manager/core/models/machine_supplier_model.dart';
 import 'package:stacked/stacked.dart';
 import 'package:shimmer/shimmer.dart';
 import 'machine_supplier.vm.dart';
@@ -13,8 +14,7 @@ class MachineSupplierView extends StatefulWidget {
   State<MachineSupplierView> createState() => _MachineSupplierViewState();
 }
 
-class _MachineSupplierViewState extends State<MachineSupplierView>
-    with TickerProviderStateMixin {
+class _MachineSupplierViewState extends State<MachineSupplierView> with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   late AnimationController _animationController;
@@ -24,16 +24,11 @@ class _MachineSupplierViewState extends State<MachineSupplierView>
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
+    _animationController = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0.0, -0.5),
       end: const Offset(0.0, 0.0),
-    ).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
     _searchController.addListener(() {
       if (mounted) {
@@ -75,28 +70,13 @@ class _MachineSupplierViewState extends State<MachineSupplierView>
       viewModelBuilder: () => MachineSupplierViewModel(),
       onViewModelReady: (MachineSupplierViewModel model) => model.init(),
       disposeViewModel: false,
-      builder: (
-        BuildContext context,
-        MachineSupplierViewModel model,
-        Widget? child,
-      ) {
+      builder: (BuildContext context, MachineSupplierViewModel model, Widget? child) {
         return Scaffold(
           appBar: _buildAppBar(context, model),
           body: Column(
             children: [
-              SlideTransition(
-                position: _slideAnimation,
-                child:
-                    _isSearchVisible
-                        ? _buildSearchBar(context, model)
-                        : const SizedBox.shrink(),
-              ),
-              Expanded(
-                child: Container(
-                  color: AppColors.scaffoldBackground,
-                  child: _buildMachinesList(context, model),
-                ),
-              ),
+              SlideTransition(position: _slideAnimation, child: _isSearchVisible ? _buildSearchBar(context, model) : const SizedBox.shrink()),
+              Expanded(child: Container(color: AppColors.scaffoldBackground, child: _buildMachinesList(context, model))),
             ],
           ),
         );
@@ -104,41 +84,16 @@ class _MachineSupplierViewState extends State<MachineSupplierView>
     );
   }
 
-  PreferredSizeWidget _buildAppBar(
-    BuildContext context,
-    MachineSupplierViewModel model,
-  ) {
+  PreferredSizeWidget _buildAppBar(BuildContext context, MachineSupplierViewModel model) {
     return AppBar(
       elevation: 0,
       leading: IconButton(
-        icon: Image.asset(
-          AppImages.back,
-          width: 24,
-          height: 24,
-          color: AppColors.white,
-        ),
+        icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
         onPressed: () => Navigator.of(context).pop(),
       ),
-      title: Text(
-        LanguageService.get('machine_suppliers'),
-        style: TextStyle(
-          color: AppColors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+      title: Text(LanguageService.get('machine_supplier'), style: TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.w600)),
       titleSpacing: 0,
-      actions: [
-        IconButton(
-          icon: Image.asset(
-            AppImages.search,
-            width: 24,
-            height: 24,
-            color: AppColors.white,
-          ),
-          onPressed: _toggleSearch,
-        ),
-      ],
+      actions: [IconButton(icon: Image.asset(AppImages.search, width: 24, height: 24, color: AppColors.white), onPressed: _toggleSearch)],
     );
   }
 
@@ -151,15 +106,7 @@ class _MachineSupplierViewState extends State<MachineSupplierView>
         focusNode: _searchFocusNode,
         decoration: InputDecoration(
           hintText: LanguageService.get('search_machines'),
-          prefixIcon: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Image.asset(
-              AppImages.search,
-              width: 20,
-              height: 20,
-              color: AppColors.gray,
-            ),
-          ),
+          prefixIcon: Padding(padding: const EdgeInsets.all(16), child: Image.asset(AppImages.search, width: 20, height: 20, color: AppColors.gray)),
           suffixIcon:
               _searchController.text.isNotEmpty
                   ? IconButton(
@@ -170,24 +117,15 @@ class _MachineSupplierViewState extends State<MachineSupplierView>
                     },
                   )
                   : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: AppColors.lightGray),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: AppColors.primary),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.lightGray)),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.primary)),
         ),
         onChanged: model.onSearchChanged,
       ),
     );
   }
 
-  Widget _buildMachinesList(
-    BuildContext context,
-    MachineSupplierViewModel model,
-  ) {
+  Widget _buildMachinesList(BuildContext context, MachineSupplierViewModel model) {
     if (model.isLoading) {
       return _buildShimmerList();
     }
@@ -225,11 +163,7 @@ class _MachineSupplierViewState extends State<MachineSupplierView>
       padding: const EdgeInsets.all(13),
       itemCount: 10,
       itemBuilder: (context, index) {
-        return Shimmer.fromColors(
-          baseColor: AppColors.lightGray,
-          highlightColor: AppColors.white,
-          child: _buildMachineCardShimmer(),
-        );
+        return Shimmer.fromColors(baseColor: AppColors.lightGray, highlightColor: AppColors.white, child: _buildMachineCardShimmer());
       },
     );
   }
@@ -239,86 +173,39 @@ class _MachineSupplierViewState extends State<MachineSupplierView>
       children: [
         Container(
           padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppColors.lightGray,
-          ),
-          child: Container(
-            height: 50,
-            width: 50,
-            decoration: BoxDecoration(
-              color: AppColors.lightGray,
-              shape: BoxShape.circle,
-            ),
-          ),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.lightGray),
+          child: Container(height: 50, width: 50, decoration: BoxDecoration(color: AppColors.lightGray, shape: BoxShape.circle)),
         ),
         AppGaps.w16,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: 16,
-                width: 120,
-                decoration: BoxDecoration(
-                  color: AppColors.lightGray,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
+              Container(height: 16, width: 120, decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4))),
               AppGaps.h5,
-              Container(
-                height: 14,
-                width: 200,
-                decoration: BoxDecoration(
-                  color: AppColors.lightGray,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
+              Container(height: 14, width: 200, decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4))),
             ],
           ),
         ),
         AppGaps.w16,
-        Container(
-          height: 20,
-          width: 60,
-          decoration: BoxDecoration(
-            color: AppColors.lightGray,
-            borderRadius: BorderRadius.circular(6),
-          ),
-        ),
+        Container(height: 20, width: 60, decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(6))),
       ],
     );
   }
 
-  Widget _buildErrorState(
-    BuildContext context,
-    MachineSupplierViewModel model,
-  ) {
+  Widget _buildErrorState(BuildContext context, MachineSupplierViewModel model) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            AppImages.alert,
-            width: 80,
-            height: 80,
-            color: AppColors.redBack,
-          ),
+          Image.asset(AppImages.alert, width: 80, height: 80, color: AppColors.redBack),
           AppGaps.h20,
           Text(
             LanguageService.get('error_loading_machines'),
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
           ),
           AppGaps.h10,
-          Text(
-            model.errorMessage,
-            style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
-            textAlign: TextAlign.center,
-          ),
+          Text(model.errorMessage, style: TextStyle(fontSize: 14, color: AppColors.textSecondary), textAlign: TextAlign.center),
           AppGaps.h20,
           ElevatedButton(
             onPressed: model.refreshMachines,
@@ -334,72 +221,46 @@ class _MachineSupplierViewState extends State<MachineSupplierView>
     );
   }
 
-  Widget _buildEmptyState(
-    BuildContext context,
-    MachineSupplierViewModel model,
-  ) {
+  Widget _buildEmptyState(BuildContext context, MachineSupplierViewModel model) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            AppImages.myCustomers,
-            width: 80,
-            height: 80,
-            color: AppColors.gray,
-          ),
+          Image.asset(AppImages.myCustomers, width: 80, height: 80, color: AppColors.gray),
           AppGaps.h20,
-          Text(
-            LanguageService.get('no_machines_found'),
-            style: TextStyle(fontSize: 18, color: AppColors.textSecondary),
-          ),
+          Text(LanguageService.get('no_machines_found'), style: TextStyle(fontSize: 18, color: AppColors.textSecondary)),
         ],
       ),
     );
   }
 
-  Widget _buildMachineCard(
-    DummyMachine machine,
-    MachineSupplierViewModel model,
-    BuildContext context,
-  ) {
-    final organization = model.getOrganizationForMachine(machine);
+  Widget _buildMachineCard(Datum datum, MachineSupplierViewModel model, BuildContext context) {
+    final customer = datum.customer;
+    final organization = model.getOrganizationForMachine(datum);
+    final firstMachine = customer?.machines?.isNotEmpty == true ? customer!.machines!.first : null;
 
     return InkWell(
-      onTap: () => model.onMachineTap(context, machine),
+      onTap: () => model.onMachineTap(context, datum),
       child: Container(
         padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
+        decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(12)),
         child: Row(
           children: [
             Stack(
               clipBehavior: Clip.none,
               children: [
                 Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.lavenderMist,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
+                  decoration: BoxDecoration(color: AppColors.lavenderMist, borderRadius: BorderRadius.circular(14)),
                   padding: EdgeInsets.all(16),
                   child: Text(
-                    machine.machineName.substring(0, 2).toUpperCase(),
-                    style: const TextStyle(
-                      color: AppColors.colorBlue,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    customer?.countryOrigin ?? "N/A",
+                    style: const TextStyle(color: AppColors.colorBlue, fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Positioned(
                   bottom: -4,
                   right: -4,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(2),
-                    child: Image.asset(AppImages.flag, height: 16, width: 16),
-                  ),
+                  child: ClipRRect(borderRadius: BorderRadius.circular(2), child: Image.asset(AppImages.flag, height: 16, width: 16)),
                 ),
               ],
             ),
@@ -411,33 +272,12 @@ class _MachineSupplierViewState extends State<MachineSupplierView>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    machine.machineName,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
-                    ),
+                    organization?.fullName ?? customer?.customerName ?? "N/A",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
                   ),
-                  AppGaps.h5,
-                  if (organization?.fullName != null) ...[
-                    Text(
-                      organization!.fullName,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    AppGaps.h3,
-                  ],
                   Text(
-                    machine.notes ?? "",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: AppColors.textSecondary,
-                    ),
+                    firstMachine?.machine?.remarks ?? customer?.contactPerson ?? "N/A",
+                    style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -452,16 +292,9 @@ class _MachineSupplierViewState extends State<MachineSupplierView>
               decoration: BoxDecoration(
                 color: AppColors.softGray,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: AppColors.textGray.withValues(alpha: 0.1),
-                ),
+                border: Border.all(color: AppColors.textGray.withValues(alpha: 0.1)),
               ),
-              child: Image.asset(
-                AppImages.arrowRight,
-                width: 16,
-                height: 16,
-                color: AppColors.darkGray,
-              ),
+              child: Image.asset(AppImages.arrowRight, width: 16, height: 16, color: AppColors.darkGray),
             ),
           ],
         ),

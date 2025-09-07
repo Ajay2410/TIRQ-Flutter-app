@@ -33,7 +33,7 @@ import '../features/employee/add_employee/add_employee.view.dart';
 import '../features/home/customers_list/customers_list.view.dart';
 import '../features/home/my_customers/machine_details/customer_details/customer_edit_details.view.dart';
 import '../features/home/my_customers/my_customers.view.dart';
-import '../features/home/my_customers/customer_details.view.dart';
+import '../features/home/my_customers/customer_details/customer_details.view.dart';
 import '../features/home/my_customers/create_customer/create_new_customer.view.dart';
 import '../features/home/machine_supplier/machine_supplier.view.dart';
 import '../core/models/customer.dart';
@@ -103,348 +103,182 @@ class AppRouter extends RouterBase {
   /// Internal mapping of views to their respective page routes.
   final Map<Type, StackedRouteFactory> _pagesMap = <Type, StackedRouteFactory>{
     LoginView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => LoginView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => LoginView(), settings: data);
     },
     RegisterView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => RegisterView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => RegisterView(), settings: data);
     },
     RegisterOrganizationView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => RegisterOrganizationView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => RegisterOrganizationView(), settings: data);
     },
     RegisterEmployeeView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => RegisterEmployeeView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => RegisterEmployeeView(), settings: data);
     },
     OtpVerificationView: (data) {
-      final OtpVerificationViewAttributes attributes =
-          data.arguments as OtpVerificationViewAttributes;
-      return MaterialPageRoute(
-        builder:
-            (BuildContext _) => OtpVerificationView(attributes: attributes),
-        settings: data,
-      );
+      final OtpVerificationViewAttributes attributes = data.arguments as OtpVerificationViewAttributes;
+      return MaterialPageRoute(builder: (BuildContext _) => OtpVerificationView(attributes: attributes), settings: data);
     },
     ScanQRView: (data) {
       final attributes = data.arguments as ScanQRViewAttributes;
-      return MaterialPageRoute(
-        builder: (BuildContext _) => ScanQRView(attributes: attributes),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => ScanQRView(attributes: attributes), settings: data);
     },
     OrganizationHomeView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => OrganizationHomeView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => OrganizationHomeView(), settings: data);
     },
     EmployeeHomeView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => EmployeeHomeView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => EmployeeHomeView(), settings: data);
     },
     CustomersListView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => CustomersListView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => CustomersListView(), settings: data);
     },
     MyCustomersView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => MyCustomersView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => MyCustomersView(), settings: data);
     },
     MachineSupplierView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => MachineSupplierView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => MachineSupplierView(), settings: data);
     },
     CustomerDetailsView: (data) {
-      return MaterialPageRoute(
-        builder:
-            (BuildContext _) =>
-                CustomerDetailsView(customer: data.arguments as Customer),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => CustomerDetailsView(customerId: (data.arguments as Customer).id!), settings: data);
     },
     TicketsListView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => TicketsListView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => TicketsListView(), settings: data);
     },
     AnalyticsView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => AnalyticsView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => AnalyticsView(), settings: data);
     },
 
     FeedbackView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => FeedbackView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => FeedbackView(), settings: data);
     },
 
     Globalactivity: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => Globalactivity(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => Globalactivity(), settings: data);
     },
 
     WarrentyTrackerView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => WarrentyTrackerView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => WarrentyTrackerView(), settings: data);
     },
 
     InstallationTrackerView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => InstallationTrackerView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => InstallationTrackerView(), settings: data);
     },
 
     PiInvoiceRecordView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => PiInvoiceRecordView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => PiInvoiceRecordView(), settings: data);
     },
 
     MachinesListView: (data) {
       return MaterialPageRoute(
         builder:
-            (BuildContext _) => MachinesListView(
-              attributes: MachinesListViewAttributes.fromJson(
-                data.queryParams.rawMap as Map<String, String>,
-              ),
-            ),
+            (BuildContext _) => MachinesListView(attributes: MachinesListViewAttributes.fromJson(data.queryParams.rawMap as Map<String, String>)),
         settings: data,
       );
     },
     ProfileView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => ProfileView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => ProfileView(), settings: data);
     },
     QRView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => QRView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => QRView(), settings: data);
     },
     UpdateOrganizationView: (data) {
       return MaterialPageRoute(
-        builder:
-            (BuildContext _) => UpdateOrganizationView(
-              attributes: data.arguments as UpdateOrganizationViewAttributes,
-            ),
+        builder: (BuildContext _) => UpdateOrganizationView(attributes: data.arguments as UpdateOrganizationViewAttributes),
         settings: data,
       );
     },
 
     EmployeeProfileView: (data) {
       return MaterialPageRoute(
-        builder:
-            (BuildContext _) => EmployeeProfileView(
-              attributes: data.arguments as EmployeeProfileViewAttributes,
-            ),
+        builder: (BuildContext _) => EmployeeProfileView(attributes: data.arguments as EmployeeProfileViewAttributes),
         settings: data,
       );
     },
 
     AddTicketView: (data) {
-      return MaterialPageRoute(
-        builder:
-            (BuildContext _) => AddTicketView(
-              attributes: data.arguments as AddTicketViewAttributes,
-            ),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => AddTicketView(attributes: data.arguments as AddTicketViewAttributes), settings: data);
     },
     TasksHomeView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => TasksHomeView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => TasksHomeView(), settings: data);
     },
     AdminManagersListView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => AdminManagersListView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => AdminManagersListView(), settings: data);
     },
     StageView: (data) {
-      return MaterialPageRoute(
-        builder:
-            (BuildContext _) =>
-                StageView(attributes: data.arguments as StageViewAttributes),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => StageView(attributes: data.arguments as StageViewAttributes), settings: data);
     },
     ApprovalView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => ApprovalView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => ApprovalView(), settings: data);
     },
     AddPartnerView: (data) {
-      return MaterialPageRoute(
-        builder:
-            (BuildContext _) => AddPartnerView(
-              attributes: data.arguments as AddPartnerViewAttributes,
-            ),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => AddPartnerView(attributes: data.arguments as AddPartnerViewAttributes), settings: data);
     },
     EmployeesListView: (data) {
       return MaterialPageRoute(
         builder:
-            (BuildContext _) => EmployeesListView(
-              attributes: EmployeeListViewAttributes.fromJson(
-                data.queryParams.rawMap as Map<String, String>,
-              ),
-            ),
+            (BuildContext _) => EmployeesListView(attributes: EmployeeListViewAttributes.fromJson(data.queryParams.rawMap as Map<String, String>)),
         settings: data,
       );
     },
     AddEmployeeView: (data) {
-      return MaterialPageRoute(
-        builder:
-            (BuildContext _) => AddEmployeeView(
-              attributes: data.arguments as AddEmployeeViewAttributes,
-            ),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => AddEmployeeView(attributes: data.arguments as AddEmployeeViewAttributes), settings: data);
     },
     ChatView: (data) {
-      return MaterialPageRoute(
-        builder:
-            (BuildContext _) =>
-                ChatView(attributes: data.arguments as ChatViewAttributes),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => ChatView(attributes: data.arguments as ChatViewAttributes), settings: data);
     },
     AddMachineView: (data) {
       return MaterialPageRoute(
-        builder:
-            (BuildContext _) => AddMachineView(
-              attributes: AddMachineViewAttributes.fromMap(
-                data.queryParams.rawMap as Map<String, String>,
-              ),
-            ),
+        builder: (BuildContext _) => AddMachineView(attributes: AddMachineViewAttributes.fromMap(data.queryParams.rawMap as Map<String, String>)),
         settings: data,
       );
     },
     SearchView: (data) {
-      return MaterialPageRoute(
-        builder:
-            (BuildContext _) =>
-                SearchView(attributes: data.arguments as SearchViewAttributes),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => SearchView(attributes: data.arguments as SearchViewAttributes), settings: data);
     },
     SearchOrganizationView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => const SearchOrganizationView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => const SearchOrganizationView(), settings: data);
     },
     ChatListView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => ChatListView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => ChatListView(), settings: data);
     },
     PermissionsView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => PermissionsView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => PermissionsView(), settings: data);
     },
     CreateGroupChat: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => CreateGroupChat(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => CreateGroupChat(), settings: data);
     },
     ArchivedChatList: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => ArchivedChatList(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => ArchivedChatList(), settings: data);
     },
     ImageViewerView: (data) {
-      return MaterialPageRoute(
-        builder:
-            (BuildContext _) =>
-                ImageViewerView(imageUrl: data.arguments as String),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => ImageViewerView(imageUrl: data.arguments as String), settings: data);
     },
     EmployeeDetailsView: (data) {
       return MaterialPageRoute(
         builder:
-            (BuildContext _) => EmployeeDetailsView(
-              attributes: EmployeeDetailsViewAttributes.fromJson(
-                data.queryParams.rawMap as Map<String, String>,
-              ),
-            ),
+            (BuildContext _) =>
+                EmployeeDetailsView(attributes: EmployeeDetailsViewAttributes.fromJson(data.queryParams.rawMap as Map<String, String>)),
         settings: data,
       );
     },
 
     RoleEmployeeListView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => RoleEmployeeListView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => RoleEmployeeListView(), settings: data);
     },
 
     DepartmentHierarchyView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => DepartmentHierarchyView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => DepartmentHierarchyView(), settings: data);
     },
 
     IntroductionView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => IntroductionView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => IntroductionView(), settings: data);
     },
 
     AuthSelectionView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => AuthSelectionView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => AuthSelectionView(), settings: data);
     },
 
     GeneralSettingView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => GeneralSettingView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => GeneralSettingView(), settings: data);
     },
 
     // TODO: Add the following page mappings when the corresponding views are created:
@@ -589,36 +423,20 @@ class AppRouter extends RouterBase {
     //   );
     // },
     MachineRecordsView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => MachineRecordsView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => MachineRecordsView(), settings: data);
     },
     AddNewMachineModelView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => AddNewMachineModelView(),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => AddNewMachineModelView(), settings: data);
     },
     MachineDetailsView: (data) {
-      return MaterialPageRoute(
-        builder:
-            (BuildContext _) =>
-                MachineDetailsView(machine: data.arguments as Datum),
-        settings: data,
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => MachineDetailsView(machine: data.arguments as Datum), settings: data);
     },
     MachineOverviewView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => MachineOverviewView(),
-      );
+      return MaterialPageRoute(builder: (BuildContext _) => MachineOverviewView());
     },
     MachineOverviewDetailsView: (data) {
       return MaterialPageRoute(
-        builder:
-            (BuildContext _) => MachineOverviewDetailsView(
-              machine: data.arguments as MachineOverviewList?,
-            ),
+        builder: (BuildContext _) => MachineOverviewDetailsView(machine: data.arguments as MachineOverviewList?),
         settings: data,
       );
     },

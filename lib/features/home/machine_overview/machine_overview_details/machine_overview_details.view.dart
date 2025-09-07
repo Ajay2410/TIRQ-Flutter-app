@@ -10,6 +10,8 @@ import 'package:manager/core/locator.dart';
 import 'package:stacked/stacked.dart';
 import 'package:manager/features/home/machine_overview/machine_overview_details/machine_overview_details.vm.dart';
 import 'package:manager/core/models/machine_overview_model.dart';
+import 'package:manager/services/dialogs.service.dart';
+import 'package:manager/widgets/dialogs/create_ticket/create_ticket_dialog.view.dart';
 
 class MachineOverviewDetailsView extends StatefulWidget {
   final MachineOverviewList? machine;
@@ -22,6 +24,7 @@ class MachineOverviewDetailsView extends StatefulWidget {
 
 class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView> {
   final _navigationService = locator<NavigationService>();
+  final _dialogService = locator<DialogService>();
   late TextEditingController _remarkController;
   late TextEditingController _notesController;
 
@@ -44,26 +47,35 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
     return ViewModelBuilder<MachineOverviewDetailsViewModel>.reactive(
       viewModelBuilder: () => MachineOverviewDetailsViewModel()..init(widget.machine?.machineId ?? ''),
       builder: (context, viewModel, child) {
-        return Scaffold(
-          body: SafeArea(
-            child: Column(
-              children: [
-                _buildAppBar(context, viewModel),
-                Expanded(
-                  child: Container(
-                    color: AppColors.white,
-                    child:
-                        viewModel.isLoading
-                            ? _buildLoadingState()
-                            : viewModel.hasError
-                            ? _buildErrorState(viewModel)
-                            : SingleChildScrollView(padding: const EdgeInsets.all(16), child: _buildMachineDetails(viewModel)),
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (!didPop) {
+              // Return the changes flag from the view model
+              Navigator.of(context).pop(viewModel.hasChanges);
+            }
+          },
+          child: Scaffold(
+            body: SafeArea(
+              child: Column(
+                children: [
+                  _buildAppBar(context, viewModel),
+                  Expanded(
+                    child: Container(
+                      color: AppColors.white,
+                      child:
+                          viewModel.isLoading
+                              ? _buildLoadingState()
+                              : viewModel.hasError
+                              ? _buildErrorState(viewModel)
+                              : SingleChildScrollView(padding: const EdgeInsets.all(16), child: _buildMachineDetails(viewModel)),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+            floatingActionButton: _buildFloatingActionButton(),
           ),
-          floatingActionButton: _buildFloatingActionButton(),
         );
       },
     );
@@ -73,7 +85,24 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
     return Builder(
       builder:
           (context) => FloatingActionButton.extended(
-            onPressed: () async {},
+            onPressed: () async {
+              // await _dialogService.showCustomDialog(
+              //   variant: DialogType.createTicket,
+              //   data: CreateTicketDialogAttributes(
+              //     onSubmit: (problem, errorCode, additionalNotes, attachments) {
+              //       // Handle ticket submission
+              //       print('Problem: $problem');
+              //       print('Error Code: $errorCode');
+              //       print('Additional Notes: $additionalNotes');
+              //       print('Attachments: ${attachments.length} files');
+              //       // TODO: Implement actual ticket creation logic
+              //     },
+              //     onCancel: () {
+              //       print('Ticket creation cancelled');
+              //     },
+              //   ),
+              // );
+            },
             backgroundColor: AppColors.primary,
             foregroundColor: AppColors.white,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),

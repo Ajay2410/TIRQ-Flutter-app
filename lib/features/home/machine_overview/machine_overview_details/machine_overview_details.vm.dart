@@ -12,6 +12,7 @@ class MachineOverviewDetailsViewModel extends BaseViewModel {
   bool _hasError = false;
   String _errorMessage = '';
   String? _machineId;
+  bool _hasChanges = false;
 
   MachineOverviewDetailsModel? get machineDetails => _machineDetails;
 
@@ -21,6 +22,7 @@ class MachineOverviewDetailsViewModel extends BaseViewModel {
   bool get hasError => _hasError;
 
   String get errorMessage => _errorMessage;
+  bool get hasChanges => _hasChanges;
 
   void init(String machineId) {
     _machineId = machineId;
@@ -35,7 +37,9 @@ class MachineOverviewDetailsViewModel extends BaseViewModel {
     _errorMessage = '';
 
     try {
-      final response = await _apiService.get(url: '${ApiEndpoints.getMachineById}/$_machineId');
+      final response = await _apiService.get(
+        url: '${ApiEndpoints.getMachineById}/$_machineId',
+      );
 
       if (response.statusCode == 200) {
         _machineDetails = MachineOverviewDetailsModel.fromJson(response.data);
@@ -60,7 +64,14 @@ class MachineOverviewDetailsViewModel extends BaseViewModel {
     await _loadMachineDetails();
   }
 
-  bool get hasProcessingDimensions => _machineDetails?.processingDimensions != null;
+  bool get hasProcessingDimensions =>
+      _machineDetails?.processingDimensions != null;
 
-  ProcessingDimensions? get processingDimensions => _machineDetails?.processingDimensions;
+  ProcessingDimensions? get processingDimensions =>
+      _machineDetails?.processingDimensions;
+
+  void markAsChanged() {
+    _hasChanges = true;
+    notifyListeners();
+  }
 }

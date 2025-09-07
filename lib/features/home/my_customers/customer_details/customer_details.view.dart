@@ -10,11 +10,14 @@ import 'package:manager/core/locator.dart';
 import 'package:manager/features/home/my_customers/machine_details/customer_machine_details.view.dart';
 import 'package:manager/features/home/my_customers/machine_details/customer_details/customer_edit_details.view.dart';
 import 'package:manager/features/home/my_customers/create_customer/create_new_customer.view.dart';
+import 'package:stacked/stacked.dart';
+import 'package:shimmer/shimmer.dart';
+import 'customer_details.vm.dart';
 
 class CustomerDetailsView extends StatefulWidget {
-  final Customer customer;
+  final String customerId;
 
-  const CustomerDetailsView({super.key, required this.customer});
+  const CustomerDetailsView({super.key, required this.customerId});
 
   @override
   State<CustomerDetailsView> createState() => _CustomerDetailsViewState();
@@ -22,29 +25,25 @@ class CustomerDetailsView extends StatefulWidget {
 
 class _CustomerDetailsViewState extends State<CustomerDetailsView> {
   bool _isDeleting = false;
-  late Customer _currentCustomer;
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
   final CustomerService _customerService = locator<CustomerService>();
 
   @override
   void initState() {
     super.initState();
-    _currentCustomer = widget.customer;
   }
 
-  void _refreshCustomerData(Customer updatedCustomer) {
-    setState(() {
-      _currentCustomer = updatedCustomer;
-    });
-  }
+  void _navigateToEditCustomer(CustomerDetailsViewModel model) async {
+    final customer = model.customer;
+    if (customer?.id == null) return;
 
-  void _navigateToEditCustomer() async {
     final result = await Navigator.of(
       context,
-    ).push(MaterialPageRoute(builder: (context) => CreateNewCustomerView(isEditMode: true, customerId: _currentCustomer.id)));
+    ).push(MaterialPageRoute(builder: (context) => CreateNewCustomerView(isEditMode: true, customerId: customer!.id!)));
 
     if (result != null && result is Customer) {
-      _refreshCustomerData(result);
+      model.refreshCustomerDetails();
+      model.markAsChanged();
 
       if (mounted) {
         _scaffoldKey.currentState?.showSnackBar(
@@ -56,45 +55,63 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    return AbsorbPointer(
-      absorbing: _isDeleting,
-      child: Scaffold(
-        key: _scaffoldKey,
-        body: Stack(
-          children: [
-            SafeArea(
-              child: Column(
+    return ViewModelBuilder<CustomerDetailsViewModel>.reactive(
+      viewModelBuilder: () => CustomerDetailsViewModel(),
+      onViewModelReady: (CustomerDetailsViewModel model) => model.init(widget.customerId),
+      disposeViewModel: false,
+      builder: (BuildContext context, CustomerDetailsViewModel model, Widget? child) {
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (!didPop) {
+              // Return the changes flag when navigating back
+              Navigator.of(context).pop(model.hasChanges);
+            }
+          },
+          child: AbsorbPointer(
+            absorbing: _isDeleting,
+            child: Scaffold(
+              key: _scaffoldKey,
+              body: Stack(
                 children: [
-                  _buildAppBar(context),
-                  Expanded(
-                    child: Container(
-                      color: AppColors.white,
-                      child: Column(
-                        children: [
-                          Padding(padding: const EdgeInsets.all(12), child: _buildCustomerContactCard()),
-                          Expanded(
-                            child: Container(
-                              color: AppColors.scaffoldBackground,
-                              padding: const EdgeInsets.all(12),
-                              child: SingleChildScrollView(child: _buildMachineList(context)),
+                  SafeArea(
+                    child: Column(
+                      children: [
+                        _buildAppBar(context, model),
+                        Expanded(
+                          child: Container(
+                            color: AppColors.white,
+                            child: Column(
+                              children: [
+                                Padding(padding: const EdgeInsets.all(12), child: _buildCustomerContactCard(model)),
+                                Expanded(
+                                  child: Container(
+                                    color: AppColors.scaffoldBackground,
+                                    padding: const EdgeInsets.all(12),
+                                    child: SingleChildScrollView(child: _buildMachineList(context, model)),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
+                  if (_isDeleting) Positioned.fill(child: Center(child: CircularProgressIndicator(color: AppColors.white, strokeWidth: 2))),
                 ],
               ),
+              floatingActionButton: _buildFloatingActionButton(context, model),
             ),
-            if (_isDeleting) Positioned.fill(child: Center(child: CircularProgressIndicator(color: AppColors.white, strokeWidth: 2))),
-          ],
-        ),
-        floatingActionButton: _buildFloatingActionButton(context),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(BuildContext context, CustomerDetailsViewModel model) {
+    final customer = model.customer;
+
     return AppBar(
       elevation: 0,
       leading: IconButton(
@@ -113,7 +130,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
               decoration: BoxDecoration(color: AppColors.bluebackground, shape: BoxShape.circle),
               child: Center(
                 child: Text(
-                  _currentCustomer.customerName?.substring(0, 2).toUpperCase() ?? 'NA',
+                  customer?.customerName?.substring(0, 2).toUpperCase() ?? 'NA',
                   style: const TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -125,11 +142,11 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _currentCustomer.customerName ?? 'Unknown Customer',
+                  customer?.customerName ?? 'Loading...',
                   style: const TextStyle(color: AppColors.white, fontSize: 14, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  _currentCustomer.designation?.isNotEmpty == true ? _currentCustomer.designation! : 'customer'.lang,
+                  customer?.designation?.isNotEmpty == true ? customer!.designation! : 'customer'.lang,
                   style: const TextStyle(color: AppColors.white, fontSize: 11, fontWeight: FontWeight.w400),
                 ),
               ],
@@ -143,9 +160,9 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
           offset: const Offset(-10, 30),
           onSelected: (String value) {
             if (value == 'edit') {
-              _navigateToEditCustomer();
+              _navigateToEditCustomer(model);
             } else if (value == 'delete') {
-              _showDeleteConfirmation(context);
+              _showDeleteConfirmation(context, model);
             }
           },
           itemBuilder:
@@ -174,7 +191,20 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     );
   }
 
-  Widget _buildCustomerContactCard() {
+  Widget _buildCustomerContactCard(CustomerDetailsViewModel model) {
+    if (model.isBusy) {
+      return _buildShimmerContactCard();
+    }
+
+    if (model.hasError) {
+      return _buildErrorState(model);
+    }
+
+    final customer = model.customer;
+    if (customer == null) {
+      return _buildEmptyState();
+    }
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -192,10 +222,10 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
               children: [
                 _buildContactInfoRow(
                   'contact_person'.lang,
-                  _currentCustomer.contactPerson?.isNotEmpty == true ? _currentCustomer.contactPerson! : 'not_available'.lang,
+                  customer.contactPerson?.isNotEmpty == true ? customer.contactPerson! : 'not_available'.lang,
                 ),
                 const SizedBox(height: 12),
-                _buildContactInfoRow('email'.lang, _currentCustomer.email?.isNotEmpty == true ? _currentCustomer.email! : 'not_available'.lang),
+                _buildContactInfoRow('email'.lang, customer.email?.isNotEmpty == true ? customer.email! : 'not_available'.lang),
               ],
             ),
           ),
@@ -204,15 +234,9 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildContactInfoRow(
-                  'designation'.lang,
-                  _currentCustomer.designation?.isNotEmpty == true ? _currentCustomer.designation! : 'not_available'.lang,
-                ),
+                _buildContactInfoRow('designation'.lang, customer.designation?.isNotEmpty == true ? customer.designation! : 'not_available'.lang),
                 const SizedBox(height: 12),
-                _buildContactInfoRow(
-                  'phone'.lang,
-                  _currentCustomer.phoneNumber?.isNotEmpty == true ? _currentCustomer.phoneNumber! : 'not_available'.lang,
-                ),
+                _buildContactInfoRow('phone'.lang, customer.phoneNumber?.isNotEmpty == true ? customer.phoneNumber! : 'not_available'.lang),
               ],
             ),
           ),
@@ -232,8 +256,21 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     );
   }
 
-  Widget _buildMachineList(BuildContext context) {
-    if (_currentCustomer.machines?.isEmpty != false) {
+  Widget _buildMachineList(BuildContext context, CustomerDetailsViewModel model) {
+    if (model.isBusy) {
+      return _buildShimmerMachineList();
+    }
+
+    if (model.hasError) {
+      return _buildErrorState(model);
+    }
+
+    final customer = model.customer;
+    if (customer == null) {
+      return _buildEmptyState();
+    }
+
+    if (customer.machines?.isEmpty != false) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -248,10 +285,10 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
       );
     }
 
-    return Column(children: _currentCustomer.machines!.map((machineData) => _buildMachineCard(context, machineData)).toList());
+    return Column(children: customer.machines!.map((machineData) => _buildMachineCard(context, machineData, customer, model)).toList());
   }
 
-  Widget _buildMachineCard(BuildContext context, MachineElement machineData) {
+  Widget _buildMachineCard(BuildContext context, MachineElement machineData, Customer customer, CustomerDetailsViewModel model) {
     final machine = machineData.machine;
     if (machine == null) return const SizedBox.shrink();
 
@@ -259,7 +296,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     final modelNumber = machine.modelNumber ?? 'N/A';
     final machineType = machine.machineType ?? 'Unknown Type';
     final isInWarranty = machineData.warrantyStatus == 'Active';
-    final country = _currentCustomer.countryOrigin?.isNotEmpty == true ? _currentCustomer.countryOrigin! : 'N/A';
+    final country = customer.countryOrigin?.isNotEmpty == true ? customer.countryOrigin! : 'N/A';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -295,12 +332,12 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
               const SizedBox(width: 8),
               GestureDetector(
                 onTap: () async {
-                  final result = await Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => CustomerMachineDetailsView(customer: _currentCustomer, machineElement: machineData)),
-                  );
+                  final result = await Navigator.of(
+                    context,
+                  ).push(MaterialPageRoute(builder: (context) => CustomerMachineDetailsView(customer: customer, machineElement: machineData)));
 
                   if (result != null && result is Customer) {
-                    _refreshCustomerData(result);
+                    model.refreshCustomerDetails();
                   }
                 },
                 child: Container(
@@ -341,13 +378,17 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     );
   }
 
-  Widget _buildFloatingActionButton(BuildContext context) {
+  Widget _buildFloatingActionButton(BuildContext context, CustomerDetailsViewModel model) {
+    final customer = model.customer;
+    if (customer == null) return const SizedBox.shrink();
+
     return FloatingActionButton.extended(
       onPressed: () async {
-        final result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => CustomerEditDetailsView(customer: _currentCustomer)));
+        final result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => CustomerEditDetailsView(customer: customer)));
 
         if (result != null && result is Customer) {
-          _refreshCustomerData(result);
+          model.refreshCustomerDetails();
+          model.markAsChanged();
 
           if (mounted) {
             _scaffoldKey.currentState?.showSnackBar(
@@ -364,7 +405,9 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context) {
+  void _showDeleteConfirmation(BuildContext context, CustomerDetailsViewModel model) {
+    final customer = model.customer;
+    if (customer?.id == null) return;
     showDialog(
       context: context,
       builder: (BuildContext context1) {
@@ -424,7 +467,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                                 ? null
                                 : () {
                                   Navigator.of(context1).pop();
-                                  _handleDeleteCustomer(context);
+                                  _handleDeleteCustomer(context, model);
                                 },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.redBack,
@@ -460,15 +503,18 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     );
   }
 
-  Future<void> _handleDeleteCustomer(BuildContext context) async {
+  Future<void> _handleDeleteCustomer(BuildContext context, CustomerDetailsViewModel model) async {
     if (_isDeleting) return;
+
+    final customer = model.customer;
+    if (customer?.id == null) return;
 
     setState(() {
       _isDeleting = true;
     });
 
     try {
-      if (_currentCustomer.id == null || _currentCustomer.id!.isEmpty) {
+      if (customer!.id!.isEmpty) {
         Fluttertoast.showToast(
           msg: 'invalid_machine_id'.lang,
           toastLength: Toast.LENGTH_SHORT,
@@ -481,7 +527,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
         return;
       }
 
-      final result = await _customerService.deleteCustomer(_currentCustomer.id!);
+      final result = await _customerService.deleteCustomer(customer.id!);
 
       result.fold(
         (failure) {
@@ -524,5 +570,175 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
         _isDeleting = false;
       });
     }
+  }
+
+  Widget _buildShimmerContactCard() {
+    return Shimmer.fromColors(
+      baseColor: AppColors.lightGray,
+      highlightColor: AppColors.white,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.colorF0F2FC,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2))],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Contact Person label
+                  Container(height: 12, width: 80, color: AppColors.lightGray),
+                  const SizedBox(height: 4),
+                  // Contact Person value
+                  Container(height: 14, width: 120, color: AppColors.lightGray),
+                  const SizedBox(height: 12),
+                  // Email label
+                  Container(height: 12, width: 40, color: AppColors.lightGray),
+                  const SizedBox(height: 4),
+                  // Email value
+                  Container(height: 14, width: 150, color: AppColors.lightGray),
+                ],
+              ),
+            ),
+            const SizedBox(width: 24),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Designation label
+                  Container(height: 12, width: 70, color: AppColors.lightGray),
+                  const SizedBox(height: 4),
+                  // Designation value
+                  Container(height: 14, width: 100, color: AppColors.lightGray),
+                  const SizedBox(height: 12),
+                  // Phone label
+                  Container(height: 12, width: 35, color: AppColors.lightGray),
+                  const SizedBox(height: 4),
+                  // Phone value
+                  Container(height: 14, width: 130, color: AppColors.lightGray),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShimmerMachineList() {
+    return Column(children: List.generate(3, (index) => _buildShimmerMachineCard()));
+  }
+
+  Widget _buildShimmerMachineCard() {
+    return Shimmer.fromColors(
+      baseColor: AppColors.lightGray,
+      highlightColor: AppColors.white,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2))],
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(16)),
+                  child: Container(height: 14, width: 20, color: AppColors.lightGray),
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: Container(height: 16, color: AppColors.lightGray)),
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(6)),
+                  child: Container(height: 12, width: 50, color: AppColors.lightGray),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(10)),
+                  child: Container(height: 16, width: 16, color: AppColors.lightGray),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Container(height: 1, color: AppColors.lightGray),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(height: 12, width: 80, color: AppColors.lightGray),
+                      const SizedBox(height: 4),
+                      Container(height: 12, width: 100, color: AppColors.lightGray),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 24),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(height: 12, width: 70, color: AppColors.lightGray),
+                      const SizedBox(height: 4),
+                      Container(height: 12, width: 120, color: AppColors.lightGray),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(CustomerDetailsViewModel model) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(AppImages.alert, width: 80, height: 80, color: AppColors.redBack),
+          const SizedBox(height: 20),
+          Text('Error loading customer details', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+          const SizedBox(height: 10),
+          Text(model.errorMessage, style: TextStyle(fontSize: 14, color: AppColors.textSecondary), textAlign: TextAlign.center),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () => model.refreshCustomerDetails(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: Text('retry'.lang),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(AppImages.myCustomers, width: 80, height: 80, color: AppColors.gray),
+          const SizedBox(height: 20),
+          Text('No customer details found', style: TextStyle(fontSize: 18, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
+        ],
+      ),
+    );
   }
 }

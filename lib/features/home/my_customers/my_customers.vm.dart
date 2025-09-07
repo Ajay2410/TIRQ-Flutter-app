@@ -132,8 +132,10 @@ class MyCustomersViewModel extends BaseViewModel {
   }
 
   void onCustomerTap(BuildContext context, Customer customer) async {
-    await Navigator.of(context).pushNamed(Routes.customerDetails, arguments: customer);
+    final result = await Navigator.of(context).pushNamed(Routes.customerDetails, arguments: customer);
 
-    await _loadCustomers();
+    if (result == true) {
+      await _loadCustomers();
+    }
   }
 }

@@ -6,9 +6,9 @@ import 'package:stacked_services/stacked_services.dart';
 
 import '../core/locator.dart';
 import '../widgets/dialogs/confirmation/confirmation_dialog.view.dart';
+import '../widgets/dialogs/create_ticket/create_ticket_dialog.view.dart';
 import '../widgets/dialogs/machine_details/machine_details_dialog.view.dart';
 import '../widgets/dialogs/resolve_request_confirmation/resolve_request_dialog.view.dart';
-import '../widgets/dialogs/ticket_closed/ticket_closed.view.dart';
 import '../widgets/dialogs/ticket_details/ticket_details_dialog.view.dart';
 import '../widgets/dialogs/ticket_resolve/ticket_resolve.view.dart';
 
@@ -22,6 +22,7 @@ enum DialogType {
   ticketResolve,
   resolveRequest,
   ticketClosed,
+  createTicket,
 }
 
 setUpDialogs() {
@@ -35,6 +36,7 @@ setUpDialogs() {
     DialogType.ticketResolve: buildDialogVariant,
     DialogType.ticketClosed: buildDialogVariant,
     DialogType.resolveRequest: buildDialogVariant,
+    DialogType.createTicket: buildDialogVariant,
   };
 
   final dialogService = locator<DialogService>();
@@ -64,31 +66,36 @@ Widget buildDialogVariant(
         request: request as DialogRequest<RelationshipRequestDialogAttributes>,
         completer: completer,
       );
-      case DialogType.ticketDetails:
-        return TicketDetailsDialog(
-          request: request as DialogRequest<TicketDetailsDialogAttributes>,
-          completer: completer,
-        );
-        case DialogType.confirmation:
-        return ConfirmationDialog(
-          request: request as DialogRequest<ConfirmationDialogAttributes>,
-          completer: completer,
-        );
-        case DialogType.ticketClosed:
-        return ConfirmationDialog(
-          request: request as DialogRequest<ConfirmationDialogAttributes>,
-          completer: completer,
-        );
-        case DialogType.ticketResolve:
-        return TicketResolveDialog(
-          request: request as DialogRequest<TicketResolveDialogAttributes>,
-          completer: completer,
-        );
-        case DialogType.resolveRequest:
-        return ResolveRequestDialog(
-          request: request as DialogRequest<ResolveRequestDialogAttributes>,
-          completer: completer,
-        );
+    case DialogType.ticketDetails:
+      return TicketDetailsDialog(
+        request: request as DialogRequest<TicketDetailsDialogAttributes>,
+        completer: completer,
+      );
+    case DialogType.confirmation:
+      return ConfirmationDialog(
+        request: request as DialogRequest<ConfirmationDialogAttributes>,
+        completer: completer,
+      );
+    case DialogType.ticketClosed:
+      return ConfirmationDialog(
+        request: request as DialogRequest<ConfirmationDialogAttributes>,
+        completer: completer,
+      );
+    case DialogType.ticketResolve:
+      return TicketResolveDialog(
+        request: request as DialogRequest<TicketResolveDialogAttributes>,
+        completer: completer,
+      );
+    case DialogType.resolveRequest:
+      return ResolveRequestDialog(
+        request: request as DialogRequest<ResolveRequestDialogAttributes>,
+        completer: completer,
+      );
+    case DialogType.createTicket:
+      return CreateTicketDialog(
+        request: request as DialogRequest<CreateTicketDialogAttributes>,
+        completer: completer,
+      );
   }
   return Dialog();
 }

@@ -3,7 +3,7 @@ import 'package:manager/resources/app_resources/app_resources.dart';
 
 class CommonTextField extends StatelessWidget {
   final TextEditingController controller;
-  final String label;
+  final String? label;
   final String placeholder;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
@@ -20,11 +20,12 @@ class CommonTextField extends StatelessWidget {
   final String? helperText;
   final String? errorText;
   final Color? disabledBackgroundColor;
+  final EdgeInsets? contentPadding;
 
   const CommonTextField({
     super.key,
     required this.controller,
-    required this.label,
+    this.label,
     required this.placeholder,
     this.keyboardType,
     this.validator,
@@ -41,6 +42,7 @@ class CommonTextField extends StatelessWidget {
     this.helperText,
     this.errorText,
     this.disabledBackgroundColor,
+    this.contentPadding,
   });
 
   @override
@@ -48,16 +50,18 @@ class CommonTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Label
-        Text(
-          label,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
+        // Label (only show if provided)
+        if (label != null) ...[
+          Text(
+            label!,
+            style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
+          const SizedBox(height: 8),
+        ],
 
         // Text Field
         TextFormField(
@@ -90,8 +94,7 @@ class CommonTextField extends StatelessWidget {
             fillColor:
                 enabled
                     ? AppColors.white
-                    : (disabledBackgroundColor ??
-                        AppColors.colorF8FBFE),
+                    : (disabledBackgroundColor ?? AppColors.colorF8FBFE),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: AppColors.lightGray),
@@ -118,10 +121,9 @@ class CommonTextField extends StatelessWidget {
                 color: AppColors.lightGray.withValues(alpha: 0.5),
               ),
             ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
-            ),
+            contentPadding:
+                contentPadding ??
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           ),
         ),
       ],

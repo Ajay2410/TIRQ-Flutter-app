@@ -1,5 +1,8 @@
 import 'package:stacked/stacked.dart';
 import 'package:flutter/material.dart';
+import 'package:manager/core/locator.dart';
+import 'package:manager/core/models/machine_supplier_model.dart';
+import 'package:manager/services/machine_supplier.service.dart';
 import 'machine_supplier_details/machine_supplier_details.view.dart';
 
 // Dummy data models
@@ -9,12 +12,7 @@ class DummyMachine {
   final String? notes;
   final String? organizationName;
 
-  DummyMachine({
-    required this.id,
-    required this.machineName,
-    this.notes,
-    this.organizationName,
-  });
+  DummyMachine({required this.id, required this.machineName, this.notes, this.organizationName});
 }
 
 class DummyOrganization {
@@ -25,16 +23,21 @@ class DummyOrganization {
 }
 
 class MachineSupplierViewModel extends BaseViewModel {
-  List<DummyMachine> _machines = [];
-  List<DummyMachine> _filteredMachines = [];
+  final MachineSupplierService _machineSupplierService = locator<MachineSupplierService>();
+
+  List<Datum> _machineSupplierData = [];
+  List<Datum> _filteredMachines = [];
   String _searchQuery = '';
   bool _isLoading = false;
   bool _hasError = false;
   String _errorMessage = '';
 
-  List<DummyMachine> get machines => _machines;
-  List<DummyMachine> get filteredMachines => _filteredMachines;
+  List<Datum> get machines => _machineSupplierData;
+
+  List<Datum> get filteredMachines => _filteredMachines;
+
   String get searchQuery => _searchQuery;
+
   bool get isLoading => _isLoading;
 
   @override
@@ -57,63 +60,19 @@ class MachineSupplierViewModel extends BaseViewModel {
     _hasError = false;
     _errorMessage = '';
 
-    // Simulate API delay
-    await Future.delayed(const Duration(milliseconds: 1000));
-
     try {
-      // Dummy data
-      _machines = [
-        DummyMachine(
-          id: '1',
-          machineName: 'Industrial Press Machine',
-          notes: 'High-performance hydraulic press for metal forming',
-          organizationName: 'TechCorp Industries',
-        ),
-        DummyMachine(
-          id: '2',
-          machineName: 'CNC Milling Center',
-          notes: 'Precision machining center with 5-axis capability',
-          organizationName: 'Precision Manufacturing Ltd',
-        ),
-        DummyMachine(
-          id: '3',
-          machineName: 'Laser Cutting System',
-          notes: 'Fiber laser cutting machine for sheet metal',
-          organizationName: 'LaserTech Solutions',
-        ),
-        DummyMachine(
-          id: '4',
-          machineName: 'Robotic Assembly Line',
-          notes: 'Automated assembly system with 6-axis robots',
-          organizationName: 'AutoBot Systems',
-        ),
-        DummyMachine(
-          id: '5',
-          machineName: 'Quality Control Station',
-          notes: 'Automated inspection and testing equipment',
-          organizationName: 'QualityFirst Corp',
-        ),
-        DummyMachine(
-          id: '6',
-          machineName: 'Packaging Machine',
-          notes: 'High-speed packaging and labeling system',
-          organizationName: 'PackPro Industries',
-        ),
-        DummyMachine(
-          id: '7',
-          machineName: 'Welding Station',
-          notes: 'Automated welding system with vision guidance',
-          organizationName: 'WeldMaster Ltd',
-        ),
-        DummyMachine(
-          id: '8',
-          machineName: 'Surface Treatment Unit',
-          notes: 'Coating and surface finishing equipment',
-          organizationName: 'SurfaceTech Inc',
-        ),
-      ];
+      final result = await _machineSupplierService.getMachineSupplier();
 
-      _filteredMachines = _machines;
+      result.fold(
+        (failure) {
+          _hasError = true;
+          _errorMessage = failure.message;
+        },
+        (machineSupplierModel) {
+          _machineSupplierData = machineSupplierModel.data ?? [];
+          _filteredMachines = _machineSupplierData;
+        },
+      );
     } catch (e) {
       _hasError = true;
       _errorMessage = 'Error: ${e.toString()}';
@@ -138,15 +97,15 @@ class MachineSupplierViewModel extends BaseViewModel {
 
   void _applyFilters() {
     _filteredMachines =
-        _machines.where((machine) {
+        _machineSupplierData.where((datum) {
+          final customer = datum.customer;
+          if (customer == null) return false;
+
           bool matchesSearch =
               _searchQuery.isEmpty ||
-              machine.machineName.toLowerCase().contains(
-                _searchQuery.toLowerCase(),
-              ) ||
-              (machine.organizationName?.toLowerCase().contains(
-                    _searchQuery.toLowerCase(),
-                  ) ??
+              (customer.customerName?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false) ||
+              (customer.organization?.fullName?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false) ||
+              (customer.machines?.any((machine) => machine.machine?.machineName?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false) ??
                   false);
 
           return matchesSearch;
@@ -155,21 +114,14 @@ class MachineSupplierViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  DummyOrganization? getOrganizationForMachine(DummyMachine machine) {
-    if (machine.organizationName != null) {
-      return DummyOrganization(
-        id: machine.id,
-        fullName: machine.organizationName!,
-      );
-    }
-    return null;
+  Organization? getOrganizationForMachine(Datum datum) {
+    return datum.customer?.organization;
   }
 
-  void onMachineTap(BuildContext context, DummyMachine machine) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const MachineSupplierDetailsView(),
-      ),
-    );
+  void onMachineTap(BuildContext context, Datum datum) async {
+    final customerId = datum.customer?.id;
+    if (customerId != null) {
+      await Navigator.of(context).push(MaterialPageRoute(builder: (context) => MachineSupplierDetailsView(customerId: customerId)));
+    }
   }
 }
