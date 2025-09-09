@@ -48,7 +48,13 @@ class ApiService {
   ApiService() {
     getDeviceId();
     getAppVersion();
-    _dio = Dio(BaseOptions(baseUrl: _config.baseUrl, connectTimeout: const Duration(seconds: 60), receiveTimeout: const Duration(seconds: 90)));
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: _config.baseUrl,
+        connectTimeout: const Duration(seconds: 60),
+        receiveTimeout: const Duration(seconds: 90),
+      ),
+    );
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -76,7 +82,12 @@ class ApiService {
               backgroundColor: Colors.red,
               textColor: Colors.white,
             );
-            return handler.reject(DioException(requestOptions: options, error: "No internet connection"));
+            return handler.reject(
+              DioException(
+                requestOptions: options,
+                error: "No internet connection",
+              ),
+            );
           }
 
           return handler.next(options);
@@ -163,7 +174,10 @@ class ApiService {
       _handleApiError(e, showToast: showToast);
       return ApiResponse<T>(
         success: false,
-        message: _extractErrorMessage(e.response?.data, e.response?.statusCode ?? 0),
+        message: _extractErrorMessage(
+          e.response?.data,
+          e.response?.statusCode ?? 0,
+        ),
         statusCode: e.response?.statusCode ?? 0,
       );
     } on Exception catch (e) {
@@ -172,7 +186,11 @@ class ApiService {
       if (showToast) {
         _showErrorToast(errorMessage, 0);
       }
-      return ApiResponse<T>(success: false, message: errorMessage, statusCode: 0);
+      return ApiResponse<T>(
+        success: false,
+        message: errorMessage,
+        statusCode: 0,
+      );
     }
   }
 
@@ -229,7 +247,10 @@ class ApiService {
       _handleApiError(e, showToast: showToast);
       return ApiResponse<T>(
         success: false,
-        message: _extractErrorMessage(e.response?.data, e.response?.statusCode ?? 0),
+        message: _extractErrorMessage(
+          e.response?.data,
+          e.response?.statusCode ?? 0,
+        ),
         statusCode: e.response?.statusCode ?? 0,
       );
     } on Exception catch (e) {
@@ -238,7 +259,11 @@ class ApiService {
       if (showToast) {
         _showErrorToast(errorMessage, 0);
       }
-      return ApiResponse<T>(success: false, message: errorMessage, statusCode: 0);
+      return ApiResponse<T>(
+        success: false,
+        message: errorMessage,
+        statusCode: 0,
+      );
     }
   }
 
@@ -295,7 +320,10 @@ class ApiService {
       _handleApiError(e, showToast: showToast);
       return ApiResponse<T>(
         success: false,
-        message: _extractErrorMessage(e.response?.data, e.response?.statusCode ?? 0),
+        message: _extractErrorMessage(
+          e.response?.data,
+          e.response?.statusCode ?? 0,
+        ),
         statusCode: e.response?.statusCode ?? 0,
       );
     } on Exception catch (e) {
@@ -304,7 +332,11 @@ class ApiService {
       if (showToast) {
         _showErrorToast(errorMessage, 0);
       }
-      return ApiResponse<T>(success: false, message: errorMessage, statusCode: 0);
+      return ApiResponse<T>(
+        success: false,
+        message: errorMessage,
+        statusCode: 0,
+      );
     }
   }
 
@@ -361,7 +393,10 @@ class ApiService {
       _handleApiError(e, showToast: showToast);
       return ApiResponse<T>(
         success: false,
-        message: _extractErrorMessage(e.response?.data, e.response?.statusCode ?? 0),
+        message: _extractErrorMessage(
+          e.response?.data,
+          e.response?.statusCode ?? 0,
+        ),
         statusCode: e.response?.statusCode ?? 0,
       );
     } on Exception catch (e) {
@@ -370,7 +405,11 @@ class ApiService {
       if (showToast) {
         _showErrorToast(errorMessage, 0);
       }
-      return ApiResponse<T>(success: false, message: errorMessage, statusCode: 0);
+      return ApiResponse<T>(
+        success: false,
+        message: errorMessage,
+        statusCode: 0,
+      );
     }
   }
 
@@ -402,11 +441,13 @@ class ApiService {
       return responseData['msg'].toString();
     }
 
-    if (responseData.containsKey('message') && responseData['message'] != null) {
+    if (responseData.containsKey('message') &&
+        responseData['message'] != null) {
       return responseData['message'].toString();
     }
 
-    if (responseData.containsKey('success_message') && responseData['success_message'] != null) {
+    if (responseData.containsKey('success_message') &&
+        responseData['success_message'] != null) {
       return responseData['success_message'].toString();
     }
 
@@ -430,12 +471,14 @@ class ApiService {
         return responseData['error'].toString();
       }
 
-      if (responseData.containsKey('message') && responseData['message'] != null) {
+      if (responseData.containsKey('message') &&
+          responseData['message'] != null) {
         return responseData['message'].toString();
       }
 
       // Check for nested error messages
-      if (responseData.containsKey('errors') && responseData['errors'] != null) {
+      if (responseData.containsKey('errors') &&
+          responseData['errors'] != null) {
         final errors = responseData['errors'];
         if (errors is Map && errors.isNotEmpty) {
           return errors.values.first.toString();
@@ -446,19 +489,23 @@ class ApiService {
       }
 
       // Check for other common error fields
-      if (responseData.containsKey('errorMessage') && responseData['errorMessage'] != null) {
+      if (responseData.containsKey('errorMessage') &&
+          responseData['errorMessage'] != null) {
         return responseData['errorMessage'].toString();
       }
 
-      if (responseData.containsKey('error_message') && responseData['error_message'] != null) {
+      if (responseData.containsKey('error_message') &&
+          responseData['error_message'] != null) {
         return responseData['error_message'].toString();
       }
 
-      if (responseData.containsKey('detail') && responseData['detail'] != null) {
+      if (responseData.containsKey('detail') &&
+          responseData['detail'] != null) {
         return responseData['detail'].toString();
       }
 
-      if (responseData.containsKey('description') && responseData['description'] != null) {
+      if (responseData.containsKey('description') &&
+          responseData['description'] != null) {
         return responseData['description'].toString();
       }
     }
@@ -511,7 +558,11 @@ class ApiService {
   }
 
   /// Process API response and handle errors
-  ApiResponse<T> _processResponse<T>(Response response, T Function(dynamic)? fromJsonT, {bool showToast = true}) {
+  ApiResponse<T> _processResponse<T>(
+    Response response,
+    T Function(dynamic)? fromJsonT, {
+    bool showToast = true,
+  }) {
     try {
       final statusCode = response.statusCode ?? 0;
       final responseData = response.data;
@@ -523,7 +574,10 @@ class ApiService {
           // Standard JSON response
           return ApiResponse<T>(
             success: true,
-            data: fromJsonT != null && responseData['data'] != null ? fromJsonT(responseData['data']) : responseData['data'],
+            data:
+                fromJsonT != null && responseData['data'] != null
+                    ? fromJsonT(responseData['data'])
+                    : responseData['data'],
             message: _extractSuccessMessage(responseData),
             statusCode: statusCode,
             errors: responseData['errors'],
@@ -535,14 +589,21 @@ class ApiService {
             if (jsonData is Map<String, dynamic>) {
               return ApiResponse<T>(
                 success: true,
-                data: fromJsonT != null && jsonData['data'] != null ? fromJsonT(jsonData['data']) : jsonData['data'],
+                data:
+                    fromJsonT != null && jsonData['data'] != null
+                        ? fromJsonT(jsonData['data'])
+                        : jsonData['data'],
                 message: _extractSuccessMessage(jsonData),
                 statusCode: statusCode,
                 errors: jsonData['errors'],
               );
             } else {
               // If JSON but not a Map, treat as raw data
-              return ApiResponse.fromRawData(responseData, statusCode, fromJsonT);
+              return ApiResponse.fromRawData(
+                responseData,
+                statusCode,
+                fromJsonT,
+              );
             }
           } catch (_) {
             // If not JSON, treat as raw string
@@ -564,7 +625,10 @@ class ApiService {
           success: false,
           message: errorMessage,
           statusCode: statusCode,
-          errors: responseData is Map<String, dynamic> ? responseData['errors'] : null,
+          errors:
+              responseData is Map<String, dynamic>
+                  ? responseData['errors']
+                  : null,
         );
       }
     } catch (e) {
@@ -575,7 +639,11 @@ class ApiService {
         _showErrorToast(errorMessage, 0);
       }
 
-      return ApiResponse<T>(success: false, message: errorMessage, statusCode: 0);
+      return ApiResponse<T>(
+        success: false,
+        message: errorMessage,
+        statusCode: 0,
+      );
     }
   }
 
@@ -624,7 +692,10 @@ class ApiService {
     }
 
     for (var file in formData.files) {
-      dataMap['files'][file.key] = {'filename': file.value.filename, 'contentType': file.value.contentType.toString()};
+      dataMap['files'][file.key] = {
+        'filename': file.value.filename,
+        'contentType': file.value.contentType.toString(),
+      };
     }
 
     return dataMap;
@@ -655,7 +726,9 @@ class ApiService {
       buffer.writeln('Query Parameters: None');
     }
     if (options.data != null && options.data.toString().isNotEmpty) {
-      buffer.writeln('Data: ${_encoder.convert(options.data is FormData ? convertFormDataToObject(options.data) : options.data)}');
+      buffer.writeln(
+        'Data: ${_encoder.convert(options.data is FormData ? convertFormDataToObject(options.data) : options.data)}',
+      );
     } else {
       buffer.writeln('Data: None');
     }
@@ -673,7 +746,10 @@ class ApiService {
   }
 
   void logRequest(RequestOptions requestOptions) {
-    AppLogger.verbose("API Request : \n${requestDetails(requestOptions)}", onlyValue: true);
+    AppLogger.verbose(
+      "API Request : \n${requestDetails(requestOptions)}",
+      onlyValue: true,
+    );
   }
 
   void logResponse(Response response) {

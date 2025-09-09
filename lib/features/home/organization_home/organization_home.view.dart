@@ -116,36 +116,36 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
               SizedBox(width: 16),
 
               // Greeting and name
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          greeting,
-                          style: TextStyle(
-                            color: AppColors.white.withValues(alpha: 0.9),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                          ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        greeting,
+                        style: TextStyle(
+                          color: AppColors.white.withValues(alpha: 0.9),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      model.user.name ?? model.user.fullName ?? 'User',
-                      style: TextStyle(
-                        color: AppColors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    model.user.name ?? model.user.fullName ?? 'User',
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
-                  ],
-                ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
+
+              Spacer(),
               // Unit selector
               _buildDropdownFormField(
                 context,
@@ -525,7 +525,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
           crossAxisCount: 4,
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
-          childAspectRatio: 0.85,
+          childAspectRatio: 0.8,
         ),
         itemCount: secondaryFeatures.length,
         itemBuilder: (context, index) {
@@ -601,9 +601,9 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                 card.title,
                 style: TextStyle(
                   color: AppColors.black,
-                  fontSize: 10,
+                  fontSize: 9,
                   fontWeight: FontWeight.w700,
-                  height: 1.2,
+                  height: 1.1,
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 2,
@@ -695,17 +695,19 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                     SizedBox(height: 8),
 
                     // Title
-                    Text(
-                      card.title,
-                      style: TextStyle(
-                        color: AppColors.black,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        height: 1.2,
+                    Flexible(
+                      child: Text(
+                        card.title,
+                        style: TextStyle(
+                          color: AppColors.black,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w700,
+                          height: 1.1,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -871,7 +873,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
     String? Function(String?)? validator,
   }) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(8),
@@ -889,13 +891,13 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
           value: value,
           hint: Text(
             label,
-            style: TextStyle(color: AppColors.gray, fontSize: 12),
+            style: TextStyle(color: AppColors.gray, fontSize: 10),
           ),
           onChanged: onChanged,
           style: TextStyle(
             color: AppColors.black,
             fontWeight: FontWeight.w600,
-            fontSize: 12,
+            fontSize: 10,
           ),
           icon: Icon(
             Icons.keyboard_arrow_down,
@@ -903,7 +905,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
             size: 16,
           ),
           dropdownColor: AppColors.white,
-          elevation: 8,
+          elevation: 0,
           borderRadius: BorderRadius.circular(8),
           items:
               items.map<DropdownMenuItem<String>>((item) {
@@ -927,7 +929,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                                 style: TextStyle(
                                   color: AppColors.primary,
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 14,
+                                  fontSize: 10,
                                 ),
                               ),
                             ],
@@ -941,7 +943,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                                   isSelected
                                       ? FontWeight.w700
                                       : FontWeight.w500,
-                              fontSize: 14,
+                              fontSize: 10,
                             ),
                           ),
                 );

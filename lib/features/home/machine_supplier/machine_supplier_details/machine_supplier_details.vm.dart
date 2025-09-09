@@ -6,7 +6,8 @@ import 'package:manager/services/machine_supplier_details.service.dart';
 import 'supplier_machine_details/supplier_machine_details.view.dart';
 
 class MachineSupplierDetailsViewModel extends BaseViewModel {
-  final MachineSupplierDetailsService _machineSupplierDetailsService = locator<MachineSupplierDetailsService>();
+  final MachineSupplierDetailsService _machineSupplierDetailsService =
+      locator<MachineSupplierDetailsService>();
 
   MachineSupplierDetailsModel? _customerDetails;
   String? _customerId;
@@ -38,7 +39,9 @@ class MachineSupplierDetailsViewModel extends BaseViewModel {
     _errorMessage = '';
 
     try {
-      final result = await _machineSupplierDetailsService.getCustomerById(_customerId!);
+      final result = await _machineSupplierDetailsService.getCustomerById(
+        _customerId!,
+      );
 
       result.fold(
         (failure) {
@@ -67,6 +70,17 @@ class MachineSupplierDetailsViewModel extends BaseViewModel {
   }
 
   void onMachineTap(BuildContext context, MachineElement machineElement) async {
-    await Navigator.of(context).push(MaterialPageRoute(builder: (context) => SupplierMachineDetailsView(machineElement: machineElement)));
+    final organizationId = _customerDetails?.organization;
+    if (organizationId != null) {
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder:
+              (context) => SupplierMachineDetailsView(
+                machineElement: machineElement,
+                organizationId: organizationId,
+              ),
+        ),
+      );
+    }
   }
 }

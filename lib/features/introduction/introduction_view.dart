@@ -203,7 +203,9 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
       ),
       child: Scaffold(
         backgroundColor: AppColors.white,
-        body: SafeArea(child: Column(children: [_buildHeader(), Expanded(child: _buildPageContent()), _buildNavigationButtons(currentPage)])),
+        body: SafeArea(
+          child: Column(children: [_buildHeader(), Expanded(child: _buildPageContent()), _buildNavigationButtons(currentPage)]),
+        ),
       ),
     );
   }
@@ -213,7 +215,6 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
       child: SizedBox(
         height: Get.height * 0.5,
         child: Stack(
-          fit: StackFit.expand,
           children: [
             AnimatedBuilder(
               animation: _imageTransitionController,
@@ -223,7 +224,6 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                   children: [
                     Positioned(
                       top: -65,
-                      left: -10,
                       child: AnimatedBuilder(
                         animation: _backgroundController,
                         builder: (context, child) {
@@ -231,7 +231,7 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                             scale: _imageScaleAnimation.value * (1.0 + _backgroundAnimation.value * 0.03), // Subtle breathing effect
                             child: Opacity(
                               opacity: _imageFadeAnimation.value,
-                              child: Image.asset(_pages[_currentIndex].imagePath, height: Get.height * 0.5, width: Get.width, fit: BoxFit.fitHeight),
+                              child: Image.asset(_pages[_currentIndex].imagePath, height: Get.height * 0.5, width: Get.width, fit: BoxFit.contain),
                             ),
                           );
                         },

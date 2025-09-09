@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:manager/features/profile/home/profile.vm.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
+import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../core/models/hive/user/user.dart';
@@ -24,8 +25,7 @@ class ProfileView extends StatelessWidget {
       builder: (BuildContext context, ProfileViewModel model, Widget? child) {
         return Scaffold(
           appBar: _buildAppBar(context, model),
-          body:
-          Container(
+          body: Container(
             color: AppColors.scaffoldBackground,
             child: SingleChildScrollView(
               child: Column(
@@ -45,13 +45,16 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context, ProfileViewModel model) {
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context,
+    ProfileViewModel model,
+  ) {
     return AppBar(
       backgroundColor: Colors.transparent, // Set to transparent
       elevation: 0,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed:  model.onBackPress,
+        onPressed: model.onBackPress,
       ),
       title: Text(
         LanguageService.get("my_profile"),
@@ -99,27 +102,30 @@ class ProfileView extends StatelessWidget {
                     ),
                     child: ClipOval(
                       child: CachedNetworkImage(
-                        imageUrl: model.user.logoUrl ??
+                        imageUrl:
+                            model.user.logoUrl ??
                             'https://img.freepik.com/free-vector/search-engine-logo_1071-76.jpg',
                         width: 61,
                         height: 61,
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => Container(
-                          color: const Color(0xFFE8E8E8),
-                          child: const Icon(
-                            Icons.person,
-                            size: 40,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        errorWidget: (context, url, error) => Container(
-                          color: AppColors.textGray,
-                          child: const Icon(
-                            Icons.person,
-                            size: 40,
-                            color: Colors.grey,
-                          ),
-                        ),
+                        placeholder:
+                            (context, url) => Container(
+                              color: const Color(0xFFE8E8E8),
+                              child: const Icon(
+                                Icons.person,
+                                size: 40,
+                                color: Colors.grey,
+                              ),
+                            ),
+                        errorWidget:
+                            (context, url, error) => Container(
+                              color: AppColors.textGray,
+                              child: const Icon(
+                                Icons.person,
+                                size: 40,
+                                color: Colors.grey,
+                              ),
+                            ),
                       ),
                     ),
                   ).animate().scale(
@@ -180,7 +186,10 @@ class ProfileView extends StatelessWidget {
               ),
               // Completion Badge
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFF3E0),
                   borderRadius: BorderRadius.circular(12),
@@ -210,14 +219,9 @@ class ProfileView extends StatelessWidget {
                       color: const Color(0xFFE3F2FD),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child:
-                    Row(
+                    child: Row(
                       children: [
-                        Icon(
-                          Icons.qr_code,
-                          size: 24,
-                          color: Color(0xFF2196F3),
-                        ),
+                        Icon(Icons.qr_code, size: 24, color: Color(0xFF2196F3)),
                         SizedBox(width: 12),
                         Text(
                           LanguageService.get("my_QR"),
@@ -242,8 +246,7 @@ class ProfileView extends StatelessWidget {
                       color: const Color(0xFFE8F5E8),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child:
-                    Row(
+                    child: Row(
                       children: [
                         Icon(
                           Icons.account_balance_wallet,
@@ -281,14 +284,16 @@ class ProfileView extends StatelessWidget {
         children: [
           _buildMenuItem(
             icon: Icons.business_outlined,
-            title: getUser().userRole == UserRole.superAdmin
-                ? LanguageService.get("organization")
-                : LanguageService.get("profile"),
+            title:
+                getUser().userRole == UserRole.superAdmin
+                    ? LanguageService.get("organization")
+                    : LanguageService.get("profile"),
             iconColor: const Color(0xFF9C27B0),
             iconBgColor: const Color(0xFFF3E5F5),
-            onTap: getUser().userRole == UserRole.superAdmin
-                ? model.navigateToCreateOrEditOrgView
-                : model.navigateToEmployeeProfileView,
+            onTap:
+                getUser().userRole == UserRole.superAdmin
+                    ? model.navigateToCreateOrEditOrgView
+                    : model.navigateToEmployeeProfileView,
             animationDelay: 500.ms,
           ),
           _buildDivider(),
@@ -300,6 +305,20 @@ class ProfileView extends StatelessWidget {
             onTap: model.navigateToGeneralSetting,
             animationDelay: 600.ms,
           ),
+          // Show Set Service Pricing only for organization roles
+          if (getUser().primaryRole == UserRole.organization) ...[
+            _buildDivider(),
+            _buildMenuItem(
+              imagePath: AppImages.organization,
+              title: LanguageService.get("set_service_pricing"),
+              iconColor: AppColors.organizationGreen,
+              iconBgColor: AppColors.organizationGreen.withValues(alpha: 0.1),
+              onTap: () {
+                // TODO: Navigate to service pricing screen
+              },
+              animationDelay: 650.ms,
+            ),
+          ],
           _buildDivider(),
           _buildMenuItem(
             icon: Icons.security_outlined,
@@ -352,7 +371,8 @@ class ProfileView extends StatelessWidget {
   }
 
   Widget _buildMenuItem({
-    required IconData icon,
+    IconData? icon,
+    String? imagePath,
     required String title,
     required Color iconColor,
     required Color iconBgColor,
@@ -374,10 +394,18 @@ class ProfileView extends StatelessWidget {
                 color: iconBgColor,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
-                icon,
-                color: iconColor,
-                size: 22,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:
+                    imagePath != null
+                        ? Image.asset(
+                          imagePath,
+                          width: 24,
+                          height: 24,
+                          color: iconColor,
+                          fit: BoxFit.contain,
+                        )
+                        : Icon(icon!, color: iconColor, size: 22),
               ),
             ),
             const SizedBox(width: 16),
@@ -425,10 +453,9 @@ class ProfileView extends StatelessWidget {
         textAlign: TextAlign.center,
         text: TextSpan(
           text: LanguageService.get("by_using_this_app_you_agree_to_our"),
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Colors.grey[600],
-            height: 1.5,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: Colors.grey[600], height: 1.5),
           children: [
             TextSpan(
               text: LanguageService.get("terms_conditions"),

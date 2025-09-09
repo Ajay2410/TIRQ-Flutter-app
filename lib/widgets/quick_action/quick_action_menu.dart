@@ -8,7 +8,10 @@ import '../../resources/app_resources/app_resources.dart';
 import '../../routes/routes.dart';
 
 /// Shows the quick action menu as a list at the right side of the screen
-void showRightSideActionList(BuildContext context, OrganizationHomeViewModel model) {
+void showRightSideActionList(
+  BuildContext context,
+  OrganizationHomeViewModel model,
+) {
   final Size screenSize = MediaQuery.of(context).size;
   final double menuWidth = screenSize.width * 0.53;
   // Get the safe area padding to adjust the position
@@ -87,13 +90,18 @@ class RightSideActionList extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.close, color: AppColors.primary), // Changed to primary
+                  icon: Icon(
+                    Icons.close,
+                    color: AppColors.primary,
+                  ), // Changed to primary
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),
           ),
-          Divider(color: AppColors.primary.withOpacity(0.2)), // Changed to primary
+          Divider(
+            color: AppColors.primary.withOpacity(0.2),
+          ), // Changed to primary
           Expanded(
             child: ListView(
               padding: EdgeInsets.symmetric(vertical: AppSizes.h8),
@@ -144,15 +152,19 @@ class RightSideActionList extends StatelessWidget {
                   },
                 ),
 
-                  _buildListActionItem(
-                    context: context,
-                    icon: Icons.handshake,
-                    label: getUser().organizationType == OrganizationType.manufacturer ? 'Add Customer' : 'Add Manufacturer',
-                    onTap: () {
-                      Navigator.pop(context);
-                      model.showScanQrOptionsForPartner();
-                    },
-                  ),
+                _buildListActionItem(
+                  context: context,
+                  icon: Icons.handshake,
+                  label:
+                      getUser().organizationType ==
+                              OrganizationType.manufacturer
+                          ? 'Add Customer'
+                          : 'Add Manufacturer',
+                  onTap: () {
+                    Navigator.pop(context);
+                    model.showScanQrOptionsForPartner();
+                  },
+                ),
                 _buildListActionItem(
                   context: context,
                   icon: Icons.person,
@@ -184,11 +196,18 @@ class RightSideActionList extends StatelessWidget {
           color: AppColors.primary, // Changed to primary
           borderRadius: BorderRadius.circular(AppSizes.v8),
         ),
-        child: Icon(icon, color: AppColors.white, size: AppSizes.v24), // Changed to white
+        child: Icon(
+          icon,
+          color: AppColors.white,
+          size: AppSizes.v24,
+        ), // Changed to white
       ),
       title: Text(
         label,
-        style: TextStyle(color: AppColors.primary, fontSize: AppSizes.v16), // Changed to primary
+        style: TextStyle(
+          color: AppColors.primary,
+          fontSize: AppSizes.v16,
+        ), // Changed to primary
       ),
       onTap: onTap,
       contentPadding: EdgeInsets.symmetric(
@@ -210,6 +229,7 @@ class QuickActionMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      heroTag: "quick_action_menu_fab",
       backgroundColor: AppColors.white, // Changed to white
       child: Icon(Icons.add, color: AppColors.primary), // Changed to primary
       onPressed: () {
@@ -254,7 +274,10 @@ class QuickActionSheet extends StatelessWidget {
           Align(
             alignment: Alignment.topRight,
             child: IconButton(
-              icon: Icon(Icons.close, color: AppColors.primary), // Changed to primary
+              icon: Icon(
+                Icons.close,
+                color: AppColors.primary,
+              ), // Changed to primary
               onPressed: () => Navigator.pop(context),
             ),
           ),
@@ -272,7 +295,7 @@ class QuickActionSheet extends StatelessWidget {
                   model.showScanQrOptionsForEmployee();
                 },
               ),
-              if(getUser().organizationType == OrganizationType.manufacturer)
+              if (getUser().organizationType == OrganizationType.manufacturer)
                 _buildActionItem(
                   context: context,
                   icon: Icons.build,
@@ -286,7 +309,7 @@ class QuickActionSheet extends StatelessWidget {
                     );
                   },
                 ),
-              if(getUser().organizationType == OrganizationType.processor)
+              if (getUser().organizationType == OrganizationType.processor)
                 _buildActionItem(
                   context: context,
                   icon: Icons.confirmation_number,
@@ -308,7 +331,7 @@ class QuickActionSheet extends StatelessWidget {
                   // model.navigateToRoute(Routes.tasks);
                 },
               ),
-              if(getUser().organizationType == OrganizationType.manufacturer)
+              if (getUser().organizationType == OrganizationType.manufacturer)
                 _buildActionItem(
                   context: context,
                   icon: Icons.handshake,
@@ -331,8 +354,14 @@ class QuickActionSheet extends StatelessWidget {
           ),
           Spacer(),
           TextButton.icon(
-            icon: Icon(Icons.arrow_back, color: AppColors.primary), // Changed to primary
-            label: Text('Back', style: TextStyle(color: AppColors.primary)), // Changed to primary
+            icon: Icon(
+              Icons.arrow_back,
+              color: AppColors.primary,
+            ), // Changed to primary
+            label: Text(
+              'Back',
+              style: TextStyle(color: AppColors.primary),
+            ), // Changed to primary
             onPressed: () => Navigator.pop(context),
           ),
           SizedBox(height: AppSizes.h8),
@@ -366,11 +395,18 @@ class QuickActionSheet extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: AppColors.white, size: AppSizes.v24), // Changed to white
+            Icon(
+              icon,
+              color: AppColors.white,
+              size: AppSizes.v24,
+            ), // Changed to white
             SizedBox(height: AppSizes.h8),
             Text(
               label,
-              style: TextStyle(color: AppColors.white, fontSize: AppSizes.v12), // Changed to white
+              style: TextStyle(
+                color: AppColors.white,
+                fontSize: AppSizes.v12,
+              ), // Changed to white
               textAlign: TextAlign.center,
             ),
           ],

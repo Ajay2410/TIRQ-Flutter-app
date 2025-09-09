@@ -38,6 +38,7 @@ class MachineOverviewList {
   DateTime? warrantyEnd;
   String? warrantyStatus;
   String? invoiceContractNo;
+  String? organization;
   String? remark;
 
   MachineOverviewList({
@@ -54,6 +55,7 @@ class MachineOverviewList {
     this.warrantyEnd,
     this.warrantyStatus,
     this.invoiceContractNo,
+    this.organization,
     this.remark,
   });
 
@@ -71,6 +73,7 @@ class MachineOverviewList {
     warrantyEnd: json["warrantyEnd"] == null ? null : DateTime.parse(json["warrantyEnd"]),
     warrantyStatus: json["warrantyStatus"],
     invoiceContractNo: json["invoiceContractNo"],
+    organization: json["organization"],
     remark: json["remark"],
   );
 
@@ -88,6 +91,7 @@ class MachineOverviewList {
     "warrantyEnd": warrantyEnd?.toIso8601String(),
     "warrantyStatus": warrantyStatus,
     "invoiceContractNo": invoiceContractNo,
+    "organization": organization,
     "remark": remark,
   };
 }

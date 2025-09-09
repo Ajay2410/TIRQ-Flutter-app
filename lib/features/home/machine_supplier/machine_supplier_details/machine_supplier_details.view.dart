@@ -176,7 +176,6 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
     final machineName = machine?.machineName ?? 'Unknown Machine';
     final modelNumber = machine?.modelNumber ?? 'N/A';
     final machineType = machine?.machineType ?? 'Unknown Type';
-    final isInWarranty = machineElement.warrantyStatus == 'Active';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -204,12 +203,12 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
               Container(
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  color: isInWarranty ? AppColors.success.withValues(alpha: 0.15) : AppColors.redBack.withValues(alpha: 0.2),
+                  color:  AppColors.success.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  isInWarranty ? 'in_warranty'.lang : 'out_of_warranty'.lang,
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: isInWarranty ? AppColors.success : AppColors.redBack),
+                  machineElement.warrantyStatus??"",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                 ),
               ),
               const SizedBox(width: 8),

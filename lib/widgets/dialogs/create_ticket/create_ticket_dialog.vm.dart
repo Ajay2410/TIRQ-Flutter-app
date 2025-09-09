@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 import '../../../core/locator.dart';
 import '../../../core/utils/app_logger.dart';
 import '../../../services/file_picker.service.dart';
+import '../../../services/language.service.dart';
 import '../../../widgets/dialogs/create_ticket/create_ticket_dialog.view.dart';
 
 class CreateTicketDialogViewModel extends ReactiveViewModel {
@@ -22,6 +24,9 @@ class CreateTicketDialogViewModel extends ReactiveViewModel {
 
   final ReactiveValue<List<File>> _attachments = ReactiveValue<List<File>>([]);
   List<File> get attachments => _attachments.value;
+
+  final ReactiveValue<String?> _attachmentsError = ReactiveValue<String?>(null);
+  String? get attachmentsError => _attachmentsError.value;
 
   CreateTicketDialogAttributes? _attributes;
 
@@ -53,6 +58,7 @@ class CreateTicketDialogViewModel extends ReactiveViewModel {
         },
         (file) {
           _attachments.value.add(file);
+          _attachmentsError.value = null; // Clear error when file is added
           notifyListeners();
         },
       );
@@ -64,23 +70,77 @@ class CreateTicketDialogViewModel extends ReactiveViewModel {
   void removeAttachment(int index) {
     if (index >= 0 && index < _attachments.value.length) {
       _attachments.value.removeAt(index);
+      // Clear error if there are still attachments, or set error if no attachments left
+      if (_attachments.value.isNotEmpty) {
+        _attachmentsError.value = null;
+      }
       notifyListeners();
     }
   }
 
-  void onSubmit() {
+  Future<void> onSubmit(BuildContext context) async {
     if (formKey.currentState?.validate() ?? false) {
-      _attributes?.onSubmit?.call(
-        problemController.text.trim(),
-        errorCodeController.text.trim(),
-        additionalNotesController.text.trim(),
-        _attachments.value,
-      );
+      // Validate attachments
+      if (_attachments.value.isEmpty) {
+        _attachmentsError.value =
+            '${LanguageService.get('upload_media')} ${LanguageService.get('required')}';
+        notifyListeners();
+        return;
+      }
+
+      _isLoading.value = true;
+      notifyListeners();
+
+      try {
+        await _attributes?.onSubmit?.call(
+          problemController.text.trim(),
+          errorCodeController.text.trim(),
+          additionalNotesController.text.trim(),
+          _attachments.value,
+        );
+
+        // Close dialog after successful submission
+        if (context.mounted) {
+          Navigator.of(context).pop(DialogResponse(confirmed: true));
+        }
+      } catch (e) {
+        AppLogger.error('Error in onSubmit: $e');
+      } finally {
+        _isLoading.value = false;
+        notifyListeners();
+      }
     }
+  }
+
+  bool validateForm() {
+    bool isFormValid = formKey.currentState?.validate() ?? false;
+
+    // Validate attachments
+    if (_attachments.value.isEmpty) {
+      _attachmentsError.value =
+          '${LanguageService.get('upload_media')} ${LanguageService.get('required')}';
+      notifyListeners();
+      return false;
+    } else {
+      _attachmentsError.value = null;
+      notifyListeners();
+    }
+
+    return isFormValid;
   }
 
   void onCancel() {
     _attributes?.onCancel?.call();
+  }
+
+  void stopLoading() {
+    _isLoading.value = false;
+    notifyListeners();
+  }
+
+  void closeDialog() {
+    // This will be called after successful submission
+    // The dialog will be closed by the parent view
   }
 
   @override

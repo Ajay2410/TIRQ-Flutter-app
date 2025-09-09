@@ -33,6 +33,9 @@ abstract class AppImages {
   static const String triqLogo2 = "assets/images/logo2.png";
   static const String triqLogo3 = "assets/images/logo3.png";
 
+  // Organization Images
+  static const String organization = "assets/icons/organization.png";
+
   // Dashboard Icons
   static const String ticketSummary = "assets/icons/ticket_summary.png";
   static const String myCustomers = "assets/icons/my_customers.png";
@@ -56,6 +59,7 @@ abstract class AppImages {
   static const String check = "assets/icons/check.png";
   static const String egyptFlag = "assets/icons/filter.png";
   static const String arrowRight = "assets/icons/arrow_right.png";
+  static const String refresh = "assets/icons/refresh.png";
 
   // Common Icons
   static const String warning = "assets/icons/warning.png";

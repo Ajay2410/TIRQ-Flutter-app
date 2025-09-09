@@ -34,6 +34,7 @@ abstract class AppColors {
   static const Color darkGray = Color(0xFF616161);
   static const Color softGray = Color(0xFFF5F5F5);
   static const Color mediumGray = Color(0xFFBDBDBD);
+  static const Color whisperGray = Color(0xFFEFEEEF);
 
   static const Color softGreen = Color(0xFF4CAF50);
   static const Color backgroundlightgreen = Color(0xFF3A98B9);
@@ -106,4 +107,7 @@ abstract class AppColors {
   static const Color color0ABAB5 = Color(0xFF0ABAB5);
   static const Color purple = Color(0xFF9C27B0);
   static const Color colorF8FBFE = Color(0xFFF8FBFE);
+
+  // Organization Colors
+  static const Color organizationGreen = Color(0xFF179959);
 }

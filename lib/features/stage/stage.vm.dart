@@ -16,14 +16,15 @@ import '../contacts/chat_list/contacts_list.view.dart';
 class StageViewModel extends ReactiveViewModel {
   final _navigationService = locator<NavigationService>();
   final _stageService = locator<StageService>();
-  final _dialogService = locator<DialogService>(); // Add this if you're using DialogService
+  final _dialogService =
+      locator<DialogService>(); // Add this if you're using DialogService
   final _ticketService = locator<TicketService>();
 
-  bool get isCloseTicketDialogOpen => _stageService.isCloseTicketDialogOpen.value;
-  String get requestedTicketId => _stageService.requestedTicketId.value??'';
+  bool get isCloseTicketDialogOpen =>
+      _stageService.isCloseTicketDialogOpen.value;
+  String get requestedTicketId => _stageService.requestedTicketId.value ?? '';
 
-  int _selectedBottomNavIndex = 2;
-  int get selectedBottomNavIndex => _selectedBottomNavIndex;
+  int get selectedBottomNavIndex => _stageService.selectedBottomNavIndex.value;
 
   List<Widget> get bottomNavItems => [
     OrganizationHomeView(),
@@ -38,26 +39,25 @@ class StageViewModel extends ReactiveViewModel {
   }
 
   updateSelectedBottomNavIndex(int index) {
-    _selectedBottomNavIndex = index;
-    notifyListeners();
+    _stageService.updateSelectedBottomNavIndex(index);
   }
 
   void navigateToRoute(String route) async {
     await _navigationService.navigateTo(route);
   }
 
-  resolveTicket(String ticketId)async {
-    await _ticketService.resolveTicket(id:ticketId);
+  resolveTicket(String ticketId) async {
+    await _ticketService.resolveTicket(id: ticketId);
     closeDialog();
   }
 
-  rejectTicket(String ticketId)async {
-    await _ticketService.rejectResolveTicket(id:ticketId);
+  rejectTicket(String ticketId) async {
+    await _ticketService.rejectResolveTicket(id: ticketId);
     closeDialog();
   }
 
-  closeDialog(){
-    _stageService.setCloseTicketDialogOpen(false,null);
+  closeDialog() {
+    _stageService.setCloseTicketDialogOpen(false, null);
   }
 
   // New method to handle back button press
@@ -65,8 +65,12 @@ class StageViewModel extends ReactiveViewModel {
     // If you're using stacked_services DialogService
     final dialogResponse = await _dialogService.showCustomDialog(
       variant: DialogType.confirmation,
-      data: ConfirmationDialogAttributes(title: 'Exit App', description: 'Are you sure you want to exit the app?',  confirmText: 'Yes',
-        cancelText: 'No',),
+      data: ConfirmationDialogAttributes(
+        title: 'Exit App',
+        description: 'Are you sure you want to exit the app?',
+        confirmText: 'Yes',
+        cancelText: 'No',
+      ),
     );
 
     return dialogResponse?.confirmed ?? false;
