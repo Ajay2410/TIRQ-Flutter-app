@@ -1,4 +1,5 @@
 part of 'app_resources.dart';
+
 abstract class AppThemes {
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
@@ -119,10 +120,7 @@ abstract class AppThemes {
       fillColor: WidgetStateColor.transparent,
       overlayColor: WidgetStateProperty.all(AppColors.transparent),
       side: WidgetStateBorderSide.resolveWith((states) {
-        return BorderSide(
-          color: AppColors.primary,
-          width: 1.5,
-        );
+        return BorderSide(color: AppColors.primary, width: 1.5);
       }),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSizes.v6),

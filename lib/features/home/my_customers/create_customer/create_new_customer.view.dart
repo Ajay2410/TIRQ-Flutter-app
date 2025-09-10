@@ -117,7 +117,13 @@ class CreateNewCustomerView extends StatelessWidget {
         const SizedBox(height: 8),
         PhoneInput(
           flagShape: BoxShape.rectangle,
-          countrySelectorNavigator: CountrySelectorNavigator.dialog(),
+          countrySelectorNavigator: CountrySelectorNavigator.dropdown(
+            layerLink: LayerLink(),
+            backgroundColor: AppColors.white,
+            countryCodeStyle: TextStyle(color: AppColors.black),
+            countryNameStyle: TextStyle(color: AppColors.black),
+            searchInputTextStyle: TextStyle(color: AppColors.black),
+          ),
           defaultCountry: model.countryCode.isNotEmpty ? model.getIsoCodeFromCountryCode(model.countryCode) : IsoCode.IN,
           initialValue:
               model.displayPhoneNumber.isNotEmpty && model.countryCode.isNotEmpty
@@ -150,9 +156,6 @@ class CreateNewCustomerView extends StatelessWidget {
           validator: (phone) {
             if (phone == null || phone.nsn.isEmpty) {
               return LanguageService.get('please_enter_phone_number');
-            }
-            if (phone.nsn.length < 10) {
-              return LanguageService.get('please_enter_valid_phone_number');
             }
             return null;
           },
