@@ -76,4 +76,8 @@ abstract class ApiEndpoints {
   static const String createTicket = 'ticket/create';
   static const String getAllTickets = 'ticket/getAll';
   static const String getTicketsByStatus = 'ticket/getticket';
+
+  // Service Pricing endpoints
+  static const String createServicePricing = 'servicePricing/create';
+  static const String getAllServicePricing = 'servicePricing/getAll';
 }

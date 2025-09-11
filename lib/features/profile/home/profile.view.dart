@@ -9,6 +9,7 @@ import 'package:stacked/stacked.dart';
 import '../../../core/models/hive/user/user.dart';
 import '../../../core/storage/storage.dart';
 import '../../../services/language.service.dart';
+import '../../../routes/routes.dart';
 import 'package:manager/features/profile/my_wallet/duepay.view.dart';
 import 'package:manager/features/profile/my_wallet/general.view.dart';
 import '../../stage/stage.view.dart';
@@ -314,7 +315,7 @@ class ProfileView extends StatelessWidget {
               iconColor: AppColors.organizationGreen,
               iconBgColor: AppColors.organizationGreen.withValues(alpha: 0.1),
               onTap: () {
-                // TODO: Navigate to service pricing screen
+                Navigator.pushNamed(context, Routes.setServicePricing);
               },
               animationDelay: 650.ms,
             ),

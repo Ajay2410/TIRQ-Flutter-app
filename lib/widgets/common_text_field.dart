@@ -21,6 +21,7 @@ class CommonTextField extends StatelessWidget {
   final String? errorText;
   final Color? disabledBackgroundColor;
   final EdgeInsets? contentPadding;
+  final TextStyle? textStyle;
 
   const CommonTextField({
     super.key,
@@ -43,6 +44,7 @@ class CommonTextField extends StatelessWidget {
     this.errorText,
     this.disabledBackgroundColor,
     this.contentPadding,
+    this.textStyle,
   });
 
   @override
@@ -80,6 +82,7 @@ class CommonTextField extends StatelessWidget {
           onFieldSubmitted: onFieldSubmitted,
           enabled: enabled,
           validator: validator,
+          style: textStyle,
           decoration: InputDecoration(
             hintText: placeholder,
             hintStyle: const TextStyle(

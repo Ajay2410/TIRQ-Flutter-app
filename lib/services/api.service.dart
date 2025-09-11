@@ -152,47 +152,6 @@ class ApiService {
     }
   }
 
-  /// Enhanced GET method that returns ApiResponse with automatic error handling
-  Future<ApiResponse<T>> getWithErrorHandling<T>({
-    required String url,
-    Map<String, dynamic>? queryParameters,
-    CancelToken? cancelToken,
-    String? baseUrl,
-    Options? options,
-    T Function(dynamic)? fromJsonT,
-    bool showToast = true,
-  }) async {
-    try {
-      var response = await _dio.get(
-        "${baseUrl ?? _config.baseUrl}$url",
-        queryParameters: queryParameters,
-        cancelToken: cancelToken,
-        options: options,
-      );
-      return _processResponse<T>(response, fromJsonT, showToast: showToast);
-    } on DioException catch (e) {
-      _handleApiError(e, showToast: showToast);
-      return ApiResponse<T>(
-        success: false,
-        message: _extractErrorMessage(
-          e.response?.data,
-          e.response?.statusCode ?? 0,
-        ),
-        statusCode: e.response?.statusCode ?? 0,
-      );
-    } on Exception catch (e) {
-      AppLogger.error("GET request exception: $e");
-      final errorMessage = "Network error occurred";
-      if (showToast) {
-        _showErrorToast(errorMessage, 0);
-      }
-      return ApiResponse<T>(
-        success: false,
-        message: errorMessage,
-        statusCode: 0,
-      );
-    }
-  }
 
   /// Enhanced POST method with error handling and toast support
   Future<Response> post({
@@ -221,49 +180,6 @@ class ApiService {
         _showErrorToast("Network error occurred", 0);
       }
       rethrow;
-    }
-  }
-
-  /// Enhanced POST method that returns ApiResponse with automatic error handling
-  Future<ApiResponse<T>> postWithErrorHandling<T>({
-    required String url,
-    Map<String, dynamic>? queryParameters,
-    dynamic data,
-    CancelToken? cancelToken,
-    Options? options,
-    T Function(dynamic)? fromJsonT,
-    bool showToast = true,
-  }) async {
-    try {
-      var response = await _dio.post(
-        "${_config.baseUrl}$url",
-        queryParameters: queryParameters,
-        data: data,
-        cancelToken: cancelToken,
-        options: options,
-      );
-      return _processResponse<T>(response, fromJsonT, showToast: showToast);
-    } on DioException catch (e) {
-      _handleApiError(e, showToast: showToast);
-      return ApiResponse<T>(
-        success: false,
-        message: _extractErrorMessage(
-          e.response?.data,
-          e.response?.statusCode ?? 0,
-        ),
-        statusCode: e.response?.statusCode ?? 0,
-      );
-    } on Exception catch (e) {
-      AppLogger.error("POST request exception: $e");
-      final errorMessage = "Network error occurred";
-      if (showToast) {
-        _showErrorToast(errorMessage, 0);
-      }
-      return ApiResponse<T>(
-        success: false,
-        message: errorMessage,
-        statusCode: 0,
-      );
     }
   }
 
@@ -297,49 +213,6 @@ class ApiService {
     }
   }
 
-  /// Enhanced PUT method that returns ApiResponse with automatic error handling
-  Future<ApiResponse<T>> putWithErrorHandling<T>({
-    required String url,
-    Map<String, dynamic>? queryParameters,
-    dynamic data,
-    CancelToken? cancelToken,
-    Options? options,
-    T Function(dynamic)? fromJsonT,
-    bool showToast = true,
-  }) async {
-    try {
-      var response = await _dio.put(
-        "${_config.baseUrl}$url",
-        queryParameters: queryParameters,
-        data: data,
-        cancelToken: cancelToken,
-        options: options,
-      );
-      return _processResponse<T>(response, fromJsonT, showToast: showToast);
-    } on DioException catch (e) {
-      _handleApiError(e, showToast: showToast);
-      return ApiResponse<T>(
-        success: false,
-        message: _extractErrorMessage(
-          e.response?.data,
-          e.response?.statusCode ?? 0,
-        ),
-        statusCode: e.response?.statusCode ?? 0,
-      );
-    } on Exception catch (e) {
-      AppLogger.error("PUT request exception: $e");
-      final errorMessage = "Network error occurred";
-      if (showToast) {
-        _showErrorToast(errorMessage, 0);
-      }
-      return ApiResponse<T>(
-        success: false,
-        message: errorMessage,
-        statusCode: 0,
-      );
-    }
-  }
-
   /// Enhanced DELETE method with error handling and toast support
   Future<Response> delete({
     required String url,
@@ -367,49 +240,6 @@ class ApiService {
         _showErrorToast("Network error occurred", 0);
       }
       rethrow;
-    }
-  }
-
-  /// Enhanced DELETE method that returns ApiResponse with automatic error handling
-  Future<ApiResponse<T>> deleteWithErrorHandling<T>({
-    required String url,
-    Map<String, dynamic>? queryParameters,
-    dynamic data,
-    CancelToken? cancelToken,
-    Options? options,
-    T Function(dynamic)? fromJsonT,
-    bool showToast = true,
-  }) async {
-    try {
-      var response = await _dio.delete(
-        "${_config.baseUrl}$url",
-        queryParameters: queryParameters,
-        data: data,
-        cancelToken: cancelToken,
-        options: options,
-      );
-      return _processResponse<T>(response, fromJsonT, showToast: showToast);
-    } on DioException catch (e) {
-      _handleApiError(e, showToast: showToast);
-      return ApiResponse<T>(
-        success: false,
-        message: _extractErrorMessage(
-          e.response?.data,
-          e.response?.statusCode ?? 0,
-        ),
-        statusCode: e.response?.statusCode ?? 0,
-      );
-    } on Exception catch (e) {
-      AppLogger.error("DELETE request exception: $e");
-      final errorMessage = "Network error occurred";
-      if (showToast) {
-        _showErrorToast(errorMessage, 0);
-      }
-      return ApiResponse<T>(
-        success: false,
-        message: errorMessage,
-        statusCode: 0,
-      );
     }
   }
 

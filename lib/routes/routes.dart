@@ -59,6 +59,9 @@ abstract class Routes {
 
   static const String feedback = '/feedbackRatings';
 
+  /// Route for the Set Service Pricing screen.
+  static const String setServicePricing = '/setServicePricing';
+
   static const String invoice = '/piInvoiceRecords';
 
   static const String globalActivity = '/globalActivityFeed';
