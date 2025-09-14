@@ -16,6 +16,7 @@ import '../../../routes/routes.dart';
 import '../../../services/auth.service.dart';
 import '../../../services/bottom_sheets.service.dart';
 import '../../../services/notification.service.dart';
+import '../../../services/stage.service.dart';
 import '../../../widgets/bottom_sheets/qr_scan/qr_scan_sheet.view.dart';
 import '../../employee/add_employee/add_employee.view.dart';
 import '../../organization/add_partner/add_partner.view.dart';
@@ -26,6 +27,7 @@ class OrganizationHomeViewModel extends ReactiveViewModel {
   final _dashboardService = locator<DashboardService>();
   final _bottomSheetService = locator<BottomSheetService>();
   final _authService = locator<AuthService>();
+  final _stageService = locator<StageService>();
 
   final _user = ReactiveValue(getUser());
   User get user => _user.value;
@@ -118,6 +120,10 @@ class OrganizationHomeViewModel extends ReactiveViewModel {
 
   void navigateToMachineOverview() async {
     _navigationService.navigateTo(Routes.machineOverview);
+  }
+
+  void navigateToTickets() async {
+    _stageService.updateSelectedBottomNavIndex(1);
   }
 
   // Add these new route navigation methods for the quick action menu

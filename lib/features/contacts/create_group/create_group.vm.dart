@@ -5,7 +5,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:dio/dio.dart';
 
-import '../../../api_endpoints.dart';
+// import '../../../api_endpoints.dart';
 import '../../../core/locator.dart';
 import '../../../core/models/employee.dart';
 import '../../../core/utils/app_logger.dart';
@@ -49,35 +49,38 @@ class CreateGroupChatViewModel extends ReactiveViewModel {
 
   // Fetch all employees from the organization
   Future<void> fetchEmployees() async {
-    try {
-      final response = await _apiService.get(url: 'employee/get-all');
+    // try {
+    //   final response = await _apiService.get(url: 'employee/get-all');
 
-      if (response.data['success'] == true) {
-        final employees = (response.data['data'] as List).map((employeeData) {
-          return Employee(
-            id: employeeData['_id'],
-            name: employeeData['fullName'],
-            email: employeeData['email'],
-            role: employeeData['role'],
-          );
-        }).toList();
+    // if (response.data['success'] == true) {
+    //   final employees = (response.data['data'] as List).map((employeeData) {
+    //     return Employee(
+    //       id: employeeData['_id'],
+    //       name: employeeData['fullName'],
+    //       email: employeeData['email'],
+    //       role: employeeData['role'],
+    //     );
+    //   }).toList();
 
-        _allEmployees = employees;
-        _filteredEmployees = List.from(_allEmployees);
-        notifyListeners();
-      } else {
-        Fluttertoast.showToast(msg: "Failed to fetch employees");
-      }
-    } catch (e) {
-      if (e is DioException) {
-        AppLogger.error("DioError fetching employees: ${e.message}");
-        AppLogger.error("Response: ${e.response?.data}");
-        Fluttertoast.showToast(msg: e.response?.data['message'] ?? "Error fetching employees");
-      } else {
-        AppLogger.error("Error fetching employees: $e");
-        Fluttertoast.showToast(msg: "Error fetching employees");
-      }
-    }
+    //   _allEmployees = employees;
+    //   _filteredEmployees = List.from(_allEmployees);
+    //   notifyListeners();
+    // } else {
+    //   Fluttertoast.showToast(msg: "Failed to fetch employees");
+    // }
+    // } catch (e) {
+    //   if (e is DioException) {
+    //     AppLogger.error("DioError fetching employees: ${e.message}");
+    //     AppLogger.error("Response: ${e.response?.data}");
+    //     Fluttertoast.showToast(msg: e.response?.data['message'] ?? "Error fetching employees");
+    //   } else {
+    //     AppLogger.error("Error fetching employees: $e");
+    //     Fluttertoast.showToast(msg: "Error fetching employees");
+    //   }
+    // }
+    _allEmployees = [];
+    _filteredEmployees = [];
+    notifyListeners();
   }
 
   // Search employees based on query
@@ -85,12 +88,19 @@ class CreateGroupChatViewModel extends ReactiveViewModel {
     if (query.isEmpty) {
       _filteredEmployees = List.from(_allEmployees);
     } else {
-      _filteredEmployees = _allEmployees.where((employee) {
-        final nameMatch = employee.name?.toLowerCase().contains(query.toLowerCase()) ?? false;
-        final roleMatch = employee.role?.toLowerCase().contains(query.toLowerCase()) ?? false;
-        final emailMatch = employee.email?.toLowerCase().contains(query.toLowerCase()) ?? false;
-        return nameMatch || roleMatch || emailMatch;
-      }).toList();
+      _filteredEmployees =
+          _allEmployees.where((employee) {
+            final nameMatch =
+                employee.name?.toLowerCase().contains(query.toLowerCase()) ??
+                false;
+            final roleMatch =
+                employee.role?.toLowerCase().contains(query.toLowerCase()) ??
+                false;
+            final emailMatch =
+                employee.email?.toLowerCase().contains(query.toLowerCase()) ??
+                false;
+            return nameMatch || roleMatch || emailMatch;
+          }).toList();
     }
     notifyListeners();
   }
@@ -98,7 +108,9 @@ class CreateGroupChatViewModel extends ReactiveViewModel {
   // Toggle employee selection
   void toggleEmployeeSelection(Employee employee) {
     if (isEmployeeSelected(employee)) {
-      _selectedEmployees.removeWhere((selectedEmployee) => selectedEmployee.id == employee.id);
+      _selectedEmployees.removeWhere(
+        (selectedEmployee) => selectedEmployee.id == employee.id,
+      );
     } else {
       _selectedEmployees.add(employee);
     }
@@ -107,7 +119,9 @@ class CreateGroupChatViewModel extends ReactiveViewModel {
 
   // Check if employee is already selected
   bool isEmployeeSelected(Employee employee) {
-    return _selectedEmployees.any((selectedEmployee) => selectedEmployee.id == employee.id);
+    return _selectedEmployees.any(
+      (selectedEmployee) => selectedEmployee.id == employee.id,
+    );
   }
 
   // Create group chat
@@ -125,10 +139,13 @@ class CreateGroupChatViewModel extends ReactiveViewModel {
     try {
       setBusy(true);
 
-      final employeeIds = _selectedEmployees.map((employee) => employee.id!).toList();
+      final employeeIds =
+          _selectedEmployees.map((employee) => employee.id!).toList();
       final groupName = groupNameController.text.trim();
 
-      AppLogger.info("Creating group chat: $groupName with employees: $employeeIds");
+      AppLogger.info(
+        "Creating group chat: $groupName with employees: $employeeIds",
+      );
 
       final response = await _dialogService.showCustomDialog(
         variant: DialogType.loader,
@@ -137,27 +154,34 @@ class CreateGroupChatViewModel extends ReactiveViewModel {
             try {
               final apiResponse = await _apiService.post(
                 url: 'chat/org-room-create',
-                data: {
-                  'groupName': groupName,
-                  'employeeIds': employeeIds,
-                },
+                data: {'groupName': groupName, 'employeeIds': employeeIds},
               );
 
               AppLogger.info("API Response: ${apiResponse.data}");
 
               if (apiResponse.data['success'] == true) {
-                return Right<Failure, String>(apiResponse.data['data']['chatRoomId']);
+                return Right<Failure, String>(
+                  apiResponse.data['data']['chatRoomId'],
+                );
               } else {
-                return Left<Failure, String>(Failure(apiResponse.data['message']));
+                return Left<Failure, String>(
+                  Failure(apiResponse.data['message']),
+                );
               }
             } catch (e) {
               if (e is DioException) {
                 AppLogger.error("DioError creating chat: ${e.message}");
                 AppLogger.error("Response: ${e.response?.data}");
-                return Left<Failure, String>(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
+                return Left<Failure, String>(
+                  Failure(
+                    e.response?.data?['message'] ?? 'Something went wrong',
+                  ),
+                );
               }
               AppLogger.error("Error creating chat: $e");
-              return Left<Failure, String>(Failure('An unexpected error occurred'));
+              return Left<Failure, String>(
+                Failure('An unexpected error occurred'),
+              );
             }
           },
         ),
@@ -166,11 +190,11 @@ class CreateGroupChatViewModel extends ReactiveViewModel {
       if (response?.data != null) {
         final result = response?.data as EitherResult<String>;
         result.fold(
-              (failure) {
+          (failure) {
             AppLogger.error("Failed to create chat: $failure");
             Fluttertoast.showToast(msg: failure.message);
           },
-              (chatRoomId) {
+          (chatRoomId) {
             AppLogger.info("Chat created successfully with ID: $chatRoomId");
             Fluttertoast.showToast(msg: "Group chat created successfully!");
             _navigationService.back(result: chatRoomId);

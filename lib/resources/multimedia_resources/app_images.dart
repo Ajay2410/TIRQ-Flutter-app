@@ -78,6 +78,7 @@ abstract class AppImages {
   static const String warrantyDate = "assets/icons/warranty_date.png";
   static const String warrantyStatus = "assets/icons/warranty_status.png";
   static const String invoice = "assets/icons/invoice.png";
+  static const String payment = "assets/icons/payment.png";
 
   // Add New Customer Icons
   static const String camera = "assets/icons/camera.png";

@@ -99,7 +99,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       _warrantyEndDate != null ? DateFormat('MMM dd, yyyy').format(_warrantyEndDate!) : LanguageService.get('not_available');
 
   List<String> get designationItems {
-    List<String> baseItems = [LanguageService.get('md'), LanguageService.get('ceo'), LanguageService.get('chairman')];
+    List<String> baseItems = ['MD', 'CEO', 'Chairman', 'Other'];
 
     if (isEditMode && _selectedDesignation != null && _selectedDesignation!.isNotEmpty) {
       if (!baseItems.contains(_selectedDesignation)) {
@@ -447,7 +447,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       if (_selectedMachine != null && _selectedMachine!.isNotEmpty) {
         final selectedMachineObj = selectedMachineObject;
         if (selectedMachineObj != null) {
-          final String apiWarrantyStatus = _warrantyStatus == 'In Warranty' ? 'Active' : 'Inactive';
+          final String apiWarrantyStatus = _warrantyStatus == 'In Warranty' ? 'In warranty' : 'Out Of Warranty';
 
           machines.add({
             'machine': selectedMachineObj.id ?? '',

@@ -22,7 +22,7 @@ class MachineDetailsView extends StatefulWidget {
 }
 
 class _MachineDetailsViewState extends State<MachineDetailsView> {
-  late TextEditingController _remarkController;
+  late TextEditingController _addOnController;
   late TextEditingController _notesController;
   final MachineService _machineService = locator<MachineService>();
   bool _isDeleting = false;
@@ -30,13 +30,13 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
   @override
   void initState() {
     super.initState();
-    _remarkController = TextEditingController();
+    _addOnController = TextEditingController();
     _notesController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _remarkController.dispose();
+    _addOnController.dispose();
     _notesController.dispose();
     _isDeleting = false;
     super.dispose();
@@ -75,7 +75,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
       ),
       titleSpacing: 0,
       title: Text(
-        '${widget.machine.machineName ?? "Unknown Machine"}',
+        "${widget.machine.modelNumber} - ${widget.machine.machineName}",
         style: const TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold),
       ),
     );
@@ -86,21 +86,24 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CommonTextField(
-          controller: TextEditingController(text: widget.machine.machineName ?? 'Unknown Machine'),
+          controller: TextEditingController(text: "#${widget.machine.modelNumber} - ${widget.machine.machineName}"),
           label: 'machine_model_name'.lang,
           placeholder: '',
           readOnly: true,
+          textStyle: TextStyle(color: AppColors.black),
           enabled: false,
           disabledBackgroundColor: const Color(0xFFF8FBFE),
         ),
         const SizedBox(height: 16),
 
         CommonTextField(
-          controller: TextEditingController(text: widget.machine.modelNumber ?? 'N/A'),
+          controller: TextEditingController(text: "#${widget.machine.modelNumber}"),
           label: 'model_number'.lang,
           placeholder: '',
           readOnly: true,
           enabled: false,
+          textStyle: TextStyle(color: AppColors.black),
+
           disabledBackgroundColor: const Color(0xFFF8FBFE),
         ),
         const SizedBox(height: 16),
@@ -111,14 +114,16 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
           placeholder: '',
           readOnly: true,
           enabled: false,
+          textStyle: TextStyle(color: AppColors.black),
+
           disabledBackgroundColor: const Color(0xFFF8FBFE),
         ),
         const SizedBox(height: 16),
 
         CommonTextField(
-          controller: _remarkController..text = widget.machine.remarks ?? '',
-          label: 'remark'.lang,
-          placeholder: 'enter_remark_here'.lang,
+          controller: _addOnController..text = widget.machine.remarks ?? '',
+          label: 'add_on'.lang,
+          placeholder: 'enter_add_on_here'.lang,
           maxLines: 1,
           suffixIcon: CustomPopup(
             content: Column(
@@ -226,7 +231,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
               child: _buildInfoRow(
                 AppImages.thickness,
                 'thickness'.lang,
-                '${widget.machine.processingDimensions?.thickness ?? 'N/A'}',
+                widget.machine.processingDimensions?.thickness ?? 'N/A',
                 AppColors.lightCoral,
               ),
             ),
@@ -307,7 +312,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                                   widget.machine.processingDimensions?.maxSpeed = dims['maxSpeed'];
                                 }
 
-                                _remarkController.text = result['remarks'] ?? '';
+                                _addOnController.text = result['remarks'] ?? '';
                                 _notesController.text = result['notes'] ?? '';
                               });
                             } else {

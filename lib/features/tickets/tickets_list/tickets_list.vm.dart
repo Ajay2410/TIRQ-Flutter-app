@@ -18,7 +18,9 @@ class TicketsListViewModel extends ReactiveViewModel {
 
   // Tab state
   final ReactiveValue<int> _selectedTabIndex = ReactiveValue<int>(0);
+
   int get selectedTabIndex => _selectedTabIndex.value;
+
   set selectedTabIndex(int value) {
     _selectedTabIndex.value = value;
     _loadTicketsForCurrentTab();
@@ -33,24 +35,32 @@ class TicketsListViewModel extends ReactiveViewModel {
   final ReactiveValue<bool> _isLoadingMore = ReactiveValue<bool>(false);
 
   int get activePage => _activePage.value;
+
   int get resolvedPage => _resolvedPage.value;
+
   bool get hasMoreActive => _hasMoreActive.value;
+
   bool get hasMoreResolved => _hasMoreResolved.value;
+
   bool get isLoadingMore => _isLoadingMore.value;
 
   // Reactive values
-  final ReactiveValue<List<TicketModel>> _activeTickets =
-      ReactiveValue<List<TicketModel>>([]);
-  final ReactiveValue<List<TicketModel>> _resolvedTickets =
-      ReactiveValue<List<TicketModel>>([]);
+  final ReactiveValue<List<Datum>> _activeTickets = ReactiveValue<List<Datum>>(
+    [],
+  );
+  final ReactiveValue<List<Datum>> _resolvedTickets =
+      ReactiveValue<List<Datum>>([]);
   final ReactiveValue<bool> _isLoading = ReactiveValue<bool>(false);
 
-  List<TicketModel> get activeTickets => _activeTickets.value;
-  List<TicketModel> get resolvedTickets => _resolvedTickets.value;
+  List<Datum> get activeTickets => _activeTickets.value;
+
+  List<Datum> get resolvedTickets => _resolvedTickets.value;
+
   bool get isLoading => _isLoading.value;
 
   // Search query
   String get searchQuery => _searchQuery;
+
   set searchQuery(String value) {
     _searchQuery = value;
     _applySearchFilters();
@@ -101,14 +111,14 @@ class TicketsListViewModel extends ReactiveViewModel {
         forceRefresh: _activePage.value == 1,
       );
 
-      List<TicketModel> combinedTickets = [];
+      List<Datum> combinedTickets = [];
 
       activeResult.fold(
         (failure) {
           print('Error loading active tickets: ${failure.message}');
         },
         (paginatedResponse) {
-          combinedTickets.addAll(paginatedResponse.data);
+          combinedTickets.addAll(paginatedResponse.data ?? []);
         },
       );
 
@@ -117,7 +127,7 @@ class TicketsListViewModel extends ReactiveViewModel {
           print('Error loading in progress tickets: ${failure.message}');
         },
         (paginatedResponse) {
-          combinedTickets.addAll(paginatedResponse.data);
+          combinedTickets.addAll(paginatedResponse.data ?? []);
         },
       );
 
@@ -132,11 +142,11 @@ class TicketsListViewModel extends ReactiveViewModel {
       bool hasMoreInProgress = false;
 
       activeResult.fold((failure) {}, (paginatedResponse) {
-        hasMoreActive = _activePage.value < paginatedResponse.pages;
+        hasMoreActive = _activePage.value < (paginatedResponse.pages ?? 1);
       });
 
       inProgressResult.fold((failure) {}, (paginatedResponse) {
-        hasMoreInProgress = _activePage.value < paginatedResponse.pages;
+        hasMoreInProgress = _activePage.value < (paginatedResponse.pages ?? 1);
       });
 
       _hasMoreActive.value = hasMoreActive || hasMoreInProgress;
@@ -173,14 +183,14 @@ class TicketsListViewModel extends ReactiveViewModel {
         forceRefresh: _resolvedPage.value == 1,
       );
 
-      List<TicketModel> combinedTickets = [];
+      List<Datum> combinedTickets = [];
 
       resolvedResult.fold(
         (failure) {
           print('Error loading resolved tickets: ${failure.message}');
         },
         (paginatedResponse) {
-          combinedTickets.addAll(paginatedResponse.data);
+          combinedTickets.addAll(paginatedResponse.data ?? []);
         },
       );
 
@@ -189,7 +199,7 @@ class TicketsListViewModel extends ReactiveViewModel {
           print('Error loading rejected tickets: ${failure.message}');
         },
         (paginatedResponse) {
-          combinedTickets.addAll(paginatedResponse.data);
+          combinedTickets.addAll(paginatedResponse.data ?? []);
         },
       );
 
@@ -207,11 +217,11 @@ class TicketsListViewModel extends ReactiveViewModel {
       bool hasMoreRejected = false;
 
       resolvedResult.fold((failure) {}, (paginatedResponse) {
-        hasMoreResolved = _resolvedPage.value < paginatedResponse.pages;
+        hasMoreResolved = _resolvedPage.value < (paginatedResponse.pages ?? 1);
       });
 
       rejectedResult.fold((failure) {}, (paginatedResponse) {
-        hasMoreRejected = _resolvedPage.value < paginatedResponse.pages;
+        hasMoreRejected = _resolvedPage.value < (paginatedResponse.pages ?? 1);
       });
 
       _hasMoreResolved.value = hasMoreResolved || hasMoreRejected;
@@ -269,12 +279,31 @@ class TicketsListViewModel extends ReactiveViewModel {
     );
   }
 
+  void navigateToReviewTicket() async {
+    // await _navigationService.navigateTo(Routes.ticketDetails);
+    await _navigationService.navigateTo(Routes.reviewTicket);
+  }
+
+  void navigateToTicketDetails({required String ticketId}) async {
+    await _navigationService.navigateTo(
+      Routes.ticketDetails,
+      arguments: ticketId,
+    );
+  }
+
+  void navigateToReviewTicketWithId({required String ticketId}) async {
+    await _navigationService.navigateTo(
+      Routes.reviewTicket,
+      arguments: ticketId,
+    );
+  }
+
   void navigateToHome() {
     _stageService.updateSelectedBottomNavIndex(0); // Home tab is at index 0
   }
 
   // Getter for current tickets based on selected tab
-  List<TicketModel> get currentTickets {
+  List<Datum> get currentTickets {
     return selectedTabIndex == 0 ? activeTickets : resolvedTickets;
   }
 

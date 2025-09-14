@@ -23,7 +23,7 @@ class SelectMaintenanceTypeDialog extends StatelessWidget {
           () =>
               SelectMaintenanceTypeDialogViewModel()
                 ..init(isGeneralCheckUpDisabled: !isWarrantyActive),
-      builder: (context, model, child) {
+      builder: (context1, model, child) {
         return Dialog(
           backgroundColor: AppColors.white,
           insetPadding: EdgeInsets.symmetric(horizontal: 14),
@@ -81,7 +81,7 @@ class SelectMaintenanceTypeDialog extends StatelessWidget {
                       IconButton(
                         onPressed: () {
                           Navigator.of(
-                            context,
+                            context1,
                           ).pop(DialogResponse(confirmed: false));
                         },
                         icon: const Icon(
@@ -127,7 +127,7 @@ class SelectMaintenanceTypeDialog extends StatelessWidget {
                         child: OutlinedButton(
                           onPressed: () {
                             Navigator.of(
-                              context,
+                              context1,
                             ).pop(DialogResponse(confirmed: false));
                           },
                           style: OutlinedButton.styleFrom(
@@ -152,19 +152,23 @@ class SelectMaintenanceTypeDialog extends StatelessWidget {
                       Expanded(
                         child: ElevatedButton(
                           onPressed:
-                              model.selectedType != null
-                                  ? () {
-                                    attributes?.onSubmit?.call(
-                                      model.selectedType!,
-                                    );
-                                    Navigator.of(
-                                      context,
-                                    ).pop(DialogResponse(confirmed: true));
+                              model.selectedType != null && !model.isLoading
+                                  ? () async {
+                                    await model.submit(model.selectedType!, (
+                                      maintenanceType,
+                                    ) {
+                                      attributes?.onSubmit?.call(
+                                        maintenanceType,
+                                      );
+                                      Navigator.of(
+                                        context1,
+                                      ).pop(DialogResponse(confirmed: true));
+                                    });
                                   }
                                   : null,
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                model.selectedType != null
+                                model.selectedType != null && !model.isLoading
                                     ? AppColors.primary
                                     : AppColors.lightGray,
                             foregroundColor: AppColors.white,
@@ -176,10 +180,24 @@ class SelectMaintenanceTypeDialog extends StatelessWidget {
                               vertical: AppSizes.h12,
                             ),
                           ),
-                          child: Text(
-                            LanguageService.get('submit_ticket'),
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
+                          child:
+                              model.isLoading
+                                  ? SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.white,
+                                      ),
+                                    ),
+                                  )
+                                  : Text(
+                                    LanguageService.get('submit_ticket'),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                         ),
                       ),
                     ],

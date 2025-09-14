@@ -403,58 +403,61 @@ class AuthService {
     required String token,
     required String? oldToken,
   }) async {
-    try {
-      final response = await apiService.post(
-        url: ApiEndpoints.updateFcmToken,
-        data: {'oldToken': oldToken ?? '', 'newToken': token},
-      );
+    // try {
+    //   final response = await apiService.post(
+    //     url: ApiEndpoints.updateFcmToken,
+    //     data: {'oldToken': oldToken ?? '', 'newToken': token},
+    //   );
 
-      if (response.data['success'] == true) {
-        return Right(true);
-      }
-    } catch (e) {
-      if (e is DioException) {
-        AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        if (e.response?.statusCode == 401) {
-          await clearHive();
-          await _navigationService.clearStackAndShow(Routes.login);
-        }
-        return Left(
-          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
-        );
-      }
-    }
-    return Left(Failure('Failed to login user'));
+    // if (response.data['success'] == true) {
+    //   return Right(true);
+    // }
+    // } catch (e) {
+    //   if (e is DioException) {
+    //     AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
+    //     if (e.response?.statusCode == 401) {
+    //       await clearHive();
+    //       await _navigationService.clearStackAndShow(Routes.login);
+    //     }
+    //     return Left(
+    //       Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+    //     );
+    //   }
+    // }
+    return Left(Failure('Failed to update FCM token'));
   }
 
   ResultFuture<bool> logout(String? fcmToken) async {
-    try {
-      final response = await apiService.post(
-        url: ApiEndpoints.logout,
-        data: {'fcmToken': fcmToken ?? ''},
-      );
+    // try {
+    //   final response = await apiService.post(
+    //     url: ApiEndpoints.logout,
+    //     data: {'fcmToken': fcmToken ?? ''},
+    //   );
 
-      if (response.data['success'] == true) {
-        await clearHive();
-        await _navigationService.clearStackAndShow(Routes.login);
-        return Right(true);
-      } else {
-        return Left(Failure(response.data['message']));
-      }
-    } catch (e) {
-      if (e is DioException) {
-        AppLogger.error(
-          e.response?.data?['message'].toString() ?? 'Something went wrong',
-        );
-        // Still clear local data and redirect to login on error
-        await clearHive();
-        await _navigationService.clearStackAndShow(Routes.login);
-        return Left(
-          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
-        );
-      }
-    }
-    return Left(Failure('Failed to logout user'));
+    // if (response.data['success'] == true) {
+    //   await clearHive();
+    //   await _navigationService.clearStackAndShow(Routes.login);
+    //   return Right(true);
+    // } else {
+    //   return Left(Failure(response.data['message']));
+    // }
+    // } catch (e) {
+    //   if (e is DioException) {
+    //     AppLogger.error(
+    //       e.response?.data?['message'].toString() ?? 'Something went wrong',
+    //     );
+    //     // Still clear local data and redirect to login on error
+    //     await clearHive();
+    //     await _navigationService.clearStackAndShow(Routes.login);
+    //     return Left(
+    //       Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+    //     );
+    //   }
+    // }
+    // Still clear local data and redirect to login even without API call
+    await clearHive();
+    await _navigationService.clearStackAndShow(Routes.login);
+    return Right(true);
   }
 
   ResultFuture<bool> verifyPasswordResetOtp({

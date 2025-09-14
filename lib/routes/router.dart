@@ -14,6 +14,8 @@ import 'package:manager/features/home/installations/installation.dart';
 import 'package:manager/features/home/pi/pi_invoice_record_view.dart';
 import 'package:manager/features/home/warrenty/warrenty_tracker.dart';
 import 'package:manager/features/image/image_full_screen.view.dart';
+import 'package:manager/features/video/video_player.view.dart';
+import 'package:manager/features/tickets/ticket_details/ticket_details.view.dart';
 import 'package:manager/features/organization/add_partner/add_partner.view.dart';
 import 'package:manager/features/permissions/permissions.view.dart';
 import 'package:manager/features/profile/qr/qr.view.dart';
@@ -51,6 +53,7 @@ import '../features/profile/home/profile.view.dart';
 import '../features/service_pricing/set_service_pricing.view.dart';
 import '../features/profile/my_wallet/general.view.dart';
 import '../features/tickets/add_ticket/add_ticket.view.dart';
+import '../features/tickets/review_ticket/review_ticket.view.dart';
 import '../features/tickets/tickets_list/tickets_list.view.dart';
 import '../features/organization/employees_list/employee_role_cards.view.dart';
 import '../features/home/machine_records/machine_records.view.dart';
@@ -402,6 +405,21 @@ class AppRouter extends RouterBase {
         settings: data,
       );
     },
+    VideoPlayerView: (data) {
+      return MaterialPageRoute(
+        builder:
+            (BuildContext _) =>
+                VideoPlayerView(videoUrl: data.arguments as String),
+        settings: data,
+      );
+    },
+    TicketDetailsView: (data) {
+      final ticketId = data.arguments as String?;
+      return MaterialPageRoute(
+        builder: (BuildContext _) => TicketDetailsView(ticketId: ticketId),
+        settings: data,
+      );
+    },
     EmployeeDetailsView: (data) {
       return MaterialPageRoute(
         builder:
@@ -630,6 +648,13 @@ class AppRouter extends RouterBase {
         settings: data,
       );
     },
+    ReviewTicketView: (data) {
+      final ticketId = data.arguments as String?;
+      return MaterialPageRoute(
+        builder: (BuildContext _) => ReviewTicketView(ticketId: ticketId),
+        settings: data,
+      );
+    },
   };
 
   /// Defines the list of routes available in the app.
@@ -673,6 +698,8 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.createGroupChat, page: CreateGroupChat),
     RouteDef(Routes.archivedChats, page: ArchivedChatList),
     RouteDef(Routes.imageViewerView, page: ImageViewerView),
+    RouteDef(Routes.videoPlayer, page: VideoPlayerView),
+    RouteDef(Routes.ticketDetails, page: TicketDetailsView),
     RouteDef(Routes.employee, page: EmployeeDetailsView),
 
     // Analytics and existing dashboard routes
@@ -694,6 +721,7 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.addNewMachineModel, page: AddNewMachineModelView),
     RouteDef(Routes.customerEditDetailsView, page: CustomerEditDetailsView),
     RouteDef(Routes.setServicePricing, page: SetServicePricingView),
+    RouteDef(Routes.reviewTicket, page: ReviewTicketView),
 
     // TODO: Add the following route definitions when the corresponding views are created:
 

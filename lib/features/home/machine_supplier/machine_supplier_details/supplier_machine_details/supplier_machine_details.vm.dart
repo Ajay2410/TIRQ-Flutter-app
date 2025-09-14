@@ -1,3 +1,4 @@
+import 'package:manager/routes/routes.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter/material.dart';
 import 'package:manager/core/locator.dart';
@@ -8,8 +9,11 @@ import 'package:manager/api_endpoints.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
 
+import 'package:stacked_services/stacked_services.dart';
+
 class SupplierMachineDetailsViewModel extends BaseViewModel {
   final _apiService = locator<ApiService>();
+  final _navigationService = locator<NavigationService>();
 
   String? _machineId;
   String? _organizationId;
@@ -19,7 +23,6 @@ class SupplierMachineDetailsViewModel extends BaseViewModel {
     _organizationId = organizationId;
   }
 
-  /// Create a ticket with the provided details - Direct API call
   Future<void> createTicket({
     String? problem,
     String? errorCode,
@@ -41,36 +44,45 @@ class SupplierMachineDetailsViewModel extends BaseViewModel {
     }
 
     if (isFromSiteVisit) {
-      // For site visit, only send ticketType, machineId, and organisationId
       final formData = FormData();
       formData.fields.addAll([
         MapEntry('ticketType', maintenanceType!),
         MapEntry('machineId', _machineId!),
         MapEntry('organisationId', _organizationId!),
+        MapEntry('problem', ""),
+        MapEntry('errorCode', ""),
+        MapEntry('notes', ""),
+        MapEntry('paymentStatus', "unpaid"),
+        MapEntry('type', "Offline"),
       ]);
 
       final response = await _apiService.post(url: ApiEndpoints.createTicket, data: formData);
 
       if (response.statusCode == 201 && response.data['ticket'] != null) {
+        final ticketId = response.data['ticket']['_id'];
+
         AppLogger.info('Site visit ticket created successfully: ${response.data['ticket']['_id']}');
+
+        await _navigationService.navigateTo(Routes.reviewTicket, arguments: ticketId);
+
         Fluttertoast.showToast(msg: response.data["message"] ?? 'Site visit ticket created successfully!', backgroundColor: Colors.green);
       } else {
         AppLogger.error('Failed to create site visit ticket');
       }
     } else {
-      // For regular ticket creation with all fields
       final formData = FormData();
 
-      // Add text fields
       formData.fields.addAll([
         MapEntry('problem', problem!),
         MapEntry('errorCode', errorCode!),
         MapEntry('notes', additionalNotes!),
         MapEntry('machineId', _machineId!),
         MapEntry('organisationId', _organizationId!),
+        MapEntry('ticketType', "Full Machine Service"),
+        MapEntry('paymentStatus', "unpaid"),
+        MapEntry('type', "Online"),
       ]);
 
-      // Add image files
       for (var i = 0; i < attachments!.length; i++) {
         final file = attachments[i];
         final extension = file.path.split('.').last.toLowerCase();

@@ -152,57 +152,63 @@ class ChatListViewModel extends BaseViewModel {
   }
 
   Future<void> getChatRooms() async {
-    try {
-      final result = await _chatService.getChatRooms();
+    // try {
+    //   final result = await _chatService.getChatRooms();
 
-      result.fold(
-        (failure) {
-          AppLogger.error('Failed to get chat rooms: ${failure.message}');
-          _chatRooms = [];
+    //   result.fold(
+    //     (failure) {
+    //       AppLogger.error('Failed to get chat rooms: ${failure.message}');
+    //       _chatRooms = [];
 
-          Fluttertoast.showToast(
-            msg:
-                "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: AppColors.error,
-            textColor: AppColors.white,
-          );
-        },
-        (response) {
-          _chatRooms = response;
-          AppLogger.info('Successfully loaded ${response.length} chat rooms');
+    //       Fluttertoast.showToast(
+    //         msg:
+    //             "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
+    //         toastLength: Toast.LENGTH_SHORT,
+    //         gravity: ToastGravity.BOTTOM,
+    //         backgroundColor: AppColors.error,
+    //         textColor: AppColors.white,
+    //       );
+    //     },
+    //     (response) {
+    //       _chatRooms = response;
+    //       AppLogger.info('Successfully loaded ${response.length} chat rooms');
 
-          AppLogger.info(
-            'Chat types distribution: '
-            'Tickets: ${ticketChatsCount}, '
-            'Departmental: ${departmentalChatsCount}, '
-            'External: ${externalChatsCount}',
-          );
+    //       AppLogger.info(
+    //         'Chat types distribution: '
+    //         'Tickets: ${ticketChatsCount}, '
+    //         'Departmental: ${departmentalChatsCount}, '
+    //         'External: ${externalChatsCount}',
+    //       );
 
-          final roomTypes = <String, int>{};
-          for (final chat in _chatRooms) {
-            final type = chat.chatRoomType ?? 'null';
-            roomTypes[type] = (roomTypes[type] ?? 0) + 1;
-          }
-          AppLogger.info('ChatRoomType distribution: $roomTypes');
-        },
-      );
-    } catch (e) {
-      AppLogger.error('Error fetching chat rooms: $e');
-      _chatRooms = [];
+    //       final roomTypes = <String, int>{};
+    //       for (final chat in _chatRooms) {
+    //         final type = chat.chatRoomType ?? 'null';
+    //         roomTypes[type] = (roomTypes[type] ?? 0) + 1;
+    //       }
+    //       AppLogger.info('ChatRoomType distribution: $roomTypes');
+    //     },
+    //   );
+    // } catch (e) {
+    //   AppLogger.error('Error fetching chat rooms: $e');
+    //   _chatRooms = [];
 
-      Fluttertoast.showToast(
-        msg: LanguageService.get("error_loading_chats"),
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: AppColors.error,
-        textColor: AppColors.white,
-      );
-    } finally {
-      if (_chatService.isRefreshing) {
-        _chatService.resetRefreshFlag();
-      }
+    //   Fluttertoast.showToast(
+    //     msg: LanguageService.get("error_loading_chats"),
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: ToastGravity.BOTTOM,
+    //     backgroundColor: AppColors.error,
+    //     textColor: AppColors.white,
+    //   );
+    // } finally {
+    //   if (_chatService.isRefreshing) {
+    //     _chatService.resetRefreshFlag();
+    //   }
+    // }
+
+    // Set empty chat rooms since API is disabled
+    _chatRooms = [];
+    if (_chatService.isRefreshing) {
+      _chatService.resetRefreshFlag();
     }
 
     notifyListeners();

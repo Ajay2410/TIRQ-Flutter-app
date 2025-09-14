@@ -109,6 +109,10 @@ abstract class AppColors {
   static const Color color0ABAB5 = Color(0xFF0ABAB5);
   static const Color purple = Color(0xFF9C27B0);
   static const Color colorF8FBFE = Color(0xFFF8FBFE);
+  static const Color peachPuff = Color(0xFFFEF3E7);
+  static const Color mistyRose = Color(0xFFFFEAEB);
+  static const Color teaGreen = Color(0xFFF0F6EB);
+  static const Color lavenderBlue = Color(0xFFE9ECFB);
 
   // Organization Colors
   static const Color organizationGreen = Color(0xFF179959);

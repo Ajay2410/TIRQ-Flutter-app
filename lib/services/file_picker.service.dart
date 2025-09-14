@@ -194,9 +194,7 @@ class FilePickerService {
     }
   }
 
-  ResultFuture<File> pickVideoFromGallery({
-    Duration? maxDuration,
-  }) async {
+  ResultFuture<File> pickVideoFromGallery({Duration? maxDuration}) async {
     try {
       // Request permission
       final statusPhotos = await Permission.photos.request();
@@ -223,9 +221,7 @@ class FilePickerService {
     }
   }
 
-  ResultFuture<File> recordVideo({
-    Duration? maxDuration,
-  }) async {
+  ResultFuture<File> recordVideo({Duration? maxDuration}) async {
     try {
       // Request permission
       final permissionStatus = await Permission.camera.request();

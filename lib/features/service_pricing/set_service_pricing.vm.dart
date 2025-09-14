@@ -10,17 +10,12 @@ import '../../services/api.service.dart';
 import '../../core/locator.dart';
 
 class SetServicePricingViewModel extends BaseViewModel {
-  final TextEditingController onlineInWarrantyController =
-      TextEditingController();
-  final TextEditingController onlineOutOfWarrantyController =
-      TextEditingController();
+  final TextEditingController onlineInWarrantyController = TextEditingController();
+  final TextEditingController onlineOutOfWarrantyController = TextEditingController();
 
-  final TextEditingController offlineInWarrantyGeneralController =
-      TextEditingController();
-  final TextEditingController offlineInWarrantyFullServiceController =
-      TextEditingController();
-  final TextEditingController offlineOutOfWarrantyController =
-      TextEditingController();
+  final TextEditingController offlineInWarrantyGeneralController = TextEditingController();
+  final TextEditingController offlineInWarrantyFullServiceController = TextEditingController();
+  final TextEditingController offlineOutOfWarrantyController = TextEditingController();
 
   bool _isLoading = false;
   bool _isSaving = false;
@@ -47,11 +42,9 @@ class SetServicePricingViewModel extends BaseViewModel {
 
   String get onlineOutOfWarrantyCurrency => _onlineOutOfWarrantyCurrency;
 
-  String get offlineInWarrantyGeneralCurrency =>
-      _offlineInWarrantyGeneralCurrency;
+  String get offlineInWarrantyGeneralCurrency => _offlineInWarrantyGeneralCurrency;
 
-  String get offlineInWarrantyFullServiceCurrency =>
-      _offlineInWarrantyFullServiceCurrency;
+  String get offlineInWarrantyFullServiceCurrency => _offlineInWarrantyFullServiceCurrency;
 
   String get offlineOutOfWarrantyCurrency => _offlineOutOfWarrantyCurrency;
 
@@ -73,18 +66,13 @@ class SetServicePricingViewModel extends BaseViewModel {
     _setLoading(true);
 
     try {
-      final response = await _apiService.get(
-        url: ApiEndpoints.getAllServicePricing,
-        showToast: false,
-      );
+      final response = await _apiService.get(url: ApiEndpoints.getAllServicePricing, showToast: false);
 
       if (response.statusCode == 200) {
         final responseData = response.data;
-        if (responseData is Map<String, dynamic> &&
-            responseData['data'] is List) {
+        if (responseData is Map<String, dynamic> && responseData['data'] is List) {
           final dataList = responseData['data'] as List;
-          _servicePricingData =
-              dataList.map((item) => Datum.fromJson(item)).toList();
+          _servicePricingData = dataList.map((item) => Datum.fromJson(item)).toList();
           _populateControllers();
         }
       } else {}
@@ -105,18 +93,13 @@ class SetServicePricingViewModel extends BaseViewModel {
           _onlineOutOfWarrantyCurrency = item.currency ?? 'USD';
         }
       } else if (item.supportMode == 'Offline') {
-        if (item.warrantyStatus == 'In warranty' &&
-            item.ticketType == 'General Check Up') {
-          offlineInWarrantyGeneralController.text =
-              item.cost?.toString() ?? '0';
+        if (item.warrantyStatus == 'In warranty' && item.ticketType == 'General Check Up') {
+          offlineInWarrantyGeneralController.text = item.cost?.toString() ?? '0';
           _offlineInWarrantyGeneralCurrency = item.currency ?? 'USD';
-        } else if (item.warrantyStatus == 'In warranty' &&
-            item.ticketType == 'Full Machine Service') {
-          offlineInWarrantyFullServiceController.text =
-              item.cost?.toString() ?? '0';
+        } else if (item.warrantyStatus == 'In warranty' && item.ticketType == 'Full Machine Service') {
+          offlineInWarrantyFullServiceController.text = item.cost?.toString() ?? '0';
           _offlineInWarrantyFullServiceCurrency = item.currency ?? 'USD';
-        } else if (item.warrantyStatus == 'Out of warranty' &&
-            item.ticketType == 'Full Machine Service') {
+        } else if (item.warrantyStatus == 'Out of warranty' && item.ticketType == 'Full Machine Service') {
           offlineOutOfWarrantyController.text = item.cost?.toString() ?? '0';
           _offlineOutOfWarrantyCurrency = item.currency ?? 'USD';
         }
@@ -143,10 +126,11 @@ class SetServicePricingViewModel extends BaseViewModel {
             "cost": int.tryParse(onlineInWarrantyController.text) ?? 0,
             "currency": _onlineInWarrantyCurrency,
           },
+          {"supportMode": "Online", "warrantyStatus": "In warranty", "ticketType": "Full Machine Service", "cost": 0, "currency": "USD"},
           {
             "supportMode": "Online",
             "warrantyStatus": "Out of warranty",
-            "ticketType": "General Check Up",
+            "ticketType": "Full Machine Service",
             "cost": int.tryParse(onlineOutOfWarrantyController.text) ?? 0,
             "currency": _onlineOutOfWarrantyCurrency,
           },
@@ -161,8 +145,7 @@ class SetServicePricingViewModel extends BaseViewModel {
             "supportMode": "Offline",
             "warrantyStatus": "In warranty",
             "ticketType": "Full Machine Service",
-            "cost":
-                int.tryParse(offlineInWarrantyFullServiceController.text) ?? 0,
+            "cost": int.tryParse(offlineInWarrantyFullServiceController.text) ?? 0,
             "currency": _offlineInWarrantyFullServiceCurrency,
           },
           {
@@ -175,17 +158,12 @@ class SetServicePricingViewModel extends BaseViewModel {
         ],
       };
 
-      final response = await _apiService.post(
-        url: ApiEndpoints.createServicePricing,
-        data: requestBody,
-        showToast: true,
-      );
+      final response = await _apiService.post(url: ApiEndpoints.createServicePricing, data: requestBody, showToast: true);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final responseData = response.data;
         String successMessage = LanguageService.get('service_pricing_saved');
-        if (responseData is Map<String, dynamic> &&
-            responseData['message'] != null) {
+        if (responseData is Map<String, dynamic> && responseData['message'] != null) {
           successMessage = responseData['message'].toString();
         }
 
@@ -201,28 +179,17 @@ class SetServicePricingViewModel extends BaseViewModel {
 
   bool validatePricing() {
     final onlineInWarranty = int.tryParse(onlineInWarrantyController.text);
-    final onlineOutOfWarranty = int.tryParse(
-      onlineOutOfWarrantyController.text,
-    );
-    final offlineInWarrantyGeneral = int.tryParse(
-      offlineInWarrantyGeneralController.text,
-    );
-    final offlineInWarrantyFullService = int.tryParse(
-      offlineInWarrantyFullServiceController.text,
-    );
-    final offlineOutOfWarranty = int.tryParse(
-      offlineOutOfWarrantyController.text,
-    );
+    final onlineOutOfWarranty = int.tryParse(onlineOutOfWarrantyController.text);
+    final offlineInWarrantyGeneral = int.tryParse(offlineInWarrantyGeneralController.text);
+    final offlineInWarrantyFullService = int.tryParse(offlineInWarrantyFullServiceController.text);
+    final offlineOutOfWarranty = int.tryParse(offlineOutOfWarrantyController.text);
 
     if (onlineInWarranty == null ||
         onlineOutOfWarranty == null ||
         offlineInWarrantyGeneral == null ||
         offlineInWarrantyFullService == null ||
         offlineOutOfWarranty == null) {
-      Fluttertoast.showToast(
-        msg: LanguageService.get('valid_numbers_required'),
-        backgroundColor: AppColors.redBack,
-      );
+      Fluttertoast.showToast(msg: LanguageService.get('valid_numbers_required'), backgroundColor: AppColors.redBack);
       return false;
     }
 

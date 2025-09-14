@@ -252,16 +252,16 @@ class _MachineRecordsViewState extends State<MachineRecordsView> with TickerProv
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  machine.machineName ?? 'Unknown Machine',
+                  "#${machine.machineName} - ${machine.machineName}",
                   style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Text("${"remarks".lang}: ", style: TextStyle(color: AppColors.black, fontSize: 12, fontWeight: FontWeight.bold)),
+                    Text("${"add_on".lang}: ", style: TextStyle(color: AppColors.black, fontSize: 12, fontWeight: FontWeight.bold)),
                     Expanded(
                       child: Text(
-                        machine.remarks ?? 'No remarks',
+                        machine.remarks ?? 'No add-ons',
                         style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400, overflow: TextOverflow.ellipsis),
                       ),
                     ),

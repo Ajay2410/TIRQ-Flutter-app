@@ -64,7 +64,6 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
           canPop: false,
           onPopInvokedWithResult: (didPop, result) {
             if (!didPop) {
-              // Return the changes flag when navigating back
               Navigator.of(context).pop(model.hasChanges);
             }
           },
@@ -295,7 +294,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     final machineName = machine.machineName ?? 'Unknown Machine';
     final modelNumber = machine.modelNumber ?? 'N/A';
     final machineType = machine.machineType ?? 'Unknown Type';
-    final isInWarranty = machineData.warrantyStatus == 'Active';
+    final isInWarranty = machineData.warrantyStatus == 'In warranty';
     final country = customer.countryOrigin?.isNotEmpty == true ? customer.countryOrigin! : 'N/A';
 
     return Container(
@@ -325,7 +324,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  isInWarranty ? 'in_warranty'.lang : 'out_of_warranty'.lang,
+                  isInWarranty ? "In warranty" : "Out Of Warranty",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: isInWarranty ? AppColors.success : AppColors.redBack),
                 ),
               ),
@@ -591,16 +590,12 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Contact Person label
                   Container(height: 12, width: 80, color: AppColors.lightGray),
                   const SizedBox(height: 4),
-                  // Contact Person value
                   Container(height: 14, width: 120, color: AppColors.lightGray),
                   const SizedBox(height: 12),
-                  // Email label
                   Container(height: 12, width: 40, color: AppColors.lightGray),
                   const SizedBox(height: 4),
-                  // Email value
                   Container(height: 14, width: 150, color: AppColors.lightGray),
                 ],
               ),
@@ -610,16 +605,12 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Designation label
                   Container(height: 12, width: 70, color: AppColors.lightGray),
                   const SizedBox(height: 4),
-                  // Designation value
                   Container(height: 14, width: 100, color: AppColors.lightGray),
                   const SizedBox(height: 12),
-                  // Phone label
                   Container(height: 12, width: 35, color: AppColors.lightGray),
                   const SizedBox(height: 4),
-                  // Phone value
                   Container(height: 14, width: 130, color: AppColors.lightGray),
                 ],
               ),

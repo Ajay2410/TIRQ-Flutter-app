@@ -25,13 +25,6 @@ class ImageViewerView extends StatelessWidget {
             backgroundColor: Colors.black,
             iconTheme: IconThemeData(color: Colors.white),
             elevation: 0,
-            actions: [
-              IconButton(
-                icon: Icon(Icons.refresh),
-                onPressed: model.resetZoom,
-                tooltip: 'Reset Zoom',
-              ),
-            ],
           ),
           body: SafeArea(
             child: Stack(

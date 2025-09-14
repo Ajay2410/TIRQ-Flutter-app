@@ -202,14 +202,8 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
 
               Container(
                 padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color:  AppColors.success.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  machineElement.warrantyStatus??"",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                ),
+                decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(6)),
+                child: Text(machineElement.warrantyStatus ?? "", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
               ),
               const SizedBox(width: 8),
               GestureDetector(
@@ -271,16 +265,12 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Contact Person label
                   Container(height: 12, width: 80, color: AppColors.lightGray),
                   const SizedBox(height: 4),
-                  // Contact Person value
                   Container(height: 14, width: 120, color: AppColors.lightGray),
                   const SizedBox(height: 12),
-                  // Email label
                   Container(height: 12, width: 40, color: AppColors.lightGray),
                   const SizedBox(height: 4),
-                  // Email value
                   Container(height: 14, width: 150, color: AppColors.lightGray),
                 ],
               ),
@@ -290,16 +280,12 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Designation label
                   Container(height: 12, width: 70, color: AppColors.lightGray),
                   const SizedBox(height: 4),
-                  // Designation value
                   Container(height: 14, width: 100, color: AppColors.lightGray),
                   const SizedBox(height: 12),
-                  // Phone label
                   Container(height: 12, width: 35, color: AppColors.lightGray),
                   const SizedBox(height: 4),
-                  // Phone value
                   Container(height: 14, width: 130, color: AppColors.lightGray),
                 ],
               ),

@@ -194,4 +194,13 @@ abstract class Routes {
   static const String machineDetails = '/machineDetails';
   static const String addNewMachineModel = '/addNewMachineModel';
   static const String customerEditDetailsView = '/customerEditDetailsView';
+
+  /// Route for the Review Ticket screen.
+  static const String reviewTicket = '/reviewTicket';
+
+  /// Route for the Video Player screen.
+  static const String videoPlayer = '/videoPlayer';
+
+  /// Route for the Ticket Details screen.
+  static const String ticketDetails = '/ticketDetails';
 }

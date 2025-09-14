@@ -3,90 +3,86 @@
 //     final ticketModel = ticketModelFromJson(jsonString);
 
 import 'dart:convert';
-import '../enums/ticket_status_enum.dart';
-import '../enums/warranty_status_enum.dart';
 
-List<TicketModel> ticketModelFromJson(String str) => List<TicketModel>.from(
-  json.decode(str).map((x) => TicketModel.fromJson(x)),
-);
+TicketModel ticketModelFromJson(String str) =>
+    TicketModel.fromJson(json.decode(str));
 
-String ticketModelToJson(List<TicketModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String ticketModelToJson(TicketModel data) => json.encode(data.toJson());
 
-// Paginated response model
-class PaginatedTicketResponse {
-  int total;
-  int page;
-  int pages;
-  int count;
-  List<TicketModel> data;
+class TicketModel {
+  int? total;
+  int? page;
+  int? pages;
+  int? count;
+  List<Datum>? data;
 
-  PaginatedTicketResponse({
-    required this.total,
-    required this.page,
-    required this.pages,
-    required this.count,
-    required this.data,
-  });
+  TicketModel({this.total, this.page, this.pages, this.count, this.data});
 
-  factory PaginatedTicketResponse.fromJson(Map<String, dynamic> json) =>
-      PaginatedTicketResponse(
-        total: json["total"] ?? 0,
-        page: json["page"] ?? 1,
-        pages: json["pages"] ?? 1,
-        count: json["count"] ?? 0,
-        data:
-            json["data"] == null
-                ? []
-                : List<TicketModel>.from(
-                  json["data"].map((x) => TicketModel.fromJson(x)),
-                ),
-      );
+  factory TicketModel.fromJson(Map<String, dynamic> json) => TicketModel(
+    total: json["total"],
+    page: json["page"],
+    pages: json["pages"],
+    count: json["count"],
+    data:
+        json["data"] == null
+            ? []
+            : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+  );
 
   Map<String, dynamic> toJson() => {
     "total": total,
     "page": page,
     "pages": pages,
     "count": count,
-    "data": List<dynamic>.from(data.map((x) => x.toJson())),
+    "data":
+        data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
   };
 }
 
-class TicketModel {
+class Datum {
   String? id;
+  String? ticketNumber;
   String? problem;
   String? errorCode;
   String? notes;
   List<Media>? media;
   String? ticketType;
+  String? type;
   String? status;
   bool? isActive;
   Machine? machine;
   Organisation? processor;
   Organisation? organisation;
+  String? pricing;
+  String? paymentStatus;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
 
-  TicketModel({
+  Datum({
     this.id,
+    this.ticketNumber,
     this.problem,
     this.errorCode,
     this.notes,
     this.media,
     this.ticketType,
+    this.type,
     this.status,
     this.isActive,
     this.machine,
     this.processor,
     this.organisation,
+    this.pricing,
+    this.paymentStatus,
     this.createdAt,
     this.updatedAt,
     this.v,
   });
 
-  factory TicketModel.fromJson(Map<String, dynamic> json) => TicketModel(
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
     id: json["_id"],
+    ticketNumber: json["ticketNumber"],
     problem: json["problem"],
     errorCode: json["errorCode"],
     notes: json["notes"],
@@ -95,6 +91,7 @@ class TicketModel {
             ? []
             : List<Media>.from(json["media"]!.map((x) => Media.fromJson(x))),
     ticketType: json["ticketType"],
+    type: json["type"],
     status: json["status"],
     isActive: json["isActive"],
     machine: json["machine"] == null ? null : Machine.fromJson(json["machine"]),
@@ -106,6 +103,8 @@ class TicketModel {
         json["organisation"] == null
             ? null
             : Organisation.fromJson(json["organisation"]),
+    pricing: json["pricing"],
+    paymentStatus: json["paymentStatus"],
     createdAt:
         json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
     updatedAt:
@@ -115,28 +114,25 @@ class TicketModel {
 
   Map<String, dynamic> toJson() => {
     "_id": id,
+    "ticketNumber": ticketNumber,
     "problem": problem,
     "errorCode": errorCode,
     "notes": notes,
     "media":
         media == null ? [] : List<dynamic>.from(media!.map((x) => x.toJson())),
     "ticketType": ticketType,
+    "type": type,
     "status": status,
     "isActive": isActive,
     "machine": machine?.toJson(),
     "processor": processor?.toJson(),
     "organisation": organisation?.toJson(),
+    "pricing": pricing,
+    "paymentStatus": paymentStatus,
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
     "__v": v,
   };
-
-  // Getter for status enum
-  TicketStatus? get ticketStatus => TicketStatus.fromString(status);
-
-  // Getter for warranty status enum
-  WarrantyStatus? get warrantyStatus =>
-      WarrantyStatus.fromString(machine?.status);
 }
 
 class Machine {

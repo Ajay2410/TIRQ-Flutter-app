@@ -9,7 +9,7 @@ import 'package:manager/services/api.service.dart';
 
 import '../core/models/hive/user/user.dart';
 import '../core/models/organization.dart';
-import '../core/storage/storage.dart';
+// import '../core/storage/storage.dart';
 import '../core/utils/failures.dart';
 
 class OrganizationService {
@@ -132,25 +132,25 @@ class OrganizationService {
   ResultFuture<bool> updateOrganization(
     Map<String, dynamic> organizationData,
   ) async {
-    try {
-      final response = await apiService.put(
-        url: ApiEndpoints.profile,
-        data: organizationData,
-      );
+    // try {
+    //   final response = await apiService.put(
+    //     url: ApiEndpoints.profile,
+    //     data: organizationData,
+    //   );
 
-      if (response.data['success'] == true) {
-        return Right(true);
-      } else {
-        return Left(Failure(response.data['message']));
-      }
-    } catch (e) {
-      if (e is DioException) {
-        AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(
-          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
-        );
-      }
-    }
+    // if (response.data['success'] == true) {
+    //   return Right(true);
+    // } else {
+    //   return Left(Failure(response.data['message']));
+    // }
+    // } catch (e) {
+    //   if (e is DioException) {
+    //     AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
+    //     return Left(
+    //       Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+    //     );
+    //   }
+    // }
     return Left(Failure('Failed to add Details'));
   }
 
@@ -271,54 +271,54 @@ class OrganizationService {
   }
 
   ResultFuture<Organization> getProfile() async {
-    try {
-      final response = await apiService.get(url: ApiEndpoints.profile);
+    // try {
+    //   final response = await apiService.get(url: ApiEndpoints.profile);
 
-      if (response.data['success'] == true) {
-        final profileData = response.data['data'];
+    // if (response.data['success'] == true) {
+    //   final profileData = response.data['data'];
 
-        // Create Organization object from API response
-        final organization = Organization.fromJson(profileData);
+    //   // Create Organization object from API response
+    //   final organization = Organization.fromJson(profileData);
 
-        // Now we also update the User object in storage to keep data consistent
-        final user = User(
-          id: profileData['_id'],
-          name: profileData['name'],
-          email: profileData['email'],
-          phone: profileData['phone'],
-          organizationId: profileData['_id'],
-          organizationName: profileData['name'],
-          organizationType:
-              profileData['organizationType'] != null
-                  ? OrganizationType.values.byName(
-                    profileData['organizationType'].toLowerCase(),
-                  )
-                  : null,
-          userType: getUser().userType,
-          userRole: getUser().userRole,
-          // Keep the token from existing user
-          token: getUser().token,
-          logoUrl: profileData['logo'],
-        );
+    //   // Now we also update the User object in storage to keep data consistent
+    //   final user = User(
+    //     id: profileData['_id'],
+    //     name: profileData['name'],
+    //     email: profileData['email'],
+    //     phone: profileData['phone'],
+    //     organizationId: profileData['_id'],
+    //     organizationName: profileData['name'],
+    //     organizationType:
+    //         profileData['organizationType'] != null
+    //             ? OrganizationType.values.byName(
+    //               profileData['organizationType'].toLowerCase(),
+    //             )
+    //             : null,
+    //     userType: getUser().userType,
+    //     userRole: getUser().userRole,
+    //     // Keep the token from existing user
+    //     token: getUser().token,
+    //     logoUrl: profileData['logo'],
+    //   );
 
-        // Save updated user to storage
-        saveUser(user);
+    //   // Save updated user to storage
+    //   saveUser(user);
 
-        return Right(organization);
-      } else {
-        return Left(
-          Failure(response.data['message'] ?? 'Failed to get profile'),
-        );
-      }
-    } catch (e) {
-      if (e is DioException) {
-        AppLogger.error(e.response?.data['message'] ?? 'Something went wrong');
-        return Left(
-          Failure(e.response?.data['message'] ?? 'Failed to get profile'),
-        );
-      }
-      AppLogger.error(e.toString());
-      return Left(Failure('Failed to get profile'));
-    }
+    //   return Right(organization);
+    // } else {
+    //   return Left(
+    //     Failure(response.data['message'] ?? 'Failed to get profile'),
+    //   );
+    // }
+    // } catch (e) {
+    //   if (e is DioException) {
+    //     AppLogger.error(e.response?.data['message'] ?? 'Something went wrong');
+    //     return Left(
+    //       Failure(e.response?.data['message'] ?? 'Failed to get profile'),
+    //     );
+    //   }
+    //   AppLogger.error(e.toString());
+    // }
+    return Left(Failure('Failed to get profile'));
   }
 }

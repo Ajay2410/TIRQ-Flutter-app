@@ -44,28 +44,28 @@ class EmployeeService {
   }
 
   ResultFuture<List<Employee>> getAllEmployees() async {
-    try {
-      final response = await apiService.get(
-        url: ApiEndpoints.allEmployee,
-      );
+    // try {
+    //   final response = await apiService.get(
+    //     url: ApiEndpoints.allEmployee,
+    //   );
 
-      if (response.data['success'] == true) {
-        return Right(
-          (response.data['data'] as List)
-              .map((e) => Employee.fromJson(e))
-              .toList(),
-        );
-      } else {
-        return Left(Failure(response.data['message']));
-      }
-    } catch (e) {
-      if (e is DioException) {
-        AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(
-          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
-        );
-      }
-    }
+    // if (response.data['success'] == true) {
+    //   return Right(
+    //     (response.data['data'] as List)
+    //         .map((e) => Employee.fromJson(e))
+    //         .toList(),
+    //   );
+    // } else {
+    //   return Left(Failure(response.data['message']));
+    // }
+    // } catch (e) {
+    //   if (e is DioException) {
+    //     AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
+    //     return Left(
+    //       Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+    //     );
+    //   }
+    // }
     return Left(Failure('Failed to get all employees'));
   }
 
@@ -103,15 +103,15 @@ class EmployeeService {
     required bool canApproveExpenses,
     required bool canApproveTimeOff,
     required String role,
-    String ? reportingTo,
-    String ? assignMachine,
-    String ? factoryUnitId,
-    String ? employeeId,
-    String ? countryCode,
-    String ? emergencyContact,
-    String ? employmentType,
-    String ? shiftTiming,
-    DateTime ? endDateTime,
+    String? reportingTo,
+    String? assignMachine,
+    String? factoryUnitId,
+    String? employeeId,
+    String? countryCode,
+    String? emergencyContact,
+    String? employmentType,
+    String? shiftTiming,
+    DateTime? endDateTime,
   }) async {
     try {
       final response = await apiService.post(
@@ -123,7 +123,7 @@ class EmployeeService {
           "startDate": startDateTime.toIso8601String(),
           "endDate": endDateTime?.toIso8601String(),
           "role": role,
-          "country":country,
+          "country": country,
           "permissions": {
             "canViewCalendar": canViewCalendar,
             "canAssignTasks": canAssignTasks,
@@ -131,14 +131,14 @@ class EmployeeService {
             "canApproveTimeOff": canApproveTimeOff,
             "canApproveExpenses": canApproveExpenses,
           },
-          "factoryUnitId" : factoryUnitId,
-          "employee_Id" : employeeId,
-          "reportingTo" : reportingTo,
-          "assignMachine" : assignMachine,
-          "countryCode" : countryCode,
-          "emergencyContact" : emergencyContact,
-          "employmentStatus" : employmentType,
-          "shift" : shiftTiming
+          "factoryUnitId": factoryUnitId,
+          "employee_Id": employeeId,
+          "reportingTo": reportingTo,
+          "assignMachine": assignMachine,
+          "countryCode": countryCode,
+          "emergencyContact": emergencyContact,
+          "employmentStatus": employmentType,
+          "shift": shiftTiming,
         },
       );
 
@@ -175,26 +175,25 @@ class EmployeeService {
     required bool canApproveExpenses,
     required bool canApproveTimeOff,
     required String role,
-    String ? reportingTo,
-    String ? assignMachine,
-    String ? factoryUnitId,
-    String ? employeeId,
-    String ? countryName,
-    String ? emergencyContact,
-    String ? employmentType,
-    String ? shiftTiming,
-    DateTime ? endDateTime,
-
+    String? reportingTo,
+    String? assignMachine,
+    String? factoryUnitId,
+    String? employeeId,
+    String? countryName,
+    String? emergencyContact,
+    String? employmentType,
+    String? shiftTiming,
+    DateTime? endDateTime,
   }) async {
     try {
       final response = await apiService.post(
         url: ApiEndpoints.addNewEmployee,
         data: {
-          "fullName":fullName,
-          "email":email,
-          'phone':phone,
-          "password":password,
-          "countryCode":countryCode,
+          "fullName": fullName,
+          "email": email,
+          'phone': phone,
+          "password": password,
+          "countryCode": countryCode,
           "relationshipType": relationshipType,
           "teamContext": team,
           "country": country,
@@ -208,14 +207,14 @@ class EmployeeService {
             "canApproveTimeOff": canApproveTimeOff,
             "canApproveExpenses": canApproveExpenses,
           },
-          "factoryUnitId" : factoryUnitId,
-          "employee_Id" : employeeId,
-          "reportingTo" : reportingTo,
-          "assignMachine" : assignMachine,
-          "countryName" : countryName,
-          "emergencyContact" : emergencyContact,
-          "employmentStatus" : employmentType,
-          "shift" : shiftTiming
+          "factoryUnitId": factoryUnitId,
+          "employee_Id": employeeId,
+          "reportingTo": reportingTo,
+          "assignMachine": assignMachine,
+          "countryName": countryName,
+          "emergencyContact": emergencyContact,
+          "employmentStatus": employmentType,
+          "shift": shiftTiming,
         },
       );
 
@@ -235,7 +234,10 @@ class EmployeeService {
     return Left(Failure('Failed to create employee'));
   }
 
-  ResultFuture<bool> updateEmployee(String employeeId, Map<String, dynamic> updateData) async {
+  ResultFuture<bool> updateEmployee(
+    String employeeId,
+    Map<String, dynamic> updateData,
+  ) async {
     try {
       final response = await apiService.put(
         url: '${ApiEndpoints.employee}/$employeeId',
@@ -280,7 +282,10 @@ class EmployeeService {
     return Left(Failure('Failed to delete employee'));
   }
 
-  ResultFuture<bool> updateEmployeePermissions(String employeeId, Map<String, dynamic> permissions) async {
+  ResultFuture<bool> updateEmployeePermissions(
+    String employeeId,
+    Map<String, dynamic> permissions,
+  ) async {
     try {
       final response = await apiService.put(
         url: '${ApiEndpoints.employee}/$employeeId/permissions',
@@ -303,7 +308,10 @@ class EmployeeService {
     return Left(Failure('Failed to update employee permissions'));
   }
 
-  ResultFuture<bool> toggleEmployeeStatus(String employeeId, String status) async {
+  ResultFuture<bool> toggleEmployeeStatus(
+    String employeeId,
+    String status,
+  ) async {
     try {
       final response = await apiService.put(
         url: '${ApiEndpoints.employee}/$employeeId/status',

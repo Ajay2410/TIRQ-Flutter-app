@@ -82,8 +82,8 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
 
   Color get warrantyStatusColor {
     if (_warrantyStatus.isEmpty) return AppColors.redBack;
-    if (_warrantyStatus == 'Active') return AppColors.success;
-    if (_warrantyStatus == 'Out of warranty') return AppColors.redBack;
+    if (_warrantyStatus == 'In warranty') return AppColors.success;
+    if (_warrantyStatus == 'Out Of Warranty') return AppColors.redBack;
     return AppColors.textSecondary;
   }
 
@@ -156,7 +156,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
       _installationDate = editMachineElement?.installationDate;
       _warrantyStartDate = editMachineElement?.warrantyStart;
       _warrantyEndDate = editMachineElement?.warrantyEnd;
-      _warrantyStatus = editMachineElement?.warrantyStatus ?? "Active";
+      _warrantyStatus = editMachineElement?.warrantyStatus ?? "In warranty";
       _invoiceContractNo = editMachineElement?.invoiceContractNo ?? "";
       invoiceContractNoController.text = _invoiceContractNo;
     } else {
@@ -164,7 +164,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
       _installationDate = DateTime.now();
       _warrantyStartDate = DateTime.now();
       _warrantyEndDate = null;
-      _warrantyStatus = 'Active';
+      _warrantyStatus = 'In warranty';
       _invoiceContractNo = '';
       invoiceContractNoController.text = _invoiceContractNo;
     }
@@ -247,10 +247,10 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
   }
 
   void toggleWarrantyStatus() {
-    if (_warrantyStatus.isEmpty || _warrantyStatus == 'Active') {
-      _warrantyStatus = 'Out of warranty';
+    if (_warrantyStatus.isEmpty || _warrantyStatus == 'In warranty') {
+      _warrantyStatus = 'Out Of Warranty';
     } else {
-      _warrantyStatus = 'Active';
+      _warrantyStatus = 'In warranty';
     }
     notifyListeners();
   }

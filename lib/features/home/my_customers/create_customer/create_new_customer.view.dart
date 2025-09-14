@@ -1,6 +1,5 @@
 import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:phone_input/phone_input_package.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/services/language.service.dart';
@@ -372,29 +371,6 @@ class CreateNewCustomerView extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildInfoRow(String iconPath, String label, String value, Color iconColor, {bool isWarning = false}) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
-          child: Image.asset(iconPath, width: 20, height: 20, color: iconColor),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
-              const SizedBox(height: 4),
-              Text(value, style: TextStyle(color: isWarning ? AppColors.redBack : AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
-            ],
-          ),
         ),
       ],
     );

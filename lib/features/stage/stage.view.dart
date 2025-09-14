@@ -11,11 +11,13 @@ import '../../../resources/app_resources/app_resources.dart';
 
 class StageViewAttributes {
   StageViewAttributes({required this.selectedBottomNavIndex});
+
   final int selectedBottomNavIndex;
 }
 
 class StageView extends StatelessWidget {
   const StageView({super.key, required this.attributes});
+
   final StageViewAttributes attributes;
 
   @override
@@ -72,18 +74,8 @@ class StageView extends StatelessWidget {
     return Container(
       height: AppSizes.v70,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(AppSizes.v30),
-          bottomRight: Radius.circular(AppSizes.v30),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.1),
-            spreadRadius: 2,
-            blurRadius: 10,
-            offset: Offset(0, -5),
-          ),
-        ],
+        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(AppSizes.v30), bottomRight: Radius.circular(AppSizes.v30)),
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.1), spreadRadius: 2, blurRadius: 10, offset: Offset(0, -5))],
       ),
       child: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -147,21 +139,11 @@ class StageView extends StatelessWidget {
     return BottomNavigationBarItem(
       activeIcon: SizedBox(
         height: AppSizes.v40,
-        child: Image.asset(
-          activeImagePath,
-          height: AppSizes.v30,
-          width: AppSizes.v30,
-          color: isSelected ? AppColors.primary : AppColors.gray,
-        ),
+        child: Image.asset(activeImagePath, height: AppSizes.v30, width: AppSizes.v30, color: isSelected ? AppColors.primary : AppColors.gray),
       ),
       icon: SizedBox(
         height: AppSizes.v40,
-        child: Image.asset(
-          imagePath,
-          height: AppSizes.v30,
-          width: AppSizes.v30,
-          color: isSelected ? AppColors.primary : AppColors.gray,
-        ),
+        child: Image.asset(imagePath, height: AppSizes.v30, width: AppSizes.v30, color: isSelected ? AppColors.primary : AppColors.gray),
       ),
       label: label,
     );

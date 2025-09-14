@@ -7,10 +7,13 @@ import 'package:manager/core/locator.dart';
 import 'package:manager/core/utils/app_logger.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dio/dio.dart';
+import 'package:stacked_services/stacked_services.dart';
+import 'package:manager/routes/routes.dart';
 import 'dart:io';
 
 class MachineOverviewDetailsViewModel extends BaseViewModel {
   final _apiService = locator<ApiService>();
+  final _navigationService = locator<NavigationService>();
 
   MachineOverviewDetailsModel? _machineDetails;
   bool _isLoading = false;
@@ -45,9 +48,7 @@ class MachineOverviewDetailsViewModel extends BaseViewModel {
     _errorMessage = '';
 
     try {
-      final response = await _apiService.get(
-        url: '${ApiEndpoints.getMachineById}/$_machineId',
-      );
+      final response = await _apiService.get(url: '${ApiEndpoints.getMachineById}/$_machineId');
 
       if (response.statusCode == 200) {
         _machineDetails = MachineOverviewDetailsModel.fromJson(response.data);
@@ -72,18 +73,15 @@ class MachineOverviewDetailsViewModel extends BaseViewModel {
     await _loadMachineDetails();
   }
 
-  bool get hasProcessingDimensions =>
-      _machineDetails?.processingDimensions != null;
+  bool get hasProcessingDimensions => _machineDetails?.processingDimensions != null;
 
-  ProcessingDimensions? get processingDimensions =>
-      _machineDetails?.processingDimensions;
+  ProcessingDimensions? get processingDimensions => _machineDetails?.processingDimensions;
 
   void markAsChanged() {
     _hasChanges = true;
     notifyListeners();
   }
 
-  /// Create a ticket with the provided details - Direct API call
   Future<void> createTicket({
     String? problem,
     String? errorCode,
@@ -94,96 +92,70 @@ class MachineOverviewDetailsViewModel extends BaseViewModel {
   }) async {
     if (_machineId == null) {
       AppLogger.error('Machine ID is null');
-      Fluttertoast.showToast(
-        msg: 'Machine ID not found',
-        backgroundColor: Colors.red,
-      );
+      Fluttertoast.showToast(msg: 'Machine ID not found', backgroundColor: Colors.red);
       return;
     }
 
     if (_organizationId == null || _organizationId!.isEmpty) {
       AppLogger.error('Organization ID is null or empty');
-      Fluttertoast.showToast(
-        msg: 'Organization ID not found',
-        backgroundColor: Colors.red,
-      );
+      Fluttertoast.showToast(msg: 'Organization ID not found', backgroundColor: Colors.red);
       return;
     }
 
     if (isFromSiteVisit) {
-      // For site visit, only send ticketType, machineId, and organisationId
       final formData = FormData();
       formData.fields.addAll([
         MapEntry('ticketType', maintenanceType!),
         MapEntry('machineId', _machineId!),
         MapEntry('organisationId', _organizationId!),
+        MapEntry('problem', ""),
+        MapEntry('errorCode', ""),
+        MapEntry('notes', ""),
+        MapEntry('paymentStatus', "unpaid"),
+        MapEntry('type', "Offline"),
       ]);
 
-      final response = await _apiService.post(
-        url: ApiEndpoints.createTicket,
-        data: formData,
-      );
+      final response = await _apiService.post(url: ApiEndpoints.createTicket, data: formData);
 
       if (response.statusCode == 201 && response.data['ticket'] != null) {
-        AppLogger.info(
-          'Site visit ticket created successfully: ${response.data['ticket']['_id']}',
-        );
-        Fluttertoast.showToast(
-          msg:
-              response.data["message"] ??
-              'Site visit ticket created successfully!',
-          backgroundColor: Colors.green,
-        );
+        final ticketId = response.data['ticket']['_id'];
+        AppLogger.info('Site visit ticket created successfully: $ticketId');
+        Fluttertoast.showToast(msg: response.data["message"] ?? 'Site visit ticket created successfully!', backgroundColor: Colors.green);
+        await _navigationService.navigateTo(Routes.reviewTicket, arguments: ticketId);
       } else {
         AppLogger.error('Failed to create site visit ticket');
       }
     } else {
-      // For regular ticket creation with all fields
       final formData = FormData();
 
-      // Add text fields
       formData.fields.addAll([
         MapEntry('problem', problem!),
         MapEntry('errorCode', errorCode!),
         MapEntry('notes', additionalNotes!),
         MapEntry('machineId', _machineId!),
         MapEntry('organisationId', _organizationId!),
+        MapEntry('ticketType', "Full Machine Service"),
+        MapEntry('paymentStatus', "unpaid"),
+        MapEntry('type', "Online"),
       ]);
 
-      // Add image files
       for (var i = 0; i < attachments!.length; i++) {
         final file = attachments[i];
         final extension = file.path.split('.').last.toLowerCase();
-        final contentType =
-            extension == 'png'
-                ? DioMediaType('image', 'png')
-                : DioMediaType('image', 'jpeg');
+        final contentType = extension == 'png' ? DioMediaType('image', 'png') : DioMediaType('image', 'jpeg');
 
         formData.files.add(
-          MapEntry(
-            'ticketImages',
-            await MultipartFile.fromFile(
-              file.path,
-              filename: 'ticket_image_$i.$extension',
-              contentType: contentType,
-            ),
-          ),
+          MapEntry('ticketImages', await MultipartFile.fromFile(file.path, filename: 'ticket_image_$i.$extension', contentType: contentType)),
         );
       }
 
-      final response = await _apiService.post(
-        url: ApiEndpoints.createTicket,
-        data: formData,
-      );
+      final response = await _apiService.post(url: ApiEndpoints.createTicket, data: formData);
 
       if (response.statusCode == 201 && response.data['ticket'] != null) {
-        AppLogger.info(
-          'Ticket created successfully: ${response.data['ticket']['_id']}',
-        );
-        Fluttertoast.showToast(
-          msg: response.data["message"] ?? 'Ticket created successfully!',
-          backgroundColor: Colors.green,
-        );
+        final ticketId = response.data['ticket']['_id'];
+        AppLogger.info('Ticket created successfully: $ticketId');
+        Fluttertoast.showToast(msg: response.data["message"] ?? 'Ticket created successfully!', backgroundColor: Colors.green);
+        await _navigationService.navigateTo(Routes.reviewTicket, arguments: ticketId);
       } else {
         AppLogger.error('Failed to create ticket');
       }

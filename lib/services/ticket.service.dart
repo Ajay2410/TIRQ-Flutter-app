@@ -6,6 +6,8 @@ import 'package:manager/api_endpoints.dart';
 import 'package:manager/core/locator.dart';
 import 'package:manager/core/models/ticket.dart';
 import 'package:manager/core/models/ticket_model.dart';
+import 'package:manager/core/models/review_ticket_model.dart';
+import 'package:manager/core/models/ticket_details_model.dart';
 import 'package:manager/core/utils/app_logger.dart';
 import 'package:manager/core/utils/type_def.dart';
 import 'package:manager/services/api.service.dart';
@@ -309,7 +311,7 @@ class TicketService {
   }
 
   /// Get tickets by status with pagination using the new API
-  ResultFuture<PaginatedTicketResponse> getTicketsByStatus({
+  ResultFuture<TicketModel> getTicketsByStatus({
     required String status, // 'Active' or 'Resolved'
     int page = 1,
     int limit = 5,
@@ -331,9 +333,9 @@ class TicketService {
       if (response.statusCode == 200) {
         final data = response.data;
         if (data != null) {
-          final paginatedResponse = PaginatedTicketResponse.fromJson(data);
+          final paginatedResponse = TicketModel.fromJson(data);
           AppLogger.info(
-            "Tickets fetched successfully: ${paginatedResponse.data.length} tickets (Page: ${paginatedResponse.page}/${paginatedResponse.pages})",
+            "Tickets fetched successfully: ${paginatedResponse.data?.length ?? 0} tickets (Page: ${paginatedResponse.page}/${paginatedResponse.pages})",
           );
           return Right(paginatedResponse);
         } else {
@@ -365,9 +367,7 @@ class TicketService {
   }
 
   /// Get all tickets using the new getAll endpoint (kept for backward compatibility)
-  ResultFuture<List<TicketModel>> getAllTickets({
-    bool forceRefresh = false,
-  }) async {
+  ResultFuture<List<Datum>> getAllTickets({bool forceRefresh = false}) async {
     // If already refreshing and not forced, return a failure
     if (_isRefreshing && !forceRefresh) {
       return Left(Failure('Refresh already in progress'));
@@ -383,8 +383,8 @@ class TicketService {
         if (data != null) {
           // Check if data is a list or a single object
           if (data is List) {
-            // If it's a list, map each item to TicketModel
-            final tickets = data.map((e) => TicketModel.fromJson(e)).toList();
+            // If it's a list, map each item to Datum
+            final tickets = data.map((e) => Datum.fromJson(e)).toList();
             AppLogger.info(
               "Tickets fetched successfully: ${tickets.length} tickets",
             );
@@ -393,16 +393,14 @@ class TicketService {
             // If it's a single object, check if it has a 'data' field
             if (data.containsKey('data') && data['data'] is List) {
               final tickets =
-                  (data['data'] as List)
-                      .map((e) => TicketModel.fromJson(e))
-                      .toList();
+                  (data['data'] as List).map((e) => Datum.fromJson(e)).toList();
               AppLogger.info(
                 "Tickets fetched successfully: ${tickets.length} tickets",
               );
               return Right(tickets);
             } else {
               // If it's a single ticket object
-              final ticket = TicketModel.fromJson(data);
+              final ticket = Datum.fromJson(data);
               AppLogger.info(
                 "Single ticket fetched successfully: ${ticket.id}",
               );
@@ -437,6 +435,92 @@ class TicketService {
       }
     } finally {
       _isRefreshing = false;
+    }
+  }
+
+  /// Get ticket summary with all related details
+  ResultFuture<ReviewTicketModel> getTicketSummary({
+    required String ticketId,
+  }) async {
+    try {
+      final response = await apiService.get(
+        url: '${ApiEndpoints.getTicketSummary}/$ticketId',
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if (data != null) {
+          final reviewTicketModel = ReviewTicketModel.fromJson(data);
+          AppLogger.info(
+            "Ticket summary fetched successfully for ticket: $ticketId",
+          );
+          return Right(reviewTicketModel);
+        } else {
+          AppLogger.error("Empty response data for ticket summary");
+          return Left(Failure('Empty response data'));
+        }
+      } else {
+        final errorMessage =
+            response.data?['message'] ?? 'Failed to fetch ticket summary';
+        AppLogger.error(
+          "API error: $errorMessage (Status: ${response.statusCode})",
+        );
+        return Left(Failure(errorMessage));
+      }
+    } catch (e) {
+      AppLogger.error("Exception in getTicketSummary: $e");
+      if (e is DioException) {
+        AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
+      } else {
+        AppLogger.error(e);
+        return Left(Failure('Failed to get ticket summary: ${e.toString()}'));
+      }
+    }
+  }
+
+  /// Get ticket details with all related information
+  ResultFuture<TicketDetailsModel> getTicketDetails({
+    required String ticketId,
+  }) async {
+    try {
+      final response = await apiService.get(
+        url: '${ApiEndpoints.getTicketSummary}/$ticketId',
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if (data != null) {
+          final ticketDetailsModel = TicketDetailsModel.fromJson(data);
+          AppLogger.info(
+            "Ticket details fetched successfully for ticket: $ticketId",
+          );
+          return Right(ticketDetailsModel);
+        } else {
+          AppLogger.error("Empty response data for ticket details");
+          return Left(Failure('Empty response data'));
+        }
+      } else {
+        final errorMessage =
+            response.data?['message'] ?? 'Failed to fetch ticket details';
+        AppLogger.error(
+          "API error: $errorMessage (Status: ${response.statusCode})",
+        );
+        return Left(Failure(errorMessage));
+      }
+    } catch (e) {
+      AppLogger.error("Exception in getTicketDetails: $e");
+      if (e is DioException) {
+        AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
+      } else {
+        AppLogger.error(e);
+        return Left(Failure('Failed to get ticket details: ${e.toString()}'));
+      }
     }
   }
 }

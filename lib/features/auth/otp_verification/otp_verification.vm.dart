@@ -58,7 +58,7 @@ class OtpVerificationViewModel extends ReactiveViewModel {
       },
       (user) async {
         // User is already saved in auth service, just navigate
-        await _navigationService.clearStackAndShow(Routes.stage, arguments: StageViewAttributes(selectedBottomNavIndex: 2));
+        await _navigationService.clearStackAndShow(Routes.stage, arguments: StageViewAttributes(selectedBottomNavIndex: 0));
       },
     );
     setBusy(false);

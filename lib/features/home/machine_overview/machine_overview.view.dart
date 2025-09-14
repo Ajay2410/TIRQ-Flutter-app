@@ -246,7 +246,6 @@ class _MachineOverviewViewState extends State<MachineOverviewView> with TickerPr
           const SizedBox(width: 8),
           GestureDetector(
             onTap: () async {
-              // Navigate to machine overview details
               final result = await _navigationService.navigateTo(Routes.machineOverviewDetails, arguments: machine);
 
               if (result == true) {

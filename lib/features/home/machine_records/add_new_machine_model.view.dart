@@ -35,7 +35,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
   final TextEditingController _totalPowerController = TextEditingController();
   final TextEditingController _operatingManualsController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
-  final TextEditingController _remarksController = TextEditingController();
+  final TextEditingController _addOnController = TextEditingController();
   final TextEditingController _serialNumberController = TextEditingController();
 
   String? _selectedFunctionality;
@@ -66,7 +66,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
     _totalPowerController.text = machine['total_power'] ?? '';
     _operatingManualsController.text = machine['operating_manuals'] ?? '';
     _notesController.text = machine['notes'] ?? '';
-    _remarksController.text = machine['remarks'] ?? '';
+    _addOnController.text = machine['remarks'] ?? '';
   }
 
   @override
@@ -84,7 +84,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
     _totalPowerController.dispose();
     _operatingManualsController.dispose();
     _notesController.dispose();
-    _remarksController.dispose();
+    _addOnController.dispose();
     super.dispose();
   }
 
@@ -413,43 +413,12 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CommonTextField(
-          controller: _operatingManualsController,
-          label: 'operating_manuals'.lang,
-          placeholder: 'Link here',
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return '${'operating_manuals'.lang} ${'required'.lang}';
-            }
-            return null;
-          },
-        ),
+        CommonTextField(controller: _addOnController, label: 'add_on'.lang, placeholder: 'enter_add_on_here'.lang, maxLines: 1),
         const SizedBox(height: 16),
-        CommonTextField(
-          controller: _remarksController,
-          label: 'remark'.lang,
-          placeholder: 'enter_remark_here'.lang,
-          maxLines: 1,
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return '${'remark'.lang} ${'required'.lang}';
-            }
-            return null;
-          },
-        ),
+
+        CommonTextField(controller: _operatingManualsController, label: 'operating_manuals'.lang, placeholder: 'Link here'),
         const SizedBox(height: 16),
-        CommonTextField(
-          controller: _notesController,
-          label: 'notes_special_instructions'.lang,
-          placeholder: 'Link here',
-          maxLines: 3,
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return '${'notes_special_instructions'.lang} ${'required'.lang}';
-            }
-            return null;
-          },
-        ),
+        CommonTextField(controller: _notesController, label: 'notes_special_instructions'.lang, placeholder: 'Link here', maxLines: 3),
       ],
     );
   }
@@ -533,7 +502,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
           'manualsLink': _operatingManualsController.text.trim(),
           'notes': _notesController.text.trim(),
           'status': 'Available',
-          'remarks': _remarksController.text.trim(),
+          'remarks': _addOnController.text.trim(),
         };
 
         final result = await _machineService.updateMachineRecord(machineId: machineId!, updateData: updateData);
@@ -578,7 +547,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
           totalPower: int.tryParse(_totalPowerController.text) ?? 0,
           manualsLink: _operatingManualsController.text.trim(),
           notes: _notesController.text.trim(),
-          remarks: _remarksController.text.trim(),
+          remarks: _addOnController.text.trim(),
           status: 'Available',
         );
 

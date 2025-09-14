@@ -21,7 +21,7 @@ abstract class ApiEndpoints {
   static const String resetPassword = 'auth/reset-password';
   static const String googleLogin = 'auth/google-login';
   static const String facebookLogin = 'auth/facebook-login';
-  static const String logout = 'auth/logout';
+  // static const String logout = 'auth/logout';
 
   static const String addPartner = 'org/add-partner';
   static const String addNewPartner = 'org/add-new';
@@ -29,7 +29,7 @@ abstract class ApiEndpoints {
   static const String getPartners = 'org/partnerships';
   static const String getEmployees = 'employee/org';
   static const String employee = 'employee';
-  static const String allEmployee = 'employee/get-all';
+  // static const String allEmployee = 'employee/get-all';
 
   static const String addNewEmployee = 'employee/add-new';
   static const String login = 'auth/login';
@@ -42,22 +42,20 @@ abstract class ApiEndpoints {
   static const String getChatId = 'chat/room-create';
   static const String sendMessage = 'chat/room';
   static const String archiveChatRoom = 'chat/rooms-archive';
-  static const String chatRooms = 'chat/rooms';
-  static const String externalChatRooms = 'auth/rooms-external';
+  // static const String chatRooms = 'chat/rooms';
+  // static const String externalChatRooms = 'auth/rooms-external';
   static const String createIndividualChatRoom = 'chat/room-create-individual';
 
   static const String getMyMachines = 'machine/my-machines';
-  static const String getAllMachines = 'machines/getAll';
-  static const String deleteMachine = 'machines/delete';
   static const String org = 'org/partner-by-id';
   static const String dashboard = 'dashboard';
   static const String tickets = 'ticket';
   static const String pingTicket = 'ticket/ping';
   static const String holdTicket = 'ticket/status';
   static const String uploadImages = 'upload/images';
-  static const String profile = 'auth/profile';
+  // static const String profile = 'auth/profile';
 
-  static const String updateFcmToken = 'auth/update-fcm-token';
+  // static const String updateFcmToken = 'auth/update-fcm-token';
   static const String resolveTicket = 'ticket/resolve';
   static const String requestResolveTicket = 'ticket/resolve-request';
   static const String rejectResolveTicket = 'ticket/forbid-resolve-request';
@@ -70,12 +68,15 @@ abstract class ApiEndpoints {
   static const String deleteCustomer = 'customers/delete-customer';
   static const String searchCustomers = 'customers/search-customers';
   static const String removeMachine = 'customers/remove-machine';
+  static const String getAllMachines = 'machines/getAll';
+  static const String deleteMachine = 'machines/delete';
   static const String getMachineSupplier = 'machinesupplier/getMachineSupplier';
   static const String getMachineOverview = 'machinesupplier/getMachineOverview';
   static const String getMachineById = 'machines/getById';
   static const String createTicket = 'ticket/create';
   static const String getAllTickets = 'ticket/getAll';
   static const String getTicketsByStatus = 'ticket/getticket';
+  static const String getTicketSummary = 'ticket/getTicketSummary';
 
   // Service Pricing endpoints
   static const String createServicePricing = 'servicePricing/create';

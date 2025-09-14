@@ -5,7 +5,6 @@ import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/services/language.service.dart';
 import 'package:manager/services/customer.service.dart';
 import 'package:manager/core/locator.dart';
-import 'package:manager/core/utils/type_def.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'customer_details/customer_edit_details.view.dart';
@@ -401,9 +400,9 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
                     child: _buildInfoRow(
                       AppImages.warrantyStatus,
                       'warranty_status'.lang,
-                      widget.machineElement.warrantyStatus == 'Active' ? 'in_warranty'.lang : 'out_of_warranty'.lang,
+                      widget.machineElement.warrantyStatus == 'In warranty' ? "In warranty" : "Out Of Warranty",
                       AppColors.color41C293,
-                      isWarning: widget.machineElement.warrantyStatus != 'Active',
+                      isWarning: widget.machineElement.warrantyStatus != 'In warranty',
                     ),
                   ),
                   const SizedBox(width: 16),
