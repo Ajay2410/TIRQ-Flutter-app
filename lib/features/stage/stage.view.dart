@@ -29,41 +29,34 @@ class StageView extends StatelessWidget {
       builder: (BuildContext context, StageViewModel model, Widget? child) {
         return WillPopScope(
           onWillPop: () => model.handleBackPress(context),
-          child: AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle(
-              statusBarColor: Colors.white,
-              statusBarIconBrightness: Brightness.light,
-              systemNavigationBarColor: AppColors.white,
-              systemNavigationBarIconBrightness: Brightness.light,
-            ),
-            child: Stack(
-              children: [
-                Scaffold(
-                  backgroundColor: AppColors.transparent,
-                  body: model.bottomNavItems[model.selectedBottomNavIndex],
-                  bottomNavigationBar: _buildCustomBottomNavBar(model, context),
-                ),
-                if (model.isCloseTicketDialogOpen) Container(color: AppColors.black.withValues(alpha: 0.3)),
-                if (model.isCloseTicketDialogOpen)
-                  TicketResolveDialog(
-                    request: DialogRequest<TicketResolveDialogAttributes>(
-                      data: TicketResolveDialogAttributes(
-                        ticketId: model.requestedTicketId,
-                        onResolvePressed: (ticketId) {
-                          model.resolveTicket(ticketId);
-                        },
-                        onRejectPressed: (ticketId) {
-                          model.rejectTicket(ticketId);
-                        },
-                        closeDialog: () {
-                          model.closeDialog();
-                        },
-                      ),
+          child: Stack(
+            children: [
+              Scaffold(
+                backgroundColor: AppColors.transparent,
+                body: model.bottomNavItems[model.selectedBottomNavIndex],
+                bottomNavigationBar: _buildCustomBottomNavBar(model, context),
+              ),
+              if (model.isCloseTicketDialogOpen)
+                Container(color: AppColors.black.withValues(alpha: 0.3)),
+              if (model.isCloseTicketDialogOpen)
+                TicketResolveDialog(
+                  request: DialogRequest<TicketResolveDialogAttributes>(
+                    data: TicketResolveDialogAttributes(
+                      ticketId: model.requestedTicketId,
+                      onResolvePressed: (ticketId) {
+                        model.resolveTicket(ticketId);
+                      },
+                      onRejectPressed: (ticketId) {
+                        model.rejectTicket(ticketId);
+                      },
+                      closeDialog: () {
+                        model.closeDialog();
+                      },
                     ),
-                    completer: (_) {},
                   ),
-              ],
-            ),
+                  completer: (_) {},
+                ),
+            ],
           ),
         );
       },
@@ -72,10 +65,20 @@ class StageView extends StatelessWidget {
 
   Widget _buildCustomBottomNavBar(StageViewModel model, BuildContext context) {
     return Container(
-      height: AppSizes.v70,
+      height: AppSizes.v72,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(AppSizes.v30), bottomRight: Radius.circular(AppSizes.v30)),
-        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.1), spreadRadius: 2, blurRadius: 10, offset: Offset(0, -5))],
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(AppSizes.v30),
+          bottomRight: Radius.circular(AppSizes.v30),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withValues(alpha: 0.1),
+            spreadRadius: 2,
+            blurRadius: 10,
+            offset: Offset(0, -5),
+          ),
+        ],
       ),
       child: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -86,8 +89,14 @@ class StageView extends StatelessWidget {
         showUnselectedLabels: true,
         selectedItemColor: AppColors.primary,
         elevation: 10,
-        unselectedLabelStyle: TextStyle(fontSize: AppSizes.v10, color: AppColors.textGray),
-        selectedLabelStyle: TextStyle(fontSize: AppSizes.v10, color: AppColors.primary),
+        unselectedLabelStyle: TextStyle(
+          fontSize: AppSizes.v10,
+          color: AppColors.textGray,
+        ),
+        selectedLabelStyle: TextStyle(
+          fontSize: AppSizes.v10,
+          color: AppColors.primary,
+        ),
         items: [
           _buildBottomNavItem(
             context,
@@ -138,12 +147,22 @@ class StageView extends StatelessWidget {
   }) {
     return BottomNavigationBarItem(
       activeIcon: SizedBox(
-        height: AppSizes.v40,
-        child: Image.asset(activeImagePath, height: AppSizes.v30, width: AppSizes.v30, color: isSelected ? AppColors.primary : AppColors.gray),
+        height: AppSizes.v32,
+        child: Image.asset(
+          activeImagePath,
+          height: AppSizes.v24,
+          width: AppSizes.v24,
+          color: isSelected ? AppColors.primary : AppColors.gray,
+        ),
       ),
       icon: SizedBox(
-        height: AppSizes.v40,
-        child: Image.asset(imagePath, height: AppSizes.v30, width: AppSizes.v30, color: isSelected ? AppColors.primary : AppColors.gray),
+        height: AppSizes.v32,
+        child: Image.asset(
+          imagePath,
+          height: AppSizes.v24,
+          width: AppSizes.v24,
+          color: isSelected ? AppColors.primary : AppColors.gray,
+        ),
       ),
       label: label,
     );

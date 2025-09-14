@@ -73,6 +73,7 @@ class _MachineSupplierViewState extends State<MachineSupplierView> with TickerPr
       builder: (BuildContext context, MachineSupplierViewModel model, Widget? child) {
         return Scaffold(
           appBar: _buildAppBar(context, model),
+          backgroundColor: AppColors.scaffoldBackground,
           body: Column(
             children: [
               SlideTransition(position: _slideAnimation, child: _isSearchVisible ? _buildSearchBar(context, model) : const SizedBox.shrink()),
@@ -87,6 +88,16 @@ class _MachineSupplierViewState extends State<MachineSupplierView> with TickerPr
   PreferredSizeWidget _buildAppBar(BuildContext context, MachineSupplierViewModel model) {
     return AppBar(
       elevation: 0,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
+          ),
+        ),
+      ),
       leading: IconButton(
         icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
         onPressed: () => Navigator.of(context).pop(),

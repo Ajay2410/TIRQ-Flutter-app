@@ -71,31 +71,21 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
             absorbing: _isDeleting,
             child: Scaffold(
               key: _scaffoldKey,
+              backgroundColor: AppColors.scaffoldBackground,
+              appBar: _buildAppBar(context, model),
               body: Stack(
                 children: [
-                  SafeArea(
-                    child: Column(
-                      children: [
-                        _buildAppBar(context, model),
-                        Expanded(
-                          child: Container(
-                            color: AppColors.white,
-                            child: Column(
-                              children: [
-                                Padding(padding: const EdgeInsets.all(12), child: _buildCustomerContactCard(model)),
-                                Expanded(
-                                  child: Container(
-                                    color: AppColors.scaffoldBackground,
-                                    padding: const EdgeInsets.all(12),
-                                    child: SingleChildScrollView(child: _buildMachineList(context, model)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                  Column(
+                    children: [
+                      Padding(padding: const EdgeInsets.all(12), child: _buildCustomerContactCard(model)),
+                      Expanded(
+                        child: Container(
+                          color: AppColors.scaffoldBackground,
+                          padding: const EdgeInsets.all(12),
+                          child: SingleChildScrollView(child: _buildMachineList(context, model)),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   if (_isDeleting) Positioned.fill(child: Center(child: CircularProgressIndicator(color: AppColors.white, strokeWidth: 2))),
                 ],
@@ -108,7 +98,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
     );
   }
 
-  Widget _buildAppBar(BuildContext context, CustomerDetailsViewModel model) {
+  PreferredSizeWidget _buildAppBar(BuildContext context, CustomerDetailsViewModel model) {
     final customer = model.customer;
 
     return AppBar(
@@ -116,6 +106,16 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
       leading: IconButton(
         icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
         onPressed: () => Navigator.of(context).pop(),
+      ),
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
+          ),
+        ),
       ),
       titleSpacing: 0,
       title: Row(

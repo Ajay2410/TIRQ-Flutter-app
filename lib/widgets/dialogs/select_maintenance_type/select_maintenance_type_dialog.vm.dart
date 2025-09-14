@@ -26,17 +26,17 @@ class SelectMaintenanceTypeDialogViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
-  Future<void> submit(String maintenanceType, Function(String) onSubmit) async {
+  Future<void> submit(
+    String maintenanceType,
+    Future<void> Function(String) onSubmit,
+  ) async {
     if (_selectedType == null) return;
 
     _isLoading.value = true;
     notifyListeners();
 
     try {
-      await Future.delayed(
-        Duration(milliseconds: 100),
-      ); // Simulate async operation
-      onSubmit(maintenanceType);
+      await onSubmit(maintenanceType);
     } catch (e) {
       // Handle error if needed
     } finally {

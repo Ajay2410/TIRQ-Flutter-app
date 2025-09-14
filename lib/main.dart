@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:manager/core/storage/storage.dart';
 import 'package:manager/core/utils/app_logger.dart';
@@ -32,20 +33,5 @@ void main() async {
   NotificationService notificationService = NotificationService();
   await notificationService.init();
 
-  runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AppColors.primaryLight, AppColors.primaryDark],
-            begin: Alignment.centerRight,
-            end: Alignment.centerLeft,
-            stops: [0.08, 1],
-          ),
-        ),
-        child: Scaffold(body: const AppView(), backgroundColor: AppColors.transparent),
-      ),
-    ),
-  );
+  runApp(AppView());
 }

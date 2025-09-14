@@ -122,6 +122,16 @@ class SetServicePricingView extends StatelessWidget {
         ),
         onPressed: () => Navigator.of(context).pop(),
       ),
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
+          ),
+        ),
+      ),
       title: Text(
         LanguageService.get('set_service_pricing'),
         style: const TextStyle(

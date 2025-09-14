@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_popup/flutter_popup.dart';
-import 'package:manager/services/dialogs.service.dart';
+import 'package:get/get.dart';
 import 'package:manager/widgets/dialogs/create_ticket/create_ticket_dialog.view.dart';
 import 'package:manager/widgets/dialogs/select_maintenance_type/select_maintenance_type_dialog.view.dart';
 import 'package:shimmer/shimmer.dart';
@@ -22,12 +22,13 @@ class MachineOverviewDetailsView extends StatefulWidget {
   const MachineOverviewDetailsView({super.key, this.machine});
 
   @override
-  State<MachineOverviewDetailsView> createState() => _MachineOverviewDetailsViewState();
+  State<MachineOverviewDetailsView> createState() =>
+      _MachineOverviewDetailsViewState();
 }
 
-class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView> with SingleTickerProviderStateMixin {
+class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
+    with SingleTickerProviderStateMixin {
   final _navigationService = locator<NavigationService>();
-  final _dialogService = locator<DialogService>();
   late TextEditingController _remarkController;
   late TextEditingController _notesController;
   late AnimationController _controller;
@@ -40,8 +41,16 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
     _remarkController = TextEditingController();
     _notesController = TextEditingController();
     _open = false;
-    _controller = AnimationController(value: _open ? 1.0 : 0.0, duration: const Duration(milliseconds: 250), vsync: this);
-    _expandAnimation = CurvedAnimation(curve: Curves.fastOutSlowIn, reverseCurve: Curves.easeOutQuad, parent: _controller);
+    _controller = AnimationController(
+      value: _open ? 1.0 : 0.0,
+      duration: const Duration(milliseconds: 250),
+      vsync: this,
+    );
+    _expandAnimation = CurvedAnimation(
+      curve: Curves.fastOutSlowIn,
+      reverseCurve: Curves.easeOutQuad,
+      parent: _controller,
+    );
   }
 
   @override
@@ -52,39 +61,53 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
     super.dispose();
   }
 
-  Future<void> _onOnlineSupportPressed(MachineOverviewDetailsViewModel viewModel) async {
+  Future<void> _onOnlineSupportPressed(
+    MachineOverviewDetailsViewModel viewModel,
+  ) async {
     _toggle();
-    await _dialogService.showCustomDialog(
-      variant: DialogType.createTicket,
-      data: CreateTicketDialogAttributes(
-        onSubmit: (problem, errorCode, additionalNotes, attachments) async {
-          print('Problem: $problem');
-          print('Error Code: $errorCode');
-          print('Additional Notes: $additionalNotes');
-          print('Attachments: ${attachments.length} files');
-          await viewModel.createTicket(problem: problem, errorCode: errorCode, additionalNotes: additionalNotes, attachments: attachments);
-        },
-        onCancel: () {
-          print('Ticket creation cancelled');
-        },
+    Get.dialog(
+      CreateTicketDialogWidget(
+        attributes: CreateTicketDialogAttributes(
+          onSubmit: (problem, errorCode, additionalNotes, attachments) async {
+            print('Problem: $problem');
+            print('Error Code: $errorCode');
+            print('Additional Notes: $additionalNotes');
+            print('Attachments: ${attachments.length} files');
+            await viewModel.createTicket(
+              problem: problem,
+              errorCode: errorCode,
+              additionalNotes: additionalNotes,
+              attachments: attachments,
+              onSucess: () {
+                Get.back();
+              },
+            );
+          },
+          onCancel: () {
+            print('Ticket creation cancelled');
+          },
+        ),
       ),
     );
   }
 
   void _onSiteVisitPressed(MachineOverviewDetailsViewModel viewModel) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SelectMaintenanceTypeDialog(
-          isWarrantyActive: isWarrantyActive(),
-          attributes: SelectMaintenanceTypeDialogAttributes(
-            onSubmit: (String maintenanceType) {
-              viewModel.createTicket(maintenanceType: maintenanceType, isFromSiteVisit: true);
-            },
-            onCancel: () {},
-          ),
-        );
-      },
+    Get.dialog(
+      SelectMaintenanceTypeDialog(
+        isWarrantyActive: true,
+        attributes: SelectMaintenanceTypeDialogAttributes(
+          onSubmit: (String maintenanceType) async {
+            await viewModel.createTicket(
+              maintenanceType: maintenanceType,
+              isFromSiteVisit: true,
+              onSucess: () {
+                Get.back();
+              },
+            );
+          },
+          onCancel: () {},
+        ),
+      ),
     );
   }
 
@@ -99,14 +122,18 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
     });
   }
 
-  WarrantyStatus? get warrantyStatusEnum => WarrantyStatus.fromString(widget.machine?.warrantyStatus);
-
-  bool isWarrantyActive() => warrantyStatusEnum?.isAvailable ?? false;
+  WarrantyStatus? get warrantyStatusEnum =>
+      WarrantyStatus.fromString(widget.machine?.warrantyStatus);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MachineOverviewDetailsViewModel>.reactive(
-      viewModelBuilder: () => MachineOverviewDetailsViewModel()..init(widget.machine?.machineId ?? '', widget.machine?.organization ?? ''),
+      viewModelBuilder:
+          () =>
+              MachineOverviewDetailsViewModel()..init(
+                widget.machine?.machineId ?? '',
+                widget.machine?.organization ?? '',
+              ),
       builder: (context, viewModel, child) {
         return PopScope(
           canPop: false,
@@ -116,37 +143,40 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
             }
           },
           child: Scaffold(
+            appBar: _buildAppBar(context, viewModel),
+            backgroundColor: AppColors.white,
             body: SafeArea(
-              child: Column(
-                children: [
-                  _buildAppBar(context, viewModel),
-                  Expanded(
-                    child: Container(
-                      color: AppColors.white,
-                      child:
-                          viewModel.isLoading
-                              ? _buildLoadingState()
-                              : viewModel.hasError
-                              ? _buildErrorState(viewModel)
-                              : SingleChildScrollView(padding: const EdgeInsets.all(16), child: _buildMachineDetails(viewModel)),
-                    ),
-                  ),
-                ],
-              ),
+              child:
+                  viewModel.isLoading
+                      ? _buildLoadingState()
+                      : viewModel.hasError
+                      ? _buildErrorState(viewModel)
+                      : SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+                        child: _buildMachineDetails(viewModel),
+                      ),
             ),
-            floatingActionButton: _buildExpandableFloatingActionButton(viewModel),
+            floatingActionButton: _buildExpandableFloatingActionButton(
+              viewModel,
+            ),
           ),
         );
       },
     );
   }
 
-  Widget _buildExpandableFloatingActionButton(MachineOverviewDetailsViewModel viewModel) {
+  Widget _buildExpandableFloatingActionButton(
+    MachineOverviewDetailsViewModel viewModel,
+  ) {
     return SizedBox.expand(
       child: Stack(
         alignment: Alignment.bottomRight,
         clipBehavior: Clip.none,
-        children: [_buildTapToCloseFab(), ..._buildExpandingActionButtons(viewModel), _buildTapToOpenFab()],
+        children: [
+          _buildTapToCloseFab(),
+          ..._buildExpandingActionButtons(viewModel),
+          _buildTapToOpenFab(),
+        ],
       ),
     );
   }
@@ -156,7 +186,11 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
       ignoring: !_open,
       child: AnimatedContainer(
         transformAlignment: Alignment.center,
-        transform: Matrix4.diagonal3Values(!_open ? 0.7 : 1.0, !_open ? 0.7 : 1.0, 1.0),
+        transform: Matrix4.diagonal3Values(
+          !_open ? 0.7 : 1.0,
+          !_open ? 0.7 : 1.0,
+          1.0,
+        ),
         duration: const Duration(milliseconds: 250),
         curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
         child: AnimatedOpacity(
@@ -168,7 +202,9 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
             onPressed: _toggle,
             backgroundColor: AppColors.primary,
             foregroundColor: AppColors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
             child: const Icon(Icons.close_rounded),
           ),
         ),
@@ -176,17 +212,38 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
     );
   }
 
-  List<Widget> _buildExpandingActionButtons(MachineOverviewDetailsViewModel viewModel) {
+  List<Widget> _buildExpandingActionButtons(
+    MachineOverviewDetailsViewModel viewModel,
+  ) {
     final children = <Widget>[];
     final count = 2; // Online Support and Site Visit
     final step = 40.0 / (count - 1);
     final buttons = [
-      _ActionButton(onPressed: () => _onSiteVisitPressed(viewModel), label: 'site_visit'.lang, backgroundColor: AppColors.primary),
-      _ActionButton(onPressed: () => _onOnlineSupportPressed(viewModel), label: 'online_support'.lang, backgroundColor: AppColors.primary),
+      _ActionButton(
+        onPressed: () => _onSiteVisitPressed(viewModel),
+        label: 'site_visit'.lang,
+        backgroundColor: AppColors.primary,
+      ),
+      _ActionButton(
+        onPressed: () => _onOnlineSupportPressed(viewModel),
+        label: 'online_support'.lang,
+        backgroundColor: AppColors.primary,
+      ),
     ];
 
-    for (var i = 0, angleInDegrees = 0.0; i < count; i++, angleInDegrees += step) {
-      children.add(_ExpandingActionButton(directionInDegrees: angleInDegrees, maxDistance: 90, progress: _expandAnimation, child: buttons[i]));
+    for (
+      var i = 0, angleInDegrees = 0.0;
+      i < count;
+      i++, angleInDegrees += step
+    ) {
+      children.add(
+        _ExpandingActionButton(
+          directionInDegrees: angleInDegrees,
+          maxDistance: 90,
+          progress: _expandAnimation,
+          child: buttons[i],
+        ),
+      );
     }
     return children;
   }
@@ -196,7 +253,11 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
       ignoring: _open,
       child: AnimatedContainer(
         transformAlignment: Alignment.center,
-        transform: Matrix4.diagonal3Values(_open ? 0.7 : 1.0, _open ? 0.7 : 1.0, 1.0),
+        transform: Matrix4.diagonal3Values(
+          _open ? 0.7 : 1.0,
+          _open ? 0.7 : 1.0,
+          1.0,
+        ),
         duration: const Duration(milliseconds: 250),
         curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
         child: AnimatedOpacity(
@@ -208,20 +269,43 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
             onPressed: _toggle,
             backgroundColor: AppColors.primary,
             foregroundColor: AppColors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
             icon: const Icon(Icons.add),
-            label: Text('create_ticket'.lang, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+            label: Text(
+              'create_ticket'.lang,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildAppBar(BuildContext context, MachineOverviewDetailsViewModel viewModel) {
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context,
+    MachineOverviewDetailsViewModel viewModel,
+  ) {
     return AppBar(
       elevation: 0,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
+          ),
+        ),
+      ),
       leading: IconButton(
-        icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
+        icon: Image.asset(
+          AppImages.back,
+          width: 24,
+          height: 24,
+          color: AppColors.white,
+        ),
         onPressed: () {
           if (mounted) {
             _navigationService.back();
@@ -232,13 +316,20 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
       title: Text(
         "#${widget.machine?.modelNumber ?? ""} - ${viewModel.machineDetails?.machineName ?? widget.machine?.machineName ?? "Unknown "
                 "Machine"}",
-        style: const TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+          color: AppColors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
 
   Widget _buildLoadingState() {
-    return SingleChildScrollView(padding: const EdgeInsets.all(16), child: _buildShimmerContent());
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: _buildShimmerContent(),
+    );
   }
 
   Widget _buildShimmerContent() {
@@ -273,11 +364,24 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
   }
 
   Widget _buildShimmerTextField({int maxLines = 1}) {
-    return Container(height: maxLines == 1 ? 60 : 80, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)));
+    return Container(
+      height: maxLines == 1 ? 60 : 80,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+      ),
+    );
   }
 
   Widget _buildShimmerSectionTitle() {
-    return Container(height: 20, width: 200, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4)));
+    return Container(
+      height: 20,
+      width: 200,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+      ),
+    );
   }
 
   Widget _buildShimmerProcessingDimensions() {
@@ -289,9 +393,22 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(height: 16, width: 120, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
+                  Container(
+                    height: 16,
+                    width: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
                   const SizedBox(height: 10),
-                  Row(children: [Expanded(child: _buildShimmerInfoRow()), const SizedBox(width: 14), Expanded(child: _buildShimmerInfoRow())]),
+                  Row(
+                    children: [
+                      Expanded(child: _buildShimmerInfoRow()),
+                      const SizedBox(width: 14),
+                      Expanded(child: _buildShimmerInfoRow()),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -301,9 +418,22 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(height: 16, width: 120, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
+                  Container(
+                    height: 16,
+                    width: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
                   const SizedBox(height: 10),
-                  Row(children: [Expanded(child: _buildShimmerInfoRow()), const SizedBox(width: 14), Expanded(child: _buildShimmerInfoRow())]),
+                  Row(
+                    children: [
+                      Expanded(child: _buildShimmerInfoRow()),
+                      const SizedBox(width: 14),
+                      Expanded(child: _buildShimmerInfoRow()),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -313,7 +443,13 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
         Container(height: 1, color: AppColors.lightGray),
         const SizedBox(height: 20),
 
-        Row(children: [Expanded(child: _buildShimmerInfoRow()), const SizedBox(width: 14), Expanded(child: _buildShimmerInfoRow())]),
+        Row(
+          children: [
+            Expanded(child: _buildShimmerInfoRow()),
+            const SizedBox(width: 14),
+            Expanded(child: _buildShimmerInfoRow()),
+          ],
+        ),
         const SizedBox(height: 20),
         Container(height: 1, color: AppColors.lightGray),
         const SizedBox(height: 20),
@@ -326,15 +462,36 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
   Widget _buildShimmerInfoRow() {
     return Row(
       children: [
-        Container(width: 33, height: 33, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8))),
+        Container(
+          width: 33,
+          height: 33,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
         const SizedBox(width: 6),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(height: 12, width: 60, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
+              Container(
+                height: 12,
+                width: 60,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
               const SizedBox(height: 4),
-              Container(height: 14, width: 80, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
+              Container(
+                height: 14,
+                width: 80,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
             ],
           ),
         ),
@@ -351,11 +508,18 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
           const SizedBox(height: 16),
           Text(
             viewModel.errorMessage,
-            style: TextStyle(color: AppColors.textGray, fontSize: 16, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              color: AppColors.textGray,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
-          ElevatedButton(onPressed: viewModel.refreshMachineDetails, child: Text('retry'.lang)),
+          ElevatedButton(
+            onPressed: viewModel.refreshMachineDetails,
+            child: Text('retry'.lang),
+          ),
         ],
       ),
     );
@@ -372,7 +536,9 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CommonTextField(
-          controller: TextEditingController(text: "#${machineData.modelNumber} - ${machineData.machineName}"),
+          controller: TextEditingController(
+            text: "#${machineData.modelNumber} - ${machineData.machineName}",
+          ),
           label: 'machine_model_name'.lang,
           placeholder: '',
           readOnly: true,
@@ -384,7 +550,9 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
         const SizedBox(height: 16),
 
         CommonTextField(
-          controller: TextEditingController(text: "#${machineData.modelNumber} - ${machineData.modelNumber}"),
+          controller: TextEditingController(
+            text: "#${machineData.modelNumber} - ${machineData.modelNumber}",
+          ),
           textStyle: TextStyle(color: AppColors.black),
           label: 'model_number'.lang,
           placeholder: '',
@@ -395,7 +563,9 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
         const SizedBox(height: 16),
 
         CommonTextField(
-          controller: TextEditingController(text: machineData.machineType ?? 'N/A'),
+          controller: TextEditingController(
+            text: machineData.machineType ?? 'N/A',
+          ),
           label: 'functionality'.lang,
           placeholder: '',
           textStyle: TextStyle(color: AppColors.black),
@@ -406,33 +576,57 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
         ),
         const SizedBox(height: 16),
 
-        CommonTextField(
-          controller: _remarkController,
-          label: 'remark'.lang,
-          textStyle: TextStyle(color: AppColors.black),
-
-          readOnly: true,
-          enabled: false,
-          placeholder: 'enter_remark_here'.lang,
-          maxLines: 1,
-          suffixIcon: CustomPopup(
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Add machine add-ons like:', style: TextStyle(color: AppColors.white, fontSize: 11, fontWeight: FontWeight.w500)),
-                SizedBox(height: 4),
-                Text(
-                  '''• Machine with 2/4 station loader\n• Machine with loader & unloader\n• Machine with Auto detection\n• Machine with Single/double blower (furnace/washing)\netc.''',
-                  style: TextStyle(color: AppColors.white, fontSize: 9, fontWeight: FontWeight.w500),
-                ),
-              ],
+        Stack(
+          alignment: Alignment.centerRight,
+          children: [
+            CommonTextField(
+              controller: _remarkController,
+              label: 'remark'.lang,
+              textStyle: TextStyle(color: AppColors.black),
+              readOnly: true,
+              enabled: false,
+              placeholder: 'enter_remark_here'.lang,
+              maxLines: 1,
             ),
-            position: PopupPosition.top,
-            arrowColor: AppColors.textGray,
-            backgroundColor: AppColors.textGray,
-            child: Padding(padding: EdgeInsets.all(16), child: Image.asset(AppImages.alert, width: 16, height: 16)),
-          ),
+            Positioned(
+              right: 0,
+              bottom: 2,
+              child: Center(
+                child: CustomPopup(
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Add machine add-ons like:',
+                        style: TextStyle(
+                          color: AppColors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        '''• Machine with 2/4 station loader\n• Machine with loader & unloader\n• Machine with Auto detection\n• Machine with Single/double blower (furnace/washing)\netc.''',
+                        style: TextStyle(
+                          color: AppColors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  position: PopupPosition.top,
+                  arrowColor: AppColors.textGray,
+                  backgroundColor: AppColors.textGray,
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Image.asset(AppImages.alert, width: 16, height: 16),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 24),
 
@@ -448,7 +642,14 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('maximum_processing_size'.lang, style: TextStyle(color: AppColors.textGray, fontSize: 12, fontWeight: FontWeight.w500)),
+                        Text(
+                          'maximum_processing_size'.lang,
+                          style: TextStyle(
+                            color: AppColors.textGray,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                         SizedBox(height: 10),
                         Row(
                           children: [
@@ -480,7 +681,14 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('minimum_processing_size'.lang, style: TextStyle(color: AppColors.textGray, fontSize: 12, fontWeight: FontWeight.w500)),
+                        Text(
+                          'minimum_processing_size'.lang,
+                          style: TextStyle(
+                            color: AppColors.textGray,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                         SizedBox(height: 10),
                         Row(
                           children: [
@@ -516,7 +724,12 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
           Row(
             children: [
               Expanded(
-                child: _buildInfoRow(AppImages.thickness, 'thickness'.lang, machineData.processingDimensions?.thickness ?? "-", AppColors.lightCoral),
+                child: _buildInfoRow(
+                  AppImages.thickness,
+                  'thickness'.lang,
+                  machineData.processingDimensions?.thickness ?? "-",
+                  AppColors.lightCoral,
+                ),
               ),
               SizedBox(width: 14),
               Expanded(
@@ -531,9 +744,21 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
           ),
           Divider(height: 40, color: AppColors.lightGray),
 
-          _buildInfoRow(AppImages.powerConsumption, "${'total_power'.lang} (kW)", '${machineData.totalPower ?? "-"}', AppColors.primarySuperLight),
+          _buildInfoRow(
+            AppImages.powerConsumption,
+            "${'total_power'.lang} (kW)",
+            '${machineData.totalPower ?? "-"}',
+            AppColors.primarySuperLight,
+          ),
         ] else ...[
-          Text('No processing dimensions available', style: TextStyle(color: AppColors.textGray, fontSize: 14, fontStyle: FontStyle.italic)),
+          Text(
+            'No processing dimensions available',
+            style: TextStyle(
+              color: AppColors.textGray,
+              fontSize: 14,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
         ],
         const SizedBox(height: 24),
 
@@ -552,15 +777,31 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
   }
 
   Widget _buildSectionTitle(String text) {
-    return Text(text, style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold));
+    return Text(
+      text,
+      style: TextStyle(
+        color: AppColors.textPrimary,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+    );
   }
 
-  Widget _buildInfoRow(String iconPath, String label, String value, Color iconColor, {bool isWarning = false}) {
+  Widget _buildInfoRow(
+    String iconPath,
+    String label,
+    String value,
+    Color iconColor, {
+    bool isWarning = false,
+  }) {
     return Row(
       children: [
         Container(
           padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(
+            color: iconColor.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(8),
+          ),
           child: Image.asset(iconPath, width: 17, height: 17, color: iconColor),
         ),
         const SizedBox(width: 6),
@@ -568,9 +809,23 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
               const SizedBox(height: 4),
-              Text(value, style: TextStyle(color: isWarning ? AppColors.redBack : AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+              Text(
+                value,
+                style: TextStyle(
+                  color: isWarning ? AppColors.redBack : AppColors.textPrimary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ],
           ),
         ),
@@ -580,7 +835,12 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
 }
 
 class _ExpandingActionButton extends StatelessWidget {
-  const _ExpandingActionButton({required this.directionInDegrees, required this.maxDistance, required this.progress, required this.child});
+  const _ExpandingActionButton({
+    required this.directionInDegrees,
+    required this.maxDistance,
+    required this.progress,
+    required this.child,
+  });
 
   final double directionInDegrees;
   final double maxDistance;
@@ -592,11 +852,17 @@ class _ExpandingActionButton extends StatelessWidget {
     return AnimatedBuilder(
       animation: progress,
       builder: (context, child) {
-        final offset = Offset.fromDirection(directionInDegrees * (math.pi / 180.0), progress.value * maxDistance);
+        final offset = Offset.fromDirection(
+          directionInDegrees * (math.pi / 180.0),
+          progress.value * maxDistance,
+        );
         return Positioned(
           right: -10 + offset.dx,
           bottom: 6 + offset.dy,
-          child: Transform.rotate(angle: (1.0 - progress.value) * math.pi / 2, child: child!),
+          child: Transform.rotate(
+            angle: (1.0 - progress.value) * math.pi / 2,
+            child: child!,
+          ),
         );
       },
       child: FadeTransition(opacity: progress, child: child),
@@ -605,7 +871,11 @@ class _ExpandingActionButton extends StatelessWidget {
 }
 
 class _ActionButton extends StatelessWidget {
-  const _ActionButton({this.onPressed, required this.label, required this.backgroundColor});
+  const _ActionButton({
+    this.onPressed,
+    required this.label,
+    required this.backgroundColor,
+  });
 
   final VoidCallback? onPressed;
   final String label;
@@ -622,7 +892,14 @@ class _ActionButton extends StatelessWidget {
         onTap: onPressed,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
-          child: Text(label, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+          child: Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ),
     );

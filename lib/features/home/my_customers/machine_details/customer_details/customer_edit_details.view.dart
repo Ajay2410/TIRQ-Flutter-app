@@ -30,6 +30,16 @@ class CustomerEditDetailsView extends StatelessWidget {
   PreferredSizeWidget _buildAppBar(BuildContext context, CustomerEditDetailsViewModel model) {
     return AppBar(
       elevation: 0,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
+          ),
+        ),
+      ),
       leading: IconButton(
         icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
         onPressed: () => Navigator.of(context).pop(),

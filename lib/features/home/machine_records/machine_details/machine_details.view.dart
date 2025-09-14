@@ -45,10 +45,10 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _buildAppBar(context),
       body: SafeArea(
         child: Column(
           children: [
-            _buildAppBar(context),
             Expanded(
               child: Container(
                 color: AppColors.white,
@@ -62,9 +62,19 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
       elevation: 0,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
+          ),
+        ),
+      ),
       leading: IconButton(
         icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
         onPressed: () {

@@ -274,6 +274,20 @@ class TicketDetailsView extends StatelessWidget {
     return AppBar(
       elevation: 0,
       titleSpacing: 0,
+      leading: IconButton(
+        icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
+          ),
+        ),
+      ),
       title: Text(ticketNumber, style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: AppColors.white, fontWeight: FontWeight.bold)),
       actions: [
         SizedBox(
@@ -561,14 +575,26 @@ class TicketDetailsView extends StatelessWidget {
 
   Widget _buildMediaItemFromApi(BuildContext context, Media media) {
     final isImage = media.type?.toLowerCase() == 'image';
-    final imageUrl = 'https://triq.onrender.com${media.url}';
+    final baseUrl = 'https://triq.onrender.com';
+    final mediaUrl = '$baseUrl${media.url}';
+
+    // For videos, we need to generate a thumbnail URL
+    // Assuming the video thumbnail follows a pattern like: video.mp4 -> video_thumb.jpg
+    String thumbnailUrl;
+    if (isImage) {
+      thumbnailUrl = mediaUrl;
+    } else {
+      // For videos, we'll use the video URL as thumbnail
+      // The video player will handle showing the first frame as thumbnail
+      thumbnailUrl = mediaUrl;
+    }
 
     return GestureDetector(
       onTap: () {
         if (isImage) {
-          Navigator.pushNamed(context, Routes.imageViewerView, arguments: imageUrl);
+          Navigator.pushNamed(context, Routes.imageViewerView, arguments: mediaUrl);
         } else {
-          Navigator.pushNamed(context, Routes.videoPlayer, arguments: imageUrl);
+          Navigator.pushNamed(context, Routes.videoPlayer, arguments: mediaUrl);
         }
       },
       child: ClipRRect(
@@ -576,24 +602,47 @@ class TicketDetailsView extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            CachedNetworkImage(
-              imageUrl: imageUrl,
-              fit: BoxFit.cover,
-              placeholder:
-                  (context, url) => Container(
-                    color: AppColors.primarySuperLight.withValues(alpha: 0.1),
-                    child: Center(child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary))),
-                  ),
-              errorWidget:
-                  (context, url, error) => Container(
-                    color: AppColors.primarySuperLight.withValues(alpha: 0.1),
-                    child: Icon(Icons.error_outline, color: AppColors.textGray, size: 20),
-                  ),
-            ),
-            if (!isImage)
+            if (isImage)
+              CachedNetworkImage(
+                imageUrl: thumbnailUrl,
+                fit: BoxFit.cover,
+                placeholder:
+                    (context, url) => Container(
+                      color: AppColors.primarySuperLight.withValues(alpha: 0.1),
+                      child: Center(child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary))),
+                    ),
+                errorWidget:
+                    (context, url, error) => Container(
+                      color: AppColors.primarySuperLight.withValues(alpha: 0.1),
+                      child: Icon(Icons.error_outline, color: AppColors.textGray, size: 20),
+                    ),
+              )
+            else
+              // For videos, show a video thumbnail with play button overlay
               Container(
-                color: Colors.black.withValues(alpha: 0.3),
-                child: Center(child: Icon(Icons.play_circle_filled, color: Colors.white, size: 24)),
+                color: AppColors.primarySuperLight.withValues(alpha: 0.1),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // Video thumbnail - you can use a video thumbnail package here
+                    // For now, we'll show a placeholder with video icon
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.videocam, color: AppColors.textGray, size: 40),
+                          SizedBox(height: 8),
+                          Text('Video', style: TextStyle(color: AppColors.textGray, fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                    // Play button overlay
+                    Container(
+                      color: Colors.black.withValues(alpha: 0.3),
+                      child: Center(child: Icon(Icons.play_circle_filled, color: Colors.white, size: 48)),
+                    ),
+                  ],
+                ),
               ),
           ],
         ),

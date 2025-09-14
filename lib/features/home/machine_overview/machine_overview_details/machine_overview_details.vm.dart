@@ -88,7 +88,7 @@ class MachineOverviewDetailsViewModel extends BaseViewModel {
     String? additionalNotes,
     List<File>? attachments,
     String? maintenanceType,
-    bool isFromSiteVisit = false,
+    bool isFromSiteVisit = false, Function() ? onSucess,
   }) async {
     if (_machineId == null) {
       AppLogger.error('Machine ID is null');
@@ -121,7 +121,10 @@ class MachineOverviewDetailsViewModel extends BaseViewModel {
         final ticketId = response.data['ticket']['_id'];
         AppLogger.info('Site visit ticket created successfully: $ticketId');
         Fluttertoast.showToast(msg: response.data["message"] ?? 'Site visit ticket created successfully!', backgroundColor: Colors.green);
-        await _navigationService.navigateTo(Routes.reviewTicket, arguments: ticketId);
+        if(onSucess!=null){
+          onSucess();
+          await _navigationService.navigateTo(Routes.reviewTicket, arguments: ticketId);
+        }
       } else {
         AppLogger.error('Failed to create site visit ticket');
       }
@@ -155,7 +158,10 @@ class MachineOverviewDetailsViewModel extends BaseViewModel {
         final ticketId = response.data['ticket']['_id'];
         AppLogger.info('Ticket created successfully: $ticketId');
         Fluttertoast.showToast(msg: response.data["message"] ?? 'Ticket created successfully!', backgroundColor: Colors.green);
-        await _navigationService.navigateTo(Routes.reviewTicket, arguments: ticketId);
+        if(onSucess!=null){
+          onSucess();
+          await _navigationService.navigateTo(Routes.reviewTicket, arguments: ticketId);
+        }
       } else {
         AppLogger.error('Failed to create ticket');
       }

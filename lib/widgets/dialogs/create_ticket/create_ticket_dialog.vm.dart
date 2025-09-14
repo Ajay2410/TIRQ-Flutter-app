@@ -44,8 +44,8 @@ class CreateTicketDialogViewModel extends ReactiveViewModel {
 
   Future<void> pickMedia() async {
     try {
-      // Show options for camera or gallery
-      final result = await _filePickerService.pickImageFromGallery(
+      // Show options for image or video
+      final result = await _filePickerService.pickMediaFromGallery(
         maxWidth: 1920,
         maxHeight: 1920,
         imageQuality: 90,

@@ -13,7 +13,8 @@ class LanguageSelectionView extends StatefulWidget {
   _LanguageSelectionViewState createState() => _LanguageSelectionViewState();
 }
 
-class _LanguageSelectionViewState extends State<LanguageSelectionView> with TickerProviderStateMixin {
+class _LanguageSelectionViewState extends State<LanguageSelectionView>
+    with TickerProviderStateMixin {
   String selectedLanguage = '';
   String searchQuery = '';
   bool isSearchVisible = false;
@@ -26,26 +27,146 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
   late Animation<double> _searchAnimation;
 
   final List<Map<String, String>> languages = [
-    {'code': 'en', 'name': 'English', 'native': 'English', 'country': 'United States', 'flag': '🇺🇸'},
-    {'code': 'zh', 'name': 'Chinese (Simplified)', 'native': '中文', 'country': 'China', 'flag': '🇨🇳'},
-    {'code': 'hi', 'name': 'Hindi', 'native': 'हिन्दी', 'country': 'India', 'flag': '🇮🇳'},
-    {'code': 'ja', 'name': 'Japanese', 'native': '日本語', 'country': 'Japan', 'flag': '🇯🇵'},
-    {'code': 'de', 'name': 'German', 'native': 'Deutsch', 'country': 'Germany', 'flag': '🇩🇪'},
-    {'code': 'fr', 'name': 'French', 'native': 'Français', 'country': 'France', 'flag': '🇫🇷'},
-    {'code': 'es', 'name': 'Spanish', 'native': 'Español', 'country': 'Spain', 'flag': '🇪🇸'},
-    {'code': 'pt', 'name': 'Portuguese', 'native': 'Português', 'country': 'Brazil', 'flag': '🇧🇷'},
-    {'code': 'ru', 'name': 'Russian', 'native': 'Русский', 'country': 'Russia', 'flag': '🇷🇺'},
-    {'code': 'ar', 'name': 'Arabic', 'native': 'العربية', 'country': 'Saudi Arabia', 'flag': '🇸🇦'},
-    {'code': 'bn', 'name': 'Bengali', 'native': 'বাংলা', 'country': 'Bangladesh', 'flag': '🇧🇩'},
-    {'code': 'tr', 'name': 'Turkish', 'native': 'Türkçe', 'country': 'Turkey', 'flag': '🇹🇷'},
-    {'code': 'it', 'name': 'Italian', 'native': 'Italiano', 'country': 'Italy', 'flag': '🇮🇹'},
-    {'code': 'ko', 'name': 'Korean', 'native': '한국어', 'country': 'South Korea', 'flag': '🇰🇷'},
-    {'code': 'vi', 'name': 'Vietnamese', 'native': 'Tiếng Việt', 'country': 'Vietnam', 'flag': '🇻🇳'},
-    {'code': 'th', 'name': 'Thai', 'native': 'ไทย', 'country': 'Thailand', 'flag': '🇹🇭'},
-    {'code': 'nl', 'name': 'Dutch', 'native': 'Nederlands', 'country': 'Netherlands', 'flag': '🇳🇱'},
-    {'code': 'pl', 'name': 'Polish', 'native': 'Polski', 'country': 'Poland', 'flag': '🇵🇱'},
-    {'code': 'id', 'name': 'Malay/Indonesian', 'native': 'Bahasa Indonesia', 'country': 'Indonesia', 'flag': '🇮🇩'},
-    {'code': 'uk', 'name': 'Ukrainian', 'native': 'Українська', 'country': 'Ukraine', 'flag': '🇺🇦'},
+    {
+      'code': 'en',
+      'name': 'English',
+      'native': 'English',
+      'country': 'United States',
+      'flag': '🇺🇸',
+    },
+    {
+      'code': 'zh',
+      'name': 'Chinese (Simplified)',
+      'native': '中文',
+      'country': 'China',
+      'flag': '🇨🇳',
+    },
+    {
+      'code': 'hi',
+      'name': 'Hindi',
+      'native': 'हिन्दी',
+      'country': 'India',
+      'flag': '🇮🇳',
+    },
+    {
+      'code': 'ja',
+      'name': 'Japanese',
+      'native': '日本語',
+      'country': 'Japan',
+      'flag': '🇯🇵',
+    },
+    {
+      'code': 'de',
+      'name': 'German',
+      'native': 'Deutsch',
+      'country': 'Germany',
+      'flag': '🇩🇪',
+    },
+    {
+      'code': 'fr',
+      'name': 'French',
+      'native': 'Français',
+      'country': 'France',
+      'flag': '🇫🇷',
+    },
+    {
+      'code': 'es',
+      'name': 'Spanish',
+      'native': 'Español',
+      'country': 'Spain',
+      'flag': '🇪🇸',
+    },
+    {
+      'code': 'pt',
+      'name': 'Portuguese',
+      'native': 'Português',
+      'country': 'Brazil',
+      'flag': '🇧🇷',
+    },
+    {
+      'code': 'ru',
+      'name': 'Russian',
+      'native': 'Русский',
+      'country': 'Russia',
+      'flag': '🇷🇺',
+    },
+    {
+      'code': 'ar',
+      'name': 'Arabic',
+      'native': 'العربية',
+      'country': 'Saudi Arabia',
+      'flag': '🇸🇦',
+    },
+    {
+      'code': 'bn',
+      'name': 'Bengali',
+      'native': 'বাংলা',
+      'country': 'Bangladesh',
+      'flag': '🇧🇩',
+    },
+    {
+      'code': 'tr',
+      'name': 'Turkish',
+      'native': 'Türkçe',
+      'country': 'Turkey',
+      'flag': '🇹🇷',
+    },
+    {
+      'code': 'it',
+      'name': 'Italian',
+      'native': 'Italiano',
+      'country': 'Italy',
+      'flag': '🇮🇹',
+    },
+    {
+      'code': 'ko',
+      'name': 'Korean',
+      'native': '한국어',
+      'country': 'South Korea',
+      'flag': '🇰🇷',
+    },
+    {
+      'code': 'vi',
+      'name': 'Vietnamese',
+      'native': 'Tiếng Việt',
+      'country': 'Vietnam',
+      'flag': '🇻🇳',
+    },
+    {
+      'code': 'th',
+      'name': 'Thai',
+      'native': 'ไทย',
+      'country': 'Thailand',
+      'flag': '🇹🇭',
+    },
+    {
+      'code': 'nl',
+      'name': 'Dutch',
+      'native': 'Nederlands',
+      'country': 'Netherlands',
+      'flag': '🇳🇱',
+    },
+    {
+      'code': 'pl',
+      'name': 'Polish',
+      'native': 'Polski',
+      'country': 'Poland',
+      'flag': '🇵🇱',
+    },
+    {
+      'code': 'id',
+      'name': 'Malay/Indonesian',
+      'native': 'Bahasa Indonesia',
+      'country': 'Indonesia',
+      'flag': '🇮🇩',
+    },
+    {
+      'code': 'uk',
+      'name': 'Ukrainian',
+      'native': 'Українська',
+      'country': 'Ukraine',
+      'flag': '🇺🇦',
+    },
   ];
 
   List<Map<String, String>> get filteredLanguages {
@@ -65,17 +186,35 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(duration: const Duration(milliseconds: 1000), vsync: this);
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
 
-    _buttonAnimationController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
-    _buttonScaleAnimation = Tween<double>(
-      begin: 0.9,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _buttonAnimationController, curve: Curves.elasticOut));
+    _buttonAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _buttonScaleAnimation = Tween<double>(begin: 0.9, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _buttonAnimationController,
+        curve: Curves.elasticOut,
+      ),
+    );
 
-    _searchAnimationController = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
-    _searchAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _searchAnimationController, curve: Curves.easeInOut));
+    _searchAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _searchAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _searchAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
 
     _animationController.forward();
   }
@@ -143,21 +282,49 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(LanguageService.get('welcome'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Colors.black)),
+              Text(
+                LanguageService.get('welcome'),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black,
+                ),
+              ),
               Container(
                 width: 40,
                 height: 40,
-                decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(13)),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(13),
+                ),
                 child:
                     !isSearchVisible
-                        ? IconButton(icon: SvgPicture.asset('assets/svg/search-normal.svg', width: 50, height: 50), onPressed: _toggleSearch)
-                        : IconButton(icon: Icon(Icons.close, color: AppColors.black, size: 25), onPressed: _toggleSearch),
+                        ? IconButton(
+                          icon: SvgPicture.asset(
+                            'assets/svg/search-normal.svg',
+                            width: 50,
+                            height: 50,
+                          ),
+                          onPressed: _toggleSearch,
+                        )
+                        : IconButton(
+                          icon: Icon(
+                            Icons.close,
+                            color: AppColors.black,
+                            size: 25,
+                          ),
+                          onPressed: _toggleSearch,
+                        ),
               ),
             ],
           ),
           Text(
             LanguageService.get('choose_language_description'),
-            style: TextStyle(fontSize: 12, color: AppColors.textGray, fontWeight: FontWeight.w400),
+            style: TextStyle(
+              fontSize: 12,
+              color: AppColors.textGray,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ],
       ),
@@ -189,11 +356,19 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
               decoration: InputDecoration(
                 hintText: LanguageService.get('search_language'),
                 hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
-                prefixIcon: Icon(Icons.search, color: Colors.grey.shade500, size: 20),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey.shade500,
+                  size: 20,
+                ),
                 suffixIcon:
                     searchQuery.isNotEmpty
                         ? IconButton(
-                          icon: Icon(Icons.clear, color: Colors.grey.shade500, size: 20),
+                          icon: Icon(
+                            Icons.clear,
+                            color: Colors.grey.shade500,
+                            size: 20,
+                          ),
                           onPressed: () {
                             setState(() {
                               searchQuery = '';
@@ -203,7 +378,10 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
                         )
                         : null,
                 border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
               ),
             ),
           ),
@@ -238,8 +416,17 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
               decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: isSelected ? AppColors.primary : Colors.transparent, width: isSelected ? 2 : 1),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2))],
+                border: Border.all(
+                  color: isSelected ? AppColors.primary : Colors.transparent,
+                  width: isSelected ? 2 : 1,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: Stack(
                 children: [
@@ -248,13 +435,25 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
                     children: [
                       // Flag
                       Center(
-                        child: SizedBox(height: 33, child: Center(child: Text(language['flag'] ?? '🏳️', style: const TextStyle(fontSize: 28)))),
+                        child: SizedBox(
+                          height: 33,
+                          child: Center(
+                            child: Text(
+                              language['flag'] ?? '🏳️',
+                              style: const TextStyle(fontSize: 28),
+                            ),
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 8),
                       // Country name
                       Text(
                         language['country'] ?? 'Unknown',
-                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.black),
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
                         textAlign: TextAlign.center,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -262,7 +461,11 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
                       const SizedBox(height: 2),
                       Text(
                         language['native'] ?? '',
-                        style: const TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.w400),
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                        ),
                         textAlign: TextAlign.center,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -277,8 +480,15 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
                       child: Container(
                         width: 20,
                         height: 20,
-                        decoration: const BoxDecoration(color: Color(0xFF1E3A8A), shape: BoxShape.circle),
-                        child: const Icon(Icons.check, color: Colors.white, size: 12),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF1E3A8A),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.check,
+                          color: Colors.white,
+                          size: 12,
+                        ),
                       ),
                     ),
                 ],
@@ -299,13 +509,24 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
         child: ElevatedButton(
           onPressed: selectedLanguage.isNotEmpty ? _onContinue : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: selectedLanguage.isNotEmpty ? const Color(0xFF1E3A8A) : Colors.grey.shade300,
+            backgroundColor:
+                selectedLanguage.isNotEmpty
+                    ? const Color(0xFF1E3A8A)
+                    : Colors.grey.shade300,
             foregroundColor: Colors.white,
             elevation: 0,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-            padding: EdgeInsets.symmetric(horizontal: AppSizes.w18, vertical: AppSizes.h8),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25),
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.w18,
+              vertical: AppSizes.h8,
+            ),
           ),
-          child: Text(LanguageService.get('continue'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          child: Text(
+            LanguageService.get('continue'),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
         ),
       ),
     );
@@ -319,15 +540,23 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView> with Tick
       await saveLanguageSelectionFlag();
       // Navigate to login screen
       if (mounted) {
-        Navigator.of(
-          context,
-        ).pushReplacement(MaterialPageRoute(builder: (context) => IntroductionView(), settings: const RouteSettings(name: '/introduction')));
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => IntroductionView(),
+            settings: const RouteSettings(name: '/introduction'),
+          ),
+        );
       }
     } catch (e) {
       print('Error saving language selection: $e');
       // Consider showing a user-friendly error message
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(LanguageService.get('language_save_error')), backgroundColor: Colors.red));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(LanguageService.get('language_save_error')),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }

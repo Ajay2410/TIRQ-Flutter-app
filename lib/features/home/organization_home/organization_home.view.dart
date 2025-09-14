@@ -33,32 +33,36 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
       disposeViewModel: false,
       builder: (BuildContext context, OrganizationHomeViewModel model, Widget? child) {
         return Scaffold(
-          backgroundColor: AppColors.white,
-          body: SafeArea(
-            child: Stack(
-              children: [
-                SizedBox(
-                  height: Get.height,
-                  width: Get.width,
-                  child: Column(
-                    children: [
-                      Container(
-                        height: Get.height * 0.3,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [AppColors.primaryDark, AppColors.primaryLight],
-                            stops: [0.0254, 1.0334],
+          backgroundColor: AppColors.transparent,
+          appBar: _buildHeader(context, model),
+          body: Container(
+            color: AppColors.white,
+            child: SafeArea(
+              child: Stack(
+                children: [
+                  SizedBox(
+                    height: Get.height,
+                    width: Get.width,
+                    child: Column(
+                      children: [
+                        Container(
+                          height: Get.height * 0.09,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [AppColors.primaryLight, AppColors.primaryDark],
+                              begin: Alignment.centerRight,
+                              end: Alignment.centerLeft,
+                              stops: [0.08, 1],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
 
-                Column(children: [Expanded(child: _buildContent(context, model))]),
-              ],
+                  Column(children: [Expanded(child: _buildContent(context, model))]),
+                ],
+              ),
             ),
           ),
         );
@@ -66,93 +70,108 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
     );
   }
 
-  Widget _buildHeader(BuildContext context, OrganizationHomeViewModel model) {
+  PreferredSizeWidget _buildHeader(BuildContext context, OrganizationHomeViewModel model) {
     String greeting = _getGreetingBasedOnTime();
 
-    return Column(
-      children: [
-        // Blue header with user info and controls
-        SizedBox(height: MediaQuery.of(context).padding.top),
-
-        // Main header content
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Row(
-            children: [
-              // Profile picture
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: AppColors.white.withValues(alpha: 0.3), width: 2)),
-                child: ClipOval(
-                  child:
-                      model.user.logoUrl != null
-                          ? Image.network(model.user.logoUrl!, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) => _buildDefaultAvatar())
-                          : _buildDefaultAvatar(),
-                ),
-              ),
-
-              SizedBox(width: 16),
-
-              // Greeting and name
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(greeting, style: TextStyle(color: AppColors.white.withValues(alpha: 0.9), fontSize: 12, fontWeight: FontWeight.w400)),
-                    ],
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    model.user.name ?? model.user.fullName ?? 'User',
-                    style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.w600),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-
-              Spacer(),
-              // Unit selector
-              _buildDropdownFormField(
-                context,
-                value: selectedUnit,
-                label: LanguageService.get('unit'),
-                items: [
-                  {"value": "Unit 1", "display": "Unit 1"},
-                  {"value": "Unit 2", "display": "Unit 2"},
-                  {"value": "Unit 3", "display": "Unit 3"},
-                  {"value": "+ Add New", "display": LanguageService.get('add_new')},
-                ],
-                onChanged: (String? newValue) {
-                  if (newValue != null) {
-                    setState(() {
-                      selectedUnit = newValue;
-                    });
-                  }
-                },
-                validator: null,
-              ),
-              SizedBox(width: 12),
-
-              // Notification icon
-              Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppColors.primarySuperLight.withValues(alpha: 0.04),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColors.white.withValues(alpha: 0.10)),
-                ),
-                child: Icon(Icons.notifications_outlined, color: AppColors.white, size: 20),
-              ),
-            ],
+    return PreferredSize(
+      preferredSize: Size.fromHeight(125 + MediaQuery.of(context).padding.top),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
           ),
         ),
+        child: Column(
+          children: [
+            SizedBox(height: MediaQuery.of(context).padding.top),
 
-        SizedBox(width: 95, height: 56, child: Image.asset(AppImages.triqLogo3, fit: BoxFit.contain)),
-        SizedBox(height: 12),
-      ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Row(
+                children: [
+                  // Profile picture
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: AppColors.white.withValues(alpha: 0.3), width: 2)),
+                    child: ClipOval(
+                      child:
+                          model.user.logoUrl != null
+                              ? Image.network(
+                                model.user.logoUrl!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) => _buildDefaultAvatar(),
+                              )
+                              : _buildDefaultAvatar(),
+                    ),
+                  ),
+
+                  SizedBox(width: 16),
+
+                  // Greeting and name
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(greeting, style: TextStyle(color: AppColors.white.withValues(alpha: 0.9), fontSize: 12, fontWeight: FontWeight.w400)),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        model.user.name ?? model.user.fullName ?? 'User',
+                        style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+
+                  Spacer(),
+                  // Unit selector
+                  _buildDropdownFormField(
+                    context,
+                    value: selectedUnit,
+                    label: LanguageService.get('unit'),
+                    items: [
+                      {"value": "Unit 1", "display": "Unit 1"},
+                      {"value": "Unit 2", "display": "Unit 2"},
+                      {"value": "Unit 3", "display": "Unit 3"},
+                      {"value": "+ Add New", "display": LanguageService.get('add_new')},
+                    ],
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          selectedUnit = newValue;
+                        });
+                      }
+                    },
+                    validator: null,
+                  ),
+                  SizedBox(width: 12),
+
+                  // Notification icon
+                  Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primarySuperLight.withValues(alpha: 0.04),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppColors.white.withValues(alpha: 0.10)),
+                    ),
+                    child: Icon(Icons.notifications_outlined, color: AppColors.white, size: 20),
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(width: 95, height: 56, child: Image.asset(AppImages.triqLogo3, fit: BoxFit.contain)),
+            SizedBox(height: 12),
+          ],
+        ),
+      ),
     );
   }
 
@@ -164,20 +183,12 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
   }
 
   Widget _buildContent(BuildContext context, OrganizationHomeViewModel model) {
-    return Column(
-      children: [
-        _buildHeader(context, model),
-
-        Expanded(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [_buildDashboardCards(context, model), SizedBox(height: 30), _buildPromotionalBanner(context)],
-            ),
-          ),
-        ),
-      ],
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [_buildDashboardCards(context, model), SizedBox(height: 30), _buildPromotionalBanner(context)],
+      ),
     );
   }
 
@@ -230,39 +241,39 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
         title: LanguageService.get('tickets_summary'),
         icon: AppImages.ticketSummary,
         color: AppColors.mediumPeriwinkle,
-        route: '/tickets',
+        route: Routes.ticketsList,
       ),
       'my_customers': DashboardCardData(
         title: LanguageService.get('my_customers'),
         icon: AppImages.myCustomers,
         color: AppColors.skyBlue,
-        route: '/customers',
+        route: Routes.myCustomers,
       ),
       'my_teams': DashboardCardData(
         title: LanguageService.get('my_teams'),
         icon: AppImages.myTeam,
         color: AppColors.greenbackground,
-        route: '/teams',
+        route: Routes.teams,
       ),
-      'tasks': DashboardCardData(title: LanguageService.get('tasks'), icon: AppImages.tasks, color: AppColors.redbackground, route: '/tasks'),
+      'tasks': DashboardCardData(title: LanguageService.get('tasks'), icon: AppImages.tasks, color: AppColors.redbackground, route: Routes.tasks),
       'pi_invoice': DashboardCardData(
         title: LanguageService.get('pi_invoice'),
         icon: AppImages.piInvoice,
         color: AppColors.darkGreenBack,
-        route: '/pi-invoice',
+        route: Routes.invoice,
         isComingSoon: true,
       ),
       'machine_suppliers': DashboardCardData(
         title: LanguageService.get('machine_suppliers'),
         icon: AppImages.machineSuppliers,
         color: AppColors.skyBlue,
-        route: '/machine-suppliers',
+        route: Routes.machineSupplier,
       ),
       'glass_flow_system': DashboardCardData(
         title: LanguageService.get('glass_flow_system'),
         icon: AppImages.glassFlowSystem,
         color: AppColors.forestGreen,
-        route: '/glass-flow-system',
+        route: Routes.glassFlowSystem,
         isComingSoon: true,
       ),
     };
@@ -329,37 +340,37 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
         title: LanguageService.get('analytics_dashboard'),
         icon: AppImages.analyticsDashboard,
         color: AppColors.amberOrange,
-        route: '/analytics',
+        route: Routes.analytics,
       ),
       'machine_records': DashboardCardData(
         title: LanguageService.get('machine_records'),
         icon: AppImages.machineRecords,
         color: AppColors.crimsonRed,
-        route: '/machines',
+        route: Routes.machinesList,
       ),
       'machine_overview': DashboardCardData(
         title: LanguageService.get('machine_overview'),
         icon: AppImages.machineRecords,
         color: AppColors.crimsonRed,
-        route: '/machine-overview',
+        route: Routes.machineOverview,
       ),
       'feedback_rating': DashboardCardData(
         title: LanguageService.get('feedback_rating'),
         icon: AppImages.feedbackRating,
         color: AppColors.mintGreen,
-        route: '/feedback',
+        route: Routes.feedback,
       ),
       'installation_tracker': DashboardCardData(
         title: LanguageService.get('installation_tracker'),
         icon: AppImages.installationTracker,
         color: AppColors.indigoBlue,
-        route: '/installations',
+        route: Routes.installation,
       ),
       'feedback_survey': DashboardCardData(
         title: LanguageService.get('feedback_survey'),
         icon: AppImages.feedbackSurvey,
         color: AppColors.oliveGreen,
-        route: '/survey',
+        route: Routes.feedbackSurvey,
       ),
     };
 
@@ -401,7 +412,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
       child: GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: 0.8),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: 0.78),
         itemCount: secondaryFeatures.length,
         itemBuilder: (context, index) {
           final card = secondaryFeatures[index];
@@ -416,19 +427,19 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
           onTap: () {
             // Navigate based on the card route
             switch (card.route) {
-              case '/analytics':
+              case Routes.analytics:
                 break;
-              case '/machines':
+              case Routes.machinesList:
                 model.navigateToMachineRecords();
                 break;
-              case '/machine-overview':
+              case Routes.machineOverview:
                 model.navigateToMachineOverview();
                 break;
-              case '/feedback':
+              case Routes.feedback:
                 break;
-              case '/installations':
+              case Routes.installation:
                 break;
-              case '/survey':
+              case Routes.feedbackSurvey:
                 break;
               default:
                 // Handle unknown routes
@@ -472,21 +483,21 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
       onTap: () {
         // Navigate based on the card route
         switch (card.route) {
-          case '/tickets':
+          case Routes.ticketsList:
             model.navigateToTickets();
             break;
-          case '/teams':
+          case Routes.teams:
             break;
-          case '/tasks':
+          case Routes.tasks:
             break;
-          case '/pi-invoice':
+          case Routes.invoice:
             break;
-          case '/machine-suppliers':
+          case Routes.machineSupplier:
             Navigator.of(context).pushNamed(Routes.machineSupplier);
             break;
-          case '/glass-flow-system':
+          case Routes.glassFlowSystem:
             break;
-          case '/customers':
+          case Routes.myCustomers:
             Navigator.of(context).pushNamed(Routes.myCustomers);
             break;
           default:

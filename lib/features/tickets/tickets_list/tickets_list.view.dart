@@ -3,16 +3,14 @@ import 'dart:math' as math;
 
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:manager/services/language.service.dart';
-import 'package:manager/services/dialogs.service.dart';
 import 'package:manager/widgets/dialogs/create_ticket/create_ticket_dialog.view.dart';
 import 'package:manager/widgets/dialogs/select_maintenance_type/select_maintenance_type_dialog.view.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
-import 'package:manager/core/locator.dart';
 import 'package:manager/core/storage/storage.dart';
 import 'package:manager/core/models/hive/user/user.dart';
 
@@ -33,7 +31,6 @@ class _TicketsListViewState extends State<TicketsListView>
     with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
-  final _dialogService = locator<DialogService>();
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
   AnimationController? _fabAnimationController;
@@ -134,38 +131,36 @@ class _TicketsListViewState extends State<TicketsListView>
 
   Future<void> _onOnlineSupportPressed(TicketsListViewModel model) async {
     _toggleFab();
-    await _dialogService.showCustomDialog(
-      variant: DialogType.createTicket,
-      data: CreateTicketDialogAttributes(
-        onSubmit: (problem, errorCode, additionalNotes, attachments) async {
-          // Navigate to review ticket using Stacked navigation
-          model.navigateToReviewTicket();
-        },
-        onCancel: () {
-          print('Ticket creation cancelled');
-        },
+    Get.dialog(
+      CreateTicketDialogWidget(
+        attributes: CreateTicketDialogAttributes(
+          onSubmit: (problem, errorCode, additionalNotes, attachments) async {
+            // Navigate to review ticket using Stacked navigation
+            model.navigateToReviewTicket();
+          },
+          onCancel: () {
+            print('Ticket creation cancelled');
+          },
+        ),
       ),
     );
   }
 
   void _onSiteVisitPressed(TicketsListViewModel model) {
     _toggleFab();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SelectMaintenanceTypeDialog(
-          isWarrantyActive: true, // You can modify this based on your logic
-          attributes: SelectMaintenanceTypeDialogAttributes(
-            onSubmit: (String maintenanceType) {
-              // Navigate to review ticket using Stacked navigation
-              model.navigateToReviewTicket();
-            },
-            onCancel: () {
-              // Handle cancel action if needed
-            },
-          ),
-        );
-      },
+    Get.dialog(
+      SelectMaintenanceTypeDialog(
+        isWarrantyActive: true, // You can modify this based on your logic
+        attributes: SelectMaintenanceTypeDialogAttributes(
+          onSubmit: (String maintenanceType) async {
+            // Navigate to review ticket using Stacked navigation
+            model.navigateToReviewTicket();
+          },
+          onCancel: () {
+            // Handle cancel action if needed
+          },
+        ),
+      ),
     );
   }
 
@@ -329,11 +324,11 @@ class _TicketsListViewState extends State<TicketsListView>
               ),
             ),
           ),
-          floatingActionButton:
-              model.selectedTabIndex == 0 &&
-                      getUser().userRole == UserRole.processor
-                  ? _buildExpandableFloatingActionButton(model)
-                  : null,
+          // floatingActionButton:
+          //     model.selectedTabIndex == 0 &&
+          //             getUser().userRole == UserRole.processor
+          //         ? _buildExpandableFloatingActionButton(model)
+          //         : null,
         );
       },
     );
@@ -346,6 +341,16 @@ class _TicketsListViewState extends State<TicketsListView>
     return AppBar(
       elevation: 0,
       titleSpacing: 0,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
+          ),
+        ),
+      ),
       leading: IconButton(
         onPressed: () => model.navigateToHome(),
         icon: Image.asset(
@@ -576,11 +581,11 @@ class _TicketsListViewState extends State<TicketsListView>
 
     return GestureDetector(
       onTap: () {
-        if (ticket.paymentStatus == 'paid') {
-          model.navigateToTicketDetails(ticketId: ticket.id ?? '');
-        } else {
-          model.navigateToReviewTicketWithId(ticketId: ticket.id ?? '');
-        }
+        // if (ticket.paymentStatus == 'paid') {
+        model.navigateToTicketDetails(ticketId: ticket.id ?? '');
+        // } else {
+        //   model.navigateToReviewTicketWithId(ticketId: ticket.id ?? '');
+        // }
       },
       child: Container(
         margin: EdgeInsets.only(bottom: AppSizes.h10),
@@ -705,8 +710,8 @@ class _TicketsListViewState extends State<TicketsListView>
                   ),
                   InfoColumn(
                     label: LanguageService.get("warranty_status"),
-                    value:
-                        "N/A", // Warranty status not available in current model
+                    value: "N/A",
+                    // Warranty status not available in current model
                     valueColor: AppColors.textGray,
                     valueFontWeight: FontWeight.w600,
                     valueFontSize: 10,

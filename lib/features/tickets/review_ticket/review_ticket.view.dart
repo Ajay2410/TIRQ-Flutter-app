@@ -57,6 +57,20 @@ class ReviewTicketView extends StatelessWidget {
     return AppBar(
       elevation: 0,
       titleSpacing: 0,
+      leading: IconButton(
+        icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
+          ),
+        ),
+      ),
       title: Text(
         LanguageService.get('review_ticket'),
         style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: AppColors.white, fontWeight: FontWeight.bold),

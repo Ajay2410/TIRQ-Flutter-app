@@ -156,13 +156,10 @@ class SelectMaintenanceTypeDialog extends StatelessWidget {
                                   ? () async {
                                     await model.submit(model.selectedType!, (
                                       maintenanceType,
-                                    ) {
-                                      attributes?.onSubmit?.call(
+                                    ) async {
+                                      await attributes?.onSubmit?.call(
                                         maintenanceType,
                                       );
-                                      Navigator.of(
-                                        context1,
-                                      ).pop(DialogResponse(confirmed: true));
                                     });
                                   }
                                   : null,
@@ -301,7 +298,7 @@ class SelectMaintenanceTypeDialog extends StatelessWidget {
 }
 
 class SelectMaintenanceTypeDialogAttributes {
-  final Function(String maintenanceType)? onSubmit;
+  final Future<void> Function(String maintenanceType)? onSubmit;
   final VoidCallback? onCancel;
 
   SelectMaintenanceTypeDialogAttributes({this.onSubmit, this.onCancel});

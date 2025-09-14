@@ -46,25 +46,24 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(
-    BuildContext context,
-    ProfileViewModel model,
-  ) {
+  PreferredSizeWidget _buildAppBar(BuildContext context, ProfileViewModel model) {
     return AppBar(
-      backgroundColor: Colors.transparent, // Set to transparent
+      backgroundColor: Colors.transparent,
+      // Set to transparent
       elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: model.onBackPress,
-      ),
-      title: Text(
-        LanguageService.get("my_profile"),
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
+      titleSpacing: 0,
+      leading: IconButton(icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white), onPressed: () => model.onBackPress),
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
+          ),
         ),
       ),
+      title: Text(LanguageService.get("my_profile"), style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
     );
   }
 
@@ -74,10 +73,7 @@ class ProfileView extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(20),
-          bottomRight: Radius.circular(20),
-        ),
+        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
       ),
       child: Column(
         children: [
@@ -93,46 +89,23 @@ class ProfileView extends StatelessWidget {
                     height: 59,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(40),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF687FE5).withOpacity(0.3),
-                          blurRadius: 2,
-                          spreadRadius: 5,
-                        ),
-                      ],
+                      boxShadow: [BoxShadow(color: const Color(0xFF687FE5).withOpacity(0.3), blurRadius: 2, spreadRadius: 5)],
                     ),
                     child: ClipOval(
                       child: CachedNetworkImage(
-                        imageUrl:
-                            model.user.logoUrl ??
-                            'https://img.freepik.com/free-vector/search-engine-logo_1071-76.jpg',
+                        imageUrl: model.user.logoUrl ?? 'https://img.freepik.com/free-vector/search-engine-logo_1071-76.jpg',
                         width: 61,
                         height: 61,
                         fit: BoxFit.cover,
                         placeholder:
-                            (context, url) => Container(
-                              color: const Color(0xFFE8E8E8),
-                              child: const Icon(
-                                Icons.person,
-                                size: 40,
-                                color: Colors.grey,
-                              ),
-                            ),
+                            (context, url) =>
+                                Container(color: const Color(0xFFE8E8E8), child: const Icon(Icons.person, size: 40, color: Colors.grey)),
                         errorWidget:
-                            (context, url, error) => Container(
-                              color: AppColors.textGray,
-                              child: const Icon(
-                                Icons.person,
-                                size: 40,
-                                color: Colors.grey,
-                              ),
-                            ),
+                            (context, url, error) =>
+                                Container(color: AppColors.textGray, child: const Icon(Icons.person, size: 40, color: Colors.grey)),
                       ),
                     ),
-                  ).animate().scale(
-                    duration: 500.ms,
-                    curve: Curves.easeOutBack,
-                  ),
+                  ).animate().scale(duration: 500.ms, curve: Curves.easeOutBack),
                   Positioned(
                     bottom: 0,
                     right: 0,
@@ -148,11 +121,7 @@ class ProfileView extends StatelessWidget {
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(color: Colors.white, width: 2),
                         ),
-                        child: const Icon(
-                          Icons.edit,
-                          size: 16,
-                          color: Colors.white,
-                        ),
+                        child: const Icon(Icons.edit, size: 16, color: Colors.white),
                       ),
                     ),
                   ),
@@ -165,44 +134,22 @@ class ProfileView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      model.organization?.name ??
-                          model.user.name ??
-                          'Leslie Alexander',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                      model.organization?.name ?? model.user.name ?? 'Leslie Alexander',
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
                     ).animate().fadeIn(duration: 500.ms),
                     const SizedBox(height: 4),
                     Text(
                       model.user.email ?? 'yourmail@email.com',
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: AppColors.textGray,
-                      ),
+                      style: const TextStyle(fontSize: 11, color: AppColors.textGray),
                     ).animate().fadeIn(duration: 500.ms, delay: 200.ms),
                   ],
                 ),
               ),
               // Completion Badge
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFF3E0),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Text(
-                  '32% Completed',
-                  style: TextStyle(
-                    color: Color(0xFFFF9800),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 10,
-                  ),
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(color: const Color(0xFFFFF3E0), borderRadius: BorderRadius.circular(12)),
+                child: const Text('32% Completed', style: TextStyle(color: Color(0xFFFF9800), fontWeight: FontWeight.bold, fontSize: 10)),
               ).animate().fadeIn(duration: 500.ms, delay: 300.ms),
             ],
           ),
@@ -216,22 +163,12 @@ class ProfileView extends StatelessWidget {
                   onTap: model.navigateToQRView,
                   child: Container(
                     padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE3F2FD),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    decoration: BoxDecoration(color: const Color(0xFFE3F2FD), borderRadius: BorderRadius.circular(12)),
                     child: Row(
                       children: [
                         Icon(Icons.qr_code, size: 24, color: Color(0xFF2196F3)),
                         SizedBox(width: 12),
-                        Text(
-                          LanguageService.get("my_QR"),
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
+                        Text(LanguageService.get("my_QR"), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black)),
                       ],
                     ),
                   ),
@@ -243,26 +180,12 @@ class ProfileView extends StatelessWidget {
                   onTap: () {},
                   child: Container(
                     padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE8F5E8),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    decoration: BoxDecoration(color: const Color(0xFFE8F5E8), borderRadius: BorderRadius.circular(12)),
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.account_balance_wallet,
-                          size: 24,
-                          color: Color(0xFF4CAF50),
-                        ),
+                        Icon(Icons.account_balance_wallet, size: 24, color: Color(0xFF4CAF50)),
                         SizedBox(width: 12),
-                        Text(
-                          LanguageService.get("my_wallet"),
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
+                        Text(LanguageService.get("my_wallet"), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black)),
                       ],
                     ),
                   ),
@@ -277,24 +200,15 @@ class ProfileView extends StatelessWidget {
 
   Widget _buildMenuItems(BuildContext context, ProfileViewModel model) {
     return Container(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
+      decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16)),
       child: Column(
         children: [
           _buildMenuItem(
             icon: Icons.business_outlined,
-            title:
-                getUser().userRole == UserRole.superAdmin
-                    ? LanguageService.get("organization")
-                    : LanguageService.get("profile"),
+            title: getUser().userRole == UserRole.superAdmin ? LanguageService.get("organization") : LanguageService.get("profile"),
             iconColor: const Color(0xFF9C27B0),
             iconBgColor: const Color(0xFFF3E5F5),
-            onTap:
-                getUser().userRole == UserRole.superAdmin
-                    ? model.navigateToCreateOrEditOrgView
-                    : model.navigateToEmployeeProfileView,
+            onTap: getUser().userRole == UserRole.superAdmin ? model.navigateToCreateOrEditOrgView : model.navigateToEmployeeProfileView,
             animationDelay: 500.ms,
           ),
           _buildDivider(),
@@ -391,47 +305,22 @@ class ProfileView extends StatelessWidget {
             Container(
               width: 40,
               height: 40,
-              decoration: BoxDecoration(
-                color: iconBgColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
+              decoration: BoxDecoration(color: iconBgColor, borderRadius: BorderRadius.circular(10)),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child:
                     imagePath != null
-                        ? Image.asset(
-                          imagePath,
-                          width: 24,
-                          height: 24,
-                          color: iconColor,
-                          fit: BoxFit.contain,
-                        )
+                        ? Image.asset(imagePath, width: 24, height: 24, color: iconColor, fit: BoxFit.contain)
                         : Icon(icon!, color: iconColor, size: 22),
               ),
             ),
             const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                ),
-              ),
-            ),
+            Expanded(child: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black))),
             Container(
               width: 30,
               height: 30,
-              decoration: BoxDecoration(
-                color: AppColors.textGray.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(
-                Icons.arrow_forward,
-                size: 16,
-                color: AppColors.black,
-              ),
+              decoration: BoxDecoration(color: AppColors.textGray.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(8)),
+              child: const Icon(Icons.arrow_forward, size: 16, color: AppColors.black),
             ),
           ],
         ),
@@ -440,11 +329,7 @@ class ProfileView extends StatelessWidget {
   }
 
   Widget _buildDivider() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      height: 1,
-      color: const Color(0xFFEEEEEE),
-    );
+    return Container(margin: const EdgeInsets.symmetric(horizontal: 20), height: 1, color: const Color(0xFFEEEEEE));
   }
 
   Widget _buildTermsAndPolicy(BuildContext context) {
@@ -454,9 +339,7 @@ class ProfileView extends StatelessWidget {
         textAlign: TextAlign.center,
         text: TextSpan(
           text: LanguageService.get("by_using_this_app_you_agree_to_our"),
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall?.copyWith(color: Colors.grey[600], height: 1.5),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600], height: 1.5),
           children: [
             TextSpan(
               text: LanguageService.get("terms_conditions"),

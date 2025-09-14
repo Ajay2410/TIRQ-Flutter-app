@@ -84,39 +84,30 @@ class _MachineOverviewViewState extends State<MachineOverviewView> with TickerPr
       viewModelBuilder: () => MachineOverviewViewModel()..init(),
       builder: (context, viewModel, child) {
         return Scaffold(
+          appBar: _buildAppBar(context),
+          backgroundColor: AppColors.scaffoldBackground,
           body: SafeArea(
-            child: Column(
-              children: [
-                _buildAppBar(context),
-                Expanded(
-                  child: Container(
-                    color: AppColors.scaffoldBackground,
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      children: [
-                        SlideTransition(
-                          position: _slideAnimation,
-                          child: _isSearchVisible ? _buildSearchBar(context, viewModel) : const SizedBox.shrink(),
-                        ),
-                        Expanded(
-                          child:
-                              viewModel.isLoading
-                                  ? RefreshIndicator(
-                                    onRefresh: viewModel.refreshMachines,
-                                    backgroundColor: AppColors.white,
-                                    child: SingleChildScrollView(child: _buildShimmerList()),
-                                  )
-                                  : RefreshIndicator(
-                                    backgroundColor: AppColors.white,
-                                    onRefresh: viewModel.refreshMachines,
-                                    child: SingleChildScrollView(child: _buildMachineList(context, viewModel)),
-                                  ),
-                        ),
-                      ],
-                    ),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                children: [
+                  SlideTransition(position: _slideAnimation, child: _isSearchVisible ? _buildSearchBar(context, viewModel) : const SizedBox.shrink()),
+                  Expanded(
+                    child:
+                        viewModel.isLoading
+                            ? RefreshIndicator(
+                              onRefresh: viewModel.refreshMachines,
+                              backgroundColor: AppColors.white,
+                              child: SingleChildScrollView(child: _buildShimmerList()),
+                            )
+                            : RefreshIndicator(
+                              backgroundColor: AppColors.white,
+                              onRefresh: viewModel.refreshMachines,
+                              child: SingleChildScrollView(child: _buildMachineList(context, viewModel)),
+                            ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -124,9 +115,19 @@ class _MachineOverviewViewState extends State<MachineOverviewView> with TickerPr
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
       elevation: 0,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
+          ),
+        ),
+      ),
       leading: IconButton(icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white), onPressed: () => Get.back()),
       titleSpacing: 0,
       title: Text('machine_overview'.lang, style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold)),

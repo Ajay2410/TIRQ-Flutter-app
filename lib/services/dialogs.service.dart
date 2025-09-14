@@ -22,7 +22,6 @@ enum DialogType {
   ticketResolve,
   resolveRequest,
   ticketClosed,
-  createTicket,
 }
 
 setUpDialogs() {
@@ -36,7 +35,6 @@ setUpDialogs() {
     DialogType.ticketResolve: buildDialogVariant,
     DialogType.ticketClosed: buildDialogVariant,
     DialogType.resolveRequest: buildDialogVariant,
-    DialogType.createTicket: buildDialogVariant,
   };
 
   final dialogService = locator<DialogService>();
@@ -89,11 +87,6 @@ Widget buildDialogVariant(
     case DialogType.resolveRequest:
       return ResolveRequestDialog(
         request: request as DialogRequest<ResolveRequestDialogAttributes>,
-        completer: completer,
-      );
-    case DialogType.createTicket:
-      return CreateTicketDialog(
-        request: request as DialogRequest<CreateTicketDialogAttributes>,
         completer: completer,
       );
   }

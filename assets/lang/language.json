@@ -6179,6 +6179,28 @@
     "malay_indonesian": "Pilih Negara",
     "Ukrainian": "Оберіть країну"
   },
+  "search_country": {
+    "English": "Search country",
+    "Hindi": "देश खोजें",
+    "Chinese (Simplified)": "搜索国家",
+    "Spanish": "Buscar país",
+    "Japanese": "国を検索",
+    "German": "Land suchen",
+    "French": "Rechercher un pays",
+    "Arabic": "البحث عن البلد",
+    "Portuguese": "Pesquisar país",
+    "Russian": "Поиск страны",
+    "Bengali": "দেশ খুঁজুন",
+    "Turkish": "Ülke ara",
+    "Italian": "Cerca paese",
+    "Korean": "국가 검색",
+    "Vietnamese": "Tìm kiếm quốc gia",
+    "Thai": "ค้นหาประเทศ",
+    "Dutch": "Land zoeken",
+    "Polish": "Szukaj kraju",
+    "malay_indonesian": "Cari negara",
+    "Ukrainian": "Пошук країни"
+  },
   "employee_role": {
     "English": "Employee Role",
     "Hindi": "कर्मचारी भूमिका",

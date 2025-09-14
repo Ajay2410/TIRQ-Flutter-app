@@ -139,45 +139,51 @@ class _MachineRecordsViewState extends State<MachineRecordsView> with TickerProv
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _buildAppBar(context),
       body: SafeArea(
-        child: Column(
-          children: [
-            _buildAppBar(context),
-            Expanded(
-              child: Container(
-                color: AppColors.scaffoldBackground,
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  children: [
-                    SlideTransition(position: _slideAnimation, child: _isSearchVisible ? _buildSearchBar(context) : const SizedBox.shrink()),
-                    Expanded(
-                      child:
-                          _isLoading
-                              ? RefreshIndicator(
-                                onRefresh: _refreshMachines,
-                                backgroundColor: AppColors.white,
-                                child: SingleChildScrollView(child: _buildShimmerList()),
-                              )
-                              : RefreshIndicator(
-                                backgroundColor: AppColors.white,
-                                onRefresh: _refreshMachines,
-                                child: SingleChildScrollView(child: _buildMachineList(context)),
-                              ),
-                    ),
-                  ],
+        child: Expanded(
+          child: Container(
+            color: AppColors.scaffoldBackground,
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              children: [
+                SlideTransition(position: _slideAnimation, child: _isSearchVisible ? _buildSearchBar(context) : const SizedBox.shrink()),
+                Expanded(
+                  child:
+                      _isLoading
+                          ? RefreshIndicator(
+                            onRefresh: _refreshMachines,
+                            backgroundColor: AppColors.white,
+                            child: SingleChildScrollView(child: _buildShimmerList()),
+                          )
+                          : RefreshIndicator(
+                            backgroundColor: AppColors.white,
+                            onRefresh: _refreshMachines,
+                            child: SingleChildScrollView(child: _buildMachineList(context)),
+                          ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
       floatingActionButton: _buildFloatingActionButton(),
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
       elevation: 0,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
+          ),
+        ),
+      ),
       leading: IconButton(icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white), onPressed: () => Get.back()),
       titleSpacing: 0,
       title: Text('machine_records'.lang, style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold)),

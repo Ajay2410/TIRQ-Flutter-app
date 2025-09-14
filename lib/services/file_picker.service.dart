@@ -294,4 +294,42 @@ class FilePickerService {
       return Left(Failure('Failed to pick files: $e'));
     }
   }
+
+  /// Pick media (image or video) from gallery
+  /// Returns the selected media file on success
+  ResultFuture<File> pickMediaFromGallery({
+    double? maxWidth,
+    double? maxHeight,
+    int? imageQuality,
+    Duration? maxDuration,
+  }) async {
+    try {
+      // Request permission
+      final statusPhotos = await Permission.photos.request();
+      final statusStorage = await Permission.storage.request();
+      if (!statusStorage.isGranted && !statusPhotos.isGranted) {
+        Fluttertoast.showToast(msg: 'Gallery permission denied');
+        return Left(Failure('Gallery permission denied'));
+      }
+
+      // Pick media files (both image and video)
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.media,
+        allowMultiple: false,
+      );
+
+      if (result == null || result.files.isEmpty) {
+        return Left(Failure('No media selected'));
+      }
+
+      if (result.files.first.path == null) {
+        return Left(Failure('Invalid media path'));
+      }
+
+      return Right(File(result.files.first.path!));
+    } catch (e) {
+      AppLogger.error('Error picking media from gallery: $e');
+      return Left(Failure('Failed to pick media: $e'));
+    }
+  }
 }

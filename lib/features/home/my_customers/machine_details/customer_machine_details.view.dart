@@ -178,10 +178,11 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _buildAppBar(context),
+      backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: Column(
           children: [
-            _buildAppBar(context),
             Expanded(
               child: Container(
                 color: AppColors.scaffoldBackground,
@@ -195,8 +196,18 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
+          ),
+        ),
+      ),
       elevation: 0,
       leading: IconButton(
         icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
@@ -452,7 +463,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
 
   Widget _buildActionButtons(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: AppColors.white,
         boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), offset: const Offset(0, -5), blurRadius: 10, spreadRadius: 0)],

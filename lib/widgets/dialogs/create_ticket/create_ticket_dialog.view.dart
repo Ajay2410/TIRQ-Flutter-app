@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -26,6 +25,22 @@ class CreateTicketDialogAttributes {
     this.onSubmit,
     this.onCancel,
   });
+}
+
+class CreateTicketDialogWidget extends StatelessWidget {
+  final CreateTicketDialogAttributes attributes;
+
+  const CreateTicketDialogWidget({super.key, required this.attributes});
+
+  @override
+  Widget build(BuildContext context) {
+    return CreateTicketDialog(
+      request: DialogRequest<CreateTicketDialogAttributes>(data: attributes),
+      completer: (response) {
+        // Handle the response if needed
+      },
+    );
+  }
 }
 
 class CreateTicketDialog extends StatelessWidget {

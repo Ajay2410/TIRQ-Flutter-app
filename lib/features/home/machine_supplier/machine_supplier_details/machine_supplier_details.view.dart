@@ -33,38 +33,38 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
       builder: (BuildContext context, MachineSupplierDetailsViewModel model, Widget? child) {
         return Scaffold(
           key: _scaffoldKey,
-          body: SafeArea(
-            child: Column(
-              children: [
-                _buildAppBar(context, model),
-                Expanded(
-                  child: Container(
-                    color: AppColors.white,
-                    child: Column(
-                      children: [
-                        Padding(padding: const EdgeInsets.all(12), child: _buildCustomerContactCard(model)),
-                        Expanded(
-                          child: Container(
-                            color: AppColors.scaffoldBackground,
-                            padding: const EdgeInsets.all(12),
-                            child: _buildMachineList(context, model),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+          appBar: _buildAppBar(context, model),
+          backgroundColor: AppColors.white,
+          body: Column(
+            children: [
+              Padding(padding: const EdgeInsets.all(12), child: _buildCustomerContactCard(model)),
+              Expanded(
+                child: Container(
+                  color: AppColors.scaffoldBackground,
+                  padding: const EdgeInsets.all(12),
+                  child: _buildMachineList(context, model),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
     );
   }
 
-  Widget _buildAppBar(BuildContext context, MachineSupplierDetailsViewModel model) {
+  PreferredSizeWidget _buildAppBar(BuildContext context, MachineSupplierDetailsViewModel model) {
     return AppBar(
       elevation: 0,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
+          ),
+        ),
+      ),
       leading: IconButton(
         icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
         onPressed: () => Navigator.of(context).pop(),

@@ -107,6 +107,25 @@ abstract class AppThemes {
       showUnselectedLabels: true,
       type: BottomNavigationBarType.fixed,
     ),
+    dialogTheme: DialogTheme(
+      backgroundColor: AppColors.white,
+      surfaceTintColor: AppColors.white,
+      elevation: 8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.v16),
+      ),
+      titleTextStyle: TextStyle(
+        color: AppColors.black,
+        fontSize: AppSizes.v18,
+        fontWeight: FontWeight.w600,
+        fontFamily: GoogleFonts.lato().fontFamily,
+      ),
+      contentTextStyle: TextStyle(
+        color: AppColors.textPrimary,
+        fontSize: AppSizes.v14,
+        fontFamily: GoogleFonts.lato().fontFamily,
+      ),
+    ),
     colorScheme: ColorScheme.light(
       primary: AppColors.primary,
       secondary: AppColors.secondary,

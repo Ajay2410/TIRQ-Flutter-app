@@ -52,9 +52,15 @@ class TicketsListViewModel extends ReactiveViewModel {
       ReactiveValue<List<Datum>>([]);
   final ReactiveValue<bool> _isLoading = ReactiveValue<bool>(false);
 
-  List<Datum> get activeTickets => _activeTickets.value;
+  // Filtered tickets for search
+  final ReactiveValue<List<Datum>> _filteredActiveTickets =
+      ReactiveValue<List<Datum>>([]);
+  final ReactiveValue<List<Datum>> _filteredResolvedTickets =
+      ReactiveValue<List<Datum>>([]);
 
-  List<Datum> get resolvedTickets => _resolvedTickets.value;
+  List<Datum> get activeTickets => _filteredActiveTickets.value;
+
+  List<Datum> get resolvedTickets => _filteredResolvedTickets.value;
 
   bool get isLoading => _isLoading.value;
 
@@ -157,6 +163,8 @@ class TicketsListViewModel extends ReactiveViewModel {
       }
     }
 
+    // Update filtered tickets after loading
+    _applySearchFilters();
     _isLoading.value = false;
     notifyListeners();
   }
@@ -232,6 +240,8 @@ class TicketsListViewModel extends ReactiveViewModel {
       }
     }
 
+    // Update filtered tickets after loading
+    _applySearchFilters();
     _isLoading.value = false;
     notifyListeners();
   }
@@ -261,14 +271,36 @@ class TicketsListViewModel extends ReactiveViewModel {
   }
 
   void _applySearchFilters() {
-    // For now, we'll apply search filters on the client side
-    // In a real app, you might want to implement server-side search
-    // This is a placeholder for search functionality
+    if (_searchQuery.isEmpty) {
+      _filteredActiveTickets.value = _activeTickets.value;
+      _filteredResolvedTickets.value = _resolvedTickets.value;
+    } else {
+      // Filter tickets based on search query
+      final query = _searchQuery.toLowerCase();
+
+      _filteredActiveTickets.value =
+          _activeTickets.value.where((ticket) {
+            return _matchesSearchQuery(ticket, query);
+          }).toList();
+
+      _filteredResolvedTickets.value =
+          _resolvedTickets.value.where((ticket) {
+            return _matchesSearchQuery(ticket, query);
+          }).toList();
+    }
+    notifyListeners();
+  }
+
+  bool _matchesSearchQuery(Datum ticket, String query) {
+    final fullName = ticket.processor?.fullName?.toLowerCase() ?? '';
+
+    return fullName.contains(query);
   }
 
   void resetFilters() {
     _searchQuery = '';
-    _applySearchFilters();
+    _filteredActiveTickets.value = _activeTickets.value;
+    _filteredResolvedTickets.value = _resolvedTickets.value;
     notifyListeners();
   }
 

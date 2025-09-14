@@ -43,37 +43,35 @@ class AppView extends StatelessWidget {
       disposeViewModel: false,
 
       builder: (BuildContext context, AppViewModel model, Widget? child) {
-        return SafeArea(
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Triq',
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Triq',
 
-            /// Global key for scaffold-related actions such as showing snack bars.
-            scaffoldMessengerKey: rootScaffoldMessengerKey,
+          /// Global key for scaffold-related actions such as showing snack bars.
+          scaffoldMessengerKey: rootScaffoldMessengerKey,
 
-            /// Sets up the theme for light and dark modes.
-            theme: AppThemes.lightTheme,
-            // darkTheme: AppThemes.darkTheme,
+          /// Sets up the theme for light and dark modes.
+          theme: AppThemes.lightTheme,
+          // darkTheme: AppThemes.darkTheme,
 
-            /// The global navigator key used by `StackedService`.
-            navigatorKey: StackedService.navigatorKey,
+          /// The global navigator key used by `StackedService`.
+          navigatorKey: StackedService.navigatorKey,
 
-            /// Generates routes dynamically.
-            onGenerateRoute: AppRouter().onGenerateRoute,
+          /// Generates routes dynamically.
+          onGenerateRoute: AppRouter().onGenerateRoute,
 
-            /// Adds a navigation observer to track app navigation events.
-            navigatorObservers: [AppNavigatorObserver()],
+          /// Adds a navigation observer to track app navigation events.
+          navigatorObservers: [AppNavigatorObserver()],
 
-            /// Supported locales for localization.
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
+          /// Supported locales for localization.
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
 
-            /// The default locale for localization.
-            locale: const Locale('en'),
+          /// The default locale for localization.
+          locale: const Locale('en'),
 
-            /// Determines the initial screen based on the app's state.
-            home:model.homeNavigation(),
-          ),
+          /// Determines the initial screen based on the app's state.
+          home:model.homeNavigation(),
         );
       },
     );

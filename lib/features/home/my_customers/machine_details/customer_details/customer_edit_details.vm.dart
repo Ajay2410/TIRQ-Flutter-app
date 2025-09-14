@@ -8,6 +8,7 @@ import 'package:manager/services/machine_storage.service.dart';
 import 'package:manager/services/language.service.dart';
 import 'package:manager/services/customer.service.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
+import 'package:manager/widgets/common/custom_date_picker.dart';
 import 'package:stacked/stacked.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -173,7 +174,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
   }
 
   Future<void> selectPurchaseDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    final DateTime? picked = await CustomDatePicker.show(
       context: context,
       initialDate: _purchaseDate ?? DateTime.now(),
       firstDate: DateTime(2000),
@@ -186,7 +187,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
   }
 
   Future<void> selectInstallationDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    final DateTime? picked = await CustomDatePicker.show(
       context: context,
       initialDate: _installationDate ?? DateTime.now(),
       firstDate: DateTime(2000),
@@ -199,7 +200,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
   }
 
   Future<void> selectWarrantyStartDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    final DateTime? picked = await CustomDatePicker.show(
       context: context,
       initialDate: _warrantyStartDate ?? DateTime.now(),
       firstDate: DateTime(2000),
@@ -234,7 +235,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
       initialDate = firstDate;
     }
 
-    final DateTime? picked = await showDatePicker(
+    final DateTime? picked = await CustomDatePicker.show(
       context: context,
       initialDate: initialDate,
       firstDate: firstDate,

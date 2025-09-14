@@ -118,6 +118,16 @@ class _MyCustomersViewState extends State<MyCustomersView> with TickerProviderSt
         icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
         onPressed: () => Navigator.of(context).pop(),
       ),
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: [0.08, 1],
+          ),
+        ),
+      ),
       title: Text(LanguageService.get('my_customers'), style: TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.w600)),
       titleSpacing: 0,
       actions: [
