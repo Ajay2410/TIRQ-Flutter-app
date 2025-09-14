@@ -14,13 +14,17 @@ import 'customer_edit_details.vm.dart';
 class CustomerEditDetailsView extends StatelessWidget {
   final Customer customer;
   final MachineElement? machineElement;
+  final bool isFromSearchOrganization;
 
-  const CustomerEditDetailsView({super.key, required this.customer, this.machineElement});
+  const CustomerEditDetailsView({super.key, required this.customer, this.machineElement, this.isFromSearchOrganization = false});
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CustomerEditDetailsViewModel>.reactive(
-      viewModelBuilder: () => CustomerEditDetailsViewModel(customer: customer)..init(machineElement: machineElement),
+      viewModelBuilder:
+          () =>
+              CustomerEditDetailsViewModel(customer: customer, isFromSearchOrganization: isFromSearchOrganization)
+                ..init(machineElement: machineElement),
       builder: (context, model, child) {
         return Scaffold(appBar: _buildAppBar(context, model), body: _buildBody(context, model));
       },

@@ -17,8 +17,9 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
   final _customerService = locator<CustomerService>();
 
   final Customer customer;
+  final bool isFromSearchOrganization;
 
-  CustomerEditDetailsViewModel({required this.customer});
+  CustomerEditDetailsViewModel({required this.customer, this.isFromSearchOrganization = false});
 
   final formKey = GlobalKey<FormState>();
 
@@ -332,8 +333,26 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
 
   List<Map<String, dynamic>> _buildMachinesData() {
     final machines = <Map<String, dynamic>>[];
-    bool isAlreadyAssigned = false;
     final machine = _machineStorageService.findMachineByName(_selectedMachine!);
+
+    // If coming from search_organization, only send the selected machine data
+    if (isFromSearchOrganization) {
+      if (machine != null) {
+        machines.add({
+          'machine': machine.id,
+          'purchaseDate': _purchaseDate!.toIso8601String().split('T')[0],
+          'installationDate': _installationDate!.toIso8601String().split('T')[0],
+          'warrantyStart': _warrantyStartDate!.toIso8601String().split('T')[0],
+          'warrantyEnd': _warrantyEndDate!.toIso8601String().split('T')[0],
+          'warrantyStatus': _warrantyStatus,
+          'invoiceContractNo': _invoiceContractNo,
+        });
+      }
+      return machines;
+    }
+
+    // Original logic for when not coming from search_organization
+    bool isAlreadyAssigned = false;
 
     if (customer.machines != null) {
       for (final existingMachine in customer.machines!) {

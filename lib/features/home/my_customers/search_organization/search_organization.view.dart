@@ -175,7 +175,9 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
   Widget _buildSearchResultItem(Customer result, SearchOrganizationViewModel model) {
     return InkWell(
       onTap: () async {
-        final editResult = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => CustomerEditDetailsView(customer: result)));
+        final editResult = await Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (context) => CustomerEditDetailsView(customer: result, isFromSearchOrganization: true)));
 
         if (editResult != null && editResult is Customer) {
           model.performSearch(model.searchQuery);
