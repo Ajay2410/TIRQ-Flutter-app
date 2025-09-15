@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:stacked/stacked.dart';
@@ -9,6 +10,8 @@ import 'package:manager/widgets/common_text_field.dart';
 import 'package:manager/routes/routes.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:manager/core/models/review_ticket_model.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:path_provider/path_provider.dart';
 import 'review_ticket.vm.dart';
 
 class ReviewTicketView extends StatelessWidget {
@@ -43,7 +46,8 @@ class ReviewTicketView extends StatelessWidget {
 
                           Padding(padding: EdgeInsets.all(15), child: _buildPaymentCard(context, model)),
 
-                          Padding(padding: EdgeInsets.only(left: 15, right: 15, bottom: 15), child: _buildCouponCodeCard(context, model)),
+                          // TODO: don't remove this card for future use
+                          // Padding(padding: EdgeInsets.only(left: 15, right: 15, bottom: 15), child: _buildCouponCodeCard(context, model)),
                         ],
                       ),
                     ),
@@ -116,7 +120,7 @@ class ReviewTicketView extends StatelessWidget {
 
               Expanded(
                 child: Text(
-                  ticketData.processorDetails?.fullName ?? "Unknown Organization",
+                  ticketData.processorDetails?.fullName ?? LanguageService.get('unknown_organization'),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
                 ),
               ),
@@ -148,19 +152,25 @@ class ReviewTicketView extends StatelessWidget {
               Expanded(
                 child: _buildContactInfoRow(
                   'warranty_status'.lang,
-                  ticketData.customerMachineDetails?.warrantyStatus ?? "Unknown",
+                  ticketData.customerMachineDetails?.warrantyStatus ?? LanguageService.get('unknown'),
                   valueColor: _getWarrantyStatusColor(ticketData.customerMachineDetails?.warrantyStatus),
                 ),
               ),
               const SizedBox(width: 10),
-              Expanded(child: _buildContactInfoRow('machine_name'.lang, ticketData.machineDetails?.machineName ?? "Unknown Machine")),
+              Expanded(
+                child: _buildContactInfoRow('machine_name'.lang, ticketData.machineDetails?.machineName ?? LanguageService.get('unknown_machine')),
+              ),
             ],
           ),
           SizedBox(height: 16),
 
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [Expanded(child: _buildContactInfoRow('model_number'.lang, ticketData.machineDetails?.modelNumber ?? "Unknown Model"))],
+            children: [
+              Expanded(
+                child: _buildContactInfoRow('model_number'.lang, ticketData.machineDetails?.modelNumber ?? LanguageService.get('unknown_model')),
+              ),
+            ],
           ),
 
           Divider(height: 26, color: AppColors.textGray.withValues(alpha: 0.1)),
@@ -174,7 +184,7 @@ class ReviewTicketView extends StatelessWidget {
                   style: TextStyle(fontSize: 11, color: AppColors.black, fontWeight: FontWeight.bold),
                 ),
                 TextSpan(
-                  text: ticketData.ticketDetails?.problem ?? "No problem description available",
+                  text: ticketData.ticketDetails?.problem ?? LanguageService.get('no_problem_description_available'),
                   style: TextStyle(fontSize: 11, color: AppColors.textGray),
                 ),
               ],
@@ -185,7 +195,7 @@ class ReviewTicketView extends StatelessWidget {
           if (ticketData.ticketDetails?.media?.isEmpty ?? true) ...[
             SizedBox(),
           ] else ...[
-            Text("Photos / Video", style: TextStyle(color: AppColors.black, fontSize: 14, fontWeight: FontWeight.w400)),
+            Text(LanguageService.get('photos_video'), style: TextStyle(color: AppColors.black, fontSize: 14, fontWeight: FontWeight.w400)),
 
             SizedBox(height: 10),
             SizedBox(
@@ -296,6 +306,7 @@ class ReviewTicketView extends StatelessWidget {
     );
   }
 
+  // TODO: don't remove this card for future use
   Widget _buildCouponCodeCard(BuildContext context, ReviewTicketViewModel model) {
     return Container(
       padding: EdgeInsets.all(20),
@@ -398,7 +409,7 @@ class ReviewTicketView extends StatelessWidget {
   }
 
   String _formatDate(DateTime? date) {
-    if (date == null) return "Unknown";
+    if (date == null) return LanguageService.get('unknown');
     return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
   }
 
@@ -424,15 +435,18 @@ class ReviewTicketView extends StatelessWidget {
   }
 
   Widget _buildMediaItemFromApi(BuildContext context, Media media) {
-    final isImage = media.type?.toLowerCase() == 'image';
     final imageUrl = 'https://triq.onrender.com${media.url}';
+    final url = media.url?.toLowerCase() ?? '';
+
+    final isVideo = url.endsWith('.mp4') || url.endsWith('.mov') || url.endsWith('.avi') || url.endsWith('.mkv');
 
     return GestureDetector(
       onTap: () {
-        if (isImage) {
-          Navigator.pushNamed(context, Routes.imageViewerView, arguments: imageUrl);
-        } else {
+        if (isVideo) {
+          print('Video URL: $imageUrl');
           Navigator.pushNamed(context, Routes.videoPlayer, arguments: imageUrl);
+        } else {
+          Navigator.pushNamed(context, Routes.imageViewerView, arguments: imageUrl);
         }
       },
       child: ClipRRect(
@@ -440,21 +454,25 @@ class ReviewTicketView extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            CachedNetworkImage(
-              imageUrl: imageUrl,
-              fit: BoxFit.cover,
-              placeholder:
-                  (context, url) => Container(
-                    color: AppColors.primarySuperLight.withValues(alpha: 0.1),
-                    child: Center(child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary))),
-                  ),
-              errorWidget:
-                  (context, url, error) => Container(
-                    color: AppColors.primarySuperLight.withValues(alpha: 0.1),
-                    child: Icon(Icons.error_outline, color: AppColors.textGray, size: 20),
-                  ),
-            ),
-            if (!isImage)
+            if (isVideo)
+              _buildVideoThumbnail(imageUrl)
+            else
+              CachedNetworkImage(
+                imageUrl: imageUrl,
+                fit: BoxFit.cover,
+                httpHeaders: {'Connection': 'keep-alive'},
+                placeholder:
+                    (context, url) => Container(
+                      color: AppColors.primarySuperLight.withValues(alpha: 0.1),
+                      child: Center(child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary))),
+                    ),
+                errorWidget:
+                    (context, url, error) => Container(
+                      color: AppColors.primarySuperLight.withValues(alpha: 0.1),
+                      child: Icon(Icons.error_outline, color: AppColors.textGray, size: 20),
+                    ),
+              ),
+            if (isVideo)
               Container(
                 color: Colors.black.withValues(alpha: 0.3),
                 child: Center(child: Icon(Icons.play_circle_filled, color: Colors.white, size: 24)),
@@ -463,6 +481,59 @@ class ReviewTicketView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildVideoThumbnail(String videoUrl) {
+    return FutureBuilder<String?>(
+      future: _generateVideoThumbnail(videoUrl),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            color: AppColors.primarySuperLight.withValues(alpha: 0.1),
+            child: Center(child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary))),
+          );
+        }
+
+        if (snapshot.hasError || snapshot.data == null) {
+          return Container(
+            color: AppColors.primarySuperLight.withValues(alpha: 0.1),
+            child: Icon(Icons.videocam, color: AppColors.textGray, size: 20),
+          );
+        }
+
+        return Image.file(
+          File(snapshot.data!),
+          fit: BoxFit.cover,
+          errorBuilder:
+              (context, error, stackTrace) => Container(
+                color: AppColors.primarySuperLight.withValues(alpha: 0.1),
+                child: Icon(Icons.videocam, color: AppColors.textGray, size: 20),
+              ),
+        );
+      },
+    );
+  }
+
+  Future<String?> _generateVideoThumbnail(String videoUrl) async {
+    try {
+      final thumbnailPath = await VideoThumbnail.thumbnailFile(
+        video: videoUrl,
+        thumbnailPath: (await getTemporaryDirectory()).path,
+        imageFormat: ImageFormat.JPEG,
+        maxHeight: 200,
+        quality: 75,
+      ).timeout(
+        Duration(seconds: 15),
+        onTimeout: () {
+          print('Video thumbnail generation timed out for: $videoUrl');
+          return null;
+        },
+      );
+      return thumbnailPath;
+    } catch (e) {
+      print('Error generating video thumbnail: $e');
+      return null;
+    }
   }
 
   Widget _buildShimmerContent() {
@@ -492,7 +563,7 @@ class ReviewTicketView extends StatelessWidget {
           children: [
             Icon(Icons.error_outline, size: 64, color: AppColors.error),
             SizedBox(height: 16),
-            Text('Error', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+            Text(LanguageService.get('error'), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
             SizedBox(height: 8),
             Text(errorMessage, textAlign: TextAlign.center, style: TextStyle(fontSize: 16, color: AppColors.textSecondary)),
             SizedBox(height: 24),
@@ -505,7 +576,7 @@ class ReviewTicketView extends StatelessWidget {
                 foregroundColor: AppColors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
-              child: Text('Retry'),
+              child: Text(LanguageService.get('retry')),
             ),
           ],
         ),
@@ -688,7 +759,7 @@ class ReviewTicketView extends StatelessWidget {
           ),
           SizedBox(height: 12),
 
-          Text("Photos / Video", style: TextStyle(color: AppColors.black, fontSize: 14, fontWeight: FontWeight.w400)),
+          Text(LanguageService.get('photos_video'), style: TextStyle(color: AppColors.black, fontSize: 14, fontWeight: FontWeight.w400)),
 
           SizedBox(height: 10),
 

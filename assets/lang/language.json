@@ -43,7 +43,6 @@
     "Malay/Indonesian": "Daftar sebagai Organisasi",
     "Ukrainian": "Зареєструватися як організація"
   },
-
   "sign_up_as_employee": {
     "English": "Sign up as Employee",
     "Hindi": "कर्मचारी के रूप में साइन अप करें",
@@ -1857,8 +1856,18 @@
     "Thai": "ไม่สามารถโหลดรายละเอียดตั๋วได้",
     "Dutch": "Fout bij het laden van ticketdetails",
     "Polish": "Nie udało się załadować szczegółów zgłoszenia",
-    "Malay/indonesian": "Gagal memuat detail tiket",
-    "Ukrainian": "Не вдалося завантажити деталі квитка"
+    "Malay/Indonesian": "Gagal memuat detail tiket",
+    "Ukrainian": "Не вдалося завантажити деталі квитка",
+    "Arabic": "فشل في تحميل تفاصيل التذكرة",
+    "Russian": "Не удалось загрузить детали билета",
+    "French": "Échec du chargement des détails du ticket",
+    "English": "Failed to load ticket details",
+    "German": "Fehler beim Laden der Ticketdetails",
+    "Spanish": "Error al cargar los detalles del ticket",
+    "Japanese": "チケットの詳細を読み込めませんでした",
+    "Hindi": "टिकट विवरण लोड करने में विफल",
+    "Chinese (Simplified)": "无法加载票务详情",
+    "Portuguese": "Falha ao carregar detalhes do ticket"
   },
   "feedback_ratings": {
     "English": "Feedback & Ratings",
@@ -2674,28 +2683,6 @@
     "Malay/Indonesian": "Mesin di Luar Jaminan",
     "Ukrainian": "Машина поза гарантією"
   },
-  "enter_service_cost": {
-    "English": "Enter Service Cost",
-    "Hindi": "सेवा लागत दर्ज करें",
-    "Chinese (Simplified)": "输入服务费用",
-    "Spanish": "Ingrese el Costo del Servicio",
-    "Japanese": "サービス料金を入力",
-    "German": "Servicekosten eingeben",
-    "French": "Entrez le coût du service",
-    "Arabic": "أدخل تكلفة الخدمة",
-    "Portuguese": "Digite o Custo do Serviço",
-    "Russian": "Введите стоимость услуги",
-    "Bengali": "সেবার খরচ লিখুন",
-    "Turkish": "Hizmet Maliyetini Girin",
-    "Italian": "Inserisci Costo Servizio",
-    "Korean": "서비스 비용 입력",
-    "Vietnamese": "Nhập chi phí dịch vụ",
-    "Thai": "ป้อนค่าใช้จ่ายบริการ",
-    "Dutch": "Voer servicekosten in",
-    "Polish": "Wprowadź koszt usługi",
-    "Malay/Indonesian": "Masukkan Biaya Layanan",
-    "Ukrainian": "Введіть вартість послуги"
-  },
   "offline_support_site_visit": {
     "English": "Offline Support Site Visit",
     "Hindi": "ऑफ़लाइन सहायता साइट विज़िट",
@@ -2762,50 +2749,6 @@
     "Malay/Indonesian": "IDR",
     "Ukrainian": "UAH"
   },
-  "online_support": {
-    "English": "Online Support",
-    "Hindi": "ऑनलाइन सहायता",
-    "Chinese (Simplified)": "在线支持",
-    "Spanish": "Soporte en Línea",
-    "Japanese": "オンラインサポート",
-    "German": "Online-Unterstützung",
-    "French": "Support en ligne",
-    "Arabic": "الدعم عبر الإنترنت",
-    "Portuguese": "Suporte Online",
-    "Russian": "Онлайн поддержка",
-    "Bengali": "অনলাইন সহায়তা",
-    "Turkish": "Çevrimiçi Destek",
-    "Italian": "Supporto Online",
-    "Korean": "온라인 지원",
-    "Vietnamese": "Hỗ trợ trực tuyến",
-    "Thai": "การสนับสนุนออนไลน์",
-    "Dutch": "Online ondersteuning",
-    "Polish": "Wsparcie online",
-    "Malay/Indonesian": "Dukungan Online",
-    "Ukrainian": "Онлайн підтримка"
-  },
-  "offline_support_site_visit": {
-    "English": "Offline Support (Site Visit)",
-    "Hindi": "ऑफलाइन सहायता (साइट विज़िट)",
-    "Chinese (Simplified)": "离线支持（现场访问）",
-    "Spanish": "Soporte Offline (Visita al Sitio)",
-    "Japanese": "オフラインサポート（サイト訪問）",
-    "German": "Offline-Unterstützung (Vor-Ort-Besuch)",
-    "French": "Support hors ligne (Visite sur site)",
-    "Arabic": "الدعم غير المتصل (زيارة الموقع)",
-    "Portuguese": "Suporte Offline (Visita ao Local)",
-    "Russian": "Офлайн поддержка (Выезд на объект)",
-    "Bengali": "অফলাইন সহায়তা (সাইট ভিজিট)",
-    "Turkish": "Çevrimdışı Destek (Saha Ziyareti)",
-    "Italian": "Supporto Offline (Visita in Sito)",
-    "Korean": "오프라인 지원 (현장 방문)",
-    "Vietnamese": "Hỗ trợ ngoại tuyến (Thăm hiện trường)",
-    "Thai": "การสนับสนุนออฟไลน์ (เยี่ยมชมไซต์)",
-    "Dutch": "Offline ondersteuning (Locatiebezoek)",
-    "Polish": "Wsparcie offline (Wizyta na miejscu)",
-    "Malay/Indonesian": "Dukungan Offline (Kunjungan Situs)",
-    "Ukrainian": "Офлайн підтримка (Відвідування об'єкту)"
-  },
   "enter_service_cost": {
     "English": "Enter Service Cost",
     "Hindi": "सेवा लागत दर्ज करें",
@@ -2849,28 +2792,6 @@
     "Polish": "Na gwarancji",
     "Malay/Indonesian": "Dalam Jaminan",
     "Ukrainian": "На гарантії"
-  },
-  "out_of_warranty": {
-    "English": "Out of Warranty",
-    "Hindi": "वारंटी से बाहर",
-    "Chinese (Simplified)": "保修期外",
-    "Spanish": "Fuera de Garantía",
-    "Japanese": "保証期間外",
-    "German": "Außerhalb der Garantie",
-    "French": "Hors garantie",
-    "Arabic": "خارج الضمان",
-    "Portuguese": "Fora da Garantia",
-    "Russian": "Вне гарантии",
-    "Bengali": "ওয়ারেন্টির বাইরে",
-    "Turkish": "Garanti Dışı",
-    "Italian": "Fuori Garanzia",
-    "Korean": "보증 기간 외",
-    "Vietnamese": "Hết bảo hành",
-    "Thai": "นอกประกัน",
-    "Dutch": "Buiten garantie",
-    "Polish": "Poza gwarancją",
-    "Malay/Indonesian": "Di Luar Jaminan",
-    "Ukrainian": "Поза гарантією"
   },
   "general_checkup": {
     "English": "General Check Up",
@@ -3290,7 +3211,6 @@
     "Malay/Indonesian": "Masuk dengan email",
     "Ukrainian": "Увійти з email"
   },
-
   "login_with_otp": {
     "English": "Login with OTP",
     "Hindi": "OTP से लॉगिन करें",
@@ -3313,7 +3233,6 @@
     "Malay/Indonesian": "Masuk dengan OTP",
     "Ukrainian": "Увійти з OTP"
   },
-
   "dont_receive_otp": {
     "English": "Didn't receive OTP?",
     "Hindi": "OTP नहीं मिला?",
@@ -3336,7 +3255,6 @@
     "Malay/Indonesian": "Tidak menerima OTP?",
     "Ukrainian": "Не отримали OTP?"
   },
-
   "create_new_password": {
     "English": "Create new password",
     "Hindi": "नया पासवर्ड बनाएं",
@@ -3359,7 +3277,6 @@
     "Malay/Indonesian": "Buat kata sandi baru",
     "Ukrainian": "Створити новий пароль"
   },
-
   "confirm_password": {
     "English": "Confirm password",
     "Hindi": "पासवर्ड की पुष्टि करें",
@@ -3382,7 +3299,6 @@
     "Malay/Indonesian": "Konfirmasi kata sandi",
     "Ukrainian": "Підтвердити пароль"
   },
-
   "please_confirm_password": {
     "English": "Please confirm password",
     "Hindi": "कृपया पासवर्ड की पुष्टि करें",
@@ -3405,7 +3321,6 @@
     "Malay/Indonesian": "Silakan konfirmasi kata sandi",
     "Ukrainian": "Будь ласка, підтвердіть пароль"
   },
-
   "passwords_do_not_match": {
     "English": "Passwords do not match",
     "Hindi": "पासवर्ड मेल नहीं खाते",
@@ -3428,7 +3343,6 @@
     "Malay/Indonesian": "Kata sandi tidak cocok",
     "Ukrainian": "Паролі не збігаються"
   },
-
   "create_password": {
     "English": "Create password",
     "Hindi": "पासवर्ड बनाएं",
@@ -3649,7 +3563,6 @@
     "Malay/Indonesian": "Coba cari dengan kata kunci yang berbeda",
     "Ukrainian": "Спробуйте пошук за іншим ключовим словом"
   },
-
   "or_not_added_to_any_organization": {
     "English": "or not added to any organization",
     "Hindi": "या किसी संगठन में शामिल नहीं",
@@ -4156,28 +4069,6 @@
     "Malay/Indonesian": "Buat profil",
     "Ukrainian": "Створити профіль"
   },
-  "existing_documents": {
-    "English": "Existing Documents",
-    "Hindi": "मौजूदा दस्तावेज",
-    "Chinese (Simplified)": "现有文件",
-    "Spanish": "Documentos existentes",
-    "Japanese": "既存文書",
-    "German": "Vorhandene Dokumente",
-    "French": "Documents existants",
-    "Arabic": "الوثائق الموجودة",
-    "Portuguese": "Documentos existentes",
-    "Russian": "Существующие документы",
-    "Bengali": "বিদ্যমান নথি",
-    "Turkish": "Mevcut belgeler",
-    "Italian": "Documenti esistenti",
-    "Korean": "기존 문서",
-    "Vietnamese": "Tài liệu hiện có",
-    "Thai": "เอกสารที่มีอยู่",
-    "Dutch": "Bestaande documenten",
-    "Polish": "Istniejące dokumenty",
-    "Malay/Indonesian": "Dokumen yang ada",
-    "Ukrainian": "Існуючі документи"
-  },
   "new_documents": {
     "English": "New Documents",
     "Hindi": "नए दस्तावेज",
@@ -4221,28 +4112,29 @@
     "Polish": "Płeć",
     "Malay/Indonesian": "Jenis kelamin",
     "Ukrainian": "Стать"
-  },"emergency_relationship": {
-  "English": "Emergency Relationship",
-  "Hindi": "आपातकालीन संबंध",
-  "Chinese (Simplified)": "紧急联系人关系",
-  "Spanish": "Relación de emergencia",
-  "Japanese": "緊急連絡先との関係",
-  "German": "Notfall-Beziehung",
-  "French": "Relation d'urgence",
-  "Arabic": "علاقة الطوارئ",
-  "Portuguese": "Relacionamento de emergência",
-  "Russian": "Экстренные отношения",
-  "Bengali": "জরুরি সম্পর্ক",
-  "Turkish": "Acil durum ilişkisi",
-  "Italian": "Relazione di emergenza",
-  "Korean": "비상 연락처 관계",
-  "Vietnamese": "Mối quan hệ khẩn cấp",
-  "Thai": "ความสัมพันธ์ฉุกเฉิน",
-  "Dutch": "Noodrelatie",
-  "Polish": "Relacja awaryjna",
-  "Malay/Indonesian": "Hubungan darurat",
-  "Ukrainian": "Екстрені відносини"
-},
+  },
+  "emergency_relationship": {
+    "English": "Emergency Relationship",
+    "Hindi": "आपातकालीन संबंध",
+    "Chinese (Simplified)": "紧急联系人关系",
+    "Spanish": "Relación de emergencia",
+    "Japanese": "緊急連絡先との関係",
+    "German": "Notfall-Beziehung",
+    "French": "Relation d'urgence",
+    "Arabic": "علاقة الطوارئ",
+    "Portuguese": "Relacionamento de emergência",
+    "Russian": "Экстренные отношения",
+    "Bengali": "জরুরি সম্পর্ক",
+    "Turkish": "Acil durum ilişkisi",
+    "Italian": "Relazione di emergenza",
+    "Korean": "비상 연락처 관계",
+    "Vietnamese": "Mối quan hệ khẩn cấp",
+    "Thai": "ความสัมพันธ์ฉุกเฉิน",
+    "Dutch": "Noodrelatie",
+    "Polish": "Relacja awaryjna",
+    "Malay/Indonesian": "Hubungan darurat",
+    "Ukrainian": "Екстрені відносини"
+  },
   "please_select_country": {
     "English": "Please select country",
     "Hindi": "कृपया देश चुनें",
@@ -4812,7 +4704,7 @@
     "Thai": "ทำตามขั้นตอนเพื่อรีเซ็ตรหัสผ่าน",
     "Dutch": "Volg de stappen om het wachtwoord opnieuw in te stellen",
     "Polish": "Wykonaj kroki, aby zresetować hasło",
-    "malay_indonesian": "Ikuti langkah-langkah untuk mereset kata sandi",
+    "Malay/Indonesian": "Ikuti langkah-langkah untuk mereset kata sandi",
     "Ukrainian": "Дотримуйтесь кроків для скидання пароля"
   },
   "sign_in_continue_account": {
@@ -4834,7 +4726,7 @@
     "Thai": "ลงชื่อเข้าใช้เพื่อดำเนินการต่อบัญชี",
     "Dutch": "Meld je aan om door te gaan met je account",
     "Polish": "Zaloguj się, aby kontynuować konto",
-    "malay_indonesian": "Masuk untuk melanjutkan akun",
+    "Malay/Indonesian": "Masuk untuk melanjutkan akun",
     "Ukrainian": "Увійдіть, щоб продовжити обліковий запис"
   },
   "email": {
@@ -5076,7 +4968,7 @@
     "Thai": "เราส่งรหัสยืนยันแล้ว",
     "Dutch": "We hebben een verificatiecode verzonden",
     "Polish": "Wysłaliśmy kod weryfikacyjny",
-    "malay_indonesian": "Kami telah mengirim kode verifikasi",
+    "Malay/Indonesian": "Kami telah mengirim kode verifikasi",
     "Ukrainian": "Ми надіслали код підтвердження"
   },
   "please_enter_otp": {
@@ -5252,7 +5144,7 @@
     "Thai": "ยืนยัน OTP เพื่อทำการลงทะเบียนให้เสร็จสิ้น",
     "Dutch": "Verifieer OTP om registratie te voltooien",
     "Polish": "Zweryfikuj OTP, aby zakończyć rejestrację",
-    "malay_indonesian": "Verifikasi OTP untuk menyelesaikan pendaftaran",
+    "Malay/Indonesian": "Verifikasi OTP untuk menyelesaikan pendaftaran",
     "Ukrainian": "Підтвердіть OTP для завершення реєстрації"
   },
   "step_1_of_2": {
@@ -5318,7 +5210,7 @@
     "Thai": "ให้รายละเอียดเพื่อเข้าร่วมองค์กร",
     "Dutch": "Verstrek details om lid te worden van de organisatie",
     "Polish": "Podaj szczegóły, aby dołączyć do organizacji",
-    "malay_indonesian": "Berikan detail untuk bergabung dengan organisasi",
+    "Malay/Indonesian": "Berikan detail untuk bergabung dengan organisasi",
     "Ukrainian": "Надайте деталі для приєднання до організації"
   },
   "organization": {
@@ -5384,7 +5276,7 @@
     "Thai": "กรุณาใส่หมายเลขโทรศัพท์",
     "Dutch": "Voer alstublieft het telefoonnummer in",
     "Polish": "Proszę wprowadzić numer telefonu",
-    "malay_indonesian": "Silakan masukkan nomor telepon",
+    "Malay/Indonesian": "Silakan masukkan nomor telepon",
     "Ukrainian": "Будь ласка, введіть номер телефону"
   },
   "phone_number": {
@@ -5428,7 +5320,7 @@
     "Thai": "ข้อกำหนดและเงื่อนไข",
     "Dutch": "Voorwaarden",
     "Polish": "Regulamin",
-    "malay_indonesian": "Syarat dan Ketentuan",
+    "Malay/Indonesian": "Syarat dan Ketentuan",
     "Ukrainian": "Умови використання"
   },
   "privacy_policy": {
@@ -5494,7 +5386,7 @@
     "Thai": "เข้าสู่ระบบ",
     "Dutch": "Inloggen",
     "Polish": "Zaloguj się",
-    "malay_indonesian": "Masuk",
+    "Malay/Indonesian": "Masuk",
     "Ukrainian": "Увійти"
   },
   "archived_messages": {
@@ -5516,7 +5408,7 @@
     "Thai": "ข้อความที่เก็บถาวร",
     "Dutch": "Gearchiveerde Berichten",
     "Polish": "Zarchiwizowane Wiadomości",
-    "malay_indonesian": "Pesan Terarsip",
+    "Malay/Indonesian": "Pesan Terarsip",
     "Ukrainian": "Архівовані повідомлення"
   },
   "no_archived_conversations": {
@@ -5538,7 +5430,7 @@
     "Thai": "ไม่มีการสนทนาที่เก็บถาวร",
     "Dutch": "Geen gearchiveerde gesprekken",
     "Polish": "Brak zarchiwizowanych rozmów",
-    "malay_indonesian": "Tidak ada percakapan terarsip",
+    "Malay/Indonesian": "Tidak ada percakapan terarsip",
     "Ukrainian": "Немає архівованих розмов"
   },
   "search_archived_conversations": {
@@ -5560,7 +5452,7 @@
     "Thai": "ค้นหาการสนทนาที่เก็บถาวร...",
     "Dutch": "Zoek gearchiveerde gesprekken...",
     "Polish": "Szukaj zarchiwizowanych rozmów...",
-    "malay_indonesian": "Cari percakapan terarsip...",
+    "Malay/Indonesian": "Cari percakapan terarsip...",
     "Ukrainian": "Пошук архівованих розмов..."
   },
   "search_contacts": {
@@ -5582,7 +5474,7 @@
     "Thai": "ค้นหารายชื่อผู้ติดต่อ...",
     "Dutch": "Zoek contacten...",
     "Polish": "Szukaj kontaktów...",
-    "malay_indonesian": "Cari kontak...",
+    "Malay/Indonesian": "Cari kontak...",
     "Ukrainian": "Пошук контактів..."
   },
   "attachments": {
@@ -5604,7 +5496,7 @@
     "Thai": "ไฟล์แนบ",
     "Dutch": "Bijlagen",
     "Polish": "Załączniki",
-    "malay_indonesian": "Lampiran",
+    "Malay/Indonesian": "Lampiran",
     "Ukrainian": "Вкладення"
   },
   "close_ticket": {
@@ -5626,7 +5518,7 @@
     "Thai": "ปิดตั๋ว",
     "Dutch": "Ticket Sluiten",
     "Polish": "Zamknij Zgłoszenie",
-    "malay_indonesian": "Tutup Tiket",
+    "Malay/Indonesian": "Tutup Tiket",
     "Ukrainian": "Закрити квиток"
   },
   "chat_details": {
@@ -5648,7 +5540,7 @@
     "Thai": "รายละเอียดการแชท",
     "Dutch": "Chatdetails",
     "Polish": "Szczegóły Czatu",
-    "malay_indonesian": "Detail Obrolan",
+    "Malay/Indonesian": "Detail Obrolan",
     "Ukrainian": "Деталі чату"
   },
   "ticket_id": {
@@ -5670,7 +5562,7 @@
     "Thai": "รหัสตั๋ว",
     "Dutch": "Ticket ID",
     "Polish": "ID Zgłoszenia",
-    "malay_indonesian": "ID Tiket",
+    "Malay/Indonesian": "ID Tiket",
     "Ukrainian": "ID квитка"
   },
   "status": {
@@ -5692,7 +5584,7 @@
     "Thai": "สถานะ",
     "Dutch": "Status",
     "Polish": "Status",
-    "malay_indonesian": "Status",
+    "Malay/Indonesian": "Status",
     "Ukrainian": "Статус"
   },
   "type": {
@@ -5714,7 +5606,7 @@
     "Thai": "ประเภท",
     "Dutch": "Type",
     "Polish": "Typ",
-    "malay_indonesian": "Jenis",
+    "Malay/Indonesian": "Jenis",
     "Ukrainian": "Тип"
   },
   "priority": {
@@ -5736,7 +5628,7 @@
     "Thai": "ลำดับความสำคัญ",
     "Dutch": "Prioriteit",
     "Polish": "Priorytet",
-    "malay_indonesian": "Prioritas",
+    "Malay/Indonesian": "Prioritas",
     "Ukrainian": "Пріоритет"
   },
   "participants": {
@@ -5758,7 +5650,7 @@
     "Thai": "ผู้เข้าร่วม",
     "Dutch": "Deelnemers",
     "Polish": "Uczestnicy",
-    "malay_indonesian": "Peserta",
+    "Malay/Indonesian": "Peserta",
     "Ukrainian": "Учасники"
   },
   "reopen_ticket": {
@@ -5780,7 +5672,7 @@
     "Thai": "เปิดตั๋วใหม่",
     "Dutch": "Ticket Heropenen",
     "Polish": "Otwórz Ponownie Zgłoszenie",
-    "malay_indonesian": "Buka Kembali Tiket",
+    "Malay/Indonesian": "Buka Kembali Tiket",
     "Ukrainian": "Повторно відкрити квиток"
   },
   "resolve_ticket": {
@@ -5802,7 +5694,7 @@
     "Thai": "แก้ไขตั๋ว",
     "Dutch": "Ticket Oplossen",
     "Polish": "Rozwiąż Zgłoszenie",
-    "malay_indonesian": "Selesaikan Tiket",
+    "Malay/Indonesian": "Selesaikan Tiket",
     "Ukrainian": "Вирішити квиток"
   },
   "group_info": {
@@ -5824,7 +5716,7 @@
     "Thai": "ข้อมูลกลุ่ม",
     "Dutch": "Groepsinformatie",
     "Polish": "Informacje o Grupie",
-    "malay_indonesian": "Info Grup",
+    "Malay/Indonesian": "Info Grup",
     "Ukrainian": "Інформація про групу"
   },
   "group_media": {
@@ -5846,7 +5738,7 @@
     "Thai": "สื่อกลุ่ม",
     "Dutch": "Groepmedia",
     "Polish": "Media Grupy",
-    "malay_indonesian": "Media Grup",
+    "Malay/Indonesian": "Media Grup",
     "Ukrainian": "Медіа групи"
   },
   "exit_group": {
@@ -5868,7 +5760,7 @@
     "Thai": "ออกจากกลุ่ม",
     "Dutch": "Groep Verlaten",
     "Polish": "Opuść Grupę",
-    "malay_indonesian": "Keluar dari Grup",
+    "Malay/Indonesian": "Keluar dari Grup",
     "Ukrainian": "Вийти з групи"
   },
   "time_remaining": {
@@ -5890,7 +5782,7 @@
     "Thai": "เวลาที่เหลือ",
     "Dutch": "Resterende Tijd",
     "Polish": "Pozostały Czas",
-    "malay_indonesian": "Waktu Tersisa",
+    "Malay/Indonesian": "Waktu Tersisa",
     "Ukrainian": "Час, що залишився"
   },
   "failed_to_load_image": {
@@ -5912,7 +5804,7 @@
     "Thai": "ไม่สามารถโหลดรูปภาพได้",
     "Dutch": "Afbeelding laden mislukt",
     "Polish": "Nie udało się załadować obrazu",
-    "malay_indonesian": "Gagal memuat gambar",
+    "Malay/Indonesian": "Gagal memuat gambar",
     "Ukrainian": "Не вдалося завантажити зображення"
   },
   "failed_to_load_video": {
@@ -5934,7 +5826,7 @@
     "Thai": "ไม่สามารถโหลดวิดีโอได้",
     "Dutch": "Video laden mislukt",
     "Polish": "Nie udało się załadować wideo",
-    "malay_indonesian": "Gagal memuat video",
+    "Malay/Indonesian": "Gagal memuat video",
     "Ukrainian": "Не вдалося завантажити відео"
   },
   "unknown_error": {
@@ -5956,7 +5848,7 @@
     "Thai": "ข้อผิดพลาดที่ไม่ทราบ",
     "Dutch": "Onbekende fout",
     "Polish": "Nieznany błąd",
-    "malay_indonesian": "Kesalahan tidak diketahui",
+    "Malay/Indonesian": "Kesalahan tidak diketahui",
     "Ukrainian": "Невідома помилка"
   },
   "attach_file": {
@@ -5978,7 +5870,7 @@
     "Thai": "แนบไฟล์",
     "Dutch": "Bestand Bijvoegen",
     "Polish": "Załącz Plik",
-    "malay_indonesian": "Lampirkan File",
+    "Malay/Indonesian": "Lampirkan File",
     "Ukrainian": "Прикріпити файл"
   },
   "take_photo": {
@@ -6000,7 +5892,7 @@
     "Thai": "ถ่ายภาพ",
     "Dutch": "Foto Maken",
     "Polish": "Zrób Zdjęcie",
-    "malay_indonesian": "Ambil Foto",
+    "Malay/Indonesian": "Ambil Foto",
     "Ukrainian": "Зробити фото"
   },
   "audio_recording": {
@@ -6022,7 +5914,7 @@
     "Thai": "การบันทึกเสียง",
     "Dutch": "Audio-opname",
     "Polish": "Nagrywanie Dźwięku",
-    "malay_indonesian": "Perekaman Audio",
+    "Malay/Indonesian": "Perekaman Audio",
     "Ukrainian": "Аудіо запис"
   },
   "create_group_chat": {
@@ -6044,7 +5936,7 @@
     "Thai": "สร้างแชทกลุ่ม",
     "Dutch": "Groepschat Maken",
     "Polish": "Utwórz Czat Grupowy",
-    "malay_indonesian": "Buat Obrolan Grup",
+    "Malay/Indonesian": "Buat Obrolan Grup",
     "Ukrainian": "Створити груповий чат"
   },
   "group_name": {
@@ -6066,7 +5958,7 @@
     "Thai": "ชื่อกลุ่ม",
     "Dutch": "Groepsnaam",
     "Polish": "Nazwa Grupy",
-    "malay_indonesian": "Nama Grup",
+    "Malay/Indonesian": "Nama Grup",
     "Ukrainian": "Назва групи"
   },
   "search_by_name_or_id": {
@@ -6088,7 +5980,7 @@
     "Thai": "ค้นหาตามชื่อหรือไอดี...",
     "Dutch": "Zoek op naam of ID...",
     "Polish": "Szukaj według nazwy lub ID...",
-    "malay_indonesian": "Cari berdasarkan nama atau ID...",
+    "Malay/Indonesian": "Cari berdasarkan nama atau ID...",
     "Ukrainian": "Пошук за ім'ям або ID..."
   },
   "no_employees_found": {
@@ -6110,7 +6002,7 @@
     "Thai": "ไม่พบพนักงาน",
     "Dutch": "Geen werknemers gevonden",
     "Polish": "Nie znaleziono pracowników",
-    "malay_indonesian": "Tidak ada karyawan ditemukan",
+    "Malay/Indonesian": "Tidak ada karyawan ditemukan",
     "Ukrainian": "Співробітників не знайдено"
   },
   "employee_details": {
@@ -6132,7 +6024,7 @@
     "Thai": "รายละเอียดพนักงาน",
     "Dutch": "Werknemersgegevens",
     "Polish": "Szczegóły Pracownika",
-    "malay_indonesian": "Detail Karyawan",
+    "Malay/Indonesian": "Detail Karyawan",
     "Ukrainian": "Деталі співробітника"
   },
   "employment_type": {
@@ -6154,7 +6046,7 @@
     "Thai": "ประเภทการจ้างงาน",
     "Dutch": "Type Dienstverband",
     "Polish": "Rodzaj Zatrudnienia",
-    "malay_indonesian": "Jenis Pekerjaan",
+    "Malay/Indonesian": "Jenis Pekerjaan",
     "Ukrainian": "Тип зайнятості"
   },
   "select_country": {
@@ -6176,7 +6068,7 @@
     "Thai": "เลือกประเทศ",
     "Dutch": "Selecteer Land",
     "Polish": "Wybierz Kraj",
-    "malay_indonesian": "Pilih Negara",
+    "Malay/Indonesian": "Pilih Negara",
     "Ukrainian": "Оберіть країну"
   },
   "search_country": {
@@ -6198,7 +6090,7 @@
     "Thai": "ค้นหาประเทศ",
     "Dutch": "Land zoeken",
     "Polish": "Szukaj kraju",
-    "malay_indonesian": "Cari negara",
+    "Malay/Indonesian": "Cari negara",
     "Ukrainian": "Пошук країни"
   },
   "employee_role": {
@@ -6220,7 +6112,7 @@
     "Thai": "บทบาทพนักงาน",
     "Dutch": "Werknemersrol",
     "Polish": "Rola Pracownika",
-    "malay_indonesian": "Peran Karyawan",
+    "Malay/Indonesian": "Peran Karyawan",
     "Ukrainian": "Роль співробітника"
   },
   "tap_to_select_country": {
@@ -6242,7 +6134,7 @@
     "Thai": "แตะเพื่อเลือกประเทศ",
     "Dutch": "Tik om land te selecteren",
     "Polish": "Dotknij, aby wybrać kraj",
-    "malay_indonesian": "Ketuk untuk memilih negara",
+    "Malay/Indonesian": "Ketuk untuk memilih negara",
     "Ukrainian": "Натисніть, щоб обрати країну"
   },
   "search_countries": {
@@ -6264,7 +6156,7 @@
     "Thai": "ค้นหาประเทศ...",
     "Dutch": "Zoek landen...",
     "Polish": "Szukaj krajów...",
-    "malay_indonesian": "Cari negara...",
+    "Malay/Indonesian": "Cari negara...",
     "Ukrainian": "Шукати країни..."
   },
   "countries_found": {
@@ -6286,7 +6178,7 @@
     "Thai": "พบประเทศ",
     "Dutch": "landen gevonden",
     "Polish": "krajów znaleziono",
-    "malay_indonesian": "negara ditemukan",
+    "Malay/Indonesian": "negara ditemukan",
     "Ukrainian": "країн знайдено"
   },
   "no_countries_found": {
@@ -6308,7 +6200,7 @@
     "Thai": "ไม่พบประเทศ",
     "Dutch": "Geen landen gevonden",
     "Polish": "Nie znaleziono krajów",
-    "malay_indonesian": "Tidak ada negara yang ditemukan",
+    "Malay/Indonesian": "Tidak ada negara yang ditemukan",
     "Ukrainian": "Країн не знайдено"
   },
   "select_manufacturer": {
@@ -6330,30 +6222,8 @@
     "Thai": "เลือกผู้ผลิต",
     "Dutch": "Selecteer Fabrikant",
     "Polish": "Wybierz Producenta",
-    "malay_indonesian": "Pilih Produsen",
+    "Malay/Indonesian": "Pilih Produsen",
     "Ukrainian": "Оберіть виробника"
-  },
-  "select_machine": {
-    "English": "Select Machine",
-    "Hindi": "मशीन चुनें",
-    "Chinese (Simplified)": "选择机器",
-    "Spanish": "Seleccionar Máquina",
-    "Japanese": "マシンを選択",
-    "German": "Maschine auswählen",
-    "French": "Sélectionner la machine",
-    "Arabic": "اختر الآلة",
-    "Portuguese": "Selecionar Máquina",
-    "Russian": "Выберите машину",
-    "Bengali": "মেশিন নির্বাচন করুন",
-    "Turkish": "Makine Seç",
-    "Italian": "Seleziona Macchina",
-    "Korean": "기계 선택",
-    "Vietnamese": "Chọn Máy",
-    "Thai": "เลือกเครื่อง",
-    "Dutch": "Selecteer Machine",
-    "Polish": "Wybierz Maszynę",
-    "malay_indonesian": "Pilih Mesin",
-    "Ukrainian": "Оберіть машину"
   },
   "report_to": {
     "English": "Report To",
@@ -6374,7 +6244,7 @@
     "Thai": "รายงานให้",
     "Dutch": "Rapporteren Aan",
     "Polish": "Raportuj Do",
-    "malay_indonesian": "Laporkan Kepada",
+    "Malay/Indonesian": "Laporkan Kepada",
     "Ukrainian": "Звітувати до"
   },
   "specify_relationship": {
@@ -6396,7 +6266,7 @@
     "Thai": "ระบุความสัมพันธ์",
     "Dutch": "Specificeer Relatie",
     "Polish": "Określ Relację",
-    "malay_indonesian": "Tentukan Hubungan",
+    "Malay/Indonesian": "Tentukan Hubungan",
     "Ukrainian": "Вкажіть відносини"
   },
   "loading_factory_locations": {
@@ -6418,7 +6288,7 @@
     "Thai": "กำลังโหลดตำแหน่งโรงงาน...",
     "Dutch": "Fabriekslocaties laden...",
     "Polish": "Ładowanie lokalizacji fabryk...",
-    "malay_indonesian": "Memuat lokasi pabrik...",
+    "Malay/Indonesian": "Memuat lokasi pabrik...",
     "Ukrainian": "Завантаження розташувань заводів..."
   },
   "factory_location_manufacturing_unit": {
@@ -6440,7 +6310,7 @@
     "Thai": "ตำแหน่งโรงงาน/หน่วยผลิต",
     "Dutch": "Fabriekslocatie/Productie-eenheid",
     "Polish": "Lokalizacja Fabryki/Jednostka Produkcyjna",
-    "malay_indonesian": "Lokasi Pabrik/Unit Manufaktur",
+    "Malay/Indonesian": "Lokasi Pabrik/Unit Manufaktur",
     "Ukrainian": "Розташування заводу/Виробничий підрозділ"
   },
   "specify_factory_location": {
@@ -6462,7 +6332,7 @@
     "Thai": "ระบุตำแหน่งโรงงาน",
     "Dutch": "Specificeer fabriekslocatie",
     "Polish": "Określ lokalizację fabryki",
-    "malay_indonesian": "Tentukan lokasi pabrik",
+    "Malay/Indonesian": "Tentukan lokasi pabrik",
     "Ukrainian": "Вкажіть розташування заводу"
   },
   "enter_custom_factory_location": {
@@ -6484,7 +6354,7 @@
     "Thai": "ป้อนตำแหน่งโรงงานที่กำหนดเอง",
     "Dutch": "Voer aangepaste fabriekslocatie in",
     "Polish": "Wprowadź niestandardową lokalizację fabryki",
-    "malay_indonesian": "Masukkan lokasi pabrik kustom",
+    "Malay/Indonesian": "Masukkan lokasi pabrik kustom",
     "Ukrainian": "Введіть власне розташування заводу"
   },
   "manufacturer_not_found": {
@@ -6506,7 +6376,7 @@
     "Thai": "ไม่พบผู้ผลิต",
     "Dutch": "Fabrikant niet gevonden",
     "Polish": "Producent nie znaleziony",
-    "malay_indonesian": "Produsen tidak ditemukan",
+    "Malay/Indonesian": "Produsen tidak ditemukan",
     "Ukrainian": "Виробника не знайдено"
   },
   "no_employee_data_found": {
@@ -6528,7 +6398,7 @@
     "Thai": "ไม่พบข้อมูลพนักงาน",
     "Dutch": "Geen werknemersgegevens gevonden",
     "Polish": "Nie znaleziono danych pracownika",
-    "malay_indonesian": "Tidak ada data karyawan yang ditemukan",
+    "Malay/Indonesian": "Tidak ada data karyawan yang ditemukan",
     "Ukrainian": "Дані співробітника не знайдено"
   },
   "delete_employee": {
@@ -6550,7 +6420,7 @@
     "Thai": "ลบพนักงาน",
     "Dutch": "Werknemer Verwijderen",
     "Polish": "Usuń Pracownika",
-    "malay_indonesian": "Hapus Karyawan",
+    "Malay/Indonesian": "Hapus Karyawan",
     "Ukrainian": "Видалити співробітника"
   },
   "no_processors_found": {
@@ -6572,7 +6442,7 @@
     "Thai": "ไม่พบตัวประมวลผล",
     "Dutch": "Geen processors gevonden",
     "Polish": "Nie znaleziono procesorów",
-    "malay_indonesian": "Tidak ada prosesor yang ditemukan",
+    "Malay/Indonesian": "Tidak ada prosesor yang ditemukan",
     "Ukrainian": "Процесорів не знайдено"
   },
   "global_activity": {
@@ -6594,7 +6464,7 @@
     "Thai": "กิจกรรมทั่วโลก",
     "Dutch": "Wereldwijde Activiteit",
     "Polish": "Aktywność Globalna",
-    "malay_indonesian": "Aktivitas Global",
+    "Malay/Indonesian": "Aktivitas Global",
     "Ukrainian": "Глобальна активність"
   },
   "installation_tracker": {
@@ -6616,7 +6486,7 @@
     "Thai": "ตัวติดตามการติดตั้ง",
     "Dutch": "Installatie Tracker",
     "Polish": "Śledzenie Instalacji",
-    "malay_indonesian": "Pelacak Instalasi",
+    "Malay/Indonesian": "Pelacak Instalasi",
     "Ukrainian": "Трекер установки"
   },
   "failed_to_load_dashboard": {
@@ -6638,7 +6508,7 @@
     "Thai": "ไม่สามารถโหลดแดชบอร์ดได้",
     "Dutch": "Dashboard laden mislukt",
     "Polish": "Nie udało się załadować dashboardu",
-    "malay_indonesian": "Gagal memuat dashboard",
+    "Malay/Indonesian": "Gagal memuat dashboard",
     "Ukrainian": "Не вдалося завантажити панель керування"
   },
   "error_parsing_color_code": {
@@ -6660,7 +6530,7 @@
     "Thai": "ข้อผิดพลาดในการแยกวิเคราะห์รหัสสี",
     "Dutch": "Fout bij het parsen van kleurcode",
     "Polish": "Błąd analizowania kodu koloru",
-    "malay_indonesian": "Kesalahan parsing kode warna",
+    "Malay/Indonesian": "Kesalahan parsing kode warna",
     "Ukrainian": "Помилка парсингу коду кольору"
   },
   "warranty_tracker": {
@@ -6682,7 +6552,7 @@
     "Thai": "ตัวติดตามการรับประกัน",
     "Dutch": "Garantie Tracker",
     "Polish": "Śledzenie Gwarancji",
-    "malay_indonesian": "Pelacak Garansi",
+    "Malay/Indonesian": "Pelacak Garansi",
     "Ukrainian": "Трекер гарантії"
   },
   "unable_to_load_image": {
@@ -6704,7 +6574,7 @@
     "Thai": "ไม่สามารถโหลดรูปภาพได้",
     "Dutch": "Kan afbeelding niet laden",
     "Polish": "Nie można załadować obrazu",
-    "malay_indonesian": "Tidak dapat memuat gambar",
+    "Malay/Indonesian": "Tidak dapat memuat gambar",
     "Ukrainian": "Неможливо завантажити зображення"
   },
   "loading_hierarchy": {
@@ -6726,7 +6596,7 @@
     "Thai": "กำลังโหลดลำดับชั้น...",
     "Dutch": "Hiërarchie laden...",
     "Polish": "Ładowanie hierarchii...",
-    "malay_indonesian": "Memuat hierarki...",
+    "Malay/Indonesian": "Memuat hierarki...",
     "Ukrainian": "Завантаження ієрархії..."
   },
   "department_hierarchy": {
@@ -6748,7 +6618,7 @@
     "Thai": "ลำดับชั้นแผนก",
     "Dutch": "Afdelingshiërarchie",
     "Polish": "Hierarchia Działu",
-    "malay_indonesian": "Hierarki Departemen",
+    "Malay/Indonesian": "Hierarki Departemen",
     "Ukrainian": "Ієрархія відділу"
   },
   "department_cards": {
@@ -6770,7 +6640,7 @@
     "Thai": "การ์ดแผนก",
     "Dutch": "Afdelingskaarten",
     "Polish": "Karty Działów",
-    "malay_indonesian": "Kartu Departemen",
+    "Malay/Indonesian": "Kartu Departemen",
     "Ukrainian": "Картки відділів"
   },
   "loading": {
@@ -6792,7 +6662,7 @@
     "Thai": "กำลังโหลด...",
     "Dutch": "Laden...",
     "Polish": "Ładowanie...",
-    "malay_indonesian": "Memuat...",
+    "Malay/Indonesian": "Memuat...",
     "Ukrainian": "Завантаження..."
   },
   "loading_machines": {
@@ -6814,7 +6684,7 @@
     "Thai": "กำลังโหลดเครื่องจักร...",
     "Dutch": "Machines laden...",
     "Polish": "Ładowanie maszyn...",
-    "malay_indonesian": "Memuat mesin...",
+    "Malay/Indonesian": "Memuat mesin...",
     "Ukrainian": "Завантаження машин..."
   },
   "no_machines_available": {
@@ -6836,7 +6706,7 @@
     "Thai": "ไม่มีเครื่องจักรที่ใช้งานได้",
     "Dutch": "Geen machines beschikbaar",
     "Polish": "Brak dostępnych maszyn",
-    "malay_indonesian": "Tidak ada mesin yang tersedia",
+    "Malay/Indonesian": "Tidak ada mesin yang tersedia",
     "Ukrainian": "Машини недоступні"
   },
   "coming_soon": {
@@ -6858,7 +6728,7 @@
     "Thai": "เร็วๆ นี้",
     "Dutch": "Binnenkort",
     "Polish": "Wkrótce",
-    "malay_indonesian": "Segera Hadir",
+    "Malay/Indonesian": "Segera Hadir",
     "Ukrainian": "Незабаром"
   },
   "select_role": {
@@ -6880,7 +6750,7 @@
     "Thai": "เลือกบทบาท",
     "Dutch": "Selecteer Rol",
     "Polish": "Wybierz Rolę",
-    "malay_indonesian": "Pilih Peran",
+    "Malay/Indonesian": "Pilih Peran",
     "Ukrainian": "Вибрати роль"
   },
   "your_team": {
@@ -6902,7 +6772,7 @@
     "Thai": "ทีมของคุณ",
     "Dutch": "Jouw Team",
     "Polish": "Twój Zespół",
-    "malay_indonesian": "Tim Anda",
+    "Malay/Indonesian": "Tim Anda",
     "Ukrainian": "Ваша команда"
   },
   "add_employee": {
@@ -6924,7 +6794,7 @@
     "Thai": "เพิ่มพนักงาน",
     "Dutch": "Werknemer Toevoegen",
     "Polish": "Dodaj Pracownika",
-    "malay_indonesian": "Tambah Karyawan",
+    "Malay/Indonesian": "Tambah Karyawan",
     "Ukrainian": "Додати співробітника"
   },
   "app_permissions": {
@@ -6946,7 +6816,7 @@
     "Thai": "สิทธิ์แอป",
     "Dutch": "App-machtigingen",
     "Polish": "Uprawnienia Aplikacji",
-    "malay_indonesian": "Izin Aplikasi",
+    "Malay/Indonesian": "Izin Aplikasi",
     "Ukrainian": "Дозволи додатку"
   },
   "chat_language": {
@@ -6968,7 +6838,7 @@
     "Thai": "ภาษาแชท",
     "Dutch": "Chattaal",
     "Polish": "Język Czatu",
-    "malay_indonesian": "Bahasa Obrolan",
+    "Malay/Indonesian": "Bahasa Obrolan",
     "Ukrainian": "Мова чату"
   },
   "same_as_corporate_address": {
@@ -6990,7 +6860,7 @@
     "Thai": "เหมือนกับที่อยู่บริษัท",
     "Dutch": "Hetzelfde als bedrijfsadres",
     "Polish": "Taki sam jak adres firmowy",
-    "malay_indonesian": "Sama dengan alamat perusahaan",
+    "Malay/Indonesian": "Sama dengan alamat perusahaan",
     "Ukrainian": "Так само, як корпоративна адреса"
   },
   "tap_to_add_logo": {
@@ -7012,7 +6882,7 @@
     "Thai": "แตะเพื่อเพิ่มโลโก้",
     "Dutch": "Tik om logo toe te voegen",
     "Polish": "Dotknij, aby dodać logo",
-    "malay_indonesian": "Ketuk untuk menambah logo",
+    "Malay/Indonesian": "Ketuk untuk menambah logo",
     "Ukrainian": "Торкніться, щоб додати логотип"
   },
   "remove_logo": {
@@ -7034,7 +6904,7 @@
     "Thai": "ลบโลโก้",
     "Dutch": "Logo Verwijderen",
     "Polish": "Usuń Logo",
-    "malay_indonesian": "Hapus Logo",
+    "Malay/Indonesian": "Hapus Logo",
     "Ukrainian": "Видалити логотип"
   },
   "no_units_added": {
@@ -7056,7 +6926,7 @@
     "Thai": "ไม่มีหน่วยที่เพิ่มเข้ามา",
     "Dutch": "Geen eenheden toegevoegd",
     "Polish": "Nie dodano żadnych jednostek",
-    "malay_indonesian": "Tidak ada unit yang ditambahkan",
+    "Malay/Indonesian": "Tidak ada unit yang ditambahkan",
     "Ukrainian": "Не додано жодних підрозділів"
   },
   "discard_changes": {
@@ -7078,7 +6948,7 @@
     "Thai": "ยกเลิกการเปลี่ยนแปลง?",
     "Dutch": "Wijzigingen Verwerpen?",
     "Polish": "Odrzucić Zmiany?",
-    "malay_indonesian": "Buang Perubahan?",
+    "Malay/Indonesian": "Buang Perubahan?",
     "Ukrainian": "Скасувати зміни?"
   },
   "save_and_leave": {
@@ -7100,7 +6970,7 @@
     "Thai": "บันทึกและออก",
     "Dutch": "Opslaan en Verlaten",
     "Polish": "Zapisz i Opuść",
-    "malay_indonesian": "Simpan dan Keluar",
+    "Malay/Indonesian": "Simpan dan Keluar",
     "Ukrainian": "Зберегти та вийти"
   },
   "select_country_for_unit": {
@@ -7122,30 +6992,8 @@
     "Thai": "เลือกประเทศสำหรับหน่วย",
     "Dutch": "Selecteer land voor eenheid",
     "Polish": "Wybierz kraj dla jednostki",
-    "malay_indonesian": "Pilih negara untuk unit",
+    "Malay/Indonesian": "Pilih negara untuk unit",
     "Ukrainian": "Виберіть країну для підрозділу"
-  },
-  "existing_documents": {
-    "English": "Existing Documents:",
-    "Hindi": "मौजूदा दस्तावेज़:",
-    "Chinese (Simplified)": "现有文档：",
-    "Spanish": "Documentos Existentes:",
-    "Japanese": "既存のドキュメント：",
-    "German": "Vorhandene Dokumente:",
-    "French": "Documents existants :",
-    "Arabic": "الوثائق الموجودة:",
-    "Portuguese": "Documentos Existentes:",
-    "Russian": "Существующие документы:",
-    "Bengali": "বিদ্যমান নথি:",
-    "Turkish": "Mevcut Belgeler:",
-    "Italian": "Documenti Esistenti:",
-    "Korean": "기존 문서:",
-    "Vietnamese": "Tài liệu Hiện có:",
-    "Thai": "เอกสารที่มีอยู่:",
-    "Dutch": "Bestaande Documenten:",
-    "Polish": "Istniejące Dokumenty:",
-    "malay_indonesian": "Dokumen yang Ada:",
-    "Ukrainian": "Наявні документи:"
   },
   "document": {
     "English": "Document",
@@ -7166,7 +7014,7 @@
     "Thai": "เอกสาร",
     "Dutch": "Document",
     "Polish": "Dokument",
-    "malay_indonesian": "Dokumen",
+    "Malay/Indonesian": "Dokumen",
     "Ukrainian": "Документ"
   },
   "new_files": {
@@ -7188,7 +7036,7 @@
     "Thai": "ไฟล์ใหม่:",
     "Dutch": "Nieuwe Bestanden:",
     "Polish": "Nowe Pliki:",
-    "malay_indonesian": "File Baru:",
+    "Malay/Indonesian": "File Baru:",
     "Ukrainian": "Нові файли:"
   },
   "add_photo": {
@@ -7210,7 +7058,7 @@
     "Thai": "เพิ่มภาพถ่าย",
     "Dutch": "Foto Toevoegen",
     "Polish": "Dodaj Zdjęcie",
-    "malay_indonesian": "Tambah Foto",
+    "Malay/Indonesian": "Tambah Foto",
     "Ukrainian": "Додати фото"
   },
   "remove_photo": {
@@ -7232,7 +7080,7 @@
     "Thai": "ลบภาพถ่าย",
     "Dutch": "Foto Verwijderen",
     "Polish": "Usuń Zdjęcie",
-    "malay_indonesian": "Hapus Foto",
+    "Malay/Indonesian": "Hapus Foto",
     "Ukrainian": "Видалити фото"
   },
   "date_of_birth": {
@@ -7254,7 +7102,7 @@
     "Thai": "วันเกิด",
     "Dutch": "Geboortedatum",
     "Polish": "Data Urodzenia",
-    "malay_indonesian": "Tanggal Lahir",
+    "Malay/Indonesian": "Tanggal Lahir",
     "Ukrainian": "Дата народження"
   },
   "messages": {
@@ -7276,7 +7124,7 @@
     "Thai": "ข้อความ",
     "Dutch": "Berichten",
     "Polish": "Wiadomości",
-    "malay_indonesian": "Pesan",
+    "Malay/Indonesian": "Pesan",
     "Ukrainian": "Повідомлення"
   },
   "contacts": {
@@ -7298,7 +7146,7 @@
     "Thai": "รายชื่อติดต่อ",
     "Dutch": "Contacten",
     "Polish": "Kontakty",
-    "malay_indonesian": "Kontak",
+    "Malay/Indonesian": "Kontak",
     "Ukrainian": "Контакти"
   },
   "home": {
@@ -7320,7 +7168,7 @@
     "Thai": "หน้าแรก",
     "Dutch": "Home",
     "Polish": "Strona Główna",
-    "malay_indonesian": "Beranda",
+    "Malay/Indonesian": "Beranda",
     "Ukrainian": "Головна"
   },
   "profile": {
@@ -7342,7 +7190,7 @@
     "Thai": "โปรไฟล์",
     "Dutch": "Profiel",
     "Polish": "Profil",
-    "malay_indonesian": "Profil",
+    "Malay/Indonesian": "Profil",
     "Ukrainian": "Профіль"
   },
   "blood_group": {
@@ -7364,7 +7212,7 @@
     "Thai": "หมู่เลือด",
     "Dutch": "Bloedgroep",
     "Polish": "Grupa Krwi",
-    "malay_indonesian": "Golongan Darah",
+    "Malay/Indonesian": "Golongan Darah",
     "Ukrainian": "Група крові"
   },
   "preferred_language": {
@@ -7386,7 +7234,7 @@
     "Thai": "ภาษาที่ต้องการ",
     "Dutch": "Voorkeurstaal",
     "Polish": "Preferowany Język",
-    "malay_indonesian": "Bahasa Pilihan",
+    "Malay/Indonesian": "Bahasa Pilihan",
     "Ukrainian": "Бажана мова"
   },
   "logout": {
@@ -7408,7 +7256,7 @@
     "Thai": "ออกจากระบบ",
     "Dutch": "Uitloggen",
     "Polish": "Wyloguj",
-    "malay_indonesian": "Keluar",
+    "Malay/Indonesian": "Keluar",
     "Ukrainian": "Вийти"
   },
   "security": {
@@ -7430,7 +7278,7 @@
     "Thai": "ความปลอดภัย",
     "Dutch": "Beveiliging",
     "Polish": "Bezpieczeństwo",
-    "malay_indonesian": "Keamanan",
+    "Malay/Indonesian": "Keamanan",
     "Ukrainian": "Безпека"
   },
   "notification": {
@@ -7452,7 +7300,7 @@
     "Thai": "การแจ้งเตือน",
     "Dutch": "Melding",
     "Polish": "Powiadomienie",
-    "malay_indonesian": "Notifikasi",
+    "Malay/Indonesian": "Notifikasi",
     "Ukrainian": "Сповіщення"
   },
   "app_language": {
@@ -7474,7 +7322,7 @@
     "Thai": "ภาษาแอป",
     "Dutch": "App-taal",
     "Polish": "Język Aplikacji",
-    "malay_indonesian": "Bahasa Aplikasi",
+    "Malay/Indonesian": "Bahasa Aplikasi",
     "Ukrainian": "Мова додатку"
   },
   "chats": {
@@ -7496,7 +7344,7 @@
     "Thai": "แชท",
     "Dutch": "Chats",
     "Polish": "Czaty",
-    "malay_indonesian": "Obrolan",
+    "Malay/Indonesian": "Obrolan",
     "Ukrainian": "Чати"
   },
   "phone": {
@@ -7518,7 +7366,7 @@
     "Thai": "โทรศัพท์",
     "Dutch": "Telefoon",
     "Polish": "Telefon",
-    "malay_indonesian": "Telepon",
+    "Malay/Indonesian": "Telepon",
     "Ukrainian": "Телефон"
   },
   "designation": {
@@ -7540,7 +7388,7 @@
     "Thai": "ตำแหน่ง",
     "Dutch": "Functie",
     "Polish": "Stanowisko",
-    "malay_indonesian": "Jabatan",
+    "Malay/Indonesian": "Jabatan",
     "Ukrainian": "Призначення"
   },
   "contact_person": {
@@ -7562,30 +7410,8 @@
     "Thai": "ผู้ติดต่อ",
     "Dutch": "Contactpersoon",
     "Polish": "Osoba Kontaktowa",
-    "malay_indonesian": "Orang Kontak",
+    "Malay/Indonesian": "Orang Kontak",
     "Ukrainian": "Контактна особа"
-  },
-  "remove": {
-    "English": "Remove",
-    "Hindi": "हटाएं",
-    "Chinese (Simplified)": "移除",
-    "Spanish": "Eliminar",
-    "Japanese": "削除",
-    "German": "Entfernen",
-    "French": "Supprimer",
-    "Arabic": "إزالة",
-    "Portuguese": "Remover",
-    "Russian": "Удалить",
-    "Bengali": "সরান",
-    "Turkish": "Kaldır",
-    "Italian": "Rimuovi",
-    "Korean": "제거",
-    "Vietnamese": "Xóa",
-    "Thai": "ลบ",
-    "Dutch": "Verwijderen",
-    "Polish": "Usuń",
-    "malay_indonesian": "Hapus",
-    "Ukrainian": "Видалити"
   },
   "remove_machine": {
     "English": "Remove Machine",
@@ -7606,7 +7432,7 @@
     "Thai": "ลบเครื่องจักร",
     "Dutch": "Machine Verwijderen",
     "Polish": "Usuń Maszynę",
-    "malay_indonesian": "Hapus Mesin",
+    "Malay/Indonesian": "Hapus Mesin",
     "Ukrainian": "Видалити Машину"
   },
   "remove_machine_confirmation": {
@@ -7628,7 +7454,7 @@
     "Thai": "คุณแน่ใจหรือไม่ที่จะลบเครื่องจักรนี้ออกจากลูกค้า?",
     "Dutch": "Weet u zeker dat u deze machine van de klant wilt verwijderen?",
     "Polish": "Czy na pewno chcesz usunąć tę maszynę od klienta?",
-    "malay_indonesian": "Adakah anda pasti mahu mengeluarkan mesin ini daripada pelanggan?",
+    "Malay/Indonesian": "Adakah anda pasti mahu mengeluarkan mesin ini daripada pelanggan?",
     "Ukrainian": "Чи впевнені ви, що хочете видалити цю машину у клієнта?"
   },
   "machine_removed_successfully": {
@@ -7650,7 +7476,7 @@
     "Thai": "ลบเครื่องจักรเรียบร้อยแล้ว",
     "Dutch": "Machine succesvol verwijderd",
     "Polish": "Maszyna została pomyślnie usunięta",
-    "malay_indonesian": "Mesin berjaya dikeluarkan",
+    "Malay/Indonesian": "Mesin berjaya dikeluarkan",
     "Ukrainian": "Машину успішно видалено"
   },
   "failed_to_remove_machine": {
@@ -7672,74 +7498,8 @@
     "Thai": "ลบเครื่องจักรไม่สำเร็จ",
     "Dutch": "Machine verwijderen mislukt",
     "Polish": "Nie udało się usunąć maszyny",
-    "malay_indonesian": "Gagal mengeluarkan mesin",
+    "Malay/Indonesian": "Gagal mengeluarkan mesin",
     "Ukrainian": "Не вдалося видалити машину"
-  },
-  "remove_machine_warning": {
-    "English": "This action cannot be undone",
-    "Hindi": "इस कार्य को पूर्ववत नहीं किया जा सकता",
-    "Chinese (Simplified)": "此操作无法撤销",
-    "Spanish": "Esta acción no se puede deshacer",
-    "Japanese": "この操作は元に戻せません",
-    "German": "Diese Aktion kann nicht rückgängig gemacht werden",
-    "French": "Cette action ne peut pas être annulée",
-    "Arabic": "لا يمكن التراجع عن هذا الإجراء",
-    "Portuguese": "Esta ação não pode ser desfeita",
-    "Russian": "Это действие нельзя отменить",
-    "Bengali": "এই কাজটি পূর্বাবস্থায় ফেরানো যাবে না",
-    "Turkish": "Bu işlem geri alınamaz",
-    "Italian": "Questa azione non può essere annullata",
-    "Korean": "이 작업은 실행 취소할 수 없습니다",
-    "Vietnamese": "Hành động này không thể hoàn tác",
-    "Thai": "การดำเนินการนี้ไม่สามารถยกเลิกได้",
-    "Dutch": "Deze actie kan niet ongedaan worden gemaakt",
-    "Polish": "Tej akcji nie można cofnąć",
-    "malay_indonesian": "Tindakan ini tidak dapat dibatalkan",
-    "Ukrainian": "Цю дію не можна скасувати"
-  },
-  "maximum_processing_size": {
-    "English": "Maximum processing size",
-    "Hindi": "अधिकतम प्रसंस्करण आकार",
-    "Chinese (Simplified)": "最大处理尺寸",
-    "Spanish": "Tamaño máximo de procesamiento",
-    "Japanese": "最大処理サイズ",
-    "German": "Maximale Verarbeitungsgröße",
-    "French": "Taille maximale de traitement",
-    "Arabic": "الحد الأقصى لحجم المعالجة",
-    "Portuguese": "Tamanho máximo de processamento",
-    "Russian": "Максимальный размер обработки",
-    "Bengali": "সর্বোচ্চ প্রক্রিয়াকরণ আকার",
-    "Turkish": "Maksimum İşleme Boyutu",
-    "Italian": "Dimensione Massima di Elaborazione",
-    "Korean": "최대 처리 크기",
-    "Vietnamese": "Kích thước xử lý tối đa",
-    "Thai": "ขนาดการประมวลผลสูงสุด",
-    "Dutch": "Maximale Verwerkingsgrootte",
-    "Polish": "Maksymalny Rozmiar Przetwarzania",
-    "malay_indonesian": "Ukuran Pemrosesan Maksimum",
-    "Ukrainian": "Максимальний розмір обробки"
-  },
-  "minimum_processing_size": {
-    "English": "Minimum processing size",
-    "Hindi": "न्यूनतम प्रसंस्करण आकार",
-    "Chinese (Simplified)": "最小处理尺寸",
-    "Spanish": "Tamaño mínimo de procesamiento",
-    "Japanese": "最小処理サイズ",
-    "German": "Minimale Verarbeitungsgröße",
-    "French": "Taille minimale de traitement",
-    "Arabic": "الحد الأدنى لحجم المعالجة",
-    "Portuguese": "Tamanho mínimo de processamento",
-    "Russian": "Минимальный размер обработки",
-    "Bengali": "সর্বনিম্ন প্রক্রিয়াকরণ আকার",
-    "Turkish": "Minimum İşleme Boyutu",
-    "Italian": "Dimensione Minima di Elaborazione",
-    "Korean": "최소 처리 크기",
-    "Vietnamese": "Kích thước xử lý tối thiểu",
-    "Thai": "ขนาดการประมวลผลต่ำสุด",
-    "Dutch": "Minimale Verwerkingsgrootte",
-    "Polish": "Minimalny Rozmiar Przetwarzania",
-    "malay_indonesian": "Ukuran Pemrosesan Minimum",
-    "Ukrainian": "Мінімальний розмір обробки"
   },
   "dimensions": {
     "English": "Dimensions",
@@ -7760,7 +7520,7 @@
     "Thai": "ขนาด",
     "Dutch": "Afmetingen",
     "Polish": "Wymiary",
-    "malay_indonesian": "Dimensi",
+    "Malay/Indonesian": "Dimensi",
     "Ukrainian": "Розміри"
   },
   "power": {
@@ -7782,7 +7542,7 @@
     "Thai": "พลังงาน",
     "Dutch": "Vermogen",
     "Polish": "Moc",
-    "malay_indonesian": "Daya",
+    "Malay/Indonesian": "Daya",
     "Ukrainian": "Потужність"
   },
   "view_more": {
@@ -7804,7 +7564,7 @@
     "Thai": "ดูเพิ่มเติม",
     "Dutch": "Meer Bekijken",
     "Polish": "Zobacz Więcej",
-    "malay_indonesian": "Lihat Lebih Banyak",
+    "Malay/Indonesian": "Lihat Lebih Banyak",
     "Ukrainian": "Переглянути більше"
   },
   "departmental": {
@@ -7826,7 +7586,7 @@
     "Thai": "แผนก",
     "Dutch": "Afdelings",
     "Polish": "Działowy",
-    "malay_indonesian": "Departemen",
+    "Malay/Indonesian": "Departemen",
     "Ukrainian": "Відомчий"
   },
   "external": {
@@ -7848,7 +7608,7 @@
     "Thai": "ภายนอก",
     "Dutch": "Extern",
     "Polish": "Zewnętrzny",
-    "malay_indonesian": "Eksternal",
+    "Malay/Indonesian": "Eksternal",
     "Ukrainian": "Зовнішній"
   },
   "tickets": {
@@ -7870,7 +7630,7 @@
     "Thai": "ตั๋ว",
     "Dutch": "Tickets",
     "Polish": "Zgłoszenia",
-    "malay_indonesian": "Tiket",
+    "Malay/Indonesian": "Tiket",
     "Ukrainian": "Квитки"
   },
   "load_more": {
@@ -7892,7 +7652,7 @@
     "Thai": "โหลดเพิ่มเติม",
     "Dutch": "Meer laden",
     "Polish": "Załaduj więcej",
-    "malay_indonesian": "Muat Lebih Banyak",
+    "Malay/Indonesian": "Muat Lebih Banyak",
     "Ukrainian": "Завантажити більше"
   },
   "in_progress": {
@@ -7914,7 +7674,7 @@
     "Thai": "กำลังดำเนินการ",
     "Dutch": "In Uitvoering",
     "Polish": "W Trakcie",
-    "malay_indonesian": "Sedang Berlangsung",
+    "Malay/Indonesian": "Sedang Berlangsung",
     "Ukrainian": "В процесі"
   },
   "processor": {
@@ -7936,7 +7696,7 @@
     "Thai": "โปรเซสเซอร์",
     "Dutch": "Processor",
     "Polish": "Procesor",
-    "malay_indonesian": "Prosesor",
+    "Malay/Indonesian": "Prosesor",
     "Ukrainian": "Процесор"
   },
   "created_at": {
@@ -7958,7 +7718,7 @@
     "Thai": "สร้างเมื่อ",
     "Dutch": "Aangemaakt op",
     "Polish": "Utworzono",
-    "malay_indonesian": "Dibuat pada",
+    "Malay/Indonesian": "Dibuat pada",
     "Ukrainian": "Створено"
   },
   "basic_information": {
@@ -7980,30 +7740,8 @@
     "Thai": "ข้อมูลพื้นฐาน",
     "Dutch": "Basisinformatie",
     "Polish": "Podstawowe Informacje",
-    "malay_indonesian": "Informasi Dasar",
+    "Malay/Indonesian": "Informasi Dasar",
     "Ukrainian": "Основна інформація"
-  },
-  "model_number": {
-    "English": "Model number",
-    "Hindi": "मॉडल नंबर",
-    "Chinese (Simplified)": "型号",
-    "Spanish": "Número de modelo",
-    "Japanese": "モデル番号",
-    "German": "Modellnummer",
-    "French": "Numéro de modèle",
-    "Arabic": "رقم الطراز",
-    "Portuguese": "Número do modelo",
-    "Russian": "Номер модели",
-    "Bengali": "মডেল নম্বর",
-    "Turkish": "Model Numarası",
-    "Italian": "Numero Modello",
-    "Korean": "모델 번호",
-    "Vietnamese": "Số mô hình",
-    "Thai": "หมายเลขรุ่น",
-    "Dutch": "Modelnummer",
-    "Polish": "Numer Modelu",
-    "malay_indonesian": "Nomor Model",
-    "Ukrainian": "Номер моделі"
   },
   "no_ticket_conversations": {
     "English": "No ticket conversations",
@@ -8024,7 +7762,7 @@
     "Thai": "ไม่มีการสนทนาตั๋ว",
     "Dutch": "Geen ticketgesprekken",
     "Polish": "Brak rozmów o zgłoszeniach",
-    "malay_indonesian": "Tidak ada percakapan tiket",
+    "Malay/Indonesian": "Tidak ada percakapan tiket",
     "Ukrainian": "Немає розмов по квитках"
   },
   "ticket_chats_appear_here": {
@@ -8046,7 +7784,7 @@
     "Thai": "แชทตั๋วปรากฏที่นี่",
     "Dutch": "Ticketchats verschijnen hier",
     "Polish": "Czaty zgłoszeń pojawiają się tutaj",
-    "malay_indonesian": "Obrolan tiket muncul di sini",
+    "Malay/Indonesian": "Obrolan tiket muncul di sini",
     "Ukrainian": "Чати квитків з'являються тут"
   },
   "no_departmental_conversations": {
@@ -8068,7 +7806,7 @@
     "Thai": "ไม่มีการสนทนาแผนก",
     "Dutch": "Geen afdelingsgesprekken",
     "Polish": "Brak rozmów działowych",
-    "malay_indonesian": "Tidak ada percakapan departemen",
+    "Malay/Indonesian": "Tidak ada percakapan departemen",
     "Ukrainian": "Немає відомчих розмов"
   },
   "departmental_chats_appear_here": {
@@ -8090,7 +7828,7 @@
     "Thai": "แชทแผนกปรากฏที่นี่",
     "Dutch": "Afdelingschats verschijnen hier",
     "Polish": "Czaty działowe pojawiają się tutaj",
-    "malay_indonesian": "Obrolan departemen muncul di sini",
+    "Malay/Indonesian": "Obrolan departemen muncul di sini",
     "Ukrainian": "Відомчі чати з'являються тут"
   },
   "no_external_conversations": {
@@ -8112,7 +7850,7 @@
     "Thai": "ไม่มีการสนทนาภายนอก",
     "Dutch": "Geen externe gesprekken",
     "Polish": "Brak rozmów zewnętrznych",
-    "malay_indonesian": "Tidak ada percakapan eksternal",
+    "Malay/Indonesian": "Tidak ada percakapan eksternal",
     "Ukrainian": "Немає зовнішніх розмов"
   },
   "external_chats_appear_here": {
@@ -8134,7 +7872,7 @@
     "Thai": "แชทภายนอกปรากฏที่นี่",
     "Dutch": "Externe chats verschijnen hier",
     "Polish": "Czaty zewnętrzne pojawiają się tutaj",
-    "malay_indonesian": "Obrolan eksternal muncul di sini",
+    "Malay/Indonesian": "Obrolan eksternal muncul di sini",
     "Ukrainian": "Зовнішні чати з'являються тут"
   },
   "organization_employees_will_appear_here": {
@@ -8156,7 +7894,7 @@
     "Thai": "พนักงานองค์กรจะปรากฏที่นี่",
     "Dutch": "Organisatiemedewerkers verschijnen hier",
     "Polish": "Pracownicy organizacji pojawią się tutaj",
-    "malay_indonesian": "Karyawan organisasi akan muncul di sini",
+    "Malay/Indonesian": "Karyawan organisasi akan muncul di sini",
     "Ukrainian": "Співробітники організації з'являться тут"
   },
   "select_employees": {
@@ -8178,7 +7916,7 @@
     "Thai": "เลือกพนักงาน",
     "Dutch": "Selecteer Werknemers",
     "Polish": "Wybierz Pracowników",
-    "malay_indonesian": "Pilih Karyawan",
+    "Malay/Indonesian": "Pilih Karyawan",
     "Ukrainian": "Вибрати співробітників"
   },
   "create_group": {
@@ -8200,74 +7938,8 @@
     "Thai": "สร้างกลุ่ม",
     "Dutch": "Groep Maken",
     "Polish": "Utwórz Grupę",
-    "malay_indonesian": "Buat Grup",
+    "Malay/Indonesian": "Buat Grup",
     "Ukrainian": "Створити групу"
-  },
-  "machine_details": {
-    "English": "Machine details",
-    "Hindi": "मशीन विवरण",
-    "Chinese (Simplified)": "机器详情",
-    "Spanish": "Detalles de la máquina",
-    "Japanese": "機械の詳細",
-    "German": "Maschinendetails",
-    "French": "Détails de la machine",
-    "Arabic": "تفاصيل الآلة",
-    "Portuguese": "Detalhes da máquina",
-    "Russian": "Детали машины",
-    "Bengali": "মেশিনের বিস্তারিত",
-    "Turkish": "Makine Detayları",
-    "Italian": "Dettagli Macchina",
-    "Korean": "기계 세부사항",
-    "Vietnamese": "Chi tiết máy",
-    "Thai": "รายละเอียดเครื่องจักร",
-    "Dutch": "Machine Details",
-    "Polish": "Szczegóły Maszyny",
-    "malay_indonesian": "Detail Mesin",
-    "Ukrainian": "Деталі машини"
-  },
-  "machine_name": {
-    "English": "Machine name",
-    "Hindi": "मशीन का नाम",
-    "Chinese (Simplified)": "机器名称",
-    "Spanish": "Nombre de la máquina",
-    "Japanese": "機械名",
-    "German": "Maschinenname",
-    "French": "Nom de la machine",
-    "Arabic": "اسم الآلة",
-    "Portuguese": "Nome da máquina",
-    "Russian": "Название машины",
-    "Bengali": "মেশিনের নাম",
-    "Turkish": "Makine Adı",
-    "Italian": "Nome Macchina",
-    "Korean": "기계 이름",
-    "Vietnamese": "Tên máy",
-    "Thai": "ชื่อเครื่องจักร",
-    "Dutch": "Machinenaam",
-    "Polish": "Nazwa Maszyny",
-    "malay_indonesian": "Nama Mesin",
-    "Ukrainian": "Назва машини"
-  },
-  "height": {
-    "English": "Height",
-    "Hindi": "ऊंचाई",
-    "Chinese (Simplified)": "高度",
-    "Spanish": "Altura",
-    "Japanese": "高さ",
-    "German": "Höhe",
-    "French": "Hauteur",
-    "Arabic": "الارتفاع",
-    "Portuguese": "Altura",
-    "Russian": "Высота",
-    "Bengali": "উচ্চতা",
-    "Turkish": "Yükseklik",
-    "Italian": "Altezza",
-    "Korean": "높이",
-    "Vietnamese": "Chiều cao",
-    "Thai": "ความสูง",
-    "Dutch": "Hoogte",
-    "Polish": "Wysokość",
-    "malay_indonesian": "Tinggi",
-    "Ukrainian": "Висота"
   },
   "invalid_number": {
     "English": "Invalid number",
@@ -8288,30 +7960,8 @@
     "Thai": "หมายเลขไม่ถูกต้อง",
     "Dutch": "Ongeldig Nummer",
     "Polish": "Nieprawidłowy Numer",
-    "malay_indonesian": "Nomor Tidak Valid",
+    "Malay/Indonesian": "Nomor Tidak Valid",
     "Ukrainian": "Недійсний номер"
-  },
-  "width": {
-    "English": "Width",
-    "Hindi": "चौड़ाई",
-    "Chinese (Simplified)": "宽度",
-    "Spanish": "Ancho",
-    "Japanese": "幅",
-    "German": "Breite",
-    "French": "Largeur",
-    "Arabic": "العرض",
-    "Portuguese": "Largura",
-    "Russian": "Ширина",
-    "Bengali": "প্রস্থ",
-    "Turkish": "Genişlik",
-    "Italian": "Larghezza",
-    "Korean": "폭",
-    "Vietnamese": "Chiều rộng",
-    "Thai": "ความกว้าง",
-    "Dutch": "Breedte",
-    "Polish": "Szerokość",
-    "malay_indonesian": "Lebar",
-    "Ukrainian": "Ширина"
   },
   "required": {
     "English": "Required",
@@ -8332,7 +7982,7 @@
     "Thai": "จำเป็น",
     "Dutch": "Verplicht",
     "Polish": "Wymagane",
-    "malay_indonesian": "Diperlukan",
+    "Malay/Indonesian": "Diperlukan",
     "Ukrainian": "Обов'язково"
   },
   "maximum_area": {
@@ -8354,7 +8004,7 @@
     "Thai": "พื้นที่สูงสุด",
     "Dutch": "Maximaal Gebied",
     "Polish": "Maksymalny Obszar",
-    "malay_indonesian": "Area Maksimum",
+    "Malay/Indonesian": "Area Maksimum",
     "Ukrainian": "Максимальна площа"
   },
   "minimum_area": {
@@ -8376,7 +8026,7 @@
     "Thai": "พื้นที่ต่ำสุด",
     "Dutch": "Minimaal Gebied",
     "Polish": "Minimalny Obszar",
-    "malay_indonesian": "Area Minimum",
+    "Malay/Indonesian": "Area Minimum",
     "Ukrainian": "Мінімальна площа"
   },
   "machine_power": {
@@ -8398,7 +8048,7 @@
     "Thai": "พลังงานเครื่องจักร",
     "Dutch": "Machinevermogen",
     "Polish": "Moc Maszyny",
-    "malay_indonesian": "Daya Mesin",
+    "Malay/Indonesian": "Daya Mesin",
     "Ukrainian": "Потужність машини"
   },
   "save": {
@@ -8420,7 +8070,7 @@
     "Thai": "บันทึก",
     "Dutch": "Opslaan",
     "Polish": "Zapisz",
-    "malay_indonesian": "Simpan",
+    "Malay/Indonesian": "Simpan",
     "Ukrainian": "Зберегти"
   },
   "all_models": {
@@ -8442,7 +8092,7 @@
     "Thai": "รุ่นทั้งหมด",
     "Dutch": "Alle Modellen",
     "Polish": "Wszystkie Modele",
-    "malay_indonesian": "Semua Model",
+    "Malay/Indonesian": "Semua Model",
     "Ukrainian": "Всі моделі"
   },
   "address": {
@@ -8464,7 +8114,7 @@
     "Thai": "ที่อยู่",
     "Dutch": "Adres",
     "Polish": "Adres",
-    "malay_indonesian": "Alamat",
+    "Malay/Indonesian": "Alamat",
     "Ukrainian": "Адреса"
   },
   "announcements": {
@@ -8486,7 +8136,7 @@
     "Thai": "ประกาศ",
     "Dutch": "Aankondigingen",
     "Polish": "Ogłoszenia",
-    "malay_indonesian": "Pengumuman",
+    "Malay/Indonesian": "Pengumuman",
     "Ukrainian": "Оголошення"
   },
   "upcoming_event": {
@@ -8508,7 +8158,7 @@
     "Thai": "งานที่จะมาถึง",
     "Dutch": "Aankomend Evenement",
     "Polish": "Nadchodzące Wydarzenie",
-    "malay_indonesian": "Acara Mendatang",
+    "Malay/Indonesian": "Acara Mendatang",
     "Ukrainian": "Майбутня подія"
   },
   "special_promotion": {
@@ -8530,7 +8180,7 @@
     "Thai": "โปรโมชั่นพิเศษ",
     "Dutch": "Speciale Promotie",
     "Polish": "Specjalna Promocja",
-    "malay_indonesian": "Promosi Khusus",
+    "Malay/Indonesian": "Promosi Khusus",
     "Ukrainian": "Спеціальна акція"
   },
   "same_as_current": {
@@ -8552,7 +8202,7 @@
     "Thai": "เหมือนกับปัจจุบัน",
     "Dutch": "Hetzelfde als Huidige",
     "Polish": "Taki sam jak Obecny",
-    "malay_indonesian": "Sama dengan Saat Ini",
+    "Malay/Indonesian": "Sama dengan Saat Ini",
     "Ukrainian": "Так само, як поточний"
   },
   "joining_date": {
@@ -8574,7 +8224,7 @@
     "Thai": "วันที่เข้าร่วม",
     "Dutch": "Toetredingsdatum",
     "Polish": "Data Dołączenia",
-    "malay_indonesian": "Tanggal Bergabung",
+    "Malay/Indonesian": "Tanggal Bergabung",
     "Ukrainian": "Дата приєднання"
   },
   "yes_leave": {
@@ -8596,7 +8246,7 @@
     "Thai": "ใช่ ออก",
     "Dutch": "Ja, Verlaten",
     "Polish": "Tak, Opuść",
-    "malay_indonesian": "Ya, Keluar",
+    "Malay/Indonesian": "Ya, Keluar",
     "Ukrainian": "Так, вийти"
   },
   "my_profile": {
@@ -8618,7 +8268,7 @@
     "Thai": "โปรไฟล์ของฉัน",
     "Dutch": "Mijn Profiel",
     "Polish": "Mój Profil",
-    "malay_indonesian": "Profil Saya",
+    "Malay/Indonesian": "Profil Saya",
     "Ukrainian": "Мій профіль"
   },
   "qr_code": {
@@ -8640,7 +8290,7 @@
     "Thai": "คิวอาร์โค้ด",
     "Dutch": "QR-code",
     "Polish": "Kod QR",
-    "malay_indonesian": "Kode QR",
+    "Malay/Indonesian": "Kode QR",
     "Ukrainian": "QR-код"
   },
   "my_code": {
@@ -8662,7 +8312,7 @@
     "Thai": "รหัสของฉัน",
     "Dutch": "Mijn Code",
     "Polish": "Mój Kod",
-    "malay_indonesian": "Kode Saya",
+    "Malay/Indonesian": "Kode Saya",
     "Ukrainian": "Мій код"
   },
   "qr_code_information": {
@@ -8684,7 +8334,7 @@
     "Thai": "ข้อมูลคิวอาร์โค้ด",
     "Dutch": "QR-code Informatie",
     "Polish": "Informacje o Kodzie QR",
-    "malay_indonesian": "Informasi Kode QR",
+    "Malay/Indonesian": "Informasi Kode QR",
     "Ukrainian": "Інформація про QR-код"
   },
   "got_it": {
@@ -8706,7 +8356,7 @@
     "Thai": "เข้าใจแล้ว",
     "Dutch": "Begrepen",
     "Polish": "Zrozumiałem",
-    "malay_indonesian": "Mengerti",
+    "Malay/Indonesian": "Mengerti",
     "Ukrainian": "Зрозуміло"
   },
   "barcode_type": {
@@ -8728,7 +8378,7 @@
     "Thai": "ประเภทบาร์โค้ด",
     "Dutch": "Barcode Type",
     "Polish": "Typ Kodu Kreskowego",
-    "malay_indonesian": "Jenis Barcode",
+    "Malay/Indonesian": "Jenis Barcode",
     "Ukrainian": "Тип штрих-коду"
   },
   "approvals_requests": {
@@ -8750,7 +8400,7 @@
     "Thai": "การอนุมัติ/คำขอ",
     "Dutch": "Goedkeuringen/Verzoeken",
     "Polish": "Zatwierdzenia/Prośby",
-    "malay_indonesian": "Persetujuan/Permintaan",
+    "Malay/Indonesian": "Persetujuan/Permintaan",
     "Ukrainian": "Затвердження/Запити"
   },
   "enter_here": {
@@ -8772,7 +8422,7 @@
     "Thai": "ป้อนที่นี่",
     "Dutch": "Voer hier in",
     "Polish": "Wprowadź tutaj",
-    "malay_indonesian": "Masukkan di sini",
+    "Malay/Indonesian": "Masukkan di sini",
     "Ukrainian": "Введіть тут"
   },
   "your_customers": {
@@ -8794,7 +8444,7 @@
     "Thai": "ลูกค้าของคุณ",
     "Dutch": "Jouw Klanten",
     "Polish": "Twoi Klienci",
-    "malay_indonesian": "Pelanggan Anda",
+    "Malay/Indonesian": "Pelanggan Anda",
     "Ukrainian": "Ваші клієнти"
   },
   "search": {
@@ -8816,7 +8466,7 @@
     "Thai": "ค้นหา",
     "Dutch": "Zoeken",
     "Polish": "Szukaj",
-    "malay_indonesian": "Cari",
+    "Malay/Indonesian": "Cari",
     "Ukrainian": "Пошук"
   },
   "no_found": {
@@ -8838,7 +8488,7 @@
     "Thai": "ไม่พบ",
     "Dutch": "Niets Gevonden",
     "Polish": "Nie Znaleziono",
-    "malay_indonesian": "Tidak Ditemukan",
+    "Malay/Indonesian": "Tidak Ditemukan",
     "Ukrainian": "Нічого не знайдено"
   },
   "manage": {
@@ -8860,7 +8510,7 @@
     "Thai": "จัดการ",
     "Dutch": "Beheren",
     "Polish": "Zarządzaj",
-    "malay_indonesian": "Kelola",
+    "Malay/Indonesian": "Kelola",
     "Ukrainian": "Керувати"
   },
   "assign_task": {
@@ -8882,7 +8532,7 @@
     "Thai": "มอบหมายงาน",
     "Dutch": "Taak Toewijzen",
     "Polish": "Przypisz Zadanie",
-    "malay_indonesian": "Tugaskan Tugas",
+    "Malay/Indonesian": "Tugaskan Tugas",
     "Ukrainian": "Призначити завдання"
   },
   "search_for_tasks": {
@@ -8904,7 +8554,7 @@
     "Thai": "ค้นหางาน",
     "Dutch": "Zoek naar taken",
     "Polish": "Wyszukaj zadania",
-    "malay_indonesian": "Cari tugas",
+    "Malay/Indonesian": "Cari tugas",
     "Ukrainian": "Шукати завдання"
   },
   "completed_tasks": {
@@ -8926,7 +8576,7 @@
     "Thai": "งานที่เสร็จสิ้น",
     "Dutch": "Voltooide taken",
     "Polish": "Ukończone zadania",
-    "malay_indonesian": "Tugas selesai",
+    "Malay/Indonesian": "Tugas selesai",
     "Ukrainian": "Завершені завдання"
   },
   "pending_tasks": {
@@ -8948,7 +8598,7 @@
     "Thai": "งานที่รอดำเนินการ",
     "Dutch": "Openstaande taken",
     "Polish": "Oczekujące zadania",
-    "malay_indonesian": "Tugas tertunda",
+    "Malay/Indonesian": "Tugas tertunda",
     "Ukrainian": "Завдання в очікуванні"
   },
   "details_for_tasks_no": {
@@ -8970,7 +8620,7 @@
     "Thai": "รายละเอียดสำหรับงานหมายเลข",
     "Dutch": "Details voor taak nr.",
     "Polish": "Szczegóły zadania nr",
-    "malay_indonesian": "Detail untuk tugas no.",
+    "Malay/Indonesian": "Detail untuk tugas no.",
     "Ukrainian": "Деталі для завдання №"
   },
   "create_ticket": {
@@ -8992,7 +8642,7 @@
     "Thai": "สร้างตั๋ว",
     "Dutch": "Ticket aanmaken",
     "Polish": "Utwórz zgłoszenie",
-    "malay_indonesian": "Buat tiket",
+    "Malay/Indonesian": "Buat tiket",
     "Ukrainian": "Створити заявку"
   },
   "online_support": {
@@ -9014,7 +8664,7 @@
     "Thai": "การสนับสนุนออนไลน์",
     "Dutch": "Online Ondersteuning",
     "Polish": "Wsparcie Online",
-    "malay_indonesian": "Dukungan Online",
+    "Malay/Indonesian": "Dukungan Online",
     "Ukrainian": "Онлайн підтримка"
   },
   "site_visit": {
@@ -9036,7 +8686,7 @@
     "Thai": "เยี่ยมชมไซต์",
     "Dutch": "Locatiebezoek",
     "Polish": "Wizyta na miejscu",
-    "malay_indonesian": "Kunjungan Situs",
+    "Malay/Indonesian": "Kunjungan Situs",
     "Ukrainian": "Відвідування об'єкта"
   },
   "site_visit_feature_coming_soon": {
@@ -9058,7 +8708,7 @@
     "Thai": "ฟีเจอร์เยี่ยมชมไซต์จะมาเร็วๆ นี้!",
     "Dutch": "Locatiebezoek functie komt binnenkort!",
     "Polish": "Funkcja wizyty na miejscu wkrótce!",
-    "malay_indonesian": "Fitur kunjungan situs akan segera hadir!",
+    "Malay/Indonesian": "Fitur kunjungan situs akan segera hadir!",
     "Ukrainian": "Функція відвідування об'єкта скоро з'явиться!"
   },
   "close": {
@@ -9080,7 +8730,7 @@
     "Thai": "ปิด",
     "Dutch": "Sluiten",
     "Polish": "Zamknij",
-    "malay_indonesian": "Tutup",
+    "Malay/Indonesian": "Tutup",
     "Ukrainian": "Закрити"
   },
   "select_a_manufacturer": {
@@ -9102,7 +8752,7 @@
     "Thai": "เลือกผู้ผลิต",
     "Dutch": "Selecteer een fabrikant",
     "Polish": "Wybierz producenta",
-    "malay_indonesian": "Pilih produsen",
+    "Malay/Indonesian": "Pilih produsen",
     "Ukrainian": "Оберіть виробника"
   },
   "select_a_machine": {
@@ -9124,30 +8774,8 @@
     "Thai": "เลือกเครื่องจักร",
     "Dutch": "Selecteer een machine",
     "Polish": "Wybierz maszynę",
-    "malay_indonesian": "Pilih mesin",
+    "Malay/Indonesian": "Pilih mesin",
     "Ukrainian": "Оберіть машину"
-  },
-  "warranty_status": {
-    "English": "WARRANTY STATUS",
-    "Hindi": "वारंटी स्थिति",
-    "Chinese (Simplified)": "保修状态",
-    "Spanish": "ESTADO DE GARANTÍA",
-    "Japanese": "保証状況",
-    "German": "GARANTIESTATUS",
-    "French": "STATUT DE GARANTIE",
-    "Arabic": "حالة الضمان",
-    "Portuguese": "STATUS DA GARANTIA",
-    "Russian": "СТАТУС ГАРАНТИИ",
-    "Bengali": "ওয়ারেন্টি স্থিতি",
-    "Turkish": "Garanti durumu",
-    "Italian": "Stato garanzia",
-    "Korean": "보증 상태",
-    "Vietnamese": "Tình trạng bảo hành",
-    "Thai": "สถานะการรับประกัน",
-    "Dutch": "Garantie status",
-    "Polish": "Status gwarancji",
-    "malay_indonesian": "Status garansi",
-    "Ukrainian": "Статус гарантії"
   },
   "ticket_type": {
     "English": "Ticket Type",
@@ -9168,7 +8796,7 @@
     "Thai": "ประเภทตั๋ว",
     "Dutch": "Ticket type",
     "Polish": "Typ zgłoszenia",
-    "malay_indonesian": "Jenis tiket",
+    "Malay/Indonesian": "Jenis tiket",
     "Ukrainian": "Тип заявки"
   },
   "maintenance_type": {
@@ -9190,30 +8818,8 @@
     "Thai": "ประเภทการบำรุงรักษา",
     "Dutch": "Onderhoud type",
     "Polish": "Typ konserwacji",
-    "malay_indonesian": "Jenis pemeliharaan",
+    "Malay/Indonesian": "Jenis pemeliharaan",
     "Ukrainian": "Тип обслуговування"
-  },
-  "general_checkup": {
-    "English": "General Checkup",
-    "Hindi": "सामान्य जांच",
-    "Chinese (Simplified)": "常规检查",
-    "Spanish": "Revisión General",
-    "Japanese": "一般点検",
-    "German": "Allgemeine Überprüfung",
-    "French": "Contrôle général",
-    "Arabic": "فحص عام",
-    "Portuguese": "Verificação Geral",
-    "Russian": "Общая проверка",
-    "Bengali": "সাধারণ পরীক্ষা",
-    "Turkish": "Genel kontrol",
-    "Italian": "Controllo generale",
-    "Korean": "일반 점검",
-    "Vietnamese": "Kiểm tra tổng quát",
-    "Thai": "การตรวจสอบทั่วไป",
-    "Dutch": "Algemene controle",
-    "Polish": "Kontrola ogólna",
-    "malay_indonesian": "Pemeriksaan umum",
-    "Ukrainian": "Загальна перевірка"
   },
   "full_machine_service": {
     "English": "Full Machine Service",
@@ -9234,7 +8840,7 @@
     "Thai": "บริการเครื่องจักรเต็มรูปแบบ",
     "Dutch": "Volledige machine service",
     "Polish": "Pełny serwis maszyny",
-    "malay_indonesian": "Layanan mesin lengkap",
+    "Malay/Indonesian": "Layanan mesin lengkap",
     "Ukrainian": "Повне обслуговування машини"
   },
   "error_code_if_available": {
@@ -9256,7 +8862,7 @@
     "Thai": "รหัสข้อผิดพลาด (หากมี)",
     "Dutch": "Foutcode (indien beschikbaar)",
     "Polish": "Kod błędu (jeśli dostępny)",
-    "malay_indonesian": "Kode error (jika tersedia)",
+    "Malay/Indonesian": "Kode error (jika tersedia)",
     "Ukrainian": "Код помилки (якщо доступний)"
   },
   "uploading_files": {
@@ -9278,30 +8884,8 @@
     "Thai": "กำลังอัปโหลดไฟล์...",
     "Dutch": "Bestanden uploaden...",
     "Polish": "Przesyłanie plików...",
-    "malay_indonesian": "Mengunggah file...",
+    "Malay/Indonesian": "Mengunggah file...",
     "Ukrainian": "Завантаження файлів..."
-  },
-  "selected_files": {
-    "English": "Selected Files",
-    "Hindi": "चयनित फाइलें",
-    "Chinese (Simplified)": "选定文件",
-    "Spanish": "Archivos Seleccionados",
-    "Japanese": "選択されたファイル",
-    "German": "Ausgewählte Dateien",
-    "French": "Fichiers sélectionnés",
-    "Arabic": "الملفات المحددة",
-    "Portuguese": "Arquivos Selecionados",
-    "Russian": "Выбранные файлы",
-    "Bengali": "নির্বাচিত ফাইল",
-    "Turkish": "Seçilen dosyalar",
-    "Italian": "File selezionati",
-    "Korean": "선택된 파일",
-    "Vietnamese": "Tệp đã chọn",
-    "Thai": "ไฟล์ที่เลือก",
-    "Dutch": "Geselecteerde bestanden",
-    "Polish": "Wybrane pliki",
-    "malay_indonesian": "File yang dipilih",
-    "Ukrainian": "Вибрані файли"
   },
   "uploaded_attachments": {
     "English": "Uploaded Attachments",
@@ -9322,7 +8906,7 @@
     "Thai": "ไฟล์แนบที่อัปโหลด",
     "Dutch": "Geüploade bijlagen",
     "Polish": "Przesłane załączniki",
-    "malay_indonesian": "Lampiran yang diunggah",
+    "Malay/Indonesian": "Lampiran yang diunggah",
     "Ukrainian": "Завантажені вкладення"
   },
   "add_media": {
@@ -9344,30 +8928,8 @@
     "Thai": "เพิ่มสื่อ",
     "Dutch": "Media toevoegen",
     "Polish": "Dodaj media",
-    "malay_indonesian": "Tambah media",
+    "Malay/Indonesian": "Tambah media",
     "Ukrainian": "Додати медіа"
-  },
-  "additional_notes": {
-    "English": "Additional notes",
-    "Hindi": "अतिरिक्त नोट्स",
-    "Chinese (Simplified)": "附加说明",
-    "Spanish": "Notas adicionales",
-    "Japanese": "追加メモ",
-    "German": "Zusätzliche Notizen",
-    "French": "Notes supplémentaires",
-    "Arabic": "ملاحظات إضافية",
-    "Portuguese": "Notas adicionais",
-    "Russian": "Дополнительные заметки",
-    "Bengali": "অতিরিক্ত নোট",
-    "Turkish": "Ek notlar",
-    "Italian": "Note aggiuntive",
-    "Korean": "추가 메모",
-    "Vietnamese": "Ghi chú bổ sung",
-    "Thai": "หมายเหตุเพิ่มเติม",
-    "Dutch": "Aanvullende opmerkingen",
-    "Polish": "Dodatkowe uwagi",
-    "malay_indonesian": "Catatan tambahan",
-    "Ukrainian": "Додаткові примітки"
   },
   "add_more_information": {
     "English": "Add More Information",
@@ -9388,30 +8950,8 @@
     "Thai": "เพิ่มข้อมูลเพิ่มเติม",
     "Dutch": "Meer informatie toevoegen",
     "Polish": "Dodaj więcej informacji",
-    "malay_indonesian": "Tambah informasi lebih lanjut",
+    "Malay/Indonesian": "Tambah informasi lebih lanjut",
     "Ukrainian": "Додати більше інформації"
-  },
-  "submit_ticket": {
-    "English": "Submit Ticket",
-    "Hindi": "टिकट जमा करें",
-    "Chinese (Simplified)": "提交工单",
-    "Spanish": "Enviar Ticket",
-    "Japanese": "チケットを送信",
-    "German": "Ticket einreichen",
-    "French": "Soumettre le ticket",
-    "Arabic": "إرسال التذكرة",
-    "Portuguese": "Enviar Ticket",
-    "Russian": "Отправить заявку",
-    "Bengali": "টিকিট জমা দিন",
-    "Turkish": "Bilet gönder",
-    "Italian": "Invia ticket",
-    "Korean": "티켓 제출",
-    "Vietnamese": "Gửi vé",
-    "Thai": "ส่งตั๋ว",
-    "Dutch": "Ticket indienen",
-    "Polish": "Wyślij zgłoszenie",
-    "malay_indonesian": "Kirim tiket",
-    "Ukrainian": "Подати заявку"
   },
   "select_maintenance_type": {
     "English": "Select Maintenance Type",
@@ -9432,7 +8972,7 @@
     "Thai": "เลือกประเภทการบำรุงรักษา",
     "Dutch": "Onderhoudstype selecteren",
     "Polish": "Wybierz typ konserwacji",
-    "malay_indonesian": "Pilih Jenis Penyelenggaraan",
+    "Malay/Indonesian": "Pilih Jenis Penyelenggaraan",
     "Ukrainian": "Виберіть тип обслуговування"
   },
   "select_any_one_option_at_a_time": {
@@ -9454,7 +8994,7 @@
     "Thai": "เลือกตัวเลือกหนึ่งครั้ง",
     "Dutch": "Selecteer één optie tegelijk",
     "Polish": "Wybierz jedną opcję na raz",
-    "malay_indonesian": "Pilih satu pilihan pada satu masa",
+    "Malay/Indonesian": "Pilih satu pilihan pada satu masa",
     "Ukrainian": "Виберіть один варіант за раз"
   },
   "general_check_up": {
@@ -9476,7 +9016,7 @@
     "Thai": "การตรวจสอบทั่วไป",
     "Dutch": "Algemene controle",
     "Polish": "Ogólna kontrola",
-    "malay_indonesian": "Pemeriksaan Umum",
+    "Malay/Indonesian": "Pemeriksaan Umum",
     "Ukrainian": "Загальна перевірка"
   },
   "update_key_business_details_locations_and_units": {
@@ -9498,7 +9038,7 @@
     "Thai": "อัปเดตรายละเอียดธุรกิจสำคัญ สถานที่ และหน่วย",
     "Dutch": "Update belangrijke bedrijfsgegevens, locaties en eenheden",
     "Polish": "Zaktualizuj kluczowe szczegóły biznesowe, lokalizacje i jednostki",
-    "malay_indonesian": "Perbarui detail bisnis utama, lokasi dan unit",
+    "Malay/Indonesian": "Perbarui detail bisnis utama, lokasi dan unit",
     "Ukrainian": "Оновити ключові бізнес-деталі, місцезнаходження та підрозділи"
   },
   "update_key_business_details": {
@@ -9520,7 +9060,7 @@
     "Thai": "อัปเดตรายละเอียดธุรกิจสำคัญ",
     "Dutch": "Update belangrijke bedrijfsgegevens",
     "Polish": "Zaktualizuj kluczowe szczegóły biznesowe",
-    "malay_indonesian": "Perbarui detail bisnis utama",
+    "Malay/Indonesian": "Perbarui detail bisnis utama",
     "Ukrainian": "Оновити ключові бізнес-деталі"
   },
   "manage_your_alerts_and_notifications": {
@@ -9542,7 +9082,7 @@
     "Thai": "จัดการการแจ้งเตือนและการแจ้งเตือนของคุณ",
     "Dutch": "Beheer je waarschuwingen en meldingen",
     "Polish": "Zarządzaj swoimi alertami i powiadomieniami",
-    "malay_indonesian": "Kelola peringatan dan notifikasi Anda",
+    "Malay/Indonesian": "Kelola peringatan dan notifikasi Anda",
     "Ukrainian": "Керуйте своїми сповіщеннями та повідомленнями"
   },
   "app_preferences_and_security": {
@@ -9564,7 +9104,7 @@
     "Thai": "การตั้งค่าแอปและความปลอดภัย",
     "Dutch": "App voorkeuren en beveiliging",
     "Polish": "Preferencje aplikacji i bezpieczeństwo",
-    "malay_indonesian": "Preferensi aplikasi dan keamanan",
+    "Malay/Indonesian": "Preferensi aplikasi dan keamanan",
     "Ukrainian": "Налаштування додатку та безпека"
   },
   "help_and_support": {
@@ -9586,7 +9126,7 @@
     "Thai": "ความช่วยเหลือและการสนับสนุน",
     "Dutch": "Hulp en ondersteuning",
     "Polish": "Pomoc i wsparcie",
-    "malay_indonesian": "Bantuan dan dukungan",
+    "Malay/Indonesian": "Bantuan dan dukungan",
     "Ukrainian": "Довідка та підтримка"
   },
   "sign_out_from_your_account": {
@@ -9608,7 +9148,7 @@
     "Thai": "ออกจากระบบบัญชีของคุณ",
     "Dutch": "Uitloggen van je account",
     "Polish": "Wyloguj się ze swojego konta",
-    "malay_indonesian": "Keluar dari akun Anda",
+    "Malay/Indonesian": "Keluar dari akun Anda",
     "Ukrainian": "Вийти з вашого облікового запису"
   },
   "invite_a_contact": {
@@ -9630,7 +9170,7 @@
     "Thai": "เชิญผู้ติดต่อ",
     "Dutch": "Een contact uitnodigen",
     "Polish": "Zaproś kontakt",
-    "malay_indonesian": "Undang kontak",
+    "Malay/Indonesian": "Undang kontak",
     "Ukrainian": "Запросити контакт"
   },
   "invite": {
@@ -9652,7 +9192,7 @@
     "Thai": "เชิญ",
     "Dutch": "Uitnodigen",
     "Polish": "Zaproś",
-    "malay_indonesian": "Undang",
+    "Malay/Indonesian": "Undang",
     "Ukrainian": "Запросити"
   },
   "by_using_this_app_you_agree_to_our": {
@@ -9674,7 +9214,7 @@
     "Thai": "โดยการใช้แอปนี้ คุณยอมรับ",
     "Dutch": "Door deze app te gebruiken, ga je akkoord met onze",
     "Polish": "Używając tej aplikacji, zgadzasz się z naszymi",
-    "malay_indonesian": "Dengan menggunakan aplikasi ini, Anda setuju dengan",
+    "Malay/Indonesian": "Dengan menggunakan aplikasi ini, Anda setuju dengan",
     "Ukrainian": "Використовуючи цей додаток, ви погоджуєтесь з нашими"
   },
   "member": {
@@ -9696,7 +9236,7 @@
     "Thai": "สมาชิก",
     "Dutch": "Lid",
     "Polish": "Członek",
-    "malay_indonesian": "Anggota",
+    "Malay/Indonesian": "Anggota",
     "Ukrainian": "Учасник"
   },
   "download": {
@@ -9718,7 +9258,7 @@
     "Thai": "ดาวน์โหลด",
     "Dutch": "Downloaden",
     "Polish": "Pobierz",
-    "Malay/indonesian": "Unduh",
+    "Malay/Indonesian": "Unduh",
     "Ukrainian": "Завантажити"
   },
   "apply_for_leave": {
@@ -9740,7 +9280,7 @@
     "Thai": "ยื่นขอลา",
     "Dutch": "Verlof aanvragen",
     "Polish": "Złóż wniosek o urlop",
-    "Malay/indonesian": "Ajukan Cuti",
+    "Malay/Indonesian": "Ajukan Cuti",
     "Ukrainian": "Подати заяву на відпустку"
   },
   "apply_for_machine_request": {
@@ -9762,7 +9302,7 @@
     "Thai": "ยื่นคำขอเครื่อง",
     "Dutch": "Machineaanvraag indienen",
     "Polish": "Złóż wniosek o maszynę",
-    "Malay/indonesian": "Ajukan Permintaan Mesin",
+    "Malay/Indonesian": "Ajukan Permintaan Mesin",
     "Ukrainian": "Подати заявку на обладнання"
   },
   "apply_for_advance_pay": {
@@ -9784,7 +9324,7 @@
     "Thai": "ยื่นขอเบิกล่วงหน้า",
     "Dutch": "Voorschot aanvragen",
     "Polish": "Złóż wniosek o zaliczkę",
-    "Malay/indonesian": "Ajukan Gaji Muka",
+    "Malay/Indonesian": "Ajukan Gaji Muka",
     "Ukrainian": "Подати заяву на аванс"
   },
   "apply_for": {
@@ -9806,7 +9346,7 @@
     "Thai": "สมัครสำหรับ",
     "Dutch": "Aanvragen voor",
     "Polish": "Zastosuj dla",
-    "Malay/indonesian": "Ajukan untuk",
+    "Malay/Indonesian": "Ajukan untuk",
     "Ukrainian": "Подати заявку на"
   },
   "please_enter_organization_name": {
@@ -9828,7 +9368,7 @@
     "Thai": "โปรดระบุชื่อองค์กร",
     "Dutch": "Voer de naam van de organisatie in",
     "Polish": "Proszę podać nazwę organizacji",
-    "Malay/indonesian": "Harap masukkan nama organisasi",
+    "Malay/Indonesian": "Harap masukkan nama organisasi",
     "Ukrainian": "Будь ласка, введіть назву організації"
   },
   "please_select_a_machine": {
@@ -9850,52 +9390,8 @@
     "Thai": "โปรดเลือกเครื่องจักร",
     "Dutch": "Selecteer een machine",
     "Polish": "Proszę wybrać maszynę",
-    "Malay/indonesian": "Harap pilih mesin",
+    "Malay/Indonesian": "Harap pilih mesin",
     "Ukrainian": "Будь ласка, виберіть машину"
-  },
-  "purchase_date": {
-    "English": "Purchase date",
-    "Hindi": "खरीद की तारीख",
-    "Chinese (Simplified)": "购买日期",
-    "Spanish": "Fecha de compra",
-    "Japanese": "購入日",
-    "German": "Kaufdatum",
-    "French": "Date d'achat",
-    "Arabic": "تاريخ الشراء",
-    "Portuguese": "Data de compra",
-    "Russian": "Дата покупки",
-    "Bengali": "ক্রয়ের তারিখ",
-    "Turkish": "Satın Alma Tarihi",
-    "Italian": "Data di acquisto",
-    "Korean": "구매일",
-    "Vietnamese": "Ngày mua",
-    "Thai": "วันที่ซื้อ",
-    "Dutch": "Aankoopdatum",
-    "Polish": "Data zakupu",
-    "Malay/indonesian": "Tanggal Pembelian",
-    "Ukrainian": "Дата покупки"
-  },
-  "installation_date": {
-    "English": "Installation date",
-    "Hindi": "स्थापना की तारीख",
-    "Chinese (Simplified)": "安装日期",
-    "Spanish": "Fecha de instalación",
-    "Japanese": "設置日",
-    "German": "Installationsdatum",
-    "French": "Date d'installation",
-    "Arabic": "تاريخ التركيب",
-    "Portuguese": "Data de instalação",
-    "Russian": "Дата установки",
-    "Bengali": "ইনস্টলেশনের তারিখ",
-    "Turkish": "Kurulum Tarihi",
-    "Italian": "Data di installazione",
-    "Korean": "설치일",
-    "Vietnamese": "Ngày cài đặt",
-    "Thai": "วันที่ติดตั้ง",
-    "Dutch": "Installatiedatum",
-    "Polish": "Data instalacji",
-    "Malay/indonesian": "Tanggal Pemasangan",
-    "Ukrainian": "Дата встановлення"
   },
   "start_date": {
     "English": "Start date",
@@ -9916,7 +9412,7 @@
     "Thai": "วันที่เริ่มต้น",
     "Dutch": "Startdatum",
     "Polish": "Data rozpoczęcia",
-    "Malay/indonesian": "Tanggal Mulai",
+    "Malay/Indonesian": "Tanggal Mulai",
     "Ukrainian": "Дата початку"
   },
   "expiration_date": {
@@ -9938,7 +9434,7 @@
     "Thai": "วันที่หมดอายุ",
     "Dutch": "Vervaldatum",
     "Polish": "Data ważności",
-    "Malay/indonesian": "Tanggal Kedaluwarsa",
+    "Malay/Indonesian": "Tanggal Kedaluwarsa",
     "Ukrainian": "Термін дії"
   },
   "service_charge_required": {
@@ -9960,7 +9456,7 @@
     "Thai": "จำเป็นต้องมีค่าบริการ",
     "Dutch": "Servicekosten vereist",
     "Polish": "Opłata serwisowa wymagana",
-    "Malay/indonesian": "Biaya Layanan Diperlukan",
+    "Malay/Indonesian": "Biaya Layanan Diperlukan",
     "Ukrainian": "Потрібна плата за обслуговування"
   },
   "no_charge": {
@@ -9982,7 +9478,7 @@
     "Thai": "ไม่มีค่าใช้จ่าย",
     "Dutch": "Geen kosten",
     "Polish": "Bez opłat",
-    "Malay/indonesian": "Tidak Ada Biaya",
+    "Malay/Indonesian": "Tidak Ada Biaya",
     "Ukrainian": "Безкоштовно"
   },
   "please_describe_the_problem": {
@@ -10004,7 +9500,7 @@
     "Thai": "โปรดอธิบายปัญหา",
     "Dutch": "Beschrijf het probleem alstublieft",
     "Polish": "Proszę opisać problem",
-    "Malay/indonesian": "Harap jelaskan masalahnya",
+    "Malay/Indonesian": "Harap jelaskan masalahnya",
     "Ukrainian": "Будь ласка, опишіть проблему"
   },
   "expired": {
@@ -10026,7 +9522,7 @@
     "Thai": "หมดอายุ",
     "Dutch": "Verlopen",
     "Polish": "Wygasły",
-    "Malay/indonesian": "Kedaluwarsa",
+    "Malay/Indonesian": "Kedaluwarsa",
     "Ukrainian": "Термін дії закінчився"
   },
   "please_enter_heading": {
@@ -10048,7 +9544,7 @@
     "Thai": "โปรดระบุหัวข้อ",
     "Dutch": "Voer de kop in",
     "Polish": "Proszę wprowadzić nagłówek",
-    "Malay/indonesian": "Harap masukkan judul",
+    "Malay/Indonesian": "Harap masukkan judul",
     "Ukrainian": "Будь ласка, введіть заголовок"
   },
   "description": {
@@ -10070,7 +9566,7 @@
     "Thai": "คำอธิบาย",
     "Dutch": "Beschrijving",
     "Polish": "Opis",
-    "Malay/indonesian": "Deskripsi",
+    "Malay/Indonesian": "Deskripsi",
     "Ukrainian": "Опис"
   },
   "heading": {
@@ -10092,7 +9588,7 @@
     "Thai": "หัวข้อ",
     "Dutch": "Kop",
     "Polish": "Nagłówek",
-    "Malay/indonesian": "Judul",
+    "Malay/Indonesian": "Judul",
     "Ukrainian": "Заголовок"
   },
   "please_enter_description": {
@@ -10114,7 +9610,7 @@
     "Thai": "โปรดระบุคำอธิบาย",
     "Dutch": "Voer de beschrijving in",
     "Polish": "Proszę wprowadzić opis",
-    "Malay/indonesian": "Harap masukkan deskripsi",
+    "Malay/Indonesian": "Harap masukkan deskripsi",
     "Ukrainian": "Будь ласка, введіть опис"
   },
   "days": {
@@ -10136,7 +9632,7 @@
     "Thai": "วัน",
     "Dutch": "Dagen",
     "Polish": "Dni",
-    "Malay/indonesian": "Hari",
+    "Malay/Indonesian": "Hari",
     "Ukrainian": "Дні"
   },
   "hours": {
@@ -10158,7 +9654,7 @@
     "Thai": "ชั่วโมง",
     "Dutch": "Uren",
     "Polish": "Godziny",
-    "Malay/indonesian": "Jam",
+    "Malay/Indonesian": "Jam",
     "Ukrainian": "Години"
   },
   "mins": {
@@ -10180,7 +9676,7 @@
     "Thai": "นาที",
     "Dutch": "Minuten",
     "Polish": "Minuty",
-    "Malay/indonesian": "Menit",
+    "Malay/Indonesian": "Menit",
     "Ukrainian": "Хвилини"
   },
   "chat": {
@@ -10202,30 +9698,8 @@
     "Thai": "แชท",
     "Dutch": "Chat",
     "Polish": "Czat",
-    "Malay/indonesian": "Obrolan",
+    "Malay/Indonesian": "Obrolan",
     "Ukrainian": "Чат"
-  },
-  "in_warranty": {
-    "English": "In warranty",
-    "Hindi": "वारंटी में",
-    "Chinese (Simplified)": "在保修期内",
-    "Spanish": "En garantía",
-    "Japanese": "保証期間内",
-    "German": "Unter Garantie",
-    "French": "Sous garantie",
-    "Arabic": "تحت الضمان",
-    "Portuguese": "Na garantia",
-    "Russian": "На гарантии",
-    "Bengali": "ওয়ারেন্টিতে",
-    "Turkish": "Garanti Kapsamında",
-    "Italian": "In garanzia",
-    "Korean": "보증 중",
-    "Vietnamese": "Trong thời gian bảo hành",
-    "Thai": "ในประกัน",
-    "Dutch": "Binnen garantie",
-    "Polish": "Na gwarancji",
-    "Malay/indonesian": "Dalam Garansi",
-    "Ukrainian": "На гарантії"
   },
   "details": {
     "English": "Details",
@@ -10246,7 +9720,7 @@
     "Thai": "รายละเอียด",
     "Dutch": "Details",
     "Polish": "Szczegóły",
-    "Malay/indonesian": "Detail",
+    "Malay/Indonesian": "Detail",
     "Ukrainian": "Деталі"
   },
   "not_started": {
@@ -10268,7 +9742,7 @@
     "Thai": "ยังไม่เริ่ม",
     "Dutch": "Niet gestart",
     "Polish": "Nie rozpoczęto",
-    "Malay/indonesian": "Belum Dimulai",
+    "Malay/Indonesian": "Belum Dimulai",
     "Ukrainian": "Не розпочато"
   },
   "no_active_tickets_found": {
@@ -10290,7 +9764,7 @@
     "Thai": "ไม่พบตั๋วที่ใช้งานอยู่",
     "Dutch": "Geen actieve tickets gevonden",
     "Polish": "Nie znaleziono aktywnych zgłoszeń",
-    "Malay/indonesian": "Tidak ada tiket aktif yang ditemukan",
+    "Malay/Indonesian": "Tidak ada tiket aktif yang ditemukan",
     "Ukrainian": "Активних квитків не знайдено"
   },
   "no_resolved_tickets_found": {
@@ -10312,7 +9786,7 @@
     "Thai": "ไม่พบตั๋วที่แก้ไขแล้ว",
     "Dutch": "Geen opgeloste tickets gevonden",
     "Polish": "Nie znaleziono rozwiązanych zgłoszeń",
-    "Malay/indonesian": "Tidak ada tiket yang diselesaikan",
+    "Malay/Indonesian": "Tidak ada tiket yang diselesaikan",
     "Ukrainian": "Вирішених квитків не знайдено"
   },
   "create_a_ticket_to_get_support": {
@@ -10334,7 +9808,7 @@
     "Thai": "สร้างตั๋วเพื่อรับการสนับสนุน",
     "Dutch": "Maak een ticket aan voor ondersteuning",
     "Polish": "Utwórz zgłoszenie, aby uzyskać wsparcie",
-    "Malay/indonesian": "Buat tiket untuk mendapatkan dukungan",
+    "Malay/Indonesian": "Buat tiket untuk mendapatkan dukungan",
     "Ukrainian": "Створіть квиток для отримання підтримки"
   },
   "all_your_resolved_tickets_will_appear_here": {
@@ -10356,7 +9830,7 @@
     "Thai": "ตั๋วที่แก้ไขแล้วทั้งหมดของคุณจะปรากฏที่นี่",
     "Dutch": "Al uw opgeloste tickets verschijnen hier",
     "Polish": "Wszystkie rozwiązane zgłoszenia pojawią się tutaj",
-    "Malay/indonesian": "Semua tiket Anda yang diselesaikan akan muncul di sini",
+    "Malay/Indonesian": "Semua tiket Anda yang diselesaikan akan muncul di sini",
     "Ukrainian": "Усі ваші вирішені квитки з'являться тут"
   },
   "choose_from_gallery": {
@@ -10378,7 +9852,7 @@
     "Thai": "เลือกจากแกลเลอรี",
     "Dutch": "Kiezen uit galerij",
     "Polish": "Wybierz z galerii",
-    "Malay/indonesian": "Pilih dari galeri",
+    "Malay/Indonesian": "Pilih dari galeri",
     "Ukrainian": "Вибрати з галереї"
   },
   "cancel": {
@@ -10400,7 +9874,7 @@
     "Thai": "ยกเลิก",
     "Dutch": "Annuleren",
     "Polish": "Anuluj",
-    "Malay/indonesian": "Batal",
+    "Malay/Indonesian": "Batal",
     "Ukrainian": "Скасувати"
   },
   "scan_from_camera": {
@@ -10422,7 +9896,7 @@
     "Thai": "สแกนจากกล้อง",
     "Dutch": "Scannen vanaf camera",
     "Polish": "Skanuj z aparatu",
-    "Malay/indonesian": "Pindai dari kamera",
+    "Malay/Indonesian": "Pindai dari kamera",
     "Ukrainian": "Сканувати з камери"
   },
   "open_camera_and_point_at_the_qr_code": {
@@ -10444,7 +9918,7 @@
     "Thai": "เปิดกล้องแล้วชี้ไปที่รหัส QR",
     "Dutch": "Open de camera en richt op de QR-code",
     "Polish": "Otwórz aparat i skieruj na kod QR",
-    "Malay/indonesian": "Buka kamera dan arahkan ke kode QR",
+    "Malay/Indonesian": "Buka kamera dan arahkan ke kode QR",
     "Ukrainian": "Відкрийте камеру та наведіть на QR-код"
   },
   "scan_from_gallery": {
@@ -10466,7 +9940,7 @@
     "Thai": "สแกนจากแกลเลอรี",
     "Dutch": "Scannen vanuit galerij",
     "Polish": "Skanuj z galerii",
-    "Malay/indonesian": "Pindai dari galeri",
+    "Malay/Indonesian": "Pindai dari galeri",
     "Ukrainian": "Сканувати з галереї"
   },
   "select_an_image_from_the_gallery": {
@@ -10488,7 +9962,7 @@
     "Thai": "เลือกรูปภาพจากแกลเลอรี",
     "Dutch": "Selecteer een afbeelding uit de galerij",
     "Polish": "Wybierz obraz z galerii",
-    "Malay/indonesian": "Pilih gambar dari galeri",
+    "Malay/Indonesian": "Pilih gambar dari galeri",
     "Ukrainian": "Виберіть зображення з галереї"
   },
   "search_by_phone_number": {
@@ -10510,7 +9984,7 @@
     "Thai": "ค้นหาด้วยหมายเลขโทรศัพท์",
     "Dutch": "Zoeken op telefoonnummer",
     "Polish": "Szukaj po numerze telefonu",
-    "Malay/indonesian": "Cari berdasarkan nomor telepon",
+    "Malay/Indonesian": "Cari berdasarkan nomor telepon",
     "Ukrainian": "Пошук за номером телефону"
   },
   "find_by_entering_a_phone_number": {
@@ -10532,7 +10006,7 @@
     "Thai": "ค้นหาโดยป้อนหมายเลขโทรศัพท์",
     "Dutch": "Vind door een telefoonnummer in te voeren",
     "Polish": "Znajdź, wprowadzając numer telefonu",
-    "Malay/indonesian": "Temukan dengan memasukkan nomor telepon",
+    "Malay/Indonesian": "Temukan dengan memasukkan nomor telepon",
     "Ukrainian": "Знайти, ввівши номер телефону"
   },
   "search_by_email": {
@@ -10554,7 +10028,7 @@
     "Thai": "ค้นหาด้วยอีเมล",
     "Dutch": "Zoeken op e-mail",
     "Polish": "Szukaj po adresie e-mail",
-    "Malay/indonesian": "Cari berdasarkan email",
+    "Malay/Indonesian": "Cari berdasarkan email",
     "Ukrainian": "Пошук за електронною поштою"
   },
   "find_by_entering_an_email": {
@@ -10576,30 +10050,8 @@
     "Thai": "ค้นหาโดยป้อนอีเมล",
     "Dutch": "Vind door een e-mailadres in te voeren",
     "Polish": "Znajdź, wprowadzając adres e-mail",
-    "Malay/indonesian": "Temukan dengan memasukkan email",
+    "Malay/Indonesian": "Temukan dengan memasukkan email",
     "Ukrainian": "Знайти, ввівши електронну пошту"
-  },
-  "add_new": {
-    "English": "Add new",
-    "Hindi": "नया जोड़ें",
-    "Chinese (Simplified)": "添加新的",
-    "Spanish": "Agregar nuevo",
-    "Japanese": "新規追加",
-    "German": "Neu hinzufügen",
-    "French": "Ajouter nouveau",
-    "Arabic": "إضافة جديد",
-    "Portuguese": "Adicionar novo",
-    "Russian": "Добавить новый",
-    "Bengali": "নতুন যোগ করুন",
-    "Turkish": "Yeni Ekle",
-    "Italian": "Aggiungi nuovo",
-    "Korean": "새로 추가",
-    "Vietnamese": "Thêm mới",
-    "Thai": "เพิ่มใหม่",
-    "Dutch": "Nieuw toevoegen",
-    "Polish": "Dodaj nowy",
-    "Malay/indonesian": "Tambah Baru",
-    "Ukrainian": "Додати новий"
   },
   "create_a_new_manually": {
     "English": "Create a new manually",
@@ -10620,7 +10072,7 @@
     "Thai": "สร้างใหม่ด้วยตนเอง",
     "Dutch": "Maak handmatig een nieuwe aan",
     "Polish": "Utwórz nowy ręcznie",
-    "Malay/indonesian": "Buat yang baru secara manual",
+    "Malay/Indonesian": "Buat yang baru secara manual",
     "Ukrainian": "Створити новий вручну"
   },
   "machine_type": {
@@ -10642,30 +10094,8 @@
     "Thai": "ประเภทเครื่องจักร",
     "Dutch": "Machinetype",
     "Polish": "Typ maszyny",
-    "Malay/indonesian": "Tipe Mesin",
+    "Malay/Indonesian": "Tipe Mesin",
     "Ukrainian": "Тип машини"
-  },
-  "fully_automatic": {
-    "English": "Fully Automatic",
-    "Hindi": "पूर्णतः स्वचालित",
-    "Chinese (Simplified)": "全自动",
-    "Spanish": "Completamente Automático",
-    "Japanese": "フルオートマチック",
-    "German": "Vollautomatisch",
-    "French": "Entièrement Automatique",
-    "Arabic": "أوتوماتيكي بالكامل",
-    "Portuguese": "Totalmente Automático",
-    "Russian": "Полностью Автоматический",
-    "Bengali": "সম্পূর্ণ স্বয়ংক্রিয়",
-    "Turkish": "Tam Otomatik",
-    "Italian": "Completamente Automatico",
-    "Korean": "완전 자동",
-    "Vietnamese": "Hoàn toàn Tự động",
-    "Thai": "อัตโนมัติเต็มรูปแบบ",
-    "Dutch": "Volledig Automatisch",
-    "Polish": "W pełni Automatyczny",
-    "Malay/indonesian": "Sepenuhnya Otomatis",
-    "Ukrainian": "Повністю Автоматичний"
   },
   "power_information": {
     "English": "Power information",
@@ -10686,118 +10116,8 @@
     "Thai": "ข้อมูลพลังงาน",
     "Dutch": "Stroominformatie",
     "Polish": "Informacje o zasilaniu",
-    "Malay/indonesian": "Informasi Daya",
+    "Malay/Indonesian": "Informasi Daya",
     "Ukrainian": "Інформація про живлення"
-  },
-  "power_consumption": {
-    "English": "Power consumption",
-    "Hindi": "विद्युत खपत",
-    "Chinese (Simplified)": "功耗",
-    "Spanish": "Consumo de energía",
-    "Japanese": "消費電力",
-    "German": "Energieverbrauch",
-    "French": "Consommation d'énergie",
-    "Arabic": "استهلاك الطاقة",
-    "Portuguese": "Consumo de energia",
-    "Russian": "Потребление энергии",
-    "Bengali": "বিদ্যুৎ খরচ",
-    "Turkish": "Güç Tüketimi",
-    "Italian": "Consumo energetico",
-    "Korean": "전력 소비",
-    "Vietnamese": "Tiêu thụ điện năng",
-    "Thai": "การใช้พลังงาน",
-    "Dutch": "Stroomverbruik",
-    "Polish": "Pobór mocy",
-    "Malay/indonesian": "Konsumsi Daya",
-    "Ukrainian": "Споживання енергії"
-  },
-  "machine_ownership": {
-    "English": "Machine ownership",
-    "Hindi": "मशीन का स्वामित्व",
-    "Chinese (Simplified)": "机器所有权",
-    "Spanish": "Propiedad de la máquina",
-    "Japanese": "機械の所有権",
-    "German": "Maschinenbesitz",
-    "French": "Propriété de la machine",
-    "Arabic": "ملكية الآلة",
-    "Portuguese": "Propriedade da máquina",
-    "Russian": "Владение машиной",
-    "Bengali": "মেশিনের মালিকানা",
-    "Turkish": "Makine Sahipliği",
-    "Italian": "Proprietà della macchina",
-    "Korean": "기기 소유권",
-    "Vietnamese": "Quyền sở hữu máy",
-    "Thai": "กรรมสิทธิ์เครื่องจักร",
-    "Dutch": "Machine eigendom",
-    "Polish": "Własność maszyny",
-    "Malay/indonesian": "Kepemilikan Mesin",
-    "Ukrainian": "Право власності на машину"
-  },
-  "warranty_start": {
-    "English": "Warranty start",
-    "Hindi": "वारंटी शुरुआत",
-    "Chinese (Simplified)": "保修开始",
-    "Spanish": "Inicio de garantía",
-    "Japanese": "保証開始",
-    "German": "Garantiebeginn",
-    "French": "Début de garantie",
-    "Arabic": "بداية الضمان",
-    "Portuguese": "Início da garantia",
-    "Russian": "Начало гарантии",
-    "Bengali": "ওয়ারেন্টি শুরু",
-    "Turkish": "Garanti Başlangıcı",
-    "Italian": "Inizio garanzia",
-    "Korean": "보증 시작",
-    "Vietnamese": "Bắt đầu bảo hành",
-    "Thai": "เริ่มต้นการรับประกัน",
-    "Dutch": "Garantie start",
-    "Polish": "Początek gwarancji",
-    "Malay/indonesian": "Garansi Mulai",
-    "Ukrainian": "Початок гарантії"
-  },
-  "warranty_end": {
-    "English": "Warranty end",
-    "Hindi": "वारंटी समाप्ति",
-    "Chinese (Simplified)": "保修结束",
-    "Spanish": "Fin de garantía",
-    "Japanese": "保証終了",
-    "German": "Garantieende",
-    "French": "Fin de garantie",
-    "Arabic": "نهاية الضمان",
-    "Portuguese": "Fim da garantia",
-    "Russian": "Окончание гарантии",
-    "Bengali": "ওয়ারেন্টি শেষ",
-    "Turkish": "Garanti Bitişi",
-    "Italian": "Fine garanzia",
-    "Korean": "보증 종료",
-    "Vietnamese": "Kết thúc bảo hành",
-    "Thai": "สิ้นสุดการรับประกัน",
-    "Dutch": "Garantie einde",
-    "Polish": "Koniec gwarancji",
-    "Malay/indonesian": "Garansi Berakhir",
-    "Ukrainian": "Кінець гарантії"
-  },
-  "out_of_warranty": {
-    "English": "Out of warranty",
-    "Hindi": "वारंटी से बाहर",
-    "Chinese (Simplified)": "保修期外",
-    "Spanish": "Fuera de garantía",
-    "Japanese": "保証期間外",
-    "German": "Außerhalb der Garantie",
-    "French": "Hors garantie",
-    "Arabic": "خارج الضمان",
-    "Portuguese": "Fora da garantia",
-    "Russian": "Вне гарантии",
-    "Bengali": "ওয়ারেন্টির বাইরে",
-    "Turkish": "Garanti Dışı",
-    "Italian": "Fuori garanzia",
-    "Korean": "보증 기간 만료",
-    "Vietnamese": "Hết bảo hành",
-    "Thai": "นอกการรับประกัน",
-    "Dutch": "Buiten garantie",
-    "Polish": "Po gwarancji",
-    "Malay/indonesian": "Di Luar Garansi",
-    "Ukrainian": "Без гарантії"
   },
   "edit": {
     "English": "Edit",
@@ -10818,7 +10138,7 @@
     "Thai": "แก้ไข",
     "Dutch": "Bewerken",
     "Polish": "Edytuj",
-    "Malay/indonesian": "Edit",
+    "Malay/Indonesian": "Edit",
     "Ukrainian": "Редагувати"
   },
   "requested_at": {
@@ -10840,7 +10160,7 @@
     "Thai": "ร้องขอเมื่อ",
     "Dutch": "Aangevraagd op",
     "Polish": "Wysłano o",
-    "Malay/indonesian": "Diminta pada",
+    "Malay/Indonesian": "Diminta pada",
     "Ukrainian": "Запитано о"
   },
   "notifications": {
@@ -10862,7 +10182,7 @@
     "Thai": "การแจ้งเตือน",
     "Dutch": "Meldingen",
     "Polish": "Powiadomienia",
-    "Malay/indonesian": "Notifikasi",
+    "Malay/Indonesian": "Notifikasi",
     "Ukrainian": "Сповіщення"
   },
   "organization_name": {
@@ -10884,7 +10204,7 @@
     "Thai": "ชื่อองค์กร",
     "Dutch": "Organisatienaam",
     "Polish": "Nazwa organizacji",
-    "Malay/indonesian": "Nama Organisasi",
+    "Malay/Indonesian": "Nama Organisasi",
     "Ukrainian": "Назва організації"
   },
   "your_name": {
@@ -10906,7 +10226,7 @@
     "Thai": "ชื่อของคุณ",
     "Dutch": "Uw naam",
     "Polish": "Twoje imię",
-    "Malay/indonesian": "Nama Anda",
+    "Malay/Indonesian": "Nama Anda",
     "Ukrainian": "Ваше ім'я"
   },
   "organization_type": {
@@ -10928,7 +10248,7 @@
     "Thai": "ประเภทองค์กร",
     "Dutch": "Organisatietype",
     "Polish": "Typ organizacji",
-    "Malay/indonesian": "Jenis Organisasi",
+    "Malay/Indonesian": "Jenis Organisasi",
     "Ukrainian": "Тип організації"
   },
   "primary_email": {
@@ -10950,7 +10270,7 @@
     "Thai": "อีเมลหลัก",
     "Dutch": "Primair e-mailadres",
     "Polish": "Główny adres e-mail",
-    "Malay/indonesian": "Email Utama",
+    "Malay/Indonesian": "Email Utama",
     "Ukrainian": "Основна електронна пошта"
   },
   "secondary_email": {
@@ -10972,7 +10292,7 @@
     "Thai": "อีเมลสำรอง",
     "Dutch": "Secundair e-mailadres",
     "Polish": "Dodatkowy adres e-mail",
-    "Malay/indonesian": "Email Sekunder",
+    "Malay/Indonesian": "Email Sekunder",
     "Ukrainian": "Додаткова електронна пошта"
   },
   "corporate_address": {
@@ -10994,7 +10314,7 @@
     "Thai": "ที่อยู่บริษัท",
     "Dutch": "Bedrijfsadres",
     "Polish": "Adres firmowy",
-    "Malay/indonesian": "Alamat Perusahaan",
+    "Malay/Indonesian": "Alamat Perusahaan",
     "Ukrainian": "Юридична адреса"
   },
   "address_line_1": {
@@ -11016,7 +10336,7 @@
     "Thai": "ที่อยู่บรรทัดที่ 1",
     "Dutch": "Adresregel 1",
     "Polish": "Adres linia 1",
-    "Malay/indonesian": "Baris Alamat 1",
+    "Malay/Indonesian": "Baris Alamat 1",
     "Ukrainian": "Адреса, рядок 1"
   },
   "address_line_2": {
@@ -11038,7 +10358,7 @@
     "Thai": "ที่อยู่บรรทัดที่ 2",
     "Dutch": "Adresregel 2",
     "Polish": "Adres linia 2",
-    "Malay/indonesian": "Baris Alamat 2",
+    "Malay/Indonesian": "Baris Alamat 2",
     "Ukrainian": "Адреса, рядок 2"
   },
   "city": {
@@ -11060,7 +10380,7 @@
     "Thai": "เมือง",
     "Dutch": "Stad",
     "Polish": "Miasto",
-    "Malay/indonesian": "Kota",
+    "Malay/Indonesian": "Kota",
     "Ukrainian": "Місто"
   },
   "state_province": {
@@ -11082,7 +10402,7 @@
     "Thai": "รัฐ/จังหวัด",
     "Dutch": "Staat/Provincie",
     "Polish": "Województwo/Prowincja",
-    "Malay/indonesian": "Negara Bagian/Provinsi",
+    "Malay/Indonesian": "Negara Bagian/Provinsi",
     "Ukrainian": "Область/Провінція"
   },
   "pin_code": {
@@ -11104,7 +10424,7 @@
     "Thai": "รหัสไปรษณีย์",
     "Dutch": "Postcode",
     "Polish": "Kod pocztowy",
-    "Malay/indonesian": "Kode PIN",
+    "Malay/Indonesian": "Kode PIN",
     "Ukrainian": "Поштовий індекс"
   },
   "established_year": {
@@ -11126,7 +10446,7 @@
     "Thai": "ปีที่ก่อตั้ง",
     "Dutch": "Oprichtingsjaar",
     "Polish": "Rok założenia",
-    "Malay/indonesian": "Tahun Berdiri",
+    "Malay/Indonesian": "Tahun Berdiri",
     "Ukrainian": "Рік заснування"
   },
   "few_words_about_your_organization": {
@@ -11148,7 +10468,7 @@
     "Thai": "สองสามคำเกี่ยวกับองค์กรของคุณ",
     "Dutch": "Enkele woorden over uw organisatie",
     "Polish": "Kilka słów o Twojej organizacji",
-    "Malay/indonesian": "Beberapa kata tentang organisasi Anda",
+    "Malay/Indonesian": "Beberapa kata tentang organisasi Anda",
     "Ukrainian": "Кілька слів про вашу організацію"
   },
   "update": {
@@ -11170,7 +10490,7 @@
     "Thai": "อัปเดต",
     "Dutch": "Bijwerken",
     "Polish": "Aktualizuj",
-    "Malay/indonesian": "Perbarui",
+    "Malay/Indonesian": "Perbarui",
     "Ukrainian": "Оновити"
   },
   "create": {
@@ -11192,7 +10512,7 @@
     "Thai": "สร้าง",
     "Dutch": "Maken",
     "Polish": "Utwórz",
-    "Malay/indonesian": "Buat",
+    "Malay/Indonesian": "Buat",
     "Ukrainian": "Створити"
   },
   "factory_address": {
@@ -11214,7 +10534,7 @@
     "Thai": "ที่อยู่โรงงาน",
     "Dutch": "Fabrieksadres",
     "Polish": "Adres fabryki",
-    "Malay/indonesian": "Alamat Pabrik",
+    "Malay/Indonesian": "Alamat Pabrik",
     "Ukrainian": "Адреса заводу"
   },
   "upload_logo": {
@@ -11236,7 +10556,7 @@
     "Thai": "อัปโหลดโลโก้",
     "Dutch": "Logo uploaden",
     "Polish": "Prześlij logo",
-    "Malay/indonesian": "Unggah Logo",
+    "Malay/Indonesian": "Unggah Logo",
     "Ukrainian": "Завантажити логотип"
   },
   "unit_name": {
@@ -11258,7 +10578,7 @@
     "Thai": "ชื่อหน่วย",
     "Dutch": "Eenheidsnaam",
     "Polish": "Nazwa jednostki",
-    "Malay/indonesian": "Nama Unit",
+    "Malay/Indonesian": "Nama Unit",
     "Ukrainian": "Назва одиниці"
   },
   "locality": {
@@ -11280,7 +10600,7 @@
     "Thai": "ท้องถิ่น",
     "Dutch": "Plaats",
     "Polish": "Miejscowość",
-    "Malay/indonesian": "Lokalitas",
+    "Malay/Indonesian": "Lokalitas",
     "Ukrainian": "Місцевість"
   },
   "update_details": {
@@ -11302,7 +10622,7 @@
     "Thai": "อัปเดตรายละเอียด",
     "Dutch": "Details bijwerken",
     "Polish": "Zaktualizuj szczegóły",
-    "Malay/indonesian": "Perbarui Detail",
+    "Malay/Indonesian": "Perbarui Detail",
     "Ukrainian": "Оновити дані"
   },
   "create_organization": {
@@ -11324,7 +10644,7 @@
     "Thai": "สร้างองค์กร",
     "Dutch": "Organisatie aanmaken",
     "Polish": "Utwórz organizację",
-    "Malay/indonesian": "Buat Organisasi",
+    "Malay/Indonesian": "Buat Organisasi",
     "Ukrainian": "Створити організацію"
   },
   "add": {
@@ -11346,7 +10666,7 @@
     "Thai": "เพิ่ม",
     "Dutch": "Toevoegen",
     "Polish": "Dodaj",
-    "Malay/indonesian": "Tambah",
+    "Malay/Indonesian": "Tambah",
     "Ukrainian": "Додати"
   },
   "country": {
@@ -11368,7 +10688,7 @@
     "Thai": "ประเทศ",
     "Dutch": "Land",
     "Polish": "Kraj",
-    "Malay/indonesian": "Negara",
+    "Malay/Indonesian": "Negara",
     "Ukrainian": "Країна"
   },
   "i_agree_to_the": {
@@ -11390,7 +10710,7 @@
     "Thai": "ฉันยอมรับ",
     "Dutch": "Ik ga akkoord met de",
     "Polish": "Zgadzam się na",
-    "Malay/indonesian": "Saya setuju dengan",
+    "Malay/Indonesian": "Saya setuju dengan",
     "Ukrainian": "Я погоджуюся з"
   },
   "terms_of_service": {
@@ -11412,7 +10732,7 @@
     "Thai": "ข้อกำหนดในการให้บริการ",
     "Dutch": "Servicevoorwaarden",
     "Polish": "Warunki świadczenia usług",
-    "Malay/indonesian": "Ketentuan Layanan",
+    "Malay/Indonesian": "Ketentuan Layanan",
     "Ukrainian": "Умови надання послуг"
   },
   "and": {
@@ -11434,7 +10754,7 @@
     "Thai": "และ",
     "Dutch": "en",
     "Polish": "i",
-    "Malay/indonesian": "dan",
+    "Malay/Indonesian": "dan",
     "Ukrainian": "та"
   },
   "decline": {
@@ -11456,7 +10776,7 @@
     "Thai": "ปฏิเสธ",
     "Dutch": "Afwijzen",
     "Polish": "Odrzuć",
-    "Malay/indonesian": "Tolak",
+    "Malay/Indonesian": "Tolak",
     "Ukrainian": "Відхилити"
   },
   "accept": {
@@ -11478,7 +10798,7 @@
     "Thai": "ยอมรับ",
     "Dutch": "Accepteren",
     "Polish": "Akceptuj",
-    "Malay/indonesian": "Terima",
+    "Malay/Indonesian": "Terima",
     "Ukrainian": "Прийняти"
   },
   "remarks": {
@@ -11500,7 +10820,7 @@
     "Thai": "หมายเหตุ",
     "Dutch": "Opmerkingen",
     "Polish": "Uwagi",
-    "Malay/indonesian": "Keterangan",
+    "Malay/Indonesian": "Keterangan",
     "Ukrainian": "Примітки"
   },
   "engineer_remarks": {
@@ -11522,7 +10842,7 @@
     "Thai": "หมายเหตุของวิศวกร",
     "Dutch": "Ingenieur Opmerkingen",
     "Polish": "Uwagi Inżyniera",
-    "Malay/indonesian": "Keterangan Jurutera",
+    "Malay/Indonesian": "Keterangan Jurutera",
     "Ukrainian": "Примітки Інженера"
   },
   "issue_information": {
@@ -11544,7 +10864,7 @@
     "Thai": "ข้อมูลปัญหา",
     "Dutch": "Probleeminformatie",
     "Polish": "Informacje o problemie",
-    "Malay/indonesian": "Informasi Masalah",
+    "Malay/Indonesian": "Informasi Masalah",
     "Ukrainian": "Інформація про проблему"
   },
   "title": {
@@ -11566,7 +10886,7 @@
     "Thai": "หัวข้อ",
     "Dutch": "Titel",
     "Polish": "Tytuł",
-    "Malay/indonesian": "Judul",
+    "Malay/Indonesian": "Judul",
     "Ukrainian": "Заголовок"
   },
   "no_title": {
@@ -11588,7 +10908,7 @@
     "Thai": "ไม่มีชื่อเรื่อง",
     "Dutch": "Geen titel",
     "Polish": "Brak tytułu",
-    "Malay/indonesian": "Tidak Ada Judul",
+    "Malay/Indonesian": "Tidak Ada Judul",
     "Ukrainian": "Без заголовка"
   },
   "no_description": {
@@ -11610,7 +10930,7 @@
     "Thai": "ไม่มีคำอธิบาย",
     "Dutch": "Geen beschrijving",
     "Polish": "Brak opisu",
-    "Malay/indonesian": "Tidak Ada Deskripsi",
+    "Malay/Indonesian": "Tidak Ada Deskripsi",
     "Ukrainian": "Без опису"
   },
   "machine_information": {
@@ -11632,7 +10952,7 @@
     "Thai": "ข้อมูลเครื่องจักร",
     "Dutch": "Machine-informatie",
     "Polish": "Informacje o maszynie",
-    "Malay/indonesian": "Informasi Mesin",
+    "Malay/Indonesian": "Informasi Mesin",
     "Ukrainian": "Інформація про машину"
   },
   "machine": {
@@ -11654,7 +10974,7 @@
     "Thai": "เครื่องจักร",
     "Dutch": "Machine",
     "Polish": "Maszyna",
-    "Malay/indonesian": "Mesin",
+    "Malay/Indonesian": "Mesin",
     "Ukrainian": "Машина"
   },
   "no_model_number": {
@@ -11676,7 +10996,7 @@
     "Thai": "ไม่มีหมายเลขรุ่น",
     "Dutch": "Geen modelnummer",
     "Polish": "Brak numeru modelu",
-    "Malay/indonesian": "Tidak Ada Nomor Model",
+    "Malay/Indonesian": "Tidak Ada Nomor Model",
     "Ukrainian": "Немає номера моделі"
   },
   "not_specified": {
@@ -11698,7 +11018,7 @@
     "Thai": "ไม่ได้ระบุ",
     "Dutch": "Niet gespecificeerd",
     "Polish": "Nie określono",
-    "Malay/indonesian": "Tidak Disebutkan",
+    "Malay/Indonesian": "Tidak Disebutkan",
     "Ukrainian": "Не вказано"
   },
   "closed_at": {
@@ -11720,7 +11040,7 @@
     "Thai": "ปิดเมื่อ",
     "Dutch": "Gesloten op",
     "Polish": "Zamknięto o",
-    "Malay/indonesian": "Ditutup pada",
+    "Malay/Indonesian": "Ditutup pada",
     "Ukrainian": "Закрито о"
   },
   "ticket_pending": {
@@ -11742,7 +11062,7 @@
     "Thai": "ตั๋วรอดำเนินการ",
     "Dutch": "Ticket in behandeling",
     "Polish": "Zgłoszenie w toku",
-    "Malay/indonesian": "Tiket Tertunda",
+    "Malay/Indonesian": "Tiket Tertunda",
     "Ukrainian": "Квиток очікує"
   },
   "error_problem_details": {
@@ -11764,7 +11084,7 @@
     "Thai": "รายละเอียดข้อผิดพลาด/ปัญหา",
     "Dutch": "Fout/probleemdetails",
     "Polish": "Szczegóły błędu/problemu",
-    "Malay/indonesian": "Detail Masalah/Kesalahan",
+    "Malay/Indonesian": "Detail Masalah/Kesalahan",
     "Ukrainian": "Деталі помилки/проблеми"
   },
   "reschedule": {
@@ -11786,7 +11106,7 @@
     "Thai": "กำหนดเวลาใหม่",
     "Dutch": "Verplaatsen",
     "Polish": "Przełóż",
-    "Malay/indonesian": "Jadwalkan Ulang",
+    "Malay/Indonesian": "Jadwalkan Ulang",
     "Ukrainian": "Перенести"
   },
   "resume_chat": {
@@ -11808,7 +11128,7 @@
     "Thai": "กลับไปสนทนา",
     "Dutch": "Chat hervatten",
     "Polish": "Wznów czat",
-    "Malay/indonesian": "Lanjutkan Obrolan",
+    "Malay/Indonesian": "Lanjutkan Obrolan",
     "Ukrainian": "Відновити чат"
   },
   "ticket": {
@@ -11830,7 +11150,7 @@
     "Thai": "ตั๋ว",
     "Dutch": "Ticket",
     "Polish": "Zgłoszenie",
-    "Malay/indonesian": "Tiket",
+    "Malay/Indonesian": "Tiket",
     "Ukrainian": "Квиток"
   },
   "minutes": {
@@ -11852,7 +11172,7 @@
     "Thai": "นาที",
     "Dutch": "Minuten",
     "Polish": "Minuty",
-    "Malay/indonesian": "Menit",
+    "Malay/Indonesian": "Menit",
     "Ukrainian": "Хвилини"
   },
   "done": {
@@ -11874,7 +11194,7 @@
     "Thai": "เสร็จสิ้น",
     "Dutch": "Klaar",
     "Polish": "Gotowe",
-    "Malay/indonesian": "Selesai",
+    "Malay/Indonesian": "Selesai",
     "Ukrainian": "Готово"
   },
   "location": {
@@ -11896,7 +11216,7 @@
     "Thai": "ตำแหน่ง",
     "Dutch": "Locatie",
     "Polish": "Lokalizacja",
-    "Malay/indonesian": "Lokasi",
+    "Malay/Indonesian": "Lokasi",
     "Ukrainian": "Розташування"
   },
   "floor": {
@@ -11918,7 +11238,7 @@
     "Thai": "ชั้น",
     "Dutch": "Verdieping",
     "Polish": "Piętro",
-    "Malay/indonesian": "Lantai",
+    "Malay/Indonesian": "Lantai",
     "Ukrainian": "Поверх"
   },
   "building": {
@@ -11940,7 +11260,7 @@
     "Thai": "อาคาร",
     "Dutch": "Gebouw",
     "Polish": "Budynek",
-    "Malay/indonesian": "Bangunan",
+    "Malay/Indonesian": "Bangunan",
     "Ukrainian": "Будівля"
   },
   "room": {
@@ -11962,7 +11282,7 @@
     "Thai": "ห้อง",
     "Dutch": "Kamer",
     "Polish": "Pokój",
-    "Malay/indonesian": "Kamar",
+    "Malay/Indonesian": "Kamar",
     "Ukrainian": "Кімната"
   },
   "pending_since": {
@@ -11984,7 +11304,7 @@
     "Thai": "รอดำเนินการตั้งแต่",
     "Dutch": "In behandeling sinds",
     "Polish": "Oczekuje od",
-    "Malay/indonesian": "Tertunda Sejak",
+    "Malay/Indonesian": "Tertunda Sejak",
     "Ukrainian": "Очікує з"
   },
   "rescheduled": {
@@ -12006,7 +11326,7 @@
     "Thai": "กำหนดเวลาใหม่แล้ว",
     "Dutch": "Verplaatst",
     "Polish": "Przełożono",
-    "Malay/indonesian": "Dijadwalkan Ulang",
+    "Malay/Indonesian": "Dijadwalkan Ulang",
     "Ukrainian": "Перенесено"
   },
   "error_problem": {
@@ -12028,7 +11348,7 @@
     "Thai": "ข้อผิดพลาด/ปัญหา",
     "Dutch": "Fout/probleem",
     "Polish": "Błąd/Problem",
-    "Malay/indonesian": "Kesalahan/Masalah",
+    "Malay/Indonesian": "Kesalahan/Masalah",
     "Ukrainian": "Помилка/Проблема"
   },
   "closing_remarks": {
@@ -12050,7 +11370,7 @@
     "Thai": "ข้อสังเกตปิด",
     "Dutch": "Afsluitende opmerkingen",
     "Polish": "Uwagi końcowe",
-    "Malay/indonesian": "Catatan Penutup",
+    "Malay/Indonesian": "Catatan Penutup",
     "Ukrainian": "Прикінцеві зауваження"
   },
   "click_here_add_closing_remark": {
@@ -12067,13 +11387,13 @@
     "Bengali": "এখানে ক্লিক করুন, সমাপনী মন্তব্য যোগ করুন",
     "Turkish": "Kapanış Notu Eklemek İçin Buraya Tıklayın",
     "Italian": "Clicca qui per aggiungere una nota di chiusura",
-    "    Korean": "여기를 클릭하여 종료 비고를 추가하세요",
     "Vietnamese": "Nhấp vào đây để thêm nhận xét kết thúc",
     "Thai": "คลิกที่นี่เพื่อเพิ่มข้อสังเกตปิด",
     "Dutch": "Klik hier om een afsluitende opmerking toe te voegen",
     "Polish": "Kliknij tutaj, aby dodać uwagę końcową",
-    "Malay/indonesian": "Klik di sini untuk menambahkan catatan penutup",
-    "Ukrainian": "Натисніть тут, щоб додати заключне зауваження"
+    "Malay/Indonesian": "Klik di sini untuk menambahkan catatan penutup",
+    "Ukrainian": "Натисніть тут, щоб додати заключне зауваження",
+    "Korean": "여기를 클릭하여 종료 비고를 추가하세요"
   },
   "active_tickets": {
     "English": "Active Tickets",
@@ -12094,7 +11414,7 @@
     "Thai": "ตั๋วที่ใช้งานอยู่",
     "Dutch": "Actieve tickets",
     "Polish": "Aktywne zgłoszenia",
-    "Malay/indonesian": "Tiket Aktif",
+    "Malay/Indonesian": "Tiket Aktif",
     "Ukrainian": "Активні квитки"
   },
   "pending_remark": {
@@ -12116,7 +11436,7 @@
     "Thai": "ข้อสังเกตที่รอดำเนินการ",
     "Dutch": "Wachtende opmerking",
     "Polish": "Oczekująca uwaga",
-    "Malay/indonesian": "Keterangan Tertunda",
+    "Malay/Indonesian": "Keterangan Tertunda",
     "Ukrainian": "Очікуюча примітка"
   },
   "resolved_tickets": {
@@ -12138,7 +11458,7 @@
     "Thai": "ตั๋วที่แก้ไขแล้ว",
     "Dutch": "Opgeloste tickets",
     "Polish": "Rozwiązane zgłoszenia",
-    "Malay/indonesian": "Tiket Terselesaikan",
+    "Malay/Indonesian": "Tiket Terselesaikan",
     "Ukrainian": "Вирішені квитки"
   },
   "support_tickets": {
@@ -12160,7 +11480,7 @@
     "Thai": "ตั๋วสนับสนุน",
     "Dutch": "Supporttickets",
     "Polish": "Zgłoszenia wsparcia",
-    "Malay/indonesian": "Tiket Dukungan",
+    "Malay/Indonesian": "Tiket Dukungan",
     "Ukrainian": "Квитки підтримки"
   },
   "search_tickets": {
@@ -12182,7 +11502,7 @@
     "Thai": "ค้นหาตั๋ว...",
     "Dutch": "Tickets zoeken...",
     "Polish": "Szukaj zgłoszeń...",
-    "Malay/indonesian": "Cari tiket...",
+    "Malay/Indonesian": "Cari tiket...",
     "Ukrainian": "Шукати квитки..."
   },
   "confirm_selection": {
@@ -12204,7 +11524,7 @@
     "Thai": "ยืนยันการเลือก",
     "Dutch": "Selectie bevestigen",
     "Polish": "Potwierdź wybór",
-    "Malay/indonesian": "Konfirmasi Pilihan",
+    "Malay/Indonesian": "Konfirmasi Pilihan",
     "Ukrainian": "Підтвердити вибір"
   },
   "scan_qr_code": {
@@ -12226,7 +11546,7 @@
     "Thai": "สแกน QR Code",
     "Dutch": "QR-code scannen",
     "Polish": "Skanuj kod QR",
-    "Malay/indonesian": "Pindai Kode QR",
+    "Malay/Indonesian": "Pindai Kode QR",
     "Ukrainian": "Сканувати QR-код"
   },
   "delete_machine": {
@@ -12248,7 +11568,7 @@
     "Thai": "ลบเครื่องจักร",
     "Dutch": "Machine verwijderen",
     "Polish": "Usuń maszynę",
-    "Malay/indonesian": "Hapus Mesin",
+    "Malay/Indonesian": "Hapus Mesin",
     "Ukrainian": "Видалити машину"
   },
   "request_details": {
@@ -12270,30 +11590,8 @@
     "Thai": "รายละเอียดคำขอ",
     "Dutch": "Aanvraagdetails",
     "Polish": "Szczegóły prośby",
-    "Malay/indonesian": "Detail Permintaan",
+    "Malay/Indonesian": "Detail Permintaan",
     "Ukrainian": "Деталі запиту"
-  },
-  "see_chat": {
-    "English": "See Chat",
-    "Hindi": "चैट देखें",
-    "Chinese (Simplified)": "查看聊天",
-    "Spanish": "Ver Chat",
-    "Japanese": "チャットを見る",
-    "German": "Chat anzeigen",
-    "French": "Voir le chat",
-    "Arabic": "رؤية المحادثة",
-    "Portuguese": "Ver Chat",
-    "Russian": "Посмотреть чат",
-    "Bengali": "চ্যাট দেখুন",
-    "Turkish": "Sohbete Bak",
-    "Italian": "Vedi chat",
-    "Korean": "채팅 보기",
-    "Vietnamese": "Xem trò chuyện",
-    "Thai": "ดูแชท",
-    "Dutch": "Chat bekijken",
-    "Polish": "Zobacz czat",
-    "Malay/indonesian": "Lihat Obrolan",
-    "Ukrainian": "Переглянути чат"
   },
   "photos_attachments": {
     "English": "Photos/Attachments",
@@ -12314,7 +11612,7 @@
     "Thai": "รูปภาพ/เอกสารแนบ",
     "Dutch": "Foto's/Bijlagen",
     "Polish": "Zdjęcia/Załączniki",
-    "Malay/indonesian": "Foto/Lampiran",
+    "Malay/Indonesian": "Foto/Lampiran",
     "Ukrainian": "Фотографії/Вкладення"
   },
   "no_photos_attached": {
@@ -12336,7 +11634,7 @@
     "Thai": "ไม่มีรูปภาพแนบ",
     "Dutch": "Geen foto's bijgevoegd",
     "Polish": "Brak załączonych zdjęć",
-    "Malay/indonesian": "Tidak ada foto yang dilampirkan",
+    "Malay/Indonesian": "Tidak ada foto yang dilampirkan",
     "Ukrainian": "Фотографій не додано"
   },
   "loading_ticket_details": {
@@ -12358,7 +11656,7 @@
     "Thai": "กำลังโหลดรายละเอียดตั๋ว...",
     "Dutch": "Ticketdetails laden...",
     "Polish": "Ładowanie szczegółów zgłoszenia...",
-    "Malay/indonesian": "Memuat detail tiket...",
+    "Malay/Indonesian": "Memuat detail tiket...",
     "Ukrainian": "Завантаження деталей квитка..."
   },
   "please_try_again_later": {
@@ -12380,7 +11678,7 @@
     "Thai": "โปรดลองอีกครั้งในภายหลัง",
     "Dutch": "Probeer het later opnieuw",
     "Polish": "Proszę spróbować ponownie później",
-    "Malay/indonesian": "Silakan coba lagi nanti",
+    "Malay/Indonesian": "Silakan coba lagi nanti",
     "Ukrainian": "Будь ласка, спробуйте пізніше"
   },
   "mark_as_resolved": {
@@ -12402,7 +11700,7 @@
     "Thai": "ทำเครื่องหมายว่าแก้ไขแล้ว",
     "Dutch": "Markeren als opgelost",
     "Polish": "Oznacz jako rozwiązane",
-    "Malay/indonesian": "Tandai sebagai Terselesaikan",
+    "Malay/Indonesian": "Tandai sebagai Terselesaikan",
     "Ukrainian": "Позначити як вирішений"
   },
   "clear_all": {
@@ -12424,7 +11722,7 @@
     "Thai": "ล้างทั้งหมด",
     "Dutch": "Alles wissen",
     "Polish": "Wyczyść wszystko",
-    "Malay/indonesian": "Hapus Semua",
+    "Malay/Indonesian": "Hapus Semua",
     "Ukrainian": "Очистити все"
   },
   "operating_hours": {
@@ -12446,7 +11744,7 @@
     "Thai": "เวลาทำการ",
     "Dutch": "Openingstijden",
     "Polish": "Godziny pracy",
-    "Malay/indonesian": "Jam Operasional",
+    "Malay/Indonesian": "Jam Operasional",
     "Ukrainian": "Години роботи"
   },
   "quick_actions": {
@@ -12468,30 +11766,8 @@
     "Thai": "การดำเนินการด่วน",
     "Dutch": "Snelle acties",
     "Polish": "Szybkie działania",
-    "Malay/indonesian": "Tindakan Cepat",
+    "Malay/Indonesian": "Tindakan Cepat",
     "Ukrainian": "Швидкі дії"
-  },
-  "continue": {
-    "English": "Continue",
-    "Hindi": "जारी रखें",
-    "Chinese (Simplified)": "继续",
-    "Spanish": "Continuar",
-    "Japanese": "続行",
-    "German": "Fortsetzen",
-    "French": "Continuer",
-    "Arabic": "متابعة",
-    "Portuguese": "Continuar",
-    "Russian": "Продолжить",
-    "Bengali": "चालিয়ে যান",
-    "Turkish": "Devam et",
-    "Italian": "Continua",
-    "Korean": "계속하기",
-    "Vietnamese": "Tiếp tục",
-    "Thai": "ดำเนินการต่อ",
-    "Dutch": "Doorgaan",
-    "Polish": "Kontynuuj",
-    "Malay_Indonesian": "Lanjutkan",
-    "Ukrainian": "Продовжити"
   },
   "tickets_summary": {
     "English": "Tickets Summary",
@@ -12735,28 +12011,6 @@
     "Malay/Indonesian": "Umpan Balik dan Penilaian",
     "Ukrainian": "Відгуки та оцінки"
   },
-  "installation_tracker": {
-    "English": "Installation Tracker",
-    "Hindi": "इंस्टॉलेशन ट्रैकर",
-    "Chinese (Simplified)": "安装跟踪器",
-    "Spanish": "Rastreador de Instalación",
-    "Japanese": "インストール追跡",
-    "German": "Installations-Tracker",
-    "French": "Suivi d'Installation",
-    "Arabic": "متتبع التثبيت",
-    "Portuguese": "Rastreador de Instalação",
-    "Russian": "Трекер установки",
-    "Bengali": "ইনস্টলেশন ট্র্যাকার",
-    "Turkish": "Kurulum Takipçisi",
-    "Italian": "Tracciatore Installazione",
-    "Korean": "설치 추적기",
-    "Vietnamese": "Theo dõi cài đặt",
-    "Thai": "ตัวติดตามการติดตั้ง",
-    "Dutch": "Installatie Tracker",
-    "Polish": "Śledzenie Instalacji",
-    "Malay/Indonesian": "Pelacak Instalasi",
-    "Ukrainian": "Відстеження встановлення"
-  },
   "feedback_survey": {
     "English": "Feedback Survey",
     "Hindi": "फीडबैक सर्वेक्षण",
@@ -12778,28 +12032,6 @@
     "Polish": "Ankieta Opinii",
     "Malay/Indonesian": "Survei Umpan Balik",
     "Ukrainian": "Опитування відгуків"
-  },
-  "coming_soon": {
-    "English": "Coming Soon",
-    "Hindi": "जल्द आ रहा है",
-    "Chinese (Simplified)": "即将推出",
-    "Spanish": "Próximamente",
-    "Japanese": "近日公開",
-    "German": "Demnächst verfügbar",
-    "French": "Bientôt disponible",
-    "Arabic": "قريباً",
-    "Portuguese": "Em breve",
-    "Russian": "Скоро",
-    "Bengali": "শীঘ্রই আসছে",
-    "Turkish": "Yakında",
-    "Italian": "Prossimamente",
-    "Korean": "곧 출시",
-    "Vietnamese": "Sắp ra mắt",
-    "Thai": "เร็วๆ นี้",
-    "Dutch": "Binnenkort beschikbaar",
-    "Polish": "Wkrótce dostępne",
-    "Malay/Indonesian": "Segera Hadir",
-    "Ukrainian": "Незабаром"
   },
   "special_offer": {
     "English": "SPECIAL OFFER",
@@ -12868,27 +12100,26 @@
     "Ukrainian": "ЗНИЖКА ДО 80%"
   },
   "new_features": {
-    "English": "NEW FEATURES",
-    "Hindi": "नई सुविधाएं",
+    "English": "New Features",
+    "Hindi": "नई विशेषताएँ",
     "Chinese (Simplified)": "新功能",
-    "Spanish": "NUEVAS CARACTERÍSTICAS",
+    "Spanish": "Nuevas funciones",
     "Japanese": "新機能",
-    "German": "NEUE FUNKTIONEN",
-    "French": "NOUVELLES FONCTIONNALITÉS",
+    "German": "Neue Funktionen",
+    "French": "Nouvelles fonctionnalités",
     "Arabic": "ميزات جديدة",
-    "Portuguese": "NOVAS CARACTERÍSTICAS",
-    "Russian": "НОВЫЕ ФУНКЦИИ",
+    "Portuguese": "Novos recursos",
+    "Russian": "Новые функции",
     "Bengali": "নতুন বৈশিষ্ট্য",
-    "Hindi": "नई सुविधाएं",
-    "Turkish": "YENİ ÖZELLİKLER",
-    "Italian": "NUOVE FUNZIONI",
+    "Turkish": "Yeni Özellikler",
+    "Italian": "Nuove funzionalità",
     "Korean": "새로운 기능",
-    "Vietnamese": "TÍNH NĂNG MỚI",
+    "Vietnamese": "Tính năng mới",
     "Thai": "คุณสมบัติใหม่",
-    "Dutch": "NIEUWE FUNCTIES",
-    "Polish": "NOWE FUNKCJE",
+    "Dutch": "Nieuwe functies",
+    "Polish": "Nowe funkcje",
     "Malay/Indonesian": "Fitur Baru",
-    "Ukrainian": "НОВІ ФУНКЦІЇ"
+    "Ukrainian": "Нові функції"
   },
   "coming_soon_feature": {
     "English": "COMING SOON",
@@ -12952,7 +12183,9 @@
     "Dutch": "PREMIUM ONDERSTEUNING",
     "Polish": "PREMIUM WSPARCIE",
     "Malay/Indonesian": "Dukungan Premium",
-    "Ukrainian": "ПРЕМІУМ ПІДТРИМКА"
+    "Ukrainian": "ПРЕМІУМ ПІДТРИМКА",
+    "French": "Support Premium",
+    "German": "Premium-Support"
   },
   "available_now": {
     "English": "AVAILABLE NOW",
@@ -13328,116 +12561,6 @@
     "Malay/Indonesian": "Pelanggan Tidak Aktif",
     "Ukrainian": "Неактивний клієнт"
   },
-  "basic_information": {
-    "English": "Basic Information",
-    "Hindi": "बुनियादी जानकारी",
-    "Chinese (Simplified)": "基本信息",
-    "Spanish": "Información Básica",
-    "Japanese": "基本情報",
-    "German": "Grundinformationen",
-    "French": "Informations de Base",
-    "Arabic": "معلومات أساسية",
-    "Portuguese": "Informações Básicas",
-    "Russian": "Основная информация",
-    "Bengali": "মৌলিক তথ্য",
-    "Turkish": "Temel Bilgiler",
-    "Italian": "Informazioni di Base",
-    "Korean": "기본 정보",
-    "Vietnamese": "Thông tin cơ bản",
-    "Thai": "ข้อมูลพื้นฐาน",
-    "Dutch": "Basisinformatie",
-    "Polish": "Podstawowe Informacje",
-    "Malay/Indonesian": "Informasi Dasar",
-    "Ukrainian": "Основна інформація"
-  },
-  "maximum_processing_size": {
-    "English": "Maximum Processing Size (mm)",
-    "Hindi": "अधिकतम प्रोसेसिंग आकार (मिमी)",
-    "Chinese (Simplified)": "最大加工尺寸 (毫米)",
-    "Spanish": "Tamaño Máximo de Procesamiento (mm)",
-    "Japanese": "最大加工サイズ (mm)",
-    "German": "Maximale Verarbeitungsgröße (mm)",
-    "French": "Taille Maximale de Traitement (mm)",
-    "Arabic": "الحد الأقصى لحجم المعالجة (مم)",
-    "Portuguese": "Tamanho Máximo de Processamento (mm)",
-    "Russian": "Максимальный размер обработки (мм)",
-    "Bengali": "সর্বোচ্চ প্রক্রিয়াকরণের আকার (মিমি)",
-    "Turkish": "Maksimum İşleme Boyutu (mm)",
-    "Italian": "Dimensione Massima di Lavorazione (mm)",
-    "Korean": "최대 가공 크기 (mm)",
-    "Vietnamese": "Kích thước xử lý tối đa (mm)",
-    "Thai": "ขนาดการประมวลผลสูงสุด (มม.)",
-    "Dutch": "Maximale Verwerkingsgrootte (mm)",
-    "Polish": "Maksymalny Rozmiar Przetwarzania (mm)",
-    "Malay/Indonesian": "Ukuran Pemrosesan Maksimum (mm)",
-    "Ukrainian": "Максимальний розмір обробки (мм)"
-  },
-  "minimum_processing_size": {
-    "English": "Minimum Processing Size (mm)",
-    "Hindi": "न्यूनतम प्रोसेसिंग आकार (मिमी)",
-    "Chinese (Simplified)": "最小加工尺寸 (毫米)",
-    "Spanish": "Tamaño Mínimo de Procesamiento (mm)",
-    "Japanese": "最小加工サイズ (mm)",
-    "German": "Minimale Verarbeitungsgröße (mm)",
-    "French": "Taille Minimale de Traitement (mm)",
-    "Arabic": "الحد الأدنى لحجم المعالجة (مم)",
-    "Portuguese": "Tamanho Mínimo de Processamento (mm)",
-    "Russian": "Минимальный размер обработки (мм)",
-    "Bengali": "সর্বনিম্ন প্রক্রিয়াকরণের আকার (মিমি)",
-    "Turkish": "Minimum İşleme Boyutu (mm)",
-    "Italian": "Dimensione Minima di Lavorazione (mm)",
-    "Korean": "최소 가공 크기 (mm)",
-    "Vietnamese": "Kích thước xử lý tối thiểu (mm)",
-    "Thai": "ขนาดการประมวลผลขั้นต่ำ (มม.)",
-    "Dutch": "Minimale Verwerkingsgrootte (mm)",
-    "Polish": "Minimalny Rozmiar Przetwarzania (mm)",
-    "Malay/Indonesian": "Ukuran Pemrosesan Minimum (mm)",
-    "Ukrainian": "Мінімальний розмір обробки (мм)"
-  },
-  "height": {
-    "English": "Height",
-    "Hindi": "ऊंचाई",
-    "Chinese (Simplified)": "高度",
-    "Spanish": "Altura",
-    "Japanese": "高さ",
-    "German": "Höhe",
-    "French": "Hauteur",
-    "Arabic": "الارتفاع",
-    "Portuguese": "Altura",
-    "Russian": "Высота",
-    "Bengali": "উচ্চতা",
-    "Turkish": "Yükseklik",
-    "Italian": "Altezza",
-    "Korean": "높이",
-    "Vietnamese": "Chiều cao",
-    "Thai": "ความสูง",
-    "Dutch": "Hoogte",
-    "Polish": "Wysokość",
-    "Malay/Indonesian": "Tinggi",
-    "Ukrainian": "Висота"
-  },
-  "width": {
-    "English": "Width",
-    "Hindi": "चौड़ाई",
-    "Chinese (Simplified)": "宽度",
-    "Spanish": "Ancho",
-    "Japanese": "幅",
-    "German": "Breite",
-    "French": "Largeur",
-    "Arabic": "العرض",
-    "Portuguese": "Largura",
-    "Russian": "Ширина",
-    "Bengali": "প্রস্থ",
-    "Turkish": "Genişlik",
-    "Italian": "Larghezza",
-    "Korean": "너비",
-    "Vietnamese": "Chiều rộng",
-    "Thai": "ความกว้าง",
-    "Dutch": "Breedte",
-    "Polish": "Szerokość",
-    "Malay/Indonesian": "Lebar",
-    "Ukrainian": "Ширина"
-  },
   "power_consumption": {
     "English": "Power Consumption",
     "Hindi": "बिजली की खपत",
@@ -13459,139 +12582,6 @@
     "Polish": "Zużycie Energii",
     "Malay/Indonesian": "Konsumsi Daya",
     "Ukrainian": "Споживання електроенергії"
-  },
-  "machine_ownership": {
-    "English": "Machine Ownership",
-    "Hindi": "मशीन का स्वामित्व",
-    "Chinese (Simplified)": "机器所有权",
-    "Spanish": "Propiedad de la Máquina",
-    "Japanese": "機械の所有権",
-    "German": "Maschineneigentum",
-    "French": "Propriété de la Machine",
-    "Arabic": "ملكية الآلة",
-    "Portuguese": "Propriedade da Máquina",
-    "Russian": "Владение машиной",
-    "Bengali": "মেশিনের মালিকানা",
-    "Turkish": "Makine Sahipliği",
-    "Italian": "Proprietà della Macchina",
-    "Korean": "기계 소유권",
-    "Vietnamese": "Quyền sở hữu máy móc",
-    "Thai": "กรรมสิทธิ์ในเครื่องจักร",
-    "Dutch": "Machine Eigendom",
-    "Polish": "Własność Maszyny",
-    "Malay/Indonesian": "Kepemilikan Mesin",
-    "Ukrainian": "Власність машини"
-  },
-  "purchase_date": {
-    "English": "Purchase Date",
-    "Hindi": "खरीद की तारीख",
-    "Chinese (Simplified)": "购买日期",
-    "Spanish": "Fecha de Compra",
-    "Japanese": "購入日",
-    "German": "Kaufdatum",
-    "French": "Date d'Achat",
-    "Arabic": "تاريخ الشراء",
-    "Portuguese": "Data de Compra",
-    "Russian": "Дата покупки",
-    "Bengali": "ক্রয়ের তারিখ",
-    "Turkish": "Satın Alma Tarihi",
-    "Italian": "Data di Acquisto",
-    "Korean": "구매일",
-    "Vietnamese": "Ngày mua",
-    "Thai": "วันที่ซื้อ",
-    "Dutch": "Aankoopdatum",
-    "Polish": "Data Zakupu",
-    "Malay/Indonesian": "Tanggal Pembelian",
-    "Ukrainian": "Дата покупки"
-  },
-  "installation_date": {
-    "English": "Installation Date",
-    "Hindi": "स्थापना की तारीख",
-    "Chinese (Simplified)": "安装日期",
-    "Spanish": "Fecha de Instalación",
-    "Japanese": "設置日",
-    "German": "Installationsdatum",
-    "French": "Date d'Installation",
-    "Arabic": "تاريخ التثبيت",
-    "Portuguese": "Data de Instalação",
-    "Russian": "Дата установки",
-    "Bengali": "স্থাপনার তারিখ",
-    "Turkish": "Kurulum Tarihi",
-    "Italian": "Data di Installazione",
-    "Korean": "설치일",
-    "Vietnamese": "Ngày lắp đặt",
-    "Thai": "วันที่ติดตั้ง",
-    "Dutch": "Installatiedatum",
-    "Polish": "Data Instalacji",
-    "Malay/Indonesian": "Tanggal Instalasi",
-    "Ukrainian": "Дата встановлення"
-  },
-  "warranty_start": {
-    "English": "Warranty Start",
-    "Hindi": "वारंटी की शुरुआत",
-    "Chinese (Simplified)": "保修开始",
-    "Spanish": "Inicio de Garantía",
-    "Japanese": "保証開始",
-    "German": "Garantiebeginn",
-    "French": "Début de Garantie",
-    "Arabic": "بداية الضمان",
-    "Portuguese": "Início da Garantia",
-    "Russian": "Начало гарантии",
-    "Bengali": "ওয়ারেন্টির শুরু",
-    "Turkish": "Garanti Başlangıcı",
-    "Italian": "Inizio Garanzia",
-    "Korean": "보증 시작",
-    "Vietnamese": "Bắt đầu bảo hành",
-    "Thai": "เริ่มต้นการรับประกัน",
-    "Dutch": "Garantie Start",
-    "Polish": "Początek Gwarancji",
-    "Malay/Indonesian": "Mulai Garansi",
-    "Ukrainian": "Початок гарантії"
-  },
-  "warranty_end": {
-    "English": "Warranty End",
-    "Hindi": "वारंटी का अंत",
-    "Chinese (Simplified)": "保修结束",
-    "Chinese (Simplified)": "保修结束",
-    "Spanish": "Fin de Garantía",
-    "Japanese": "保証終了",
-    "German": "Garantieende",
-    "French": "Fin de Garantie",
-    "Arabic": "نهاية الضمان",
-    "Portuguese": "Fim da Garantia",
-    "Russian": "Конец гарантии",
-    "Bengali": "ওয়ারেন্টির শেষ",
-    "Turkish": "Garanti Sonu",
-    "Italian": "Fine Garanzia",
-    "Korean": "보증 종료",
-    "Vietnamese": "Kết thúc bảo hành",
-    "Thai": "สิ้นสุดการรับประกัน",
-    "Dutch": "Garantie Einde",
-    "Polish": "Koniec Gwarancji",
-    "Malay/Indonesian": "Akhir Garansi",
-    "Ukrainian": "Кінець гарантії"
-  },
-  "warranty_status": {
-    "English": "Warranty Status",
-    "Hindi": "वारंटी की स्थिति",
-    "Chinese (Simplified)": "保修状态",
-    "Spanish": "Estado de Garantía",
-    "Japanese": "保証状況",
-    "German": "Garantiestatus",
-    "French": "Statut de Garantie",
-    "Arabic": "حالة الضمان",
-    "Portuguese": "Status da Garantia",
-    "Russian": "Статус гарантии",
-    "Bengali": "ওয়ারেন্টির অবস্থা",
-    "Turkish": "Garanti Durumu",
-    "Italian": "Stato Garanzia",
-    "Korean": "보증 상태",
-    "Vietnamese": "Trạng thái bảo hành",
-    "Thai": "สถานะการรับประกัน",
-    "Dutch": "Garantiestatus",
-    "Polish": "Status Gwarancji",
-    "Malay/Indonesian": "Status Garansi",
-    "Ukrainian": "Статус гарантії"
   },
   "out_of_warranty": {
     "English": "Out of Warranty",
@@ -13636,72 +12626,6 @@
     "Polish": "Numer Faktury/Umowy",
     "Malay/Indonesian": "Nomor Faktur/Kontrak",
     "Ukrainian": "Номер рахунку/контракту"
-  },
-  "edit": {
-    "English": "Edit",
-    "Hindi": "संपादित करें",
-    "Chinese (Simplified)": "编辑",
-    "Spanish": "Editar",
-    "Japanese": "編集",
-    "German": "Bearbeiten",
-    "French": "Modifier",
-    "Arabic": "تعديل",
-    "Portuguese": "Editar",
-    "Russian": "Редактировать",
-    "Bengali": "সম্পাদনা করুন",
-    "Turkish": "Düzenle",
-    "Italian": "Modifica",
-    "Korean": "편집",
-    "Vietnamese": "Chỉnh sửa",
-    "Thai": "แก้ไข",
-    "Dutch": "Bewerken",
-    "Polish": "Edytuj",
-    "Malay/Indonesian": "Edit",
-    "Ukrainian": "Редагувати"
-  },
-  "remove": {
-    "English": "Remove",
-    "Hindi": "हटाएं",
-    "Chinese (Simplified)": "删除",
-    "Spanish": "Eliminar",
-    "Japanese": "削除",
-    "German": "Entfernen",
-    "French": "Supprimer",
-    "Arabic": "إزالة",
-    "Portuguese": "Remover",
-    "Russian": "Удалить",
-    "Bengali": "সরান",
-    "Turkish": "Kaldır",
-    "Italian": "Rimuovi",
-    "Korean": "제거",
-    "Vietnamese": "Xóa",
-    "Thai": "ลบ",
-    "Dutch": "Verwijderen",
-    "Polish": "Usuń",
-    "Malay/Indonesian": "Hapus",
-    "Ukrainian": "Видалити"
-  },
-  "power_information": {
-    "English": "Power Information",
-    "Hindi": "बिजली की जानकारी",
-    "Chinese (Simplified)": "电源信息",
-    "Spanish": "Información de Energía",
-    "Japanese": "電力情報",
-    "German": "Strominformationen",
-    "French": "Informations sur l'Énergie",
-    "Arabic": "معلومات الطاقة",
-    "Portuguese": "Informações de Energia",
-    "Russian": "Информация об энергии",
-    "Bengali": "বিদ্যুৎ সম্পর্কিত তথ্য",
-    "Turkish": "Güç Bilgileri",
-    "Italian": "Informazioni sull'Energia",
-    "Korean": "전력 정보",
-    "Vietnamese": "Thông tin điện",
-    "Thai": "ข้อมูลพลังงาน",
-    "Dutch": "Stroominformatie",
-    "Polish": "Informacje o Energii",
-    "Malay/Indonesian": "Informasi Daya",
-    "Ukrainian": "Інформація про енергію"
   },
   "scan_from_camera_gallery": {
     "English": "Scan from Camera & Gallery",
@@ -13834,116 +12758,6 @@
     "Polish": "Utwórz nowy",
     "Malay/Indonesian": "Buat Baru",
     "Ukrainian": "Створити новий"
-  },
-  "organization_name": {
-    "English": "Organization Name",
-    "Hindi": "संगठन का नाम",
-    "Chinese (Simplified)": "组织名称",
-    "Spanish": "Nombre de la Organización",
-    "Japanese": "組織名",
-    "German": "Organisationsname",
-    "French": "Nom de l'organisation",
-    "Arabic": "اسم المنظمة",
-    "Portuguese": "Nome da Organização",
-    "Russian": "Название организации",
-    "Bengali": "সংস্থার নাম",
-    "Turkish": "Organizasyon Adı",
-    "Italian": "Nome dell'organizzazione",
-    "Korean": "조직명",
-    "Vietnamese": "Tên tổ chức",
-    "Thai": "ชื่อองค์กร",
-    "Dutch": "Organisatienaam",
-    "Polish": "Nazwa organizacji",
-    "Malay/Indonesian": "Nama Organisasi",
-    "Ukrainian": "Назва організації"
-  },
-  "phone_number": {
-    "English": "Phone Number",
-    "Hindi": "फोन नंबर",
-    "Chinese (Simplified)": "电话号码",
-    "Spanish": "Número de Teléfono",
-    "Japanese": "電話番号",
-    "German": "Telefonnummer",
-    "French": "Numéro de téléphone",
-    "Arabic": "رقم الهاتف",
-    "Portuguese": "Número de Telefone",
-    "Russian": "Номер телефона",
-    "Bengali": "ফোন নম্বর",
-    "Turkish": "Telefon Numarası",
-    "Italian": "Numero di telefono",
-    "Korean": "전화번호",
-    "Vietnamese": "Số điện thoại",
-    "Thai": "หมายเลขโทรศัพท์",
-    "Dutch": "Telefoonnummer",
-    "Polish": "Numer telefonu",
-    "Malay/Indonesian": "Nomor Telepon",
-    "Ukrainian": "Номер телефону"
-  },
-  "email_address": {
-    "English": "Email Address",
-    "Hindi": "ईमेल पता",
-    "Chinese (Simplified)": "电子邮件地址",
-    "Spanish": "Dirección de Correo Electrónico",
-    "Japanese": "メールアドレス",
-    "German": "E-Mail-Adresse",
-    "French": "Adresse e-mail",
-    "Arabic": "عنوان البريد الإلكتروني",
-    "Portuguese": "Endereço de E-mail",
-    "Russian": "Адрес электронной почты",
-    "Bengali": "ইমেইল ঠিকানা",
-    "Turkish": "E-posta Adresi",
-    "Italian": "Indirizzo e-mail",
-    "Korean": "이메일 주소",
-    "Vietnamese": "Địa chỉ email",
-    "Thai": "ที่อยู่อีเมล",
-    "Dutch": "E-mailadres",
-    "Polish": "Adres e-mail",
-    "Malay/Indonesian": "Alamat Email",
-    "Ukrainian": "Адреса електронної пошти"
-  },
-  "contact_person": {
-    "English": "Contact Person",
-    "Hindi": "संपर्क व्यक्ति",
-    "Chinese (Simplified)": "联系人",
-    "Spanish": "Persona de Contacto",
-    "Japanese": "担当者",
-    "German": "Ansprechpartner",
-    "French": "Personne de contact",
-    "Arabic": "الشخص المسؤول",
-    "Portuguese": "Pessoa de Contato",
-    "Russian": "Контактное лицо",
-    "Bengali": "যোগাযোগের ব্যক্তি",
-    "Turkish": "İletişim Kişisi",
-    "Italian": "Persona di contatto",
-    "Korean": "담당자",
-    "Vietnamese": "Người liên hệ",
-    "Thai": "ผู้ติดต่อ",
-    "Dutch": "Contactpersoon",
-    "Polish": "Osoba kontaktowa",
-    "Malay/Indonesian": "Orang Kontak",
-    "Ukrainian": "Контактна особа"
-  },
-  "designation": {
-    "English": "Designation",
-    "Hindi": "पद",
-    "Chinese (Simplified)": "职位",
-    "Spanish": "Designación",
-    "Japanese": "役職",
-    "German": "Bezeichnung",
-    "French": "Désignation",
-    "Arabic": "المسمى الوظيفي",
-    "Portuguese": "Designação",
-    "Russian": "Должность",
-    "Bengali": "পদবি",
-    "Turkish": "Unvan",
-    "Italian": "Designazione",
-    "Korean": "직책",
-    "Vietnamese": "Chức danh",
-    "Thai": "ตำแหน่ง",
-    "Dutch": "Aanduiding",
-    "Polish": "Oznaczenie",
-    "Malay/Indonesian": "Jabatan",
-    "Ukrainian": "Посада"
   },
   "select_designation": {
     "English": "Select Designation",
@@ -14120,28 +12934,6 @@
     "Polish": "Koniec gwarancji",
     "Malay/Indonesian": "Akhir garansi",
     "Ukrainian": "Кінець гарантії"
-  },
-  "warranty_status": {
-    "English": "Warranty Status",
-    "Hindi": "वारंटी स्थिति",
-    "Chinese (Simplified)": "保修状态",
-    "Spanish": "Estado de garantía",
-    "Japanese": "保証状況",
-    "German": "Garantiestatus",
-    "French": "Statut de garantie",
-    "Arabic": "حالة الضمان",
-    "Portuguese": "Status da garantia",
-    "Russian": "Статус гарантии",
-    "Bengali": "ওয়ারেন্টি অবস্থা",
-    "Turkish": "Garanti Durumu",
-    "Italian": "Stato garanzia",
-    "Korean": "보증 상태",
-    "Vietnamese": "Trạng thái bảo hành",
-    "Thai": "สถานะการรับประกัน",
-    "Dutch": "Garantiestatus",
-    "Polish": "Status gwarancji",
-    "Malay/Indonesian": "Status garansi",
-    "Ukrainian": "Статус гарантії"
   },
   "name": {
     "English": "Name",
@@ -14825,50 +13617,6 @@
     "Malay/Indonesian": "Nama Mesin / Model",
     "Ukrainian": "Назва машини / моделі"
   },
-  "functionality": {
-    "English": "Functionality",
-    "Hindi": "कार्यक्षमता",
-    "Chinese (Simplified)": "功能",
-    "Spanish": "Funcionalidad",
-    "Japanese": "機能",
-    "German": "Funktionalität",
-    "French": "Fonctionnalité",
-    "Arabic": "الوظائف",
-    "Portuguese": "Funcionalidade",
-    "Russian": "Функциональность",
-    "Bengali": "কার্যকারিতা",
-    "Turkish": "İşlevsellik",
-    "Italian": "Funzionalità",
-    "Korean": "기능",
-    "Vietnamese": "Chức năng",
-    "Thai": "ฟังก์ชัน",
-    "Dutch": "Functionaliteit",
-    "Polish": "Funkcjonalność",
-    "Malay/Indonesian": "Fungsionalitas",
-    "Ukrainian": "Функціональність"
-  },
-  "fully_automatic": {
-    "English": "Fully Automatic",
-    "Hindi": "पूरी तरह से स्वचालित",
-    "Chinese (Simplified)": "全自动",
-    "Spanish": "Completamente Automático",
-    "Japanese": "完全自動",
-    "German": "Vollautomatisch",
-    "French": "Entièrement Automatique",
-    "Arabic": "أوتوماتيكي بالكامل",
-    "Portuguese": "Totalmente Automático",
-    "Russian": "Полностью автоматический",
-    "Bengali": "সম্পূর্ণ স্বয়ংক্রিয়",
-    "Turkish": "Tam Otomatik",
-    "Italian": "Completamente Automatico",
-    "Korean": "완전 자동",
-    "Vietnamese": "Hoàn toàn tự động",
-    "Thai": "อัตโนมัติเต็มรูปแบบ",
-    "Dutch": "Volledig Automatisch",
-    "Polish": "W pełni Automatyczny",
-    "Malay/Indonesian": "Sepenuhnya Otomatis",
-    "Ukrainian": "Повністю автоматичний"
-  },
   "semi_automatic": {
     "English": "Semi Automatic",
     "Hindi": "अर्ध स्वचालित",
@@ -14935,28 +13683,6 @@
     "Malay/Indonesian": "Pilih Fungsionalitas",
     "Ukrainian": "Виберіть функціональність"
   },
-  "processing_dimensions": {
-    "English": "Processing Dimensions",
-    "Hindi": "प्रोसेसिंग आयाम",
-    "Chinese (Simplified)": "加工尺寸",
-    "Spanish": "Dimensiones de Procesamiento",
-    "Japanese": "加工寸法",
-    "German": "Verarbeitungsabmessungen",
-    "French": "Dimensions de Traitement",
-    "Arabic": "أبعاد المعالجة",
-    "Portuguese": "Dimensões de Processamento",
-    "Russian": "Размеры обработки",
-    "Bengali": "প্রক্রিয়াকরণের মাত্রা",
-    "Turkish": "İşleme Boyutları",
-    "Italian": "Dimensioni di Lavorazione",
-    "Korean": "가공 치수",
-    "Vietnamese": "Kích thước xử lý",
-    "Thai": "ขนาดการประมวลผล",
-    "Dutch": "Verwerkingsafmetingen",
-    "Polish": "Wymiary Obróbki",
-    "Malay/Indonesian": "Dimensi Pemrosesan",
-    "Ukrainian": "Розміри обробки"
-  },
   "maximum_processing_size": {
     "English": "Maximum Processing Size (mm)",
     "Hindi": "अधिकतम प्रोसेसिंग आकार (मिमी)",
@@ -14978,28 +13704,6 @@
     "Polish": "Maksymalny Rozmiar Obróbki (mm)",
     "Malay/Indonesian": "Ukuran Pemrosesan Maksimum (mm)",
     "Ukrainian": "Максимальний розмір обробки (мм)"
-  },
-  "minimum_processing_size": {
-    "English": "Minimum Processing Size (mm)",
-    "Hindi": "न्यूनतम प्रोसेसिंग आकार (मिमी)",
-    "Chinese (Simplified)": "最小加工尺寸 (mm)",
-    "Spanish": "Tamaño Mínimo de Procesamiento (mm)",
-    "Japanese": "最小加工サイズ (mm)",
-    "German": "Minimale Verarbeitungsgröße (mm)",
-    "French": "Taille Minimale de Traitement (mm)",
-    "Arabic": "الحد الأدنى لحجم المعالجة (مم)",
-    "Portuguese": "Tamanho Mínimo de Processamento (mm)",
-    "Russian": "Минимальный размер обработки (мм)",
-    "Bengali": "সর্বনিম্ন প্রক্রিয়াকরণের আকার (মিমি)",
-    "Turkish": "Minimum İşleme Boyutu (mm)",
-    "Italian": "Dimensione Minima di Lavorazione (mm)",
-    "Korean": "최소 가공 크기 (mm)",
-    "Vietnamese": "Kích thước xử lý tối thiểu (mm)",
-    "Thai": "ขนาดการประมวลผลขั้นต่ำ (มม.)",
-    "Dutch": "Minimale Verwerkingsgrootte (mm)",
-    "Polish": "Minimalny Rozmiar Obróbki (mm)",
-    "Malay/Indonesian": "Ukuran Pemrosesan Minimum (mm)",
-    "Ukrainian": "Мінімальний розмір обробки (мм)"
   },
   "thickness": {
     "English": "Thickness (mm)",
@@ -15133,28 +13837,6 @@
     "Malay/Indonesian": "Simpan Mesin ke Rekam",
     "Ukrainian": "Зберегти машину в запис"
   },
-  "apply": {
-    "English": "Apply",
-    "Hindi": "लागू करें",
-    "Chinese (Simplified)": "应用",
-    "Spanish": "Aplicar",
-    "Japanese": "適用",
-    "German": "Anwenden",
-    "French": "Appliquer",
-    "Arabic": "تطبيق",
-    "Portuguese": "Aplicar",
-    "Russian": "Применить",
-    "Bengali": "প্রয়োগ করুন",
-    "Turkish": "Uygula",
-    "Italian": "Applica",
-    "Korean": "적용",
-    "Vietnamese": "Áp dụng",
-    "Thai": "ใช้",
-    "Dutch": "Toepassen",
-    "Polish": "Zastosuj",
-    "Malay/Indonesian": "Terapkan",
-    "Ukrainian": "Застосувати"
-  },
   "machine_details": {
     "English": "Machine Details",
     "Hindi": "मशीन विवरण",
@@ -15176,28 +13858,6 @@
     "Polish": "Szczegóły Maszyny",
     "Malay/Indonesian": "Detail Mesin",
     "Ukrainian": "Деталі машини"
-  },
-  "machine_model_name": {
-    "English": "Machine / Model Name",
-    "Hindi": "मशीन / मॉडल नाम",
-    "Chinese (Simplified)": "机器/型号名称",
-    "Spanish": "Nombre de Máquina / Modelo",
-    "Japanese": "機械/モデル名",
-    "German": "Maschinen-/Modellname",
-    "French": "Nom de Machine/Modèle",
-    "Arabic": "اسم الآلة / النموذج",
-    "Portuguese": "Nome da Máquina/Modelo",
-    "Russian": "Название машины/модели",
-    "Bengali": "মেশিন/মডেল নাম",
-    "Turkish": "Makine/Model Adı",
-    "Italian": "Nome Macchina/Modello",
-    "Korean": "기계/모델명",
-    "Vietnamese": "Tên máy/Model",
-    "Thai": "ชื่อเครื่องจักร/รุ่น",
-    "Dutch": "Machine/Modelnaam",
-    "Polish": "Nazwa Maszyny/Modelu",
-    "Malay/Indonesian": "Nama Mesin/Model",
-    "Ukrainian": "Назва машини/моделі"
   },
   "model_number": {
     "English": "Model Number",
@@ -15309,28 +13969,6 @@
     "Malay/Indonesian": "Dimensi Pemrosesan",
     "Ukrainian": "Розміри обробки"
   },
-  "maximum_processing_size": {
-    "English": "Maximum Processing Size (mm)",
-    "Hindi": "अधिकतम प्रोसेसिंग आकार (मिमी)",
-    "Chinese (Simplified)": "最大加工尺寸 (mm)",
-    "Spanish": "Tamaño Máximo de Procesamiento (mm)",
-    "Japanese": "最大加工サイズ (mm)",
-    "German": "Maximale Verarbeitungsgröße (mm)",
-    "French": "Taille Maximale de Traitement (mm)",
-    "Arabic": "الحد الأقصى لحجم المعالجة (مم)",
-    "Portuguese": "Tamanho Máximo de Processamento (mm)",
-    "Russian": "Максимальный размер обработки (мм)",
-    "Bengali": "সর্বোচ্চ প্রক্রিয়াকরণের আকার (মিমি)",
-    "Turkish": "Maksimum İşleme Boyutu (mm)",
-    "Italian": "Dimensione Massima di Lavorazione (mm)",
-    "Korean": "최대 가공 크기 (mm)",
-    "Vietnamese": "Kích thước xử lý tối đa (mm)",
-    "Thai": "ขนาดการประมวลผลสูงสุด (มม.)",
-    "Dutch": "Maximale Verwerkingsgrootte (mm)",
-    "Polish": "Maksymalny Rozmiar Obróbki (mm)",
-    "Malay/Indonesian": "Ukuran Pemrosesan Maksimum (mm)",
-    "Ukrainian": "Максимальний розмір обробки (мм)"
-  },
   "minimum_processing_size": {
     "English": "Minimum Processing Size (mm)",
     "Hindi": "न्यूनतम प्रोसेसिंग आकार (मिमी)",
@@ -15397,72 +14035,6 @@
     "Malay/Indonesian": "Lebar",
     "Ukrainian": "Ширина"
   },
-  "thickness": {
-    "English": "Thickness",
-    "Hindi": "मोटाई",
-    "Chinese (Simplified)": "厚度",
-    "Spanish": "Espesor",
-    "Japanese": "厚さ",
-    "German": "Dicke",
-    "French": "Épaisseur",
-    "Arabic": "السماكة",
-    "Portuguese": "Espessura",
-    "Russian": "Толщина",
-    "Bengali": "বেধ",
-    "Turkish": "Kalınlık",
-    "Italian": "Spessore",
-    "Korean": "두께",
-    "Vietnamese": "Độ dày",
-    "Thai": "ความหนา",
-    "Dutch": "Dikte",
-    "Polish": "Grubość",
-    "Malay/Indonesian": "Ketebalan",
-    "Ukrainian": "Товщина"
-  },
-  "total_power": {
-    "English": "Total Power",
-    "Hindi": "कुल शक्ति",
-    "Chinese (Simplified)": "总功率",
-    "Spanish": "Potencia Total",
-    "Japanese": "総電力",
-    "German": "Gesamtleistung",
-    "French": "Puissance Totale",
-    "Arabic": "إجمالي الطاقة",
-    "Portuguese": "Potência Total",
-    "Russian": "Общая мощность",
-    "Bengali": "মোট শক্তি",
-    "Turkish": "Toplam Güç",
-    "Italian": "Potenza Totale",
-    "Korean": "총 전력",
-    "Vietnamese": "Tổng công suất",
-    "Thai": "กำลังรวม",
-    "Dutch": "Totaal Vermogen",
-    "Polish": "Całkowita Moc",
-    "Malay/Indonesian": "Total Daya",
-    "Ukrainian": "Загальна потужність"
-  },
-  "notes_special_instructions": {
-    "English": "Notes/Special Instructions",
-    "Hindi": "नोट्स/विशेष निर्देश",
-    "Chinese (Simplified)": "备注/特殊说明",
-    "Spanish": "Notas/Instrucciones Especiales",
-    "Japanese": "注記/特別指示",
-    "German": "Hinweise/Besondere Anweisungen",
-    "French": "Notes/Instructions Spéciales",
-    "Arabic": "ملاحظات/تعليمات خاصة",
-    "Portuguese": "Notas/Instruções Especiais",
-    "Russian": "Примечания/Особые указания",
-    "Bengali": "নোট/বিশেষ নির্দেশনা",
-    "Turkish": "Notlar/Özel Talimatlar",
-    "Italian": "Note/Istruzioni Speciali",
-    "Korean": "참고사항/특별 지시사항",
-    "Vietnamese": "Ghi chú/Hướng dẫn đặc biệt",
-    "Thai": "หมายเหตุ/คำแนะนำพิเศษ",
-    "Dutch": "Opmerkingen/Bijzondere Instructies",
-    "Polish": "Uwagi/Specjalne Instrukcje",
-    "Malay/Indonesian": "Catatan/Instruksi Khusus",
-    "Ukrainian": "Примітки/Спеціальні інструкції"
-  },
   "link_here": {
     "English": "Link here",
     "Hindi": "यहां लिंक करें",
@@ -15484,28 +14056,6 @@
     "Polish": "Połącz tutaj",
     "Malay/Indonesian": "Tautkan di sini",
     "Ukrainian": "Посилання тут"
-  },
-  "edit": {
-    "English": "Edit",
-    "Hindi": "संपादित करें",
-    "Chinese (Simplified)": "编辑",
-    "Spanish": "Editar",
-    "Japanese": "編集",
-    "German": "Bearbeiten",
-    "French": "Modifier",
-    "Arabic": "تعديل",
-    "Portuguese": "Editar",
-    "Russian": "Редактировать",
-    "Bengali": "সম্পাদনা করুন",
-    "Turkish": "Düzenle",
-    "Italian": "Modifica",
-    "Korean": "편집",
-    "Vietnamese": "Chỉnh sửa",
-    "Thai": "แก้ไข",
-    "Dutch": "Bewerken",
-    "Polish": "Edytuj",
-    "Malay/Indonesian": "Edit",
-    "Ukrainian": "Редагувати"
   },
   "remove": {
     "English": "Remove",
@@ -15682,28 +14232,6 @@
     "Polish": "Ostrzeżenie",
     "Malay/Indonesian": "Peringatan",
     "Ukrainian": "Попередження"
-  },
-  "machine_name": {
-    "English": "Machine Name",
-    "Hindi": "मशीन का नाम",
-    "Chinese (Simplified)": "机器名称",
-    "Spanish": "Nombre de la Máquina",
-    "Japanese": "機械名",
-    "German": "Maschinenname",
-    "French": "Nom de la Machine",
-    "Arabic": "اسم الآلة",
-    "Portuguese": "Nome da Máquina",
-    "Russian": "Название машины",
-    "Bengali": "মেশিনের নাম",
-    "Turkish": "Makine Adı",
-    "Italian": "Nome Macchina",
-    "Korean": "기계명",
-    "Vietnamese": "Tên máy",
-    "Thai": "ชื่อเครื่องจักร",
-    "Dutch": "Machinenaam",
-    "Polish": "Nazwa Maszyny",
-    "Malay/Indonesian": "Nama Mesin",
-    "Ukrainian": "Назва машини"
   },
   "machine_model": {
     "English": "Machine Model",
@@ -16519,28 +15047,6 @@
     "Malay/Indonesian": "Tulis masalah di sini.....",
     "Ukrainian": "Напишіть проблему тут....."
   },
-  "error_code": {
-    "English": "Error Code",
-    "Hindi": "त्रुटि कोड",
-    "Chinese (Simplified)": "错误代码",
-    "Spanish": "Código de Error",
-    "Japanese": "エラーコード",
-    "German": "Fehlercode",
-    "French": "Code d'Erreur",
-    "Arabic": "رمز الخطأ",
-    "Portuguese": "Código de Erro",
-    "Russian": "Код Ошибки",
-    "Bengali": "ত্রুটি কোড",
-    "Turkish": "Hata Kodu",
-    "Italian": "Codice di Errore",
-    "Korean": "오류 코드",
-    "Vietnamese": "Mã Lỗi",
-    "Thai": "รหัสข้อผิดพลาด",
-    "Dutch": "Foutcode",
-    "Polish": "Kod Błędu",
-    "Malay/Indonesian": "Kode Kesalahan",
-    "Ukrainian": "Код Помилки"
-  },
   "upload_media": {
     "English": "Upload Media",
     "Hindi": "मीडिया अपलोड करें",
@@ -16783,50 +15289,6 @@
     "Malay/Indonesian": "Jenis Dukungan",
     "Ukrainian": "Тип підтримки"
   },
-  "created_date": {
-    "English": "Created Date",
-    "Hindi": "निर्माण तिथि",
-    "Chinese (Simplified)": "创建日期",
-    "Spanish": "Fecha de Creación",
-    "Japanese": "作成日",
-    "German": "Erstellungsdatum",
-    "French": "Date de création",
-    "Arabic": "تاريخ الإنشاء",
-    "Portuguese": "Data de Criação",
-    "Russian": "Дата создания",
-    "Bengali": "তৈরি করার তারিখ",
-    "Turkish": "Oluşturulma Tarihi",
-    "Italian": "Data di Creazione",
-    "Korean": "생성일",
-    "Vietnamese": "Ngày tạo",
-    "Thai": "วันที่สร้าง",
-    "Dutch": "Aanmaakdatum",
-    "Polish": "Data Utworzenia",
-    "Malay/Indonesian": "Tanggal Dibuat",
-    "Ukrainian": "Дата створення"
-  },
-  "in_warranty": {
-    "English": "In Warranty",
-    "Hindi": "वारंटी में",
-    "Chinese (Simplified)": "保修期内",
-    "Spanish": "En Garantía",
-    "Japanese": "保証期間内",
-    "German": "In der Garantie",
-    "French": "Sous garantie",
-    "Arabic": "تحت الضمان",
-    "Portuguese": "Em Garantia",
-    "Russian": "На гарантии",
-    "Bengali": "ওয়ারেন্টিতে",
-    "Turkish": "Garantide",
-    "Italian": "In Garanzia",
-    "Korean": "보증 기간 내",
-    "Vietnamese": "Trong bảo hành",
-    "Thai": "อยู่ในประกัน",
-    "Dutch": "Onder Garantie",
-    "Polish": "Na Gwarancji",
-    "Malay/Indonesian": "Dalam Garansi",
-    "Ukrainian": "На гарантії"
-  },
   "machine_name": {
     "English": "Machine Name",
     "Hindi": "मशीन का नाम",
@@ -16848,28 +15310,6 @@
     "Polish": "Nazwa Maszyny",
     "Malay/Indonesian": "Nama Mesin",
     "Ukrainian": "Назва машини"
-  },
-  "model_number": {
-    "English": "Model Number",
-    "Hindi": "मॉडल नंबर",
-    "Chinese (Simplified)": "型号",
-    "Spanish": "Número de Modelo",
-    "Japanese": "モデル番号",
-    "German": "Modellnummer",
-    "French": "Numéro de modèle",
-    "Arabic": "رقم الطراز",
-    "Portuguese": "Número do Modelo",
-    "Russian": "Номер модели",
-    "Bengali": "মডেল নম্বর",
-    "Turkish": "Model Numarası",
-    "Italian": "Numero di Modello",
-    "Korean": "모델 번호",
-    "Vietnamese": "Số model",
-    "Thai": "หมายเลขรุ่น",
-    "Dutch": "Modelnummer",
-    "Polish": "Numer Modelu",
-    "Malay/Indonesian": "Nomor Model",
-    "Ukrainian": "Номер моделі"
   },
   "support_fee_notice": {
     "English": "Support Fee Notice",
@@ -17223,26 +15663,356 @@
     "Malay/Indonesian": "Kupon dihapus",
     "Ukrainian": "Купон видалено"
   },
-  "redirecting_to_payment": {
-    "English": "Redirecting to payment...",
-    "Hindi": "भुगतान पर पुनर्निर्देशित कर रहे हैं...",
-    "Chinese (Simplified)": "正在重定向到付款...",
-    "Spanish": "Redirigiendo al pago...",
-    "Japanese": "支払いにリダイレクト中...",
-    "German": "Weiterleitung zur Zahlung...",
-    "French": "Redirection vers le paiement...",
-    "Arabic": "إعادة التوجيه إلى الدفع...",
-    "Portuguese": "Redirecionando para pagamento...",
-    "Russian": "Перенаправление на оплату...",
-    "Bengali": "পেমেন্টে পুনর্নির্দেশ করা হচ্ছে...",
-    "Turkish": "Ödemeye yönlendiriliyor...",
-    "Italian": "Reindirizzamento al pagamento...",
-    "Korean": "결제로 리디렉션 중...",
-    "Vietnamese": "Đang chuyển hướng đến thanh toán...",
-    "Thai": "กำลังเปลี่ยนเส้นทางไปยังการชำระเงิน...",
-    "Dutch": "Doorverwijzen naar betaling...",
-    "Polish": "Przekierowywanie do płatności...",
-    "Malay/Indonesian": "Mengarahkan ke pembayaran...",
-    "Ukrainian": "Перенаправлення на оплату..."
+  "unknown_organization": {
+    "English": "Unknown Organization",
+    "Hindi": "अज्ञात संगठन",
+    "Chinese (Simplified)": "未知组织",
+    "Spanish": "Organización Desconocida",
+    "Japanese": "不明な組織",
+    "German": "Unbekannte Organisation",
+    "French": "Organisation Inconnue",
+    "Arabic": "منظمة غير معروفة",
+    "Portuguese": "Organização Desconhecida",
+    "Russian": "Неизвестная организация",
+    "Bengali": "অজানা সংস্থা",
+    "Turkish": "Bilinmeyen Organizasyon",
+    "Italian": "Organizzazione Sconosciuta",
+    "Korean": "알 수 없는 조직",
+    "Vietnamese": "Tổ chức không xác định",
+    "Thai": "องค์กรที่ไม่รู้จัก",
+    "Dutch": "Onbekende Organisatie",
+    "Polish": "Nieznana Organizacja",
+    "Malay/Indonesian": "Organisasi Tidak Diketahui",
+    "Ukrainian": "Невідома організація"
+  },
+  "unknown_machine": {
+    "English": "Unknown Machine",
+    "Hindi": "अज्ञात मशीन",
+    "Chinese (Simplified)": "未知机器",
+    "Spanish": "Máquina Desconocida",
+    "Japanese": "不明なマシン",
+    "German": "Unbekannte Maschine",
+    "French": "Machine Inconnue",
+    "Arabic": "آلة غير معروفة",
+    "Portuguese": "Máquina Desconhecida",
+    "Russian": "Неизвестная машина",
+    "Bengali": "অজানা মেশিন",
+    "Turkish": "Bilinmeyen Makine",
+    "Italian": "Macchina Sconosciuta",
+    "Korean": "알 수 없는 기계",
+    "Vietnamese": "Máy không xác định",
+    "Thai": "เครื่องจักรที่ไม่รู้จัก",
+    "Dutch": "Onbekende Machine",
+    "Polish": "Nieznana Maszyna",
+    "Malay/Indonesian": "Mesin Tidak Diketahui",
+    "Ukrainian": "Невідома машина"
+  },
+  "unknown_model": {
+    "English": "Unknown Model",
+    "Hindi": "अज्ञात मॉडल",
+    "Chinese (Simplified)": "未知型号",
+    "Spanish": "Modelo Desconocido",
+    "Japanese": "不明なモデル",
+    "German": "Unbekanntes Modell",
+    "French": "Modèle Inconnu",
+    "Arabic": "نموذج غير معروف",
+    "Portuguese": "Modelo Desconhecido",
+    "Russian": "Неизвестная модель",
+    "Bengali": "অজানা মডেল",
+    "Turkish": "Bilinmeyen Model",
+    "Italian": "Modello Sconosciuto",
+    "Korean": "알 수 없는 모델",
+    "Vietnamese": "Mô hình không xác định",
+    "Thai": "รุ่นที่ไม่รู้จัก",
+    "Dutch": "Onbekend Model",
+    "Polish": "Nieznany Model",
+    "Malay/Indonesian": "Model Tidak Diketahui",
+    "Ukrainian": "Невідома модель"
+  },
+  "no_problem_description_available": {
+    "English": "No problem description available",
+    "Hindi": "कोई समस्या विवरण उपलब्ध नहीं",
+    "Chinese (Simplified)": "无问题描述可用",
+    "Spanish": "No hay descripción del problema disponible",
+    "Japanese": "問題の説明が利用できません",
+    "German": "Keine Problembeschreibung verfügbar",
+    "French": "Aucune description de problème disponible",
+    "Arabic": "لا يوجد وصف للمشكلة متاح",
+    "Portuguese": "Nenhuma descrição do problema disponível",
+    "Russian": "Описание проблемы недоступно",
+    "Bengali": "কোন সমস্যার বিবরণ পাওয়া যায় না",
+    "Turkish": "Problem açıklaması mevcut değil",
+    "Italian": "Nessuna descrizione del problema disponibile",
+    "Korean": "사용 가능한 문제 설명이 없습니다",
+    "Vietnamese": "Không có mô tả vấn đề nào",
+    "Thai": "ไม่มีคำอธิบายปัญหา",
+    "Dutch": "Geen probleembeschrijving beschikbaar",
+    "Polish": "Brak opisu problemu",
+    "Malay/Indonesian": "Tidak ada deskripsi masalah yang tersedia",
+    "Ukrainian": "Опис проблеми недоступний"
+  },
+  "photos_video": {
+    "English": "Photos / Video",
+    "Hindi": "फोटो / वीडियो",
+    "Chinese (Simplified)": "照片 / 视频",
+    "Spanish": "Fotos / Video",
+    "Japanese": "写真 / 動画",
+    "German": "Fotos / Video",
+    "French": "Photos / Vidéo",
+    "Arabic": "الصور / الفيديو",
+    "Portuguese": "Fotos / Vídeo",
+    "Russian": "Фото / Видео",
+    "Bengali": "ছবি / ভিডিও",
+    "Turkish": "Fotoğraflar / Video",
+    "Italian": "Foto / Video",
+    "Korean": "사진 / 비디오",
+    "Vietnamese": "Ảnh / Video",
+    "Thai": "รูปภาพ / วิดีโอ",
+    "Dutch": "Foto's / Video",
+    "Polish": "Zdjęcia / Wideo",
+    "Malay/Indonesian": "Foto / Video",
+    "Ukrainian": "Фото / Відео"
+  },
+  "payment_status": {
+    "English": "Payment Status",
+    "Hindi": "भुगतान स्थिति",
+    "Chinese (Simplified)": "付款状态",
+    "Spanish": "Estado del Pago",
+    "Japanese": "支払い状況",
+    "German": "Zahlungsstatus",
+    "French": "Statut du Paiement",
+    "Arabic": "حالة الدفع",
+    "Portuguese": "Status do Pagamento",
+    "Russian": "Статус платежа",
+    "Bengali": "পেমেন্ট স্ট্যাটাস",
+    "Turkish": "Ödeme Durumu",
+    "Italian": "Stato del Pagamento",
+    "Korean": "결제 상태",
+    "Vietnamese": "Trạng thái thanh toán",
+    "Thai": "สถานะการชำระเงิน",
+    "Dutch": "Betalingsstatus",
+    "Polish": "Status Płatności",
+    "Malay/Indonesian": "Status Pembayaran",
+    "Ukrainian": "Статус платежу"
+  },
+  "support_mode": {
+    "English": "Support Mode",
+    "Hindi": "सहायता मोड",
+    "Chinese (Simplified)": "支持模式",
+    "Spanish": "Modo de Soporte",
+    "Japanese": "サポートモード",
+    "German": "Support-Modus",
+    "French": "Mode de Support",
+    "Arabic": "وضع الدعم",
+    "Portuguese": "Modo de Suporte",
+    "Russian": "Режим поддержки",
+    "Bengali": "সাপোর্ট মোড",
+    "Turkish": "Destek Modu",
+    "Italian": "Modalità di Supporto",
+    "Korean": "지원 모드",
+    "Vietnamese": "Chế độ hỗ trợ",
+    "Thai": "โหมดการสนับสนุน",
+    "Dutch": "Ondersteuningsmodus",
+    "Polish": "Tryb Wsparcia",
+    "Malay/Indonesian": "Mode Dukungan",
+    "Ukrainian": "Режим підтримки"
+  },
+  "get_tax_invoice": {
+    "English": "Get Tax Invoice",
+    "Hindi": "टैक्स इनवॉइस प्राप्त करें",
+    "Chinese (Simplified)": "获取税务发票",
+    "Spanish": "Obtener Factura Fiscal",
+    "Japanese": "税務請求書を取得",
+    "German": "Steuerrechnung abrufen",
+    "French": "Obtenir la Facture Fiscale",
+    "Arabic": "الحصول على الفاتورة الضريبية",
+    "Portuguese": "Obter Nota Fiscal",
+    "Russian": "Получить налоговую накладную",
+    "Bengali": "ট্যাক্স ইনভয়েস পান",
+    "Turkish": "Vergi Faturası Al",
+    "Italian": "Ottieni Fattura Fiscale",
+    "Korean": "세금 계산서 받기",
+    "Vietnamese": "Lấy hóa đơn thuế",
+    "Thai": "รับใบแจ้งหนี้ภาษี",
+    "Dutch": "Belastingfactuur ophalen",
+    "Polish": "Pobierz Fakturę Podatkową",
+    "Malay/Indonesian": "Dapatkan Faktur Pajak",
+    "Ukrainian": "Отримати податкову накладну"
+  },
+  "ticket_details": {
+    "English": "Ticket Details",
+    "Hindi": "टिकट विवरण",
+    "Chinese (Simplified)": "工单详情",
+    "Spanish": "Detalles del Ticket",
+    "Japanese": "チケット詳細",
+    "German": "Ticket-Details",
+    "French": "Détails du Ticket",
+    "Arabic": "تفاصيل التذكرة",
+    "Portuguese": "Detalhes do Ticket",
+    "Russian": "Детали билета",
+    "Bengali": "টিকিটের বিবরণ",
+    "Turkish": "Bilet Detayları",
+    "Italian": "Dettagli del Ticket",
+    "Korean": "티켓 세부사항",
+    "Vietnamese": "Chi tiết vé",
+    "Thai": "รายละเอียดตั๋ว",
+    "Dutch": "Ticketdetails",
+    "Polish": "Szczegóły Biletu",
+    "Malay/Indonesian": "Detail Tiket",
+    "Ukrainian": "Деталі квитка"
+  },
+  "error_code": {
+    "English": "Error Code",
+    "Hindi": "त्रुटि कोड",
+    "Chinese (Simplified)": "错误代码",
+    "Spanish": "Código de Error",
+    "Japanese": "エラーコード",
+    "German": "Fehlercode",
+    "French": "Code d'Erreur",
+    "Arabic": "رمز الخطأ",
+    "Portuguese": "Código de Erro",
+    "Russian": "Код ошибки",
+    "Bengali": "এরর কোড",
+    "Turkish": "Hata Kodu",
+    "Italian": "Codice di Errore",
+    "Korean": "오류 코드",
+    "Vietnamese": "Mã lỗi",
+    "Thai": "รหัสข้อผิดพลาด",
+    "Dutch": "Foutcode",
+    "Polish": "Kod Błędu",
+    "Malay/Indonesian": "Kode Error",
+    "Ukrainian": "Код помилки"
+  },
+  "warranty_status": {
+    "English": "Warranty Status",
+    "Hindi": "वारंटी स्थिति",
+    "Chinese (Simplified)": "保修状态",
+    "Spanish": "Estado de Garantía",
+    "Japanese": "保証状況",
+    "German": "Garantiestatus",
+    "French": "Statut de Garantie",
+    "Arabic": "حالة الضمان",
+    "Portuguese": "Status da Garantia",
+    "Russian": "Статус гарантии",
+    "Bengali": "ওয়ারেন্টি স্ট্যাটাস",
+    "Turkish": "Garanti Durumu",
+    "Italian": "Stato della Garanzia",
+    "Korean": "보증 상태",
+    "Vietnamese": "Trạng thái bảo hành",
+    "Thai": "สถานะการรับประกัน",
+    "Dutch": "Garantiestatus",
+    "Polish": "Status Gwarancji",
+    "Malay/Indonesian": "Status Garansi",
+    "Ukrainian": "Статус гарантії"
+  },
+  "see_chat": {
+    "English": "See Chat",
+    "Hindi": "चैट देखें",
+    "Chinese (Simplified)": "查看聊天",
+    "Spanish": "Ver Chat",
+    "Japanese": "チャットを見る",
+    "German": "Chat anzeigen",
+    "French": "Voir le Chat",
+    "Arabic": "عرض الدردشة",
+    "Portuguese": "Ver Chat",
+    "Russian": "Посмотреть чат",
+    "Bengali": "চ্যাট দেখুন",
+    "Turkish": "Sohbeti Gör",
+    "Italian": "Vedi Chat",
+    "Korean": "채팅 보기",
+    "Vietnamese": "Xem trò chuyện",
+    "Thai": "ดูแชท",
+    "Dutch": "Chat bekijken",
+    "Polish": "Zobacz Czat",
+    "Malay/Indonesian": "Lihat Chat",
+    "Ukrainian": "Переглянути чат"
+  },
+  "error_loading_ticket_details": {
+    "English": "Error loading ticket details",
+    "Hindi": "टिकट विवरण लोड करने में त्रुटि",
+    "Chinese (Simplified)": "加载工单详情时出错",
+    "Spanish": "Error al cargar los detalles del ticket",
+    "Japanese": "チケット詳細の読み込みエラー",
+    "German": "Fehler beim Laden der Ticket-Details",
+    "French": "Erreur lors du chargement des détails du ticket",
+    "Arabic": "خطأ في تحميل تفاصيل التذكرة",
+    "Portuguese": "Erro ao carregar detalhes do ticket",
+    "Russian": "Ошибка загрузки деталей билета",
+    "Bengali": "টিকিটের বিবরণ লোড করতে ত্রুটি",
+    "Turkish": "Bilet detayları yüklenirken hata",
+    "Italian": "Errore nel caricamento dei dettagli del ticket",
+    "Korean": "티켓 세부사항 로드 오류",
+    "Vietnamese": "Lỗi khi tải chi tiết vé",
+    "Thai": "ข้อผิดพลาดในการโหลดรายละเอียดตั๋ว",
+    "Dutch": "Fout bij het laden van ticketdetails",
+    "Polish": "Błąd ładowania szczegółów biletu",
+    "Malay/Indonesian": "Kesalahan memuat detail tiket",
+    "Ukrainian": "Помилка завантаження деталей квитка"
+  },
+  "unknown_error_occurred": {
+    "English": "Unknown error occurred",
+    "Hindi": "अज्ञात त्रुटि हुई",
+    "Chinese (Simplified)": "发生未知错误",
+    "Spanish": "Ocurrió un error desconocido",
+    "Japanese": "不明なエラーが発生しました",
+    "German": "Unbekannter Fehler aufgetreten",
+    "French": "Une erreur inconnue s'est produite",
+    "Arabic": "حدث خطأ غير معروف",
+    "Portuguese": "Ocorreu um erro desconhecido",
+    "Russian": "Произошла неизвестная ошибка",
+    "Bengali": "অজানা ত্রুটি ঘটেছে",
+    "Turkish": "Bilinmeyen hata oluştu",
+    "Italian": "Si è verificato un errore sconosciuto",
+    "Korean": "알 수 없는 오류가 발생했습니다",
+    "Vietnamese": "Đã xảy ra lỗi không xác định",
+    "Thai": "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ",
+    "Dutch": "Onbekende fout opgetreden",
+    "Polish": "Wystąpił nieznany błąd",
+    "Malay/Indonesian": "Terjadi kesalahan yang tidak diketahui",
+    "Ukrainian": "Сталася невідома помилка"
+  },
+  "no_ticket_details_found": {
+    "English": "No ticket details found",
+    "Hindi": "कोई टिकट विवरण नहीं मिला",
+    "Chinese (Simplified)": "未找到工单详情",
+    "Spanish": "No se encontraron detalles del ticket",
+    "Japanese": "チケット詳細が見つかりません",
+    "German": "Keine Ticket-Details gefunden",
+    "French": "Aucun détail de ticket trouvé",
+    "Arabic": "لم يتم العثور على تفاصيل التذكرة",
+    "Portuguese": "Nenhum detalhe de ticket encontrado",
+    "Russian": "Детали билета не найдены",
+    "Bengali": "কোন টিকিটের বিবরণ পাওয়া যায়নি",
+    "Turkish": "Bilet detayları bulunamadı",
+    "Italian": "Nessun dettaglio del ticket trovato",
+    "Korean": "티켓 세부사항을 찾을 수 없습니다",
+    "Vietnamese": "Không tìm thấy chi tiết vé",
+    "Thai": "ไม่พบรายละเอียดตั๋ว",
+    "Dutch": "Geen ticketdetails gevonden",
+    "Polish": "Nie znaleziono szczegółów biletu",
+    "Malay/Indonesian": "Tidak ada detail tiket ditemukan",
+    "Ukrainian": "Деталі квитка не знайдено"
+  },
+  "ticket_details_could_not_be_loaded": {
+    "English": "The ticket details could not be loaded",
+    "Hindi": "टिकट विवरण लोड नहीं किया जा सका",
+    "Chinese (Simplified)": "无法加载工单详情",
+    "Spanish": "No se pudieron cargar los detalles del ticket",
+    "Japanese": "チケット詳細を読み込めませんでした",
+    "German": "Die Ticket-Details konnten nicht geladen werden",
+    "French": "Les détails du ticket n'ont pas pu être chargés",
+    "Arabic": "لا يمكن تحميل تفاصيل التذكرة",
+    "Portuguese": "Os detalhes do ticket não puderam ser carregados",
+    "Russian": "Не удалось загрузить детали билета",
+    "Bengali": "টিকিটের বিবরণ লোড করা যায়নি",
+    "Turkish": "Bilet detayları yüklenemedi",
+    "Italian": "I dettagli del ticket non sono stati caricati",
+    "Korean": "티켓 세부사항을 로드할 수 없습니다",
+    "Vietnamese": "Không thể tải chi tiết vé",
+    "Thai": "ไม่สามารถโหลดรายละเอียดตั๋วได้",
+    "Dutch": "De ticketdetails konden niet worden geladen",
+    "Polish": "Nie udało się załadować szczegółów biletu",
+    "Malay/Indonesian": "Detail tiket tidak dapat dimuat",
+    "Ukrainian": "Не вдалося завантажити деталі квитка"
   }
 }

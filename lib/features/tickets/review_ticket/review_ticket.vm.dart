@@ -91,7 +91,7 @@ class ReviewTicketViewModel extends ReactiveViewModel {
 
   void continueToPay() {
     Fluttertoast.showToast(
-      msg: LanguageService.get('redirecting_to_payment'),
+      msg: 'Work in progress',
       backgroundColor: Colors.blue,
       textColor: Colors.white,
       toastLength: Toast.LENGTH_SHORT,

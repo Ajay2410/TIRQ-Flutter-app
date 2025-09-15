@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:manager/services/language.service.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
@@ -13,6 +15,7 @@ import 'package:manager/core/models/ticket_details_model.dart';
 import 'package:manager/core/locator.dart';
 import 'package:manager/configs.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import 'ticket_details.vm.dart';
 
 class TicketDetailsView extends StatelessWidget {
@@ -123,10 +126,13 @@ class TicketDetailsView extends StatelessWidget {
           children: [
             Icon(Icons.error_outline, size: 64, color: AppColors.redBack),
             SizedBox(height: 16),
-            Text('Error loading ticket details', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+            Text(
+              LanguageService.get('error_loading_ticket_details'),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+            ),
             SizedBox(height: 8),
             Text(
-              model.errorMessage ?? 'Unknown error occurred',
+              model.errorMessage ?? LanguageService.get('unknown_error_occurred'),
               style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
@@ -138,7 +144,7 @@ class TicketDetailsView extends StatelessWidget {
                 foregroundColor: AppColors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
-              child: Text('Retry'),
+              child: Text(LanguageService.get('retry')),
             ),
           ],
         ),
@@ -155,10 +161,13 @@ class TicketDetailsView extends StatelessWidget {
           children: [
             Icon(Icons.inbox_outlined, size: 64, color: AppColors.textSecondary),
             SizedBox(height: 16),
-            Text('No ticket details found', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+            Text(
+              LanguageService.get('no_ticket_details_found'),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+            ),
             SizedBox(height: 8),
             Text(
-              'The ticket details could not be loaded',
+              LanguageService.get('ticket_details_could_not_be_loaded'),
               style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
@@ -213,7 +222,10 @@ class TicketDetailsView extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Payment Status", style: TextStyle(color: AppColors.textGray, fontSize: 11, fontWeight: FontWeight.w500)),
+                    Text(
+                      LanguageService.get('payment_status'),
+                      style: TextStyle(color: AppColors.textGray, fontSize: 11, fontWeight: FontWeight.w500),
+                    ),
                     Text(
                       paymentStatus.toUpperCase(),
                       style: TextStyle(
@@ -229,7 +241,7 @@ class TicketDetailsView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Support Mode",
+                      LanguageService.get('support_mode'),
                       style: TextStyle(color: AppColors.textGray, fontSize: 11, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
                     ),
                     Text(supportMode, style: TextStyle(color: AppColors.textGray, fontSize: 11, fontWeight: FontWeight.w500)),
@@ -240,7 +252,7 @@ class TicketDetailsView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Ticket Type",
+                      LanguageService.get('ticket_type'),
                       style: TextStyle(color: AppColors.textGray, fontSize: 11, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
                     ),
                     Text(ticketType, style: TextStyle(color: AppColors.textGray, fontSize: 11, fontWeight: FontWeight.w500)),
@@ -253,7 +265,12 @@ class TicketDetailsView extends StatelessWidget {
           Row(
             children: [
               SizedBox(width: 13),
-              Expanded(child: Text("Get Tax Invoice", style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600))),
+              Expanded(
+                child: Text(
+                  LanguageService.get('get_tax_invoice'),
+                  style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600),
+                ),
+              ),
               IconButton(
                 onPressed: () {
                   // TODO: Implement tax invoice functionality
@@ -398,15 +415,15 @@ class TicketDetailsView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Ticket Details", style: TextStyle(color: AppColors.black, fontSize: 16, fontWeight: FontWeight.w600)),
+        Text(LanguageService.get('ticket_details'), style: TextStyle(color: AppColors.black, fontSize: 16, fontWeight: FontWeight.w600)),
         SizedBox(height: 16),
         Row(
           children: [
-            Expanded(child: _buildDetailItem("Created Date", createdDate)),
-            Expanded(child: _buildDetailItem("Error Code", errorCode)),
+            Expanded(child: _buildDetailItem(LanguageService.get('created_date'), createdDate)),
+            Expanded(child: _buildDetailItem(LanguageService.get('error_code'), errorCode)),
             Expanded(
               child: _buildDetailItem(
-                "Warranty Status",
+                LanguageService.get('warranty_status'),
                 model.getWarrantyStatusColor(warrantyStatus),
                 valueColor: warrantyStatus.toLowerCase() == 'in warranty' ? AppColors.color41C293 : AppColors.crimsonRed,
               ),
@@ -416,8 +433,8 @@ class TicketDetailsView extends StatelessWidget {
         SizedBox(height: 12),
         Row(
           children: [
-            Expanded(child: _buildDetailItem("Machine Name", machineName)),
-            Expanded(child: _buildDetailItem("Model Number", modelNumber)),
+            Expanded(child: _buildDetailItem(LanguageService.get('machine_name'), machineName)),
+            Expanded(child: _buildDetailItem(LanguageService.get('model_number'), modelNumber)),
             Expanded(child: SizedBox()),
           ],
         ),
@@ -456,7 +473,7 @@ class TicketDetailsView extends StatelessWidget {
         if (mediaList.isEmpty) ...[
           SizedBox(),
         ] else ...[
-          Text("Photos / Video", style: TextStyle(color: AppColors.black, fontSize: 14, fontWeight: FontWeight.w400)),
+          Text(LanguageService.get('photos_video'), style: TextStyle(color: AppColors.black, fontSize: 14, fontWeight: FontWeight.w400)),
           SizedBox(height: 10),
 
           SizedBox(
@@ -574,27 +591,18 @@ class TicketDetailsView extends StatelessWidget {
   }
 
   Widget _buildMediaItemFromApi(BuildContext context, Media media) {
-    final isImage = media.type?.toLowerCase() == 'image';
-    final baseUrl = 'https://triq.onrender.com';
-    final mediaUrl = '$baseUrl${media.url}';
+    final imageUrl = 'https://triq.onrender.com${media.url}';
+    final url = media.url?.toLowerCase() ?? '';
 
-    // For videos, we need to generate a thumbnail URL
-    // Assuming the video thumbnail follows a pattern like: video.mp4 -> video_thumb.jpg
-    String thumbnailUrl;
-    if (isImage) {
-      thumbnailUrl = mediaUrl;
-    } else {
-      // For videos, we'll use the video URL as thumbnail
-      // The video player will handle showing the first frame as thumbnail
-      thumbnailUrl = mediaUrl;
-    }
+    final isVideo = url.endsWith('.mp4') || url.endsWith('.mov') || url.endsWith('.avi') || url.endsWith('.mkv');
 
     return GestureDetector(
       onTap: () {
-        if (isImage) {
-          Navigator.pushNamed(context, Routes.imageViewerView, arguments: mediaUrl);
+        if (isVideo) {
+          print('Video URL: $imageUrl');
+          Navigator.pushNamed(context, Routes.videoPlayer, arguments: imageUrl);
         } else {
-          Navigator.pushNamed(context, Routes.videoPlayer, arguments: mediaUrl);
+          Navigator.pushNamed(context, Routes.imageViewerView, arguments: imageUrl);
         }
       },
       child: ClipRRect(
@@ -602,10 +610,13 @@ class TicketDetailsView extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            if (isImage)
+            if (isVideo)
+              _buildVideoThumbnail(imageUrl)
+            else
               CachedNetworkImage(
-                imageUrl: thumbnailUrl,
+                imageUrl: imageUrl,
                 fit: BoxFit.cover,
+                httpHeaders: {'Connection': 'keep-alive'},
                 placeholder:
                     (context, url) => Container(
                       color: AppColors.primarySuperLight.withValues(alpha: 0.1),
@@ -616,38 +627,69 @@ class TicketDetailsView extends StatelessWidget {
                       color: AppColors.primarySuperLight.withValues(alpha: 0.1),
                       child: Icon(Icons.error_outline, color: AppColors.textGray, size: 20),
                     ),
-              )
-            else
-              // For videos, show a video thumbnail with play button overlay
+              ),
+            if (isVideo)
               Container(
-                color: AppColors.primarySuperLight.withValues(alpha: 0.1),
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    // Video thumbnail - you can use a video thumbnail package here
-                    // For now, we'll show a placeholder with video icon
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.videocam, color: AppColors.textGray, size: 40),
-                          SizedBox(height: 8),
-                          Text('Video', style: TextStyle(color: AppColors.textGray, fontSize: 12)),
-                        ],
-                      ),
-                    ),
-                    // Play button overlay
-                    Container(
-                      color: Colors.black.withValues(alpha: 0.3),
-                      child: Center(child: Icon(Icons.play_circle_filled, color: Colors.white, size: 48)),
-                    ),
-                  ],
-                ),
+                color: Colors.black.withValues(alpha: 0.3),
+                child: Center(child: Icon(Icons.play_circle_filled, color: Colors.white, size: 24)),
               ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildVideoThumbnail(String videoUrl) {
+    return FutureBuilder<String?>(
+      future: _generateVideoThumbnail(videoUrl),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            color: AppColors.primarySuperLight.withValues(alpha: 0.1),
+            child: Center(child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary))),
+          );
+        }
+
+        if (snapshot.hasError || snapshot.data == null) {
+          return Container(
+            color: AppColors.primarySuperLight.withValues(alpha: 0.1),
+            child: Icon(Icons.videocam, color: AppColors.textGray, size: 20),
+          );
+        }
+
+        return Image.file(
+          File(snapshot.data!),
+          fit: BoxFit.cover,
+          errorBuilder:
+              (context, error, stackTrace) => Container(
+                color: AppColors.primarySuperLight.withValues(alpha: 0.1),
+                child: Icon(Icons.videocam, color: AppColors.textGray, size: 20),
+              ),
+        );
+      },
+    );
+  }
+
+  Future<String?> _generateVideoThumbnail(String videoUrl) async {
+    try {
+      final thumbnailPath = await VideoThumbnail.thumbnailFile(
+        video: videoUrl,
+        thumbnailPath: (await getTemporaryDirectory()).path,
+        imageFormat: ImageFormat.JPEG,
+        maxHeight: 200,
+        quality: 75,
+      ).timeout(
+        Duration(seconds: 15),
+        onTimeout: () {
+          print('Video thumbnail generation timed out for: $videoUrl');
+          return null;
+        },
+      );
+      return thumbnailPath;
+    } catch (e) {
+      print('Error generating video thumbnail: $e');
+      return null;
+    }
   }
 
   Widget _buildBottomActionBar(BuildContext context, TicketDetailsViewModel model) {
@@ -664,7 +706,7 @@ class TicketDetailsView extends StatelessWidget {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.v50)),
             padding: EdgeInsets.symmetric(vertical: 16),
           ),
-          child: Text("See Chat", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          child: Text(LanguageService.get('see_chat'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         ),
       ),
     );
