@@ -51,7 +51,7 @@ import '../features/profile/create_or_edit_org/create_or_edit_org.view.dart';
 import '../features/profile/create_or_edit_org/update_employee_profile.view.dart';
 import '../features/profile/home/profile.view.dart';
 import '../features/service_pricing/set_service_pricing.view.dart';
-import '../features/profile/my_wallet/general.view.dart';
+import '../features/profile/general/general.view.dart';
 import '../features/tickets/add_ticket/add_ticket.view.dart';
 import '../features/tickets/review_ticket/review_ticket.view.dart';
 import '../features/tickets/tickets_list/tickets_list.view.dart';

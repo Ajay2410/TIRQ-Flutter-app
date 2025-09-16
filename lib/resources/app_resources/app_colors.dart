@@ -22,6 +22,7 @@ abstract class AppColors {
   static const Color secondaryDark = Color(0xFF5746A6);
   static const Color secondaryVariant = Color(0xFF43307F);
   static const Color appbarVarient = Color(0xFF003382);
+  static const Color violetBlue = Color(0xFF8F87F1);
 
   // Accent Colors
   static const Color accent = Color(0xFFff6b6b);
@@ -116,4 +117,12 @@ abstract class AppColors {
 
   // Organization Colors
   static const Color organizationGreen = Color(0xFF179959);
+
+  // Profile Progress Colors
+  static const Color progressRed = Color(0xFFDF4747); // 0-30% Completed
+  static const Color progressOrange = Color(0xFFFFB141); // 31-69% Completed
+  static const Color progressBlue = Color(0xFF687FE5); // 70-99% Completed
+  static const Color progressGreen = Color(0xFF41C293); // 100% Completed
+
+  static const Color periwinkleBlue = Color(0xFF687FE5);
 }

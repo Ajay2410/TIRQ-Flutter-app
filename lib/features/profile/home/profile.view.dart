@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:get/get.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:manager/features/profile/home/profile.vm.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
@@ -10,9 +12,7 @@ import '../../../core/models/hive/user/user.dart';
 import '../../../core/storage/storage.dart';
 import '../../../services/language.service.dart';
 import '../../../routes/routes.dart';
-import 'package:manager/features/profile/my_wallet/duepay.view.dart';
-import 'package:manager/features/profile/my_wallet/general.view.dart';
-import '../../stage/stage.view.dart';
+import '../../../widgets/qr_dialog.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -31,7 +31,6 @@ class ProfileView extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  // Profile Header Section - Fixed to match reference image
                   _buildProfileHeader(context, model),
                   const SizedBox(height: 20),
                   // Menu Items
@@ -77,25 +76,22 @@ class ProfileView extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Profile Image, Name/Email, and Completion Badge in one Row
+          _buildProfileCompletionCard(context, model),
+          SizedBox(height: 15),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Profile Image with Edit Button
               Stack(
                 children: [
                   Container(
-                    width: 59,
-                    height: 59,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                      boxShadow: [BoxShadow(color: const Color(0xFF687FE5).withOpacity(0.3), blurRadius: 2, spreadRadius: 5)],
-                    ),
+                    decoration: BoxDecoration(color: AppColors.periwinkleBlue.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(40)),
+                    padding: EdgeInsets.all(8),
                     child: ClipOval(
                       child: CachedNetworkImage(
                         imageUrl: model.user.logoUrl ?? 'https://img.freepik.com/free-vector/search-engine-logo_1071-76.jpg',
-                        width: 61,
-                        height: 61,
+                        width: 44,
+                        height: 44,
                         fit: BoxFit.cover,
                         placeholder:
                             (context, url) =>
@@ -114,14 +110,9 @@ class ProfileView extends StatelessWidget {
                         model.navigateToCreateOrEditOrgView();
                       },
                       child: Container(
-                        width: 28,
-                        height: 28,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: Colors.white, width: 2),
-                        ),
-                        child: const Icon(Icons.edit, size: 16, color: Colors.white),
+                        padding: EdgeInsets.all(3),
+                        decoration: BoxDecoration(color: AppColors.primaryDark, borderRadius: BorderRadius.circular(14)),
+                        child: Image.asset(AppImages.edit, width: 12, height: 12, color: Colors.white),
                       ),
                     ),
                   ),
@@ -145,11 +136,16 @@ class ProfileView extends StatelessWidget {
                   ],
                 ),
               ),
-              // Completion Badge
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(color: const Color(0xFFFFF3E0), borderRadius: BorderRadius.circular(12)),
-                child: const Text('32% Completed', style: TextStyle(color: Color(0xFFFF9800), fontWeight: FontWeight.bold, fontSize: 10)),
+              GestureDetector(
+                onTap: () => _showQRDialog( model),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AppColors.textGray.withValues(alpha: 0.1)),
+                  ),
+                  padding: EdgeInsets.all(8),
+                  child: Image.asset(AppImages.qr, width: 32, height: 32),
+                ),
               ).animate().fadeIn(duration: 500.ms, delay: 300.ms),
             ],
           ),
@@ -204,19 +200,17 @@ class ProfileView extends StatelessWidget {
       child: Column(
         children: [
           _buildMenuItem(
-            icon: Icons.business_outlined,
-            title: getUser().userRole == UserRole.superAdmin ? LanguageService.get("organization") : LanguageService.get("profile"),
-            iconColor: const Color(0xFF9C27B0),
-            iconBgColor: const Color(0xFFF3E5F5),
-            onTap: getUser().userRole == UserRole.superAdmin ? model.navigateToCreateOrEditOrgView : model.navigateToEmployeeProfileView,
-            animationDelay: 500.ms,
+            imagePath: AppImages.organization,
+            title: LanguageService.get("organization"),
+            iconColor: AppColors.violetBlue,
+            onTap: () {},
+            animationDelay: 600.ms,
           ),
           _buildDivider(),
           _buildMenuItem(
-            icon: Icons.settings_outlined,
+            imagePath: AppImages.general,
             title: LanguageService.get("general"),
             iconColor: const Color(0xFF00BCD4),
-            iconBgColor: const Color(0xFFE0F2F1),
             onTap: model.navigateToGeneralSetting,
             animationDelay: 600.ms,
           ),
@@ -227,7 +221,6 @@ class ProfileView extends StatelessWidget {
               imagePath: AppImages.organization,
               title: LanguageService.get("set_service_pricing"),
               iconColor: AppColors.organizationGreen,
-              iconBgColor: AppColors.organizationGreen.withValues(alpha: 0.1),
               onTap: () {
                 Navigator.pushNamed(context, Routes.setServicePricing);
               },
@@ -236,46 +229,41 @@ class ProfileView extends StatelessWidget {
           ],
           _buildDivider(),
           _buildMenuItem(
-            icon: Icons.security_outlined,
+            imagePath: AppImages.security,
             title: LanguageService.get("security"),
             iconColor: const Color(0xFF607D8B),
-            iconBgColor: const Color(0xFFECEFF1),
             onTap: () {},
             animationDelay: 700.ms,
           ),
           _buildDivider(),
           _buildMenuItem(
-            icon: Icons.help_outline,
+            imagePath: AppImages.helpSupport,
             title: LanguageService.get("help_and_support"),
             iconColor: const Color(0xFFFF9800),
-            iconBgColor: const Color(0xFFFFF3E0),
             onTap: () {},
             animationDelay: 800.ms,
           ),
           _buildDivider(),
           _buildMenuItem(
-            icon: Icons.feedback_outlined,
+            imagePath: AppImages.feedback,
             title: LanguageService.get("feedback"),
             iconColor: const Color(0xFF673AB7),
-            iconBgColor: const Color(0xFFEDE7F6),
             onTap: () {},
             animationDelay: 900.ms,
           ),
           _buildDivider(),
           _buildMenuItem(
-            icon: Icons.person_add_outlined,
+            imagePath: AppImages.inviteContact,
             title: LanguageService.get("invite_a_contact"),
             iconColor: const Color(0xFF4CAF50),
-            iconBgColor: const Color(0xFFE8F5E8),
             onTap: () {},
             animationDelay: 1000.ms,
           ),
           _buildDivider(),
           _buildMenuItem(
-            icon: Icons.logout_outlined,
+            imagePath: AppImages.logout,
             title: LanguageService.get("logout"),
             iconColor: const Color(0xFFE53935),
-            iconBgColor: const Color(0xFFFFEBEE),
             onTap: model.navigateToLoginView,
             isLast: true,
             animationDelay: 1100.ms,
@@ -290,7 +278,6 @@ class ProfileView extends StatelessWidget {
     String? imagePath,
     required String title,
     required Color iconColor,
-    required Color iconBgColor,
     required VoidCallback onTap,
     required Duration animationDelay,
     bool isLast = false,
@@ -305,7 +292,7 @@ class ProfileView extends StatelessWidget {
             Container(
               width: 40,
               height: 40,
-              decoration: BoxDecoration(color: iconBgColor, borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child:
@@ -315,12 +302,15 @@ class ProfileView extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 16),
-            Expanded(child: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black))),
+            Expanded(child: Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black))),
             Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(color: AppColors.textGray.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(8)),
-              child: const Icon(Icons.arrow_forward, size: 16, color: AppColors.black),
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.primarySuperLight.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColors.textGray.withValues(alpha: 0.1)),
+              ),
+              child: Image.asset(AppImages.arrowRight, width: 16, height: 16, color: AppColors.textGray),
             ),
           ],
         ),
@@ -332,37 +322,74 @@ class ProfileView extends StatelessWidget {
     return Container(margin: const EdgeInsets.symmetric(horizontal: 20), height: 1, color: const Color(0xFFEEEEEE));
   }
 
-  Widget _buildTermsAndPolicy(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
-      child: RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-          text: LanguageService.get("by_using_this_app_you_agree_to_our"),
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600], height: 1.5),
-          children: [
-            TextSpan(
-              text: LanguageService.get("terms_conditions"),
-              style: const TextStyle(
-                color: Color(0xFF4A6CF7),
-                fontWeight: FontWeight.w600,
-                decoration: TextDecoration.underline,
-                decorationColor: Color(0xFF4A6CF7),
-              ),
+  Widget _buildProfileCompletionCard(BuildContext context, ProfileViewModel model) {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(color: AppColors.primaryLight.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  LanguageService.get("please_complete_profile"),
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black),
+                ).animate().fadeIn(duration: 500.ms),
+                const SizedBox(height: 8),
+                Text(
+                  LanguageService.get("verify_email_phone_description"),
+                  style: const TextStyle(fontSize: 10, color: AppColors.textGray),
+                ).animate().fadeIn(duration: 500.ms, delay: 200.ms),
+              ],
             ),
-            TextSpan(text: LanguageService.get("and")),
-            TextSpan(
-              text: LanguageService.get("privacy_policy"),
-              style: const TextStyle(
-                color: Color(0xFF4A6CF7),
-                fontWeight: FontWeight.w600,
-                decoration: TextDecoration.underline,
-                decorationColor: Color(0xFF4A6CF7),
-              ),
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(width: 20),
+          _buildCircularProgressIndicator(),
+        ],
       ),
-    ).animate().fadeIn(duration: 500.ms, delay: 1000.ms);
+    ).animate().fadeIn(duration: 500.ms, delay: 100.ms);
+  }
+
+  Widget _buildCircularProgressIndicator() {
+    const double completionPercentage = 0.35; // 35% completion - can be made dynamic later
+    // Test different percentages to verify color conditions:
+    // 0.15 = 15% (Red), 0.45 = 45% (Orange), 0.75 = 75% (Blue), 1.0 = 100% (Green)
+
+    return CircularPercentIndicator(
+      radius: 30.0,
+      lineWidth: 4.0,
+      percent: completionPercentage,
+      center: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("${(completionPercentage * 100).toInt()}%", style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black)),
+          const SizedBox(height: 2),
+          Text(LanguageService.get("complete"), style: const TextStyle(fontSize: 8, color: AppColors.textGray)),
+        ],
+      ),
+      progressColor: _getProgressColor(completionPercentage),
+      backgroundColor: Colors.white,
+      circularStrokeCap: CircularStrokeCap.round,
+    ).animate().scale(duration: 500.ms, delay: 300.ms, curve: Curves.easeOutBack);
+  }
+
+  /// Returns the appropriate progress color based on completion percentage
+  Color _getProgressColor(double percentage) {
+    final int percentageInt = (percentage * 100).toInt();
+
+    if (percentageInt >= 100) {
+      return AppColors.progressGreen; // 100% Completed - Green
+    } else if (percentageInt >= 70) {
+      return AppColors.progressBlue; // 70-99% Completed - Blue
+    } else if (percentageInt >= 31) {
+      return AppColors.progressOrange; // 31-69% Completed - Orange
+    } else {
+      return AppColors.progressRed; // 0-30% Completed - Red
+    }
+  }
+
+  void _showQRDialog(ProfileViewModel model) {
+    Get.dialog(QRDialog(user: model.user, organizationName: model.organization?.name));
   }
 }

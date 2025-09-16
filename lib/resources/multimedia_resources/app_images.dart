@@ -64,6 +64,28 @@ abstract class AppImages {
   // Common Icons
   static const String warning = "assets/icons/warning.png";
   static const String alert = "assets/icons/alert.png";
+  static const String edit = "assets/icons/edit.png";
+  static const String qr = "assets/icons/qr.png";
+
+  // Profile Menu Icons
+  static const String general = "assets/icons/general.png";
+  static const String security = "assets/icons/security.png";
+  static const String helpSupport = "assets/icons/help_support.png";
+  static const String feedback = "assets/icons/feedback.png";
+  static const String inviteContact = "assets/icons/invite_contact.png";
+  static const String logout = "assets/icons/logout.png";
+
+  // QR Dialog Action Icons
+  static const String scan = "assets/icons/scan.png";
+  static const String share = "assets/icons/share.png";
+  static const String save = "assets/icons/save.png";
+
+  // Settings Icons
+  static const String appLanguage = "assets/icons/app_language.png";
+  static const String chatLanguage = "assets/icons/chat_language.png";
+  static const String currency = "assets/icons/currency.png";
+  static const String systemSound = "assets/icons/system_sound.png";
+  static const String appearance = "assets/icons/appearance.png";
 
   // Machine Details Icons
   static const String modelNumber = "assets/icons/model_number.png";
