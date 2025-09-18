@@ -7,6 +7,7 @@ import 'package:manager/services/language.service.dart';
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final String? titleKey;
+  final Widget? titleWidget;
   final Widget? leading;
   final List<Widget>? actions;
   final bool showBackButton;
@@ -23,6 +24,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.title,
     this.titleKey,
+    this.titleWidget,
     this.leading,
     this.actions,
     this.showBackButton = true,
@@ -70,6 +72,10 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget? _buildTitle() {
+    // If titleWidget is provided, use it directly
+    if (titleWidget != null) return titleWidget;
+
+    // If no title or titleKey, return null
     if (title == null && titleKey == null) return null;
 
     final displayTitle =
@@ -106,6 +112,7 @@ class GradientAppBar extends CommonAppBar {
     super.key,
     super.title,
     super.titleKey,
+    super.titleWidget,
     super.leading,
     super.actions,
     super.showBackButton,
@@ -133,6 +140,7 @@ class SimpleAppBar extends CommonAppBar {
     super.key,
     super.title,
     super.titleKey,
+    super.titleWidget,
     super.leading,
     super.actions,
     super.showBackButton,

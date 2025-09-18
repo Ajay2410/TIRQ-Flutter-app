@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:manager/features/Messages/chat/chat.view.dart';
 import 'package:manager/services/chat.service.dart';
 import 'package:manager/services/language.service.dart';
+import 'package:manager/services/stage.service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -15,6 +16,7 @@ import '../../../routes/routes.dart';
 class ChatListViewModel extends BaseViewModel {
   final _navigationService = locator<NavigationService>();
   final _chatService = locator<ChatService>();
+  final _stageService = locator<StageService>();
 
   List<ChatViewAttributes> _chatRooms = [];
   List<ChatViewAttributes> get chatRooms => _chatRooms;
@@ -45,6 +47,10 @@ class ChatListViewModel extends BaseViewModel {
       final roomType = chat.chatRoomType?.toLowerCase();
       return roomType != "ticket" && roomType != "withinorg";
     }).toList();
+  }
+
+  void navigateToHome() {
+    _stageService.updateSelectedBottomNavIndex(0);
   }
 
   // Count methods for badges

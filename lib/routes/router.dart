@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manager/features/Messages/chat/chat.view.dart';
-import 'package:manager/features/Messages/chat_list/chat_list.view.dart';
+import 'package:manager/features/chat/chat_list.view.dart';
 import 'package:manager/features/auth/login/login.view.dart';
 import 'package:manager/features/auth/otp_verification/otp_verification.view.dart';
 import 'package:manager/features/auth/register/register.view.dart';
@@ -28,7 +28,7 @@ import 'package:manager/features/tasks/tasks_home/tasks_home.view.dart';
 import 'package:manager/routes/routes.dart';
 import 'package:stacked/stacked.dart';
 
-import '../features/Messages/chat_list/archived_chat_list.view.dart';
+import '../features/chat/archive_chat/archived_chat_list.view.dart';
 import '../features/Messages/create_group/create_group.view.dart';
 import '../features/auth/auth_selection/auth_selection.view.dart';
 import '../features/employee/add_employee/add_employee.view.dart';

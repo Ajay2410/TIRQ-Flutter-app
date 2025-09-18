@@ -13,7 +13,8 @@ class AppLanguageView extends StatefulWidget {
   State<AppLanguageView> createState() => _AppLanguageViewState();
 }
 
-class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProviderStateMixin {
+class _AppLanguageViewState extends State<AppLanguageView>
+    with SingleTickerProviderStateMixin {
   final controller = Get.put(LanguageController());
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
@@ -31,7 +32,12 @@ class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProv
       backgroundColor: AppColors.white,
       appBar: _buildAppBar(context),
       bottomNavigationBar: _buildSaveButton(context),
-      body: Column(children: [_buildSearchBar(context), Expanded(child: _buildLanguageList(context))]),
+      body: Column(
+        children: [
+          _buildSearchBar(context),
+          Expanded(child: _buildLanguageList(context)),
+        ],
+      ),
     );
   }
 
@@ -44,7 +50,13 @@ class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProv
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
         color: AppColors.white,
-        boxShadow: [BoxShadow(color: AppColors.black.withOpacity(0.05), offset: const Offset(0, 2), blurRadius: 8)],
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withOpacity(0.05),
+            offset: const Offset(0, 2),
+            blurRadius: 8,
+          ),
+        ],
       ),
       child: TextField(
         controller: _searchController,
@@ -58,7 +70,10 @@ class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProv
           prefixIcon: Icon(Icons.search, color: AppColors.primary),
           fillColor: AppColors.lightGray.withOpacity(0.3),
           filled: true,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
           contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           suffixIcon:
               _searchController.text.isNotEmpty
@@ -89,7 +104,13 @@ class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProv
             decoration: BoxDecoration(
               color: AppColors.white,
               borderRadius: BorderRadius.circular(16),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 8, offset: Offset(0, 2))],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 8,
+                  offset: Offset(0, 2),
+                ),
+              ],
             ),
             child: Material(
               color: Colors.transparent,
@@ -104,8 +125,16 @@ class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProv
                       Container(
                         width: 48,
                         height: 48,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: AppColors.softGray.withOpacity(0.1)),
-                        child: Center(child: Text(lang.flag, style: TextStyle(fontSize: 28))),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: AppColors.softGray.withOpacity(0.1),
+                        ),
+                        child: Center(
+                          child: Text(
+                            lang.flag,
+                            style: TextStyle(fontSize: 28),
+                          ),
+                        ),
                       ),
                       SizedBox(width: 16),
                       // Language info
@@ -113,11 +142,22 @@ class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProv
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(lang.name, style: TextStyle(color: AppColors.textPrimary, fontSize: 17, fontWeight: FontWeight.w600)),
+                            Text(
+                              lang.name,
+                              style: TextStyle(
+                                color: AppColors.textPrimary,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                             SizedBox(height: 4),
                             Text(
                               _getCountryName(lang.code),
-                              style: TextStyle(color: AppColors.textSecondary, fontSize: 15, fontWeight: FontWeight.w400),
+                              style: TextStyle(
+                                color: AppColors.textSecondary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ],
                         ),
@@ -128,13 +168,27 @@ class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProv
                         height: 24,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: isSelected ? AppColors.primary : AppColors.lightGray, width: 2),
-                          color: isSelected ? AppColors.primary : AppColors.white,
+                          border: Border.all(
+                            color:
+                                isSelected
+                                    ? AppColors.primary
+                                    : AppColors.lightGray,
+                            width: 2,
+                          ),
+                          color:
+                              isSelected ? AppColors.primary : AppColors.white,
                         ),
                         child:
                             isSelected
                                 ? Center(
-                                  child: Container(width: 8, height: 8, decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.white)),
+                                  child: Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
                                 )
                                 : null,
                       ),

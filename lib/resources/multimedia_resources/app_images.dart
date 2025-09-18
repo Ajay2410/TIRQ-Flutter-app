@@ -66,6 +66,7 @@ abstract class AppImages {
   static const String alert = "assets/icons/alert.png";
   static const String edit = "assets/icons/edit.png";
   static const String qr = "assets/icons/qr.png";
+  static const String archive = "assets/icons/archive.png";
 
   // Profile Menu Icons
   static const String general = "assets/icons/general.png";
@@ -106,6 +107,16 @@ abstract class AppImages {
   static const String camera = "assets/icons/camera.png";
   static const String phone = "assets/icons/phone.png";
   static const String addCircle = "assets/icons/add_circle.png";
+
+  // Chat Attachment Icons
+  static const String microphone = "assets/icons/microphone.png";
+  static const String location = "assets/icons/location.png";
+  static const String video = "assets/icons/video.png";
+  static const String file = "assets/icons/file.png";
+  static const String gallery = "assets/icons/gallery.png";
+  static const String send = "assets/icons/send.png";
+  static const String attachment = "assets/icons/attachment.png";
+  static const String cameraOutlined = "assets/icons/camera_outlined.png";
 
   // Search Screen Icons
   static const String earthSearch = "assets/images/earth_search.png";

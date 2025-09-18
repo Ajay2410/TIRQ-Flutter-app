@@ -10,7 +10,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import '../../../core/locator.dart';
 import '../../services/ticket.service.dart';
-import '../Messages/chat_list/chat_list.view.dart';
+import '../chat/chat_list.view.dart';
 import '../contacts/chat_list/contacts_list.view.dart';
 
 class StageViewModel extends ReactiveViewModel {

@@ -168,7 +168,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
             ),
 
             SizedBox(width: 95, height: 56, child: Image.asset(AppImages.triqLogo3, fit: BoxFit.contain)),
-            SizedBox(height: 12),
+            // SizedBox(height: 12),
           ],
         ),
       ),
