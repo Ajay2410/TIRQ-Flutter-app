@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:manager/core/storage/storage.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/widgets/common_app_bar.dart';
 import 'package:manager/widgets/common_text_field.dart';
+import 'package:manager/features/chat/chat.vm.dart';
+import 'package:stacked/stacked.dart';
 import '../../resources/app_resources/app_resources.dart';
+import '../../services/socket_service.dart';
 
 // Message data model
 class ChatMessage {
@@ -27,12 +31,16 @@ class ChatView extends StatefulWidget {
   final String contactName;
   final String contactNumber;
   final String contactInitials;
+  final String? roomId;
+  final String? userId;
 
   const ChatView({
     super.key,
     required this.contactName,
     required this.contactNumber,
     required this.contactInitials,
+    this.roomId,
+    this.userId,
   });
 
   @override
@@ -40,59 +48,31 @@ class ChatView extends StatefulWidget {
 }
 
 class _ChatViewState extends State<ChatView> {
-  final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final FocusNode _messageFocusNode = FocusNode();
+  final SocketService _socketService = SocketService();
 
-  // Dummy messages data
-  final List<ChatMessage> _messages = [
-    ChatMessage(
-      id: '1',
-      text: 'yes, I Need More help',
-      timestamp: '01:08 PM',
-      isSent: true,
-      isRead: true,
-    ),
-    ChatMessage(
-      id: '2',
-      text:
-          'thank you for your patience we will be with you as soon as our team is available',
-      timestamp: '01:08 PM',
-      isSent: false,
-    ),
-    ChatMessage(
-      id: '3',
-      text: 'yes, I Need More help',
-      timestamp: '01:08 PM',
-      isSent: true,
-      isRead: true,
-    ),
-    ChatMessage(
-      id: '4',
-      text:
-          'thank you for your patience we will be with you as soon as our team is available\nआपके धैर्य के लिए धन्यवाद, जैसे ही हमारी टीम उपलब्ध होगी हम आपके साथ होंगे',
-      timestamp: '01:08 PM',
-      isSent: false,
-    ),
-    ChatMessage(
-      id: '5',
-      text: 'yes, I Need More help',
-      timestamp: '01:08 PM',
-      isSent: true,
-      isRead: true,
-    ),
-    ChatMessage(
-      id: '6',
-      text:
-          'thank you for your patience we will be with you as soon as our team is available',
-      timestamp: '01:08 PM',
-      isSent: false,
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _initializeSocket();
+  }
+
+  void _initializeSocket() {
+    // Initialize socket connection
+    _socketService.initializeSocket(
+      serverUrl: 'https://triq.onrender.com/',
+      queryParams: {
+        'userId': widget.userId ?? 'default_user',
+        'roomId': widget.roomId ?? 'default_room',
+      },
+      extraHeaders: {'Authorization': "${getUser().token}"},
+    );
+  }
 
   @override
   void dispose() {
-    _messageController.dispose();
+    _socketService.dispose();
     _scrollController.dispose();
     _messageFocusNode.dispose();
     super.dispose();
@@ -230,7 +210,7 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
-  Widget _buildMessageBubble(ChatMessage message) {
+  Widget _buildMessageBubble(MessageModel message) {
     return TweenAnimationBuilder<double>(
       duration: Duration(milliseconds: 300),
       tween: Tween(begin: 0.0, end: 1.0),
@@ -246,7 +226,7 @@ class _ChatViewState extends State<ChatView> {
               ),
               child: Row(
                 mainAxisAlignment:
-                    message.isSent
+                    message.isSentByMe
                         ? MainAxisAlignment.end
                         : MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -255,7 +235,7 @@ class _ChatViewState extends State<ChatView> {
                   Flexible(
                     child: Column(
                       crossAxisAlignment:
-                          message.isSent
+                          message.isSentByMe
                               ? CrossAxisAlignment.end
                               : CrossAxisAlignment.start,
                       children: [
@@ -270,11 +250,11 @@ class _ChatViewState extends State<ChatView> {
                               topLeft: Radius.circular(AppSizes.v18),
                               topRight: Radius.circular(AppSizes.v18),
                               bottomLeft:
-                                  message.isSent
+                                  message.isSentByMe
                                       ? Radius.circular(AppSizes.v18)
                                       : Radius.circular(0),
                               bottomRight:
-                                  message.isSent
+                                  message.isSentByMe
                                       ? Radius.circular(0)
                                       : Radius.circular(AppSizes.v18),
                             ),
@@ -289,7 +269,7 @@ class _ChatViewState extends State<ChatView> {
                               ),
                               decoration: BoxDecoration(
                                 color:
-                                    message.isSent
+                                    message.isSentByMe
                                         ? AppColors.primaryDark
                                         : AppColors.primaryLight.withValues(
                                           alpha: 0.1,
@@ -298,11 +278,11 @@ class _ChatViewState extends State<ChatView> {
                                   topLeft: Radius.circular(AppSizes.v18),
                                   topRight: Radius.circular(AppSizes.v18),
                                   bottomLeft:
-                                      message.isSent
+                                      message.isSentByMe
                                           ? Radius.circular(AppSizes.v18)
                                           : Radius.circular(0),
                                   bottomRight:
-                                      message.isSent
+                                      message.isSentByMe
                                           ? Radius.circular(0)
                                           : Radius.circular(AppSizes.v18),
                                 ),
@@ -312,10 +292,10 @@ class _ChatViewState extends State<ChatView> {
                                 children: [
                                   // Message text
                                   Text(
-                                    message.text,
+                                    message.content,
                                     style: TextStyle(
                                       color:
-                                          message.isSent
+                                          message.isSentByMe
                                               ? AppColors.white
                                               : AppColors.textPrimary,
                                       fontSize: AppSizes.f14,
@@ -325,8 +305,10 @@ class _ChatViewState extends State<ChatView> {
                                   ),
 
                                   // Translated text if available
-                                  if (message.translatedText != null &&
-                                      message.translatedText!.isNotEmpty) ...[
+                                  if (message.translatedContent != null &&
+                                      message
+                                          .translatedContent!
+                                          .isNotEmpty) ...[
                                     SizedBox(height: AppSizes.h6),
                                     Container(
                                       padding: EdgeInsets.symmetric(
@@ -335,7 +317,7 @@ class _ChatViewState extends State<ChatView> {
                                       ),
                                       decoration: BoxDecoration(
                                         color:
-                                            message.isSent
+                                            message.isSentByMe
                                                 ? AppColors.white.withValues(
                                                   alpha: 0.15,
                                                 )
@@ -346,10 +328,10 @@ class _ChatViewState extends State<ChatView> {
                                         ),
                                       ),
                                       child: Text(
-                                        message.translatedText!,
+                                        message.translatedContent!,
                                         style: TextStyle(
                                           color:
-                                              message.isSent
+                                              message.isSentByMe
                                                   ? AppColors.white.withValues(
                                                     alpha: 0.9,
                                                   )
@@ -373,19 +355,19 @@ class _ChatViewState extends State<ChatView> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment:
-                                message.isSent
+                                message.isSentByMe
                                     ? MainAxisAlignment.end
                                     : MainAxisAlignment.start,
                             children: [
                               Text(
-                                "${message.timestamp} •",
+                                "${_formatTimestamp(message.timestamp)} •",
                                 style: TextStyle(
                                   color: AppColors.textGray,
                                   fontSize: AppSizes.f10,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              if (message.isSent) ...[
+                              if (message.isSentByMe) ...[
                                 SizedBox(width: AppSizes.w6),
                                 _buildMessageStatus(message),
                               ],
@@ -404,17 +386,28 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
-  Widget _buildMessageStatus(ChatMessage message) {
+  Widget _buildMessageStatus(MessageModel message) {
     Color statusColor;
 
-    if (message.isRead) {
-      statusColor = AppColors.primary;
-    } else {
-      statusColor = AppColors.textGray;
+    switch (message.status) {
+      case 'sent':
+        statusColor = AppColors.textGray;
+        break;
+      case 'delivered':
+        statusColor = AppColors.primary;
+        break;
+      case 'read':
+        statusColor = AppColors.primary;
+        break;
+      case 'failed':
+        statusColor = AppColors.error;
+        break;
+      default:
+        statusColor = AppColors.textGray;
     }
 
     return Text(
-      message.isRead ? 'Read' : 'Sent',
+      message.status.toUpperCase(),
       style: TextStyle(
         color: statusColor,
         fontSize: AppSizes.f10,
@@ -423,7 +416,22 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
-  Widget _buildMessageInput() {
+  String _formatTimestamp(DateTime timestamp) {
+    final now = DateTime.now();
+    final difference = now.difference(timestamp);
+
+    if (difference.inDays > 0) {
+      return '${timestamp.day}/${timestamp.month}';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}h ago';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}m ago';
+    } else {
+      return 'Just now';
+    }
+  }
+
+  Widget _buildMessageInput(ChatViewModel model) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSizes.w16,
@@ -454,8 +462,9 @@ class _ChatViewState extends State<ChatView> {
             ),
           ),
           child: CommonTextField(
-            controller: _messageController,
+            controller: model.messageController,
             placeholder: 'Write Message',
+            onFieldSubmitted: (value) => model.sendMessage(),
             prefixIcon: PopupMenuButton<String>(
               onSelected: (value) => _handleAttachmentAction(value),
               shape: RoundedRectangleBorder(
@@ -579,6 +588,52 @@ class _ChatViewState extends State<ChatView> {
                   ),
                 ),
                 SizedBox(width: AppSizes.w12),
+                GestureDetector(
+                  onTap:
+                      model.isSendingMessage
+                          ? null
+                          : () {
+                            // Send message when send button is tapped
+                            if (model.messageController.text
+                                .trim()
+                                .isNotEmpty) {
+                              model.sendMessage();
+                            }
+                          },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color:
+                          model.messageController.text.trim().isNotEmpty &&
+                                  !model.isSendingMessage
+                              ? AppColors.primaryDark
+                              : AppColors.lightGray.withValues(alpha: 0.3),
+                      shape: BoxShape.circle,
+                    ),
+                    child:
+                        model.isSendingMessage
+                            ? SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  AppColors.white,
+                                ),
+                              ),
+                            )
+                            : Image.asset(
+                              AppImages.send,
+                              width: 16,
+                              height: 16,
+                              color:
+                                  model.messageController.text.trim().isNotEmpty
+                                      ? AppColors.white
+                                      : AppColors.textGray,
+                            ),
+                  ),
+                ),
+                SizedBox(width: AppSizes.w12),
               ],
             ),
           ),
@@ -626,29 +681,54 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(context),
-      backgroundColor: AppColors.white,
-      body: Column(
-        children: [
-          // Messages list
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              padding: EdgeInsets.only(top: AppSizes.h8),
-              itemCount: _messages.length + 1, // +1 for date separator
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return _buildDateSeparator('Jun 17, 2025');
-                }
-                return _buildMessageBubble(_messages[index - 1]);
-              },
+    return ViewModelBuilder<ChatViewModel>.reactive(
+      viewModelBuilder: () => ChatViewModel(),
+      onViewModelReady: (model) {
+        // Add some sample messages for demonstration
+        model.addSampleMessage();
+
+        // Add listener to text controller for dynamic UI updates
+        model.messageController.addListener(() {
+          setState(() {
+            // This will trigger a rebuild to update the send button appearance
+          });
+        });
+      },
+      builder:
+          (context, model, child) => Scaffold(
+            appBar: _buildAppBar(context),
+            backgroundColor: AppColors.white,
+            body: Column(
+              children: [
+                // Messages list
+                Expanded(
+                  child:
+                      model.isBusy
+                          ? Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                            ),
+                          )
+                          : ListView.builder(
+                            controller: _scrollController,
+                            padding: EdgeInsets.only(top: AppSizes.h8),
+                            itemCount:
+                                model.messages.length +
+                                1, // +1 for date separator
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return _buildDateSeparator('Today');
+                              }
+                              final message = model.messages[index - 1];
+                              return _buildMessageBubble(message);
+                            },
+                          ),
+                ),
+                // Message input
+                _buildMessageInput(model),
+              ],
             ),
           ),
-          // Message input
-          _buildMessageInput(),
-        ],
-      ),
     );
   }
 }

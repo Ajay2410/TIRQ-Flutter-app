@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:manager/features/Messages/chat/chat.view.dart';
 import 'package:manager/features/chat/chat_list.view.dart';
 import 'package:manager/features/auth/login/login.view.dart';
 import 'package:manager/features/auth/otp_verification/otp_verification.view.dart';
@@ -337,14 +336,6 @@ class AppRouter extends RouterBase {
             (BuildContext _) => AddEmployeeView(
               attributes: data.arguments as AddEmployeeViewAttributes,
             ),
-        settings: data,
-      );
-    },
-    ChatView: (data) {
-      return MaterialPageRoute(
-        builder:
-            (BuildContext _) =>
-                ChatView(attributes: data.arguments as ChatViewAttributes),
         settings: data,
       );
     },
@@ -691,7 +682,6 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.employeesList, page: RoleEmployeeListView),
     RouteDef(Routes.addEmployee, page: AddEmployeeView),
     RouteDef(Routes.addMachine, page: AddMachineView),
-    RouteDef(Routes.chat, page: ChatView),
     RouteDef(Routes.search, page: SearchView),
     RouteDef(Routes.chatsList, page: ChatListView),
     RouteDef(Routes.permissions, page: PermissionsView),

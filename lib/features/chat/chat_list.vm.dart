@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:dartz/dartz.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:manager/features/Messages/chat/chat.view.dart';
+import 'package:manager/core/models/chat_list_model.dart';
+import 'package:manager/core/utils/failures.dart';
 import 'package:manager/services/chat.service.dart';
 import 'package:manager/services/language.service.dart';
 import 'package:manager/services/stage.service.dart';
@@ -18,34 +20,36 @@ class ChatListViewModel extends BaseViewModel {
   final _chatService = locator<ChatService>();
   final _stageService = locator<StageService>();
 
-  List<ChatViewAttributes> _chatRooms = [];
-  List<ChatViewAttributes> get chatRooms => _chatRooms;
+  List<ChatListModel> _chatRooms = [];
+  List<ChatListModel> get chatRooms => _chatRooms;
 
-  List<ChatViewAttributes> _archivedChatRooms = [];
-  List<ChatViewAttributes> get archivedChatRooms => _archivedChatRooms;
+  List<ChatListModel> _allChats = [];
+  List<ChatListModel> get allChats => _allChats;
+
+  List<ChatListModel> _archivedChatRooms = [];
+  List<ChatListModel> get archivedChatRooms => _archivedChatRooms;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
   StreamSubscription? _refreshSubscription;
 
-  // Filter methods for different chat types based on chatRoomType
-  List<ChatViewAttributes> getTicketChats() {
-    return _chatRooms.where((chat) {
-      return chat.chatRoomType?.toLowerCase() == "ticket";
+  // Filter methods for different chat types based on ticket type
+  List<ChatListModel> getTicketChats() {
+    return _allChats.where((chat) {
+      return chat.ticket?.ticketType?.toLowerCase().contains("machine") == true;
     }).toList();
   }
 
-  List<ChatViewAttributes> getDepartmentalChats() {
-    return _chatRooms.where((chat) {
-      return chat.chatRoomType?.toLowerCase() == "withinorg";
+  List<ChatListModel> getDepartmentalChats() {
+    return _allChats.where((chat) {
+      return chat.ticket?.type?.toLowerCase() == "online";
     }).toList();
   }
 
-  List<ChatViewAttributes> getExternalChats() {
-    return _chatRooms.where((chat) {
-      final roomType = chat.chatRoomType?.toLowerCase();
-      return roomType != "ticket" && roomType != "withinorg";
+  List<ChatListModel> getExternalChats() {
+    return _allChats.where((chat) {
+      return chat.ticket?.type?.toLowerCase() != "online";
     }).toList();
   }
 
@@ -59,24 +63,17 @@ class ChatListViewModel extends BaseViewModel {
   int get externalChatsCount => getExternalChats().length;
   int get totalChatsCount => _chatRooms.length;
 
-  // Archived filter methods
-  List<ChatViewAttributes> getArchivedTicketChats() {
-    return _archivedChatRooms
-        .where((chat) => chat.chatRoomType?.toLowerCase() == "ticket")
-        .toList();
+  // Archived filter methods - Note: These methods are not implemented as the API doesn't support archived chats yet
+  List<ChatListModel> getArchivedTicketChats() {
+    return [];
   }
 
-  List<ChatViewAttributes> getArchivedDepartmentalChats() {
-    return _archivedChatRooms
-        .where((chat) => chat.chatRoomType?.toLowerCase() == "withinorg")
-        .toList();
+  List<ChatListModel> getArchivedDepartmentalChats() {
+    return [];
   }
 
-  List<ChatViewAttributes> getArchivedExternalChats() {
-    return _archivedChatRooms.where((chat) {
-      final roomType = chat.chatRoomType?.toLowerCase();
-      return roomType != "ticket" && roomType != "withinorg";
-    }).toList();
+  List<ChatListModel> getArchivedExternalChats() {
+    return [];
   }
 
   // Archived count methods
@@ -101,7 +98,7 @@ class ChatListViewModel extends BaseViewModel {
   }
 
   // Filtered search results for each tab
-  List<ChatViewAttributes> getFilteredTicketChats() {
+  List<ChatListModel> getFilteredTicketChats() {
     final tickets = getTicketChats();
     if (_searchQuery.isEmpty) return tickets;
 
@@ -114,7 +111,7 @@ class ChatListViewModel extends BaseViewModel {
         .toList();
   }
 
-  List<ChatViewAttributes> getFilteredDepartmentalChats() {
+  List<ChatListModel> getFilteredDepartmentalChats() {
     final departmental = getDepartmentalChats();
     if (_searchQuery.isEmpty) return departmental;
 
@@ -127,7 +124,7 @@ class ChatListViewModel extends BaseViewModel {
         .toList();
   }
 
-  List<ChatViewAttributes> getFilteredExternalChats() {
+  List<ChatListModel> getFilteredExternalChats() {
     final external = getExternalChats();
     if (_searchQuery.isEmpty) return external;
 
@@ -158,63 +155,48 @@ class ChatListViewModel extends BaseViewModel {
   }
 
   Future<void> getChatRooms() async {
-    // try {
-    //   final result = await _chatService.getChatRooms();
+    try {
+      final result = await _chatService.getAllChats();
 
-    //   result.fold(
-    //     (failure) {
-    //       AppLogger.error('Failed to get chat rooms: ${failure.message}');
-    //       _chatRooms = [];
+      result.fold(
+        (failure) {
+          AppLogger.error('Failed to get all chats: ${failure.message}');
+          _allChats = [];
 
-    //       Fluttertoast.showToast(
-    //         msg:
-    //             "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
-    //         toastLength: Toast.LENGTH_SHORT,
-    //         gravity: ToastGravity.BOTTOM,
-    //         backgroundColor: AppColors.error,
-    //         textColor: AppColors.white,
-    //       );
-    //     },
-    //     (response) {
-    //       _chatRooms = response;
-    //       AppLogger.info('Successfully loaded ${response.length} chat rooms');
+          Fluttertoast.showToast(
+            msg:
+                "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: AppColors.error,
+            textColor: AppColors.white,
+          );
+        },
+        (response) {
+          _allChats = response;
+          AppLogger.info('Successfully loaded ${response.length} chats');
 
-    //       AppLogger.info(
-    //         'Chat types distribution: '
-    //         'Tickets: ${ticketChatsCount}, '
-    //         'Departmental: ${departmentalChatsCount}, '
-    //         'External: ${externalChatsCount}',
-    //       );
+          AppLogger.info(
+            'Chat types distribution: '
+            'Total chats: ${response.length}',
+          );
+        },
+      );
+    } catch (e) {
+      AppLogger.error('Error fetching all chats: $e');
+      _allChats = [];
 
-    //       final roomTypes = <String, int>{};
-    //       for (final chat in _chatRooms) {
-    //         final type = chat.chatRoomType ?? 'null';
-    //         roomTypes[type] = (roomTypes[type] ?? 0) + 1;
-    //       }
-    //       AppLogger.info('ChatRoomType distribution: $roomTypes');
-    //     },
-    //   );
-    // } catch (e) {
-    //   AppLogger.error('Error fetching chat rooms: $e');
-    //   _chatRooms = [];
-
-    //   Fluttertoast.showToast(
-    //     msg: LanguageService.get("error_loading_chats"),
-    //     toastLength: Toast.LENGTH_SHORT,
-    //     gravity: ToastGravity.BOTTOM,
-    //     backgroundColor: AppColors.error,
-    //     textColor: AppColors.white,
-    //   );
-    // } finally {
-    //   if (_chatService.isRefreshing) {
-    //     _chatService.resetRefreshFlag();
-    //   }
-    // }
-
-    // Set empty chat rooms since API is disabled
-    _chatRooms = [];
-    if (_chatService.isRefreshing) {
-      _chatService.resetRefreshFlag();
+      Fluttertoast.showToast(
+        msg: LanguageService.get("error_loading_chats"),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: AppColors.error,
+        textColor: AppColors.white,
+      );
+    } finally {
+      if (_chatService.isRefreshing) {
+        _chatService.resetRefreshFlag();
+      }
     }
 
     notifyListeners();
@@ -225,7 +207,9 @@ class ChatListViewModel extends BaseViewModel {
     notifyListeners();
 
     try {
-      final result = await _chatService.getArchivedChatRooms();
+      // Note: Archived chats are not supported by the API yet
+      // final result = await _chatService.getArchivedChatRooms();
+      final result = Right<Failure, List<ChatListModel>>([]);
 
       result.fold(
         (failure) {
@@ -266,7 +250,7 @@ class ChatListViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void navigateToChat(ChatViewAttributes chatRoom) async {
+  void navigateToChat(ChatListModel chatRoom) async {
     await _navigationService.navigateTo(Routes.chat, arguments: chatRoom);
     init();
   }
@@ -276,44 +260,31 @@ class ChatListViewModel extends BaseViewModel {
   }
 
   // Helper methods for search functionality
-  String _getChatTitle(ChatViewAttributes chatRoom) {
-    if (chatRoom.chatRoomType?.toLowerCase() == "ticket" &&
-        chatRoom.ticket?.ticketId != null) {
-      return chatRoom.ticket!.ticketId!;
-    } else if (chatRoom.chatRoomType?.toLowerCase() == "withinorg") {
-      if (chatRoom.groupName?.isNotEmpty == true) {
-        return chatRoom.groupName!;
-      } else if (chatRoom.organization?.name?.isNotEmpty == true) {
-        return chatRoom.organization!.name!;
-      }
-    } else if (chatRoom.groupName?.isNotEmpty == true) {
-      return chatRoom.groupName!;
-    } else if (chatRoom.organization?.name?.isNotEmpty == true) {
-      return chatRoom.organization!.name!;
+  String _getChatTitle(ChatListModel chat) {
+    if (chat.ticket?.ticketNumber != null) {
+      return "Ticket #${chat.ticket!.ticketNumber!}";
+    } else if (chat.chatWith?.fullName != null) {
+      return chat.chatWith!.fullName!;
     }
-
-    return "${LanguageService.get("chat")} #${chatRoom.id.substring(0, 6)}";
+    return "${LanguageService.get("chat")} #${chat.id?.substring(0, 6) ?? 'unknown'}";
   }
 
-  String _getLastMessagePreview(ChatViewAttributes chatRoom) {
-    if (chatRoom.chatRoomType?.toLowerCase() == "ticket" &&
-        chatRoom.ticket?.description != null) {
-      return chatRoom.ticket!.description!;
-    } else if (chatRoom.participants.isNotEmpty) {
-      return chatRoom.participants
-          .map((participant) => participant.name)
-          .join(", ");
+  String _getLastMessagePreview(ChatListModel chat) {
+    if (chat.ticket?.problem != null) {
+      return chat.ticket!.problem!;
+    } else if (chat.chatWith?.fullName != null) {
+      return "Chat with ${chat.chatWith!.fullName!}";
     }
     return LanguageService.get("no_messages_yet");
   }
 
-  bool hasUnreadMessages(ChatViewAttributes chatRoom) {
-    return chatRoom.id.hashCode % 3 == 0;
+  bool hasUnreadMessages(ChatListModel chat) {
+    return (chat.id?.hashCode ?? 0) % 3 == 0;
   }
 
-  int getUnreadMessageCount(ChatViewAttributes chatRoom) {
-    if (hasUnreadMessages(chatRoom)) {
-      return (chatRoom.id.hashCode % 10) + 1;
+  int getUnreadMessageCount(ChatListModel chat) {
+    if (hasUnreadMessages(chat)) {
+      return ((chat.id?.hashCode ?? 0) % 10) + 1;
     }
     return 0;
   }

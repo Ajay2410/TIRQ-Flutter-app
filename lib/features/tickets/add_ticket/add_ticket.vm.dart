@@ -10,19 +10,14 @@ import 'package:stacked_services/stacked_services.dart';
 import '../../../core/locator.dart';
 import '../../../core/models/machine.dart';
 import '../../../core/utils/app_logger.dart';
-import '../../../core/utils/type_def.dart';
 import '../../../resources/app_resources/app_resources.dart';
 import '../../../routes/routes.dart';
 import '../../../services/bottom_sheets.service.dart';
 import '../../../services/chat.service.dart';
-import '../../../services/dialogs.service.dart';
 import '../../../services/file_picker.service.dart';
 import '../../../services/file_upload.service.dart';
 import '../../../services/machine.service.dart';
 import '../../../services/ticket.service.dart';
-import '../../../widgets/dialogs/loader/loader_dialog.view.dart';
-import '../../Messages/chat/chat.view.dart';
-import '../../machines/add_machine/add_machine.view.dart';
 
 // Additional Info Section class for tickets
 class AdditionalInfoSection {
@@ -518,33 +513,9 @@ class AddTicketViewModel extends ReactiveViewModel {
           msg: "Ticket created successfully!",
           backgroundColor: Colors.green,
         );
-        navigateToChatView(ticketId);
         _navigationService.back();
       },
     );
-  }
-
-  void navigateToChatView(String ticketId) async {
-    final response = await _dialogService.showCustomDialog(
-      variant: DialogType.loader,
-      data: LoaderDialogAttributes(
-        task:
-            () =>
-                _chatService.getChatViewAttributesForTicket(ticketId: ticketId),
-        message: "Loading chat...",
-      ),
-    );
-    if (response?.data != null) {
-      (response!.data as EitherResult<ChatViewAttributes>).fold(
-        (failure) {
-          AppLogger.error(failure.message);
-          Fluttertoast.showToast(msg: failure.message);
-        },
-        (attributes) {
-          _navigationService.navigateTo(Routes.chat, arguments: attributes);
-        },
-      );
-    }
   }
 
   void addLocalFile(File file) {

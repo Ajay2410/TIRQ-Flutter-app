@@ -11,7 +11,8 @@ import 'package:stacked_services/stacked_services.dart';
 import '../../../core/locator.dart';
 import '../../services/ticket.service.dart';
 import '../chat/chat_list.view.dart';
-import '../contacts/chat_list/contacts_list.view.dart';
+import '../contacts/contacts_list.dart';
+// import '../contacts/chat_list/contacts_list.view.dart'; // File doesn't exist
 
 class StageViewModel extends ReactiveViewModel {
   final _navigationService = locator<NavigationService>();

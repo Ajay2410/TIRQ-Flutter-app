@@ -8,27 +8,6 @@ import 'package:stacked/stacked.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import '../../resources/app_resources/app_resources.dart';
 
-// Dummy chat data model
-class DummyChatData {
-  final String id;
-  final String title;
-  final String lastMessage;
-  final String time;
-  final String status;
-  final String type;
-  final int unreadCount;
-
-  DummyChatData({
-    required this.id,
-    required this.title,
-    required this.lastMessage,
-    required this.time,
-    required this.status,
-    required this.type,
-    required this.unreadCount,
-  });
-}
-
 class ChatListView extends StatefulWidget {
   const ChatListView({super.key});
 
@@ -36,7 +15,8 @@ class ChatListView extends StatefulWidget {
   State<ChatListView> createState() => _ChatListViewState();
 }
 
-class _ChatListViewState extends State<ChatListView> with TickerProviderStateMixin {
+class _ChatListViewState extends State<ChatListView>
+    with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   late AnimationController _animationController;
@@ -47,16 +27,24 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
   String _sortFilter = 'latest';
 
   // Dynamic border radius for segmented control
-  BorderRadius _dynamicBorder = BorderRadius.only(topLeft: Radius.circular(AppSizes.v45), bottomLeft: Radius.circular(AppSizes.v45));
+  BorderRadius _dynamicBorder = BorderRadius.only(
+    topLeft: Radius.circular(AppSizes.v45),
+    bottomLeft: Radius.circular(AppSizes.v45),
+  );
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0.0, -0.5),
       end: const Offset(0.0, 0.0),
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -86,24 +74,64 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
     }
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context, ChatListViewModel model) {
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context,
+    ChatListViewModel model,
+  ) {
     return GradientAppBar(
       titleSpacing: 0,
-      leading: IconButton(onPressed: () => model. navigateToHome(), icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white)),
+      leading: IconButton(
+        onPressed: () => model.navigateToHome(),
+        icon: Image.asset(
+          AppImages.back,
+          width: 24,
+          height: 24,
+          color: AppColors.white,
+        ),
+      ),
       titleKey: 'messages',
       actions: [
-        InkWell(onTap: _toggleSearch, child: Image.asset(AppImages.search, width: 23, height: 23, color: AppColors.white)),
+        InkWell(
+          onTap: _toggleSearch,
+          child: Image.asset(
+            AppImages.search,
+            width: 23,
+            height: 23,
+            color: AppColors.white,
+          ),
+        ),
         SizedBox(width: 15),
-        InkWell(onTap: () => model.navigateToArchivedChats(), child: Image.asset(AppImages.archive, width: 23, height: 23, color: AppColors.white)),
+        InkWell(
+          onTap: () => model.navigateToArchivedChats(),
+          child: Image.asset(
+            AppImages.archive,
+            width: 23,
+            height: 23,
+            color: AppColors.white,
+          ),
+        ),
         PopupMenuButton<String>(
           icon: Stack(
             children: [
-              Image.asset(AppImages.filter, width: 23, height: 23, color: AppColors.white),
-              if (_statusFilter != 'all' || (_sortFilter != 'latest' && _statusFilter == 'all'))
+              Image.asset(
+                AppImages.filter,
+                width: 23,
+                height: 23,
+                color: AppColors.white,
+              ),
+              if (_statusFilter != 'all' ||
+                  (_sortFilter != 'latest' && _statusFilter == 'all'))
                 Positioned(
                   right: 0,
                   top: 0,
-                  child: Container(width: 8, height: 8, decoration: BoxDecoration(color: AppColors.primary, shape: BoxShape.circle)),
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
                 ),
             ],
           ),
@@ -140,14 +168,21 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
                       children: [
-                        if (_statusFilter == 'in_progress') Icon(Icons.check, color: AppColors.primary, size: 20),
+                        if (_statusFilter == 'in_progress')
+                          Icon(Icons.check, color: AppColors.primary, size: 20),
                         if (_statusFilter == 'in_progress') SizedBox(width: 8),
                         Text(
                           'In Progress',
                           style: TextStyle(
-                            color: _statusFilter == 'in_progress' ? AppColors.primary : AppColors.textPrimary,
+                            color:
+                                _statusFilter == 'in_progress'
+                                    ? AppColors.primary
+                                    : AppColors.textPrimary,
                             fontSize: 16,
-                            fontWeight: _statusFilter == 'in_progress' ? FontWeight.w600 : FontWeight.normal,
+                            fontWeight:
+                                _statusFilter == 'in_progress'
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
                           ),
                         ),
                       ],
@@ -161,14 +196,21 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
                       children: [
-                        if (_statusFilter == 'on_hold') Icon(Icons.check, color: AppColors.primary, size: 20),
+                        if (_statusFilter == 'on_hold')
+                          Icon(Icons.check, color: AppColors.primary, size: 20),
                         if (_statusFilter == 'on_hold') SizedBox(width: 8),
                         Text(
                           'On Hold',
                           style: TextStyle(
-                            color: _statusFilter == 'on_hold' ? AppColors.primary : AppColors.textPrimary,
+                            color:
+                                _statusFilter == 'on_hold'
+                                    ? AppColors.primary
+                                    : AppColors.textPrimary,
                             fontSize: 16,
-                            fontWeight: _statusFilter == 'on_hold' ? FontWeight.w600 : FontWeight.normal,
+                            fontWeight:
+                                _statusFilter == 'on_hold'
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
                           ),
                         ),
                       ],
@@ -182,14 +224,24 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
                       children: [
-                        if (_sortFilter == 'latest' && _statusFilter == 'all') Icon(Icons.check, color: AppColors.primary, size: 20),
-                        if (_sortFilter == 'latest' && _statusFilter == 'all') SizedBox(width: 8),
+                        if (_sortFilter == 'latest' && _statusFilter == 'all')
+                          Icon(Icons.check, color: AppColors.primary, size: 20),
+                        if (_sortFilter == 'latest' && _statusFilter == 'all')
+                          SizedBox(width: 8),
                         Text(
                           'Latest to Oldest',
                           style: TextStyle(
-                            color: (_sortFilter == 'latest' && _statusFilter == 'all') ? AppColors.primary : AppColors.textPrimary,
+                            color:
+                                (_sortFilter == 'latest' &&
+                                        _statusFilter == 'all')
+                                    ? AppColors.primary
+                                    : AppColors.textPrimary,
                             fontSize: 16,
-                            fontWeight: (_sortFilter == 'latest' && _statusFilter == 'all') ? FontWeight.w600 : FontWeight.normal,
+                            fontWeight:
+                                (_sortFilter == 'latest' &&
+                                        _statusFilter == 'all')
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
                           ),
                         ),
                       ],
@@ -203,14 +255,24 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
                       children: [
-                        if (_sortFilter == 'oldest' && _statusFilter == 'all') Icon(Icons.check, color: AppColors.primary, size: 20),
-                        if (_sortFilter == 'oldest' && _statusFilter == 'all') SizedBox(width: 8),
+                        if (_sortFilter == 'oldest' && _statusFilter == 'all')
+                          Icon(Icons.check, color: AppColors.primary, size: 20),
+                        if (_sortFilter == 'oldest' && _statusFilter == 'all')
+                          SizedBox(width: 8),
                         Text(
                           'Oldest to Latest',
                           style: TextStyle(
-                            color: (_sortFilter == 'oldest' && _statusFilter == 'all') ? AppColors.primary : AppColors.textPrimary,
+                            color:
+                                (_sortFilter == 'oldest' &&
+                                        _statusFilter == 'all')
+                                    ? AppColors.primary
+                                    : AppColors.textPrimary,
                             fontSize: 16,
-                            fontWeight: (_sortFilter == 'oldest' && _statusFilter == 'all') ? FontWeight.w600 : FontWeight.normal,
+                            fontWeight:
+                                (_sortFilter == 'oldest' &&
+                                        _statusFilter == 'all')
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
                           ),
                         ),
                       ],
@@ -218,7 +280,9 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                   ),
                 ),
               ],
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           color: AppColors.white,
           shadowColor: AppColors.black.withValues(alpha: 0.1),
         ),
@@ -273,11 +337,20 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                 child: Column(
                   children: [
                     // Animated search bar
-                    SlideTransition(position: _slideAnimation, child: _isSearchVisible ? _buildSearchBar(context, model) : const SizedBox.shrink()),
+                    SlideTransition(
+                      position: _slideAnimation,
+                      child:
+                          _isSearchVisible
+                              ? _buildSearchBar(context, model)
+                              : const SizedBox.shrink(),
+                    ),
                     // Tab Bar
                     Container(
                       color: AppColors.white,
-                      padding: EdgeInsets.symmetric(horizontal: AppSizes.w20, vertical: AppSizes.h16),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.w20,
+                        vertical: AppSizes.h16,
+                      ),
                       child: CustomSlidingSegmentedControl<int>(
                         height: 40,
                         innerPadding: EdgeInsets.zero,
@@ -294,7 +367,10 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
-                              color: selectedTabIndex == 0 ? AppColors.white : AppColors.black,
+                              color:
+                                  selectedTabIndex == 0
+                                      ? AppColors.white
+                                      : AppColors.black,
                             ),
                           ),
                           1: Text(
@@ -302,7 +378,10 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
-                              color: selectedTabIndex == 1 ? AppColors.white : AppColors.black,
+                              color:
+                                  selectedTabIndex == 1
+                                      ? AppColors.white
+                                      : AppColors.black,
                             ),
                           ),
                           2: Text(
@@ -310,19 +389,28 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
-                              color: selectedTabIndex == 2 ? AppColors.white : AppColors.black,
+                              color:
+                                  selectedTabIndex == 2
+                                      ? AppColors.white
+                                      : AppColors.black,
                             ),
                           ),
                         },
                         fromMax: true,
-                        thumbDecoration: BoxDecoration(borderRadius: _dynamicBorder, color: AppColors.primary),
+                        thumbDecoration: BoxDecoration(
+                          borderRadius: _dynamicBorder,
+                          color: AppColors.primary,
+                        ),
                         onValueChanged: (int value) {
                           setState(() {
                             selectedTabIndex = value;
                             // Update dynamic border radius based on selected segment
                             switch (value) {
                               case 0:
-                                _dynamicBorder = BorderRadius.only(topLeft: Radius.circular(AppSizes.v45), bottomLeft: Radius.circular(AppSizes.v45));
+                                _dynamicBorder = BorderRadius.only(
+                                  topLeft: Radius.circular(AppSizes.v45),
+                                  bottomLeft: Radius.circular(AppSizes.v45),
+                                );
                                 break;
                               case 1:
                                 _dynamicBorder = BorderRadius.circular(0);
@@ -344,7 +432,11 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                         color: AppColors.scaffoldBackground,
                         child:
                             model.isLoading
-                                ? Center(child: CircularProgressIndicator(color: AppColors.primary))
+                                ? Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.primary,
+                                  ),
+                                )
                                 : _buildFilteredChatList(context, model),
                       ),
                     ),
@@ -356,130 +448,34 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
     );
   }
 
-  List<DummyChatData> _getDummyChats() {
-    return [
-      DummyChatData(
-        id: '1',
-        title: 'Ticket #12345',
-        lastMessage: 'The machine is working perfectly now. Thank you!',
-        time: '2:30 PM',
-        status: 'Resolved',
-        type: 'ticket',
-        unreadCount: 0,
-      ),
-      DummyChatData(
-        id: '2',
-        title: 'Engineering Team',
-        lastMessage: 'Meeting scheduled for tomorrow at 10 AM',
-        time: '1:45 PM',
-        status: 'Active',
-        type: 'departmental',
-        unreadCount: 3,
-      ),
-      DummyChatData(
-        id: '3',
-        title: 'External Partner - ABC Corp',
-        lastMessage: 'Please review the attached documents',
-        time: '12:20 PM',
-        status: 'Pending',
-        type: 'external',
-        unreadCount: 1,
-      ),
-      DummyChatData(
-        id: '4',
-        title: 'Ticket #12346',
-        lastMessage: 'We are investigating the issue',
-        time: '11:15 AM',
-        status: 'In Progress',
-        type: 'ticket',
-        unreadCount: 2,
-      ),
-      DummyChatData(
-        id: '5',
-        title: 'Support Team',
-        lastMessage: 'New update available for the system',
-        time: '10:30 AM',
-        status: 'Active',
-        type: 'departmental',
-        unreadCount: 0,
-      ),
-      DummyChatData(
-        id: '6',
-        title: 'Client - XYZ Industries',
-        lastMessage: 'Thank you for the quick response',
-        time: '9:45 AM',
-        status: 'Resolved',
-        type: 'external',
-        unreadCount: 0,
-      ),
-      DummyChatData(
-        id: '7',
-        title: 'Ticket #12347',
-        lastMessage: 'Issue has been escalated to senior support',
-        time: '8:20 AM',
-        status: 'Escalated',
-        type: 'ticket',
-        unreadCount: 5,
-      ),
-      DummyChatData(
-        id: '8',
-        title: 'Management Team',
-        lastMessage: 'Monthly review meeting notes attached',
-        time: 'Yesterday',
-        status: 'Active',
-        type: 'departmental',
-        unreadCount: 0,
-      ),
-      DummyChatData(
-        id: '9',
-        title: 'Ticket #12348',
-        lastMessage: 'Working on the solution',
-        time: '10:30 AM',
-        status: 'In Progress',
-        type: 'ticket',
-        unreadCount: 1,
-      ),
-      DummyChatData(
-        id: '10',
-        title: 'Support Team',
-        lastMessage: 'Waiting for client response',
-        time: '9:15 AM',
-        status: 'On Hold',
-        type: 'departmental',
-        unreadCount: 0,
-      ),
-    ];
-  }
-
   Widget _buildFilteredChatList(BuildContext context, ChatListViewModel model) {
-    final allChats = _getDummyChats();
-    List<DummyChatData> filteredChats;
+    List<dynamic> filteredChats;
     String emptyTitle;
     String emptySubtitle;
     IconData emptyIcon;
 
-    // Filter by tab type
+    // Filter by tab type using the model's methods
     switch (selectedTabIndex) {
       case 0: // Tickets
-        filteredChats = allChats.where((chat) => chat.type == 'ticket').toList();
+        filteredChats = model.getFilteredTicketChats();
         emptyTitle = LanguageService.get("no_ticket_conversations");
         emptySubtitle = LanguageService.get("ticket_chats_appear_here");
         emptyIcon = Icons.support_agent;
         break;
       case 1: // Departmental
-        filteredChats = allChats.where((chat) => chat.type == 'departmental').toList();
+        filteredChats = model.getFilteredDepartmentalChats();
         emptyTitle = LanguageService.get("no_departmental_conversations");
         emptySubtitle = LanguageService.get("departmental_chats_appear_here");
         emptyIcon = Icons.business;
         break;
       case 2: // External
-        filteredChats = allChats.where((chat) => chat.type == 'external').toList();
+        filteredChats = model.getFilteredExternalChats();
         emptyTitle = LanguageService.get("no_external_conversations");
         emptySubtitle = LanguageService.get("external_chats_appear_here");
         emptyIcon = Icons.public;
         break;
       default:
-        filteredChats = allChats;
+        filteredChats = model.allChats;
         emptyTitle = "No conversations";
         emptySubtitle = "No chats available";
         emptyIcon = Icons.chat;
@@ -489,11 +485,12 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
     if (_statusFilter != 'all') {
       filteredChats =
           filteredChats.where((chat) {
+            final status = chat.ticket?.status?.toLowerCase() ?? '';
             switch (_statusFilter) {
               case 'in_progress':
-                return chat.status.toLowerCase() == 'in progress';
+                return status == 'active';
               case 'on_hold':
-                return chat.status.toLowerCase() == 'on hold';
+                return status == 'on hold';
               default:
                 return true;
             }
@@ -513,12 +510,14 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
       color: AppColors.primary,
       backgroundColor: AppColors.white,
       onRefresh: () async {
-        // Simulate refresh delay
-        await Future.delayed(Duration(seconds: 1));
+        await model.getChatRooms();
       },
       child: ListView.separated(
         separatorBuilder: (context, index) {
-          return Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: Divider(height: 0));
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Divider(height: 0),
+          );
         },
         itemCount: filteredChats.length,
         itemBuilder: (context, index) {
@@ -531,10 +530,19 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
 
   Widget _buildSearchBar(BuildContext context, ChatListViewModel model) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppSizes.w20, vertical: AppSizes.h16),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.w20,
+        vertical: AppSizes.h16,
+      ),
       decoration: BoxDecoration(
         color: AppColors.white,
-        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), offset: const Offset(0, 2), blurRadius: 8)],
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withValues(alpha: 0.05),
+            offset: const Offset(0, 2),
+            blurRadius: 8,
+          ),
+        ],
       ),
       child: TextField(
         controller: _searchController,
@@ -548,8 +556,14 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
           prefixIcon: Icon(Icons.search, color: AppColors.primary),
           fillColor: AppColors.lightGray.withValues(alpha: 0.3),
           filled: true,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: BorderSide.none),
-          contentPadding: EdgeInsets.symmetric(vertical: AppSizes.h12, horizontal: AppSizes.w16),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(AppSizes.v12),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding: EdgeInsets.symmetric(
+            vertical: AppSizes.h12,
+            horizontal: AppSizes.w16,
+          ),
           suffixIcon:
               _searchController.text.isNotEmpty
                   ? IconButton(
@@ -565,20 +579,44 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, String title, String subtitle, IconData icon) {
+  Widget _buildEmptyState(
+    BuildContext context,
+    String title,
+    String subtitle,
+    IconData icon,
+  ) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             padding: EdgeInsets.all(AppSizes.v24),
-            decoration: BoxDecoration(color: AppColors.lightGray.withValues(alpha: 0.3), shape: BoxShape.circle),
-            child: Icon(icon, size: 80, color: AppColors.primary.withValues(alpha: 0.7)),
+            decoration: BoxDecoration(
+              color: AppColors.lightGray.withValues(alpha: 0.3),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              size: 80,
+              color: AppColors.primary.withValues(alpha: 0.7),
+            ),
           ),
           SizedBox(height: AppSizes.h16),
-          Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
+            ),
+          ),
           SizedBox(height: AppSizes.h8),
-          Text(subtitle, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary), textAlign: TextAlign.center),
+          Text(
+            subtitle,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );
@@ -590,32 +628,73 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
       children: [
         Container(
           padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(AppSizes.v16)),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(AppSizes.v16),
+          ),
           alignment: Alignment.center,
           child: Text(
             "VG - Van Group".substring(0, 2).toUpperCase(),
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: AppColors.primary),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+              color: AppColors.primary,
+            ),
           ),
         ),
         Positioned(
           bottom: -4,
           right: -4,
-          child: ClipRRect(borderRadius: BorderRadius.circular(2), child: Image.asset(AppImages.flag, width: 17, height: 17, fit: BoxFit.cover)),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(2),
+            child: Image.asset(
+              AppImages.flag,
+              width: 17,
+              height: 17,
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildChatItem(BuildContext context, ChatListViewModel model, DummyChatData chatRoom) {
+  Widget _buildChatItem(
+    BuildContext context,
+    ChatListViewModel model,
+    dynamic chatRoom,
+  ) {
+    final chatTitle = _getChatTitle(chatRoom);
+    final lastMessage = _getLastMessagePreview(chatRoom);
+    final ticketNumber = chatRoom.ticket?.ticketNumber ?? 'Unknown';
+    final status = chatRoom.ticket?.status ?? 'Unknown';
+    final chatWithName = chatRoom.chatWith?.fullName ?? 'Unknown';
+
     return InkWell(
       onTap: () {
-        // Navigate to chat screen with dummy data
+        // Navigate to chat screen with real data
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => ChatView(contactName: 'Leslie Alexander', contactNumber: '#12352344566', contactInitials: 'LA')),
+          MaterialPageRoute(
+            builder:
+                (context) => ChatView(
+                  contactName: chatWithName,
+                  contactNumber: ticketNumber,
+                  contactInitials:
+                      chatWithName.isNotEmpty
+                          ? chatWithName.substring(0, 1).toUpperCase()
+                          : 'U',
+                  roomId: chatRoom.id,
+                  userId:
+                      '68c515db66e6b3dee33126c3', // You can get this from user service
+                ),
+          ),
         );
       },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: AppSizes.h15, horizontal: AppSizes.w16),
+        padding: EdgeInsets.symmetric(
+          vertical: AppSizes.h15,
+          horizontal: AppSizes.w16,
+        ),
         decoration: BoxDecoration(color: AppColors.white),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -630,17 +709,33 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                     children: [
                       Expanded(
                         child: Text(
-                          'VG - Van Group',
+                          chatTitle,
                           style: Theme.of(
                             context,
-                          ).textTheme.titleMedium?.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 14),
+                          ).textTheme.titleMedium?.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: AppSizes.w8, vertical: AppSizes.h2),
-                        decoration: BoxDecoration(color: AppColors.redBack.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(AppSizes.v6)),
-                        child: Text("On Hold", style: TextStyle(color: AppColors.redBack, fontSize: AppSizes.v12)),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSizes.w8,
+                          vertical: AppSizes.h2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _getStatusColor(status).withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(AppSizes.v6),
+                        ),
+                        child: Text(
+                          status,
+                          style: TextStyle(
+                            color: _getStatusColor(status),
+                            fontSize: AppSizes.v12,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -648,14 +743,23 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                   Row(
                     children: [
                       Expanded(
-                        child: Row(
-                          children: [
-                            Text('${LanguageService.get("pending_since")} : ', style: TextStyle(fontSize: 11, color: AppColors.textGray)),
-                            Text("3 hours 15Min", style: TextStyle(fontSize: 11, color: AppColors.black)),
-                          ],
+                        child: Text(
+                          lastMessage,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: AppColors.textGray,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      Text("#12352344566", style: TextStyle(fontSize: 10, color: AppColors.black, fontWeight: FontWeight.bold)),
+                      Text(
+                        ticketNumber,
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: AppColors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -665,5 +769,36 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
         ),
       ),
     );
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'active':
+        return AppColors.primary;
+      case 'on hold':
+        return AppColors.redBack;
+      case 'resolved':
+        return AppColors.success;
+      default:
+        return AppColors.gray;
+    }
+  }
+
+  String _getChatTitle(dynamic chat) {
+    if (chat.ticket?.ticketNumber != null) {
+      return "Ticket #${chat.ticket!.ticketNumber!}";
+    } else if (chat.chatWith?.fullName != null) {
+      return chat.chatWith!.fullName!;
+    }
+    return "${LanguageService.get("chat")} #${chat.id?.substring(0, 6) ?? 'unknown'}";
+  }
+
+  String _getLastMessagePreview(dynamic chat) {
+    if (chat.ticket?.problem != null) {
+      return chat.ticket!.problem!;
+    } else if (chat.chatWith?.fullName != null) {
+      return "Chat with ${chat.chatWith!.fullName!}";
+    }
+    return LanguageService.get("no_messages_yet");
   }
 }

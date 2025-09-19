@@ -5,10 +5,10 @@ import 'package:dio/dio.dart';
 
 import '../api_endpoints.dart';
 import '../core/locator.dart';
+import '../core/models/chat_list_model.dart';
 import '../core/utils/app_logger.dart';
 import '../core/utils/failures.dart';
 import '../core/utils/type_def.dart';
-import '../features/Messages/chat/chat.view.dart';
 import 'api.service.dart';
 
 class ChatService {
@@ -37,31 +37,6 @@ class ChatService {
     _isRefreshing = false;
   }
 
-  ResultFuture<ChatViewAttributes> getChatViewAttributesForTicket({
-    required String ticketId,
-  }) async {
-    // try {
-    final response = await _apiService.post(
-      url: ApiEndpoints.getChatId,
-      data: {'ticketId': ticketId},
-    );
-
-    if (response.data['success'] == true) {
-      return Right(ChatViewAttributes.fromJson(response.data['data']));
-    } else {
-      return Left(Failure(response.data['message']));
-    }
-    // } catch (e) {
-    //   if (e is DioException) {
-    //     AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-    //     return Left(
-    //       Failure(e.response?.data?['message'] ?? 'Something went wrong'),
-    //     );
-    //   }
-    // }
-    return Left(Failure('Failed to get machines'));
-  }
-
   ResultFuture<bool> sendMessage({
     required String roomId,
     required Map<String, dynamic> message,
@@ -88,19 +63,19 @@ class ChatService {
     return Left(Failure('Failed to send message'));
   }
 
-  ResultFuture<List<ChatViewAttributes>> getArchivedChatRooms() async {
+  ResultFuture<List<ChatListModel>> getAllChats() async {
     try {
-      final response = await _apiService.get(url: ApiEndpoints.archiveChatRoom);
+      final response = await _apiService.get(url: ApiEndpoints.getAllChats);
+
       if (response.statusCode == 200) {
-        // Return the actual data list instead of just true
-        final chatRooms =
+        final chatList =
             (response.data as List)
-                .map((e) => ChatViewAttributes.fromJson(e))
+                .map((e) => ChatListModel.fromJson(e))
                 .toList();
-        return Right(chatRooms);
+        return Right(chatList);
       } else {
         return Left(
-          Failure(response.data['message'] ?? 'Failed to get chat rooms'),
+          Failure(response.data['message'] ?? 'Failed to get all chats'),
         );
       }
     } catch (e) {
@@ -110,73 +85,7 @@ class ChatService {
           Failure(e.response?.data?['message'] ?? 'Something went wrong'),
         );
       }
-      return Left(Failure('Failed to get chat rooms: $e'));
+      return Left(Failure('Failed to get all chats: $e'));
     }
-  }
-
-  ResultFuture<List<ChatViewAttributes>> getChatRooms() async {
-    // try {
-    //   final response = await _apiService.get(url: ApiEndpoints.chatRooms);
-
-    //   if (response.statusCode == 200) {
-    //     // Return the actual data list instead of just true
-    //     final chatRooms = (response.data as List).map((e) => ChatViewAttributes.fromJson(e)).toList();
-    //     return Right(chatRooms);
-    //   } else {
-    //     return Left(Failure(response.data['message'] ?? 'Failed to get chat rooms'));
-    //   }
-    // } catch (e) {
-    //   if (e is DioException) {
-    //     AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-    //     return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
-    //   }
-    //   return Left(Failure('Failed to get chat rooms: $e'));
-    // }
-    return Left(Failure('Failed to get chat rooms'));
-  }
-
-  ResultFuture<ChatViewAttributes> createIndividualChatRoom({
-    required List<String> employeeIds,
-  }) async {
-    try {
-      final response = await _apiService.post(
-        url: ApiEndpoints.createIndividualChatRoom,
-        data: {'employeeIds': employeeIds},
-      );
-
-      if (response.data['success'] == true) {
-        return Right(ChatViewAttributes.fromJson(response.data['data']));
-      } else {
-        return Left(Failure(response.data['message']));
-      }
-    } catch (e) {
-      if (e is DioException) {
-        AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-        return Left(
-          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
-        );
-      }
-      return Left(Failure('Failed to create individual chat room: $e'));
-    }
-  }
-
-  ResultFuture<List<ChatViewAttributes>> getExternalChatRooms() async {
-    // try {
-    //   final response = await _apiService.get(url: ApiEndpoints.externalChatRooms);
-
-    // if (response.data['success'] == true) {
-    //   final chatRooms = (response.data['data'] as List).map((e) => ChatViewAttributes.fromJson(e)).toList();
-    //   return Right(chatRooms);
-    // } else {
-    //   return Left(Failure(response.data['message'] ?? 'Failed to get external chat rooms'));
-    // }
-    // } catch (e) {
-    //   if (e is DioException) {
-    //     AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
-    //     return Left(Failure(e.response?.data?['message'] ?? 'Something went wrong'));
-    //   }
-    //   return Left(Failure('Failed to get external chat rooms: $e'));
-    // }
-    return Left(Failure('Failed to get external chat rooms'));
   }
 }
