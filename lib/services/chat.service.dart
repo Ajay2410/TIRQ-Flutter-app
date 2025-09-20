@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:manager/features/chat/chat_view.dart';
+import 'package:manager/features/chat/model/chat_message_model.dart';
 
 import '../api_endpoints.dart';
 import '../core/locator.dart';
@@ -61,6 +63,32 @@ class ChatService {
       }
     }
     return Left(Failure('Failed to send message'));
+  }
+
+  ResultFuture<List<ChatMessageModel>> getAllChatMessages({required String roomId}) async {
+    try {
+      final response = await _apiService.get(url: '${ApiEndpoints.getAllChatMessages}/$roomId');
+
+      if (response.statusCode == 200) {
+        List<ChatMessageModel> messageList =
+        (response.data as List)
+            .map((e) => ChatMessageModel.fromJson(e))
+            .toList();
+        return Right(messageList);
+      } else {
+        return Left(
+          Failure(response.data['message'] ?? 'Failed to get messages'),
+        );
+      }
+    } catch (e) {
+      if (e is DioException) {
+        AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
+      }
+      return Left(Failure('Failed to get messages: $e'));
+    }
   }
 
   ResultFuture<List<ChatListModel>> getAllChats() async {

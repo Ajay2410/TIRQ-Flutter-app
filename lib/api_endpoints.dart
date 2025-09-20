@@ -43,6 +43,7 @@ abstract class ApiEndpoints {
   static const String sendMessage = 'chat/room';
   static const String archiveChatRoom = 'chat/rooms-archive';
   static const String getAllChats = 'chat/getAllChats';
+  static const String getAllChatMessages = 'chat/messages';
   // static const String chatRooms = 'chat/rooms';
   // static const String externalChatRooms = 'auth/rooms-external';
   static const String createIndividualChatRoom = 'chat/room-create-individual';

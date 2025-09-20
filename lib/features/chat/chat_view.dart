@@ -1,38 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:manager/core/storage/storage.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/widgets/common_app_bar.dart';
 import 'package:manager/widgets/common_text_field.dart';
 import 'package:manager/features/chat/chat.vm.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 import '../../resources/app_resources/app_resources.dart';
+import '../../resources/enums/chat_enum.dart';
 import '../../services/socket_service.dart';
-
-// Message data model
-class ChatMessage {
-  final String id;
-  final String text;
-  final String timestamp;
-  final bool isSent;
-  final bool isRead;
-  final String? translatedText;
-
-  ChatMessage({
-    required this.id,
-    required this.text,
-    required this.timestamp,
-    required this.isSent,
-    this.isRead = false,
-    this.translatedText,
-  });
-}
+import 'model/chat_message_model.dart';
 
 class ChatView extends StatefulWidget {
   final String contactName;
   final String contactNumber;
   final String contactInitials;
   final String? roomId;
-  final String? userId;
 
   const ChatView({
     super.key,
@@ -40,7 +22,6 @@ class ChatView extends StatefulWidget {
     required this.contactNumber,
     required this.contactInitials,
     this.roomId,
-    this.userId,
   });
 
   @override
@@ -48,32 +29,11 @@ class ChatView extends StatefulWidget {
 }
 
 class _ChatViewState extends State<ChatView> {
-  final ScrollController _scrollController = ScrollController();
   final FocusNode _messageFocusNode = FocusNode();
-  final SocketService _socketService = SocketService();
 
-  @override
-  void initState() {
-    super.initState();
-    _initializeSocket();
-  }
-
-  void _initializeSocket() {
-    // Initialize socket connection
-    _socketService.initializeSocket(
-      serverUrl: 'https://triq.onrender.com/',
-      queryParams: {
-        'userId': widget.userId ?? 'default_user',
-        'roomId': widget.roomId ?? 'default_room',
-      },
-      extraHeaders: {'Authorization': "${getUser().token}"},
-    );
-  }
 
   @override
   void dispose() {
-    _socketService.dispose();
-    _scrollController.dispose();
     _messageFocusNode.dispose();
     super.dispose();
   }
@@ -210,7 +170,7 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
-  Widget _buildMessageBubble(MessageModel message) {
+  Widget _buildMessageBubble(ChatMessageModel message) {
     return TweenAnimationBuilder<double>(
       duration: Duration(milliseconds: 300),
       tween: Tween(begin: 0.0, end: 1.0),
@@ -304,45 +264,42 @@ class _ChatViewState extends State<ChatView> {
                                     ),
                                   ),
 
-                                  // Translated text if available
-                                  if (message.translatedContent != null &&
-                                      message
-                                          .translatedContent!
-                                          .isNotEmpty) ...[
-                                    SizedBox(height: AppSizes.h6),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: AppSizes.w8,
-                                        vertical: AppSizes.h4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color:
-                                            message.isSentByMe
-                                                ? AppColors.white.withValues(
-                                                  alpha: 0.15,
-                                                )
-                                                : AppColors.lightGray
-                                                    .withValues(alpha: 0.5),
-                                        borderRadius: BorderRadius.circular(
-                                          AppSizes.v8,
-                                        ),
-                                      ),
-                                      child: Text(
-                                        message.translatedContent!,
-                                        style: TextStyle(
-                                          color:
-                                              message.isSentByMe
-                                                  ? AppColors.white.withValues(
-                                                    alpha: 0.9,
-                                                  )
-                                                  : AppColors.textSecondary,
-                                          fontSize: AppSizes.f12,
-                                          height: 1.3,
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  // // Translated text if available
+                                  // if (message.content.isNotEmpty) ...[
+                                  //   SizedBox(height: AppSizes.h6),
+                                  //   Container(
+                                  //     padding: EdgeInsets.symmetric(
+                                  //       horizontal: AppSizes.w8,
+                                  //       vertical: AppSizes.h4,
+                                  //     ),
+                                  //     decoration: BoxDecoration(
+                                  //       color:
+                                  //           message.isSentByMe
+                                  //               ? AppColors.white.withValues(
+                                  //                 alpha: 0.15,
+                                  //               )
+                                  //               : AppColors.lightGray
+                                  //                   .withValues(alpha: 0.5),
+                                  //       borderRadius: BorderRadius.circular(
+                                  //         AppSizes.v8,
+                                  //       ),
+                                  //     ),
+                                  //     child: Text(
+                                  //       message.content,
+                                  //       style: TextStyle(
+                                  //         color:
+                                  //             message.isSentByMe
+                                  //                 ? AppColors.white.withValues(
+                                  //                   alpha: 0.9,
+                                  //                 )
+                                  //                 : AppColors.textSecondary,
+                                  //         fontSize: AppSizes.f12,
+                                  //         height: 1.3,
+                                  //         fontStyle: FontStyle.italic,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ],
                                 ],
                               ),
                             ),
@@ -360,7 +317,7 @@ class _ChatViewState extends State<ChatView> {
                                     : MainAxisAlignment.start,
                             children: [
                               Text(
-                                "${_formatTimestamp(message.timestamp)} •",
+                                "${_formatTimestamp(message.createdAt)} •",
                                 style: TextStyle(
                                   color: AppColors.textGray,
                                   fontSize: AppSizes.f10,
@@ -386,28 +343,27 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
-  Widget _buildMessageStatus(MessageModel message) {
+  Widget _buildMessageStatus(ChatMessageModel message) {
     Color statusColor;
 
     switch (message.status) {
-      case 'sent':
+      case MessageStatus.sent:
         statusColor = AppColors.textGray;
         break;
-      case 'delivered':
+      case MessageStatus.delivered:
+      case MessageStatus.read:
         statusColor = AppColors.primary;
         break;
-      case 'read':
-        statusColor = AppColors.primary;
-        break;
-      case 'failed':
+      case MessageStatus.failed:
         statusColor = AppColors.error;
         break;
-      default:
+      case MessageStatus.unknown:
         statusColor = AppColors.textGray;
+        break;
     }
 
     return Text(
-      message.status.toUpperCase(),
+      message.status.name.toUpperCase(),
       style: TextStyle(
         color: statusColor,
         fontSize: AppSizes.f10,
@@ -464,7 +420,7 @@ class _ChatViewState extends State<ChatView> {
           child: CommonTextField(
             controller: model.messageController,
             placeholder: 'Write Message',
-            onFieldSubmitted: (value) => model.sendMessage(),
+            // onFieldSubmitted: (value) => model.sendMessage(),
             prefixIcon: PopupMenuButton<String>(
               onSelected: (value) => _handleAttachmentAction(value),
               shape: RoundedRectangleBorder(
@@ -684,8 +640,10 @@ class _ChatViewState extends State<ChatView> {
     return ViewModelBuilder<ChatViewModel>.reactive(
       viewModelBuilder: () => ChatViewModel(),
       onViewModelReady: (model) {
+        model.fetchInitialData(roomId1: widget.roomId);
+
         // Add some sample messages for demonstration
-        model.addSampleMessage();
+        // model.addSampleMessage();
 
         // Add listener to text controller for dynamic UI updates
         model.messageController.addListener(() {
@@ -699,19 +657,35 @@ class _ChatViewState extends State<ChatView> {
             appBar: _buildAppBar(context),
             backgroundColor: AppColors.white,
             body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 // Messages list
-                Expanded(
+                Flexible(
                   child:
-                      model.isBusy
-                          ? Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.primary,
-                            ),
-                          )
-                          : ListView.builder(
-                            controller: _scrollController,
-                            padding: EdgeInsets.only(top: AppSizes.h8),
+                      model.isLoading
+                          ? ListView.builder(
+              controller: model.scrollController,
+              padding: EdgeInsets.only(top: AppSizes.h8),
+              itemCount: model.isLoading
+                  ? 6
+                  : model.messages.length + 1, // +1 for date separator
+              itemBuilder: (context, index) {
+                if (model.isLoading) {
+                  // Alternate shimmer sides for variety
+                  return MessageBubbleShimmer(isSentByMe: index % 2 == 0);
+                }
+
+                if (index == 0) {
+                  return _buildDateSeparator('Today');
+                }
+
+                final message = model.messages[index - 1];
+                return _buildMessageBubble(message);
+              },
+            )
+                : ListView.builder(
+                            controller: model.scrollController,
+                            padding: EdgeInsets.only(top: AppSizes.h10),
                             itemCount:
                                 model.messages.length +
                                 1, // +1 for date separator
@@ -729,6 +703,82 @@ class _ChatViewState extends State<ChatView> {
               ],
             ),
           ),
+    );
+  }
+}
+
+class MessageBubbleShimmer extends StatelessWidget {
+  final bool isSentByMe;
+  const MessageBubbleShimmer({super.key, required this.isSentByMe});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+        child: Row(
+          mainAxisAlignment:
+          isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+          children: [
+            Flexible(
+              child: Column(
+                crossAxisAlignment:
+                isSentByMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                children: [
+                  // Message bubble shimmer
+                  Container(
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.75,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: const Radius.circular(18),
+                        topRight: const Radius.circular(18),
+                        bottomLeft: isSentByMe
+                            ? const Radius.circular(18)
+                            : const Radius.circular(0),
+                        bottomRight: isSentByMe
+                            ? const Radius.circular(0)
+                            : const Radius.circular(18),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 12,
+                          width: double.infinity,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(height: 6),
+                        Container(
+                          height: 12,
+                          width: 80,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  // Timestamp shimmer
+                  Container(
+                    height: 10,
+                    width: 50,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

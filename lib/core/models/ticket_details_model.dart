@@ -15,6 +15,7 @@ class TicketDetailsModel {
   Details? processorDetails;
   Details? organisationDetails;
   PricingDetails? pricingDetails;
+  ChatRoom? chatRoom;
 
   TicketDetailsModel({
     this.ticketDetails,
@@ -23,6 +24,7 @@ class TicketDetailsModel {
     this.processorDetails,
     this.organisationDetails,
     this.pricingDetails,
+    this.chatRoom,
   });
 
   factory TicketDetailsModel.fromJson(Map<String, dynamic> json) => TicketDetailsModel(
@@ -32,6 +34,7 @@ class TicketDetailsModel {
     processorDetails: json["processorDetails"] == null ? null : Details.fromJson(json["processorDetails"]),
     organisationDetails: json["organisationDetails"] == null ? null : Details.fromJson(json["organisationDetails"]),
     pricingDetails: json["pricingDetails"] == null ? null : PricingDetails.fromJson(json["pricingDetails"]),
+    chatRoom: json["chatRoom"] == null ? null : ChatRoom.fromJson(json["chatRoom"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -41,6 +44,7 @@ class TicketDetailsModel {
     "processorDetails": processorDetails?.toJson(),
     "organisationDetails": organisationDetails?.toJson(),
     "pricingDetails": pricingDetails?.toJson(),
+    "chatRoom": chatRoom?.toJson(),
   };
 }
 
@@ -357,5 +361,69 @@ class Media {
     "url": url,
     "type": type,
     "_id": id,
+  };
+}
+
+class ChatRoom {
+  String? id;
+  String? ticket;
+  ChatUser? organisation;
+  ChatUser? processor;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  int? v;
+
+  ChatRoom({
+    this.id,
+    this.ticket,
+    this.organisation,
+    this.processor,
+    this.createdAt,
+    this.updatedAt,
+    this.v,
+  });
+
+  factory ChatRoom.fromJson(Map<String, dynamic> json) => ChatRoom(
+    id: json["_id"],
+    ticket: json["ticket"],
+    organisation: json["organisation"] == null ? null : ChatUser.fromJson(json["organisation"]),
+    processor: json["processor"] == null ? null : ChatUser.fromJson(json["processor"]),
+    createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
+    updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
+    v: json["__v"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "_id": id,
+    "ticket": ticket,
+    "organisation": organisation?.toJson(),
+    "processor": processor?.toJson(),
+    "createdAt": createdAt?.toIso8601String(),
+    "updatedAt": updatedAt?.toIso8601String(),
+    "__v": v,
+  };
+}
+
+class ChatUser {
+  String? id;
+  String? fullName;
+  String? email;
+
+  ChatUser({
+    this.id,
+    this.fullName,
+    this.email,
+  });
+
+  factory ChatUser.fromJson(Map<String, dynamic> json) => ChatUser(
+    id: json["_id"],
+    fullName: json["fullName"],
+    email: json["email"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "_id": id,
+    "fullName": fullName,
+    "email": email,
   };
 }

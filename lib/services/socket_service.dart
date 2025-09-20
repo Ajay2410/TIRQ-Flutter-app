@@ -23,22 +23,62 @@ class SocketService {
           .build(),
     );
 
-    // Listen for connection
     _socket!.onConnect((_) {
-      print("connected ${_socket!.id}");
+      print("✅ Connected: ${_socket!.id}");
+    });
 
-      // Register user after connection
-      if (queryParams != null && queryParams['userId'] != null) {
-        _socket!.emit("registerUser", {"userId": queryParams['userId']});
-      }
+    _socket!.onDisconnect((_) {
+      print("🔌 Disconnected");
+    });
+
+    _socket!.onError((err) {
+      print("❌ Socket error: $err");
     });
   }
 
-  /// Clean up resources
+  /// Register user (with orgId/processorId)
+  void registerUser(String orgOrProcessorId) {
+    _socket?.emit("registerUser", {"userId": orgOrProcessorId});
+  }
+
+  /// Join room
+  void joinRoom(String roomId) {
+    _socket?.emit("JoinRoom", {"roomId": roomId});
+  }
+
+  /// Send message with optional attachments
+  void sendMessage({
+    required String roomId,
+    required String content,
+    List<Map<String, dynamic>> attachments = const [],
+  }) {
+    final payload = {
+      "roomId": roomId,
+      "content": content,
+      "attachments": attachments, // each: {"type": "image|video|document", "url": "..."}
+    };
+    _socket?.emit("sendMessage", payload);
+    print("📤 Sent message: $payload");
+  }
+
+  /// Listen for new messages
+  void onNewMessage(Function(dynamic) handler) {
+    _socket?.on("newMessage", handler);
+  }
+
+  /// Generic event listener
+  void on(String event, Function(dynamic) handler) {
+    _socket?.on(event, handler);
+  }
+
+  /// Remove event listener
+  void off(String event) {
+    _socket?.off(event);
+  }
+
+  /// Dispose
   void dispose() {
-    if (_socket != null) {
-      _socket!.dispose();
-      _socket = null;
-    }
+    _socket?.dispose();
+    _socket = null;
   }
 }

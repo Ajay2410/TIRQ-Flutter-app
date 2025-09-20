@@ -1,8 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:manager/core/storage/storage.dart';
 import 'package:manager/core/utils/app_logger.dart';
 import 'package:stacked/stacked.dart';
+
+import '../../core/locator.dart';
+import '../../core/models/hive/user/user.dart';
+import '../../resources/app_resources/app_resources.dart';
+import '../../services/chat.service.dart';
+import '../../services/language.service.dart';
+import '../../services/socket_service.dart';
+import 'model/chat_message_model.dart';
 
 enum MessageType {
   text,
@@ -19,43 +29,130 @@ enum MessageType {
   }
 }
 
-class MessageModel {
-  final String id;
-  final String content;
-  final String? translatedContent;
-  final DateTime timestamp;
-  final bool isSentByMe;
-  final String senderName;
-  final String senderProfilePic;
-  final MessageType messageType;
-  final String status;
-
-  MessageModel({
-    required this.id,
-    required this.content,
-    this.translatedContent,
-    required this.timestamp,
-    required this.isSentByMe,
-    required this.senderName,
-    required this.senderProfilePic,
-    required this.messageType,
-    required this.status,
-  });
-}
-
 class ChatViewModel extends ReactiveViewModel {
+  final _chatService = locator<ChatService>();
   final TextEditingController messageController = TextEditingController();
   final ScrollController scrollController = ScrollController();
+
+  final SocketService _socketService = SocketService();
 
   // State variables
   bool _isSendingMessage = false;
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   // Messages list
-  final List<MessageModel> _messages = [];
-  List<MessageModel> get messages => _messages;
+  final List<ChatMessageModel> _messages = [];
+  List<ChatMessageModel> get messages => _messages.toList();
 
   // Getters
   bool get isSendingMessage => _isSendingMessage;
+
+  User userData = getUser();
+  String roomId = "default_room";
+
+  /// Handle new incoming messages
+  void _handleNewMessage(dynamic data) {
+    print(" New message received: $data");
+    if (data is Map<String, dynamic>) {
+      final message = ChatMessageModel.fromJson(data);
+
+      if(message.sender.id == userData.id) {
+        message.isSentByMe = true;
+      } else {
+        message.isSentByMe = false;
+      }
+
+      _messages.add(message);
+      notifyListeners();
+      _scrollToBottom();
+    }
+  }
+
+  Future<void> fetchInitialData({required String? roomId1}) async {
+    _isLoading = true;
+    notifyListeners();
+
+    roomId = roomId1 ?? roomId;
+    await Future.wait([
+      initializeSocket(),
+      getAllChatMessages(),
+    ]);
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+
+  /// Socket implementation
+  Future<void> initializeSocket() async {
+    // Initialize socket connection
+    _socketService.initializeSocket(
+      serverUrl: 'https://triq.onrender.com/',
+      queryParams: {'userId': userData.id ?? 'default_user', 'roomId': roomId},
+      extraHeaders: {'Authorization': "${userData.token}"},
+    );
+
+    // Register user
+    _socketService.registerUser(userData.id ?? 'default_user');
+
+    // Join room
+    _socketService.joinRoom(roomId);
+
+    // Listen for incoming messages
+    _socketService.onNewMessage(_handleNewMessage);
+  }
+
+  void _scrollToBottom() {
+    if (scrollController.hasClients) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (scrollController.hasClients) {
+          scrollController.animateTo(
+            scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+    }
+  }
+
+  /// Fetch all messages
+  Future<void> getAllChatMessages() async {
+    try {
+      final result = await _chatService.getAllChatMessages(roomId: roomId);
+
+      result.fold(
+            (failure) {
+          AppLogger.error('Failed to get all chats: ${failure.message}');
+          _messages.clear();
+
+          Fluttertoast.showToast(
+            msg:
+            "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: AppColors.error,
+            textColor: AppColors.white,
+          );
+        },
+            (response) {
+
+              final result = response.map((element) {
+                element.isSentByMe = element.sender.id == userData.id;
+                return element;
+              }).toList();
+
+              _messages.clear();
+              _messages.addAll(result);
+          AppLogger.info('Chat Messages loaded ${response.length} messages');
+        },
+      );
+    } catch (e) {
+      AppLogger.error('Error fetching chat rooms: $e');
+    }
+  }
 
   /// Send a text message
   Future<void> sendMessage() async {
@@ -71,62 +168,24 @@ class ChatViewModel extends ReactiveViewModel {
       final messageText = messageController.text.trim();
       messageController.clear();
 
-      // Add message to local list immediately for better UX
-      final tempMessage = MessageModel(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
+      // Send message via socket
+      _socketService.sendMessage(
+        roomId: roomId,
         content: messageText,
-        timestamp: DateTime.now(),
-        isSentByMe: true,
-        senderName: 'You',
-        senderProfilePic: '',
-        messageType: MessageType.text,
-        status: 'sending',
       );
 
-      _messages.insert(0, tempMessage);
-      notifyListeners();
-
-      // Simulate API call delay
-      await Future.delayed(Duration(seconds: 1));
-
-      // Update message status to sent
-      final messageIndex = _messages.indexWhere((m) => m.id == tempMessage.id);
-      if (messageIndex != -1) {
-        _messages[messageIndex] = MessageModel(
-          id: tempMessage.id,
-          content: tempMessage.content,
-          timestamp: tempMessage.timestamp,
-          isSentByMe: true,
-          senderName: tempMessage.senderName,
-          senderProfilePic: tempMessage.senderProfilePic,
-          messageType: tempMessage.messageType,
-          status: 'sent',
-        );
-      }
-
-      AppLogger.info('Message sent successfully');
+      AppLogger.info('Message sent locally for immediate display.');
     } catch (e) {
       AppLogger.error('Error sending message: $e');
-
-      // Update message status to failed
-      final messageIndex = _messages.indexWhere((m) => m.status == 'sending');
-      if (messageIndex != -1) {
-        _messages[messageIndex] = MessageModel(
-          id: _messages[messageIndex].id,
-          content: _messages[messageIndex].content,
-          timestamp: _messages[messageIndex].timestamp,
-          isSentByMe: true,
-          senderName: _messages[messageIndex].senderName,
-          senderProfilePic: _messages[messageIndex].senderProfilePic,
-          messageType: _messages[messageIndex].messageType,
-          status: 'failed',
-        );
-      }
+      // Optionally, update the temporary message to show a 'failed' state.
     } finally {
       _isSendingMessage = false;
       notifyListeners();
     }
   }
+
+  // NOTE: The 'sendAttachment' and 'addSampleMessage' methods are now broken
+  // because they use the old MessageModel. They need to be updated or removed.
 
   /// Send a file attachment
   Future<void> sendAttachment({
@@ -134,86 +193,15 @@ class ChatViewModel extends ReactiveViewModel {
     required MessageType messageType,
     required String fileName,
   }) async {
-    try {
-      _isSendingMessage = true;
-      notifyListeners();
-
-      // Add message to local list
-      final tempMessage = MessageModel(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        content: fileName,
-        timestamp: DateTime.now(),
-        isSentByMe: true,
-        senderName: 'You',
-        senderProfilePic: '',
-        messageType: messageType,
-        status: 'sending',
-      );
-
-      _messages.insert(0, tempMessage);
-      notifyListeners();
-
-      // Simulate API call delay
-      await Future.delayed(Duration(seconds: 1));
-
-      // Update message status
-      final messageIndex = _messages.indexWhere((m) => m.id == tempMessage.id);
-      if (messageIndex != -1) {
-        _messages[messageIndex] = MessageModel(
-          id: tempMessage.id,
-          content: tempMessage.content,
-          timestamp: tempMessage.timestamp,
-          isSentByMe: true,
-          senderName: tempMessage.senderName,
-          senderProfilePic: tempMessage.senderProfilePic,
-          messageType: tempMessage.messageType,
-          status: 'sent',
-        );
-      }
-
-      AppLogger.info('Attachment sent successfully');
-    } catch (e) {
-      AppLogger.error('Error sending attachment: $e');
-
-      // Update message status to failed
-      final messageIndex = _messages.indexWhere((m) => m.status == 'sending');
-      if (messageIndex != -1) {
-        _messages[messageIndex] = MessageModel(
-          id: _messages[messageIndex].id,
-          content: _messages[messageIndex].content,
-          timestamp: _messages[messageIndex].timestamp,
-          isSentByMe: true,
-          senderName: _messages[messageIndex].senderName,
-          senderProfilePic: _messages[messageIndex].senderProfilePic,
-          messageType: _messages[messageIndex].messageType,
-          status: 'failed',
-        );
-      }
-    } finally {
-      _isSendingMessage = false;
-      notifyListeners();
-    }
-  }
-
-  /// Add a sample message for demonstration
-  void addSampleMessage() {
-    final sampleMessage = MessageModel(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      content: 'Hello! This is a sample message.',
-      timestamp: DateTime.now().subtract(Duration(minutes: 5)),
-      isSentByMe: false,
-      senderName: 'Contact',
-      senderProfilePic: '',
-      messageType: MessageType.text,
-      status: 'sent',
-    );
-
-    _messages.add(sampleMessage);
-    notifyListeners();
+    // This method is broken and needs to be updated for ChatMessageModel
   }
 
   @override
   void dispose() {
+    // Clean up socket listeners
+    _socketService.off('newMessage');
+    _socketService.dispose();
+
     // Dispose controllers
     messageController.dispose();
     scrollController.dispose();

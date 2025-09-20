@@ -684,8 +684,6 @@ class _ChatListViewState extends State<ChatListView>
                           ? chatWithName.substring(0, 1).toUpperCase()
                           : 'U',
                   roomId: chatRoom.id,
-                  userId:
-                      '68c515db66e6b3dee33126c3', // You can get this from user service
                 ),
           ),
         );
