@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:manager/core/locator.dart';
 import 'package:manager/core/models/ticket_details_model.dart';
 import 'package:manager/services/ticket.service.dart';
+import 'package:manager/features/chat/chat_view.dart';
 
 class TicketDetailsViewModel extends BaseViewModel {
   final TicketService _ticketService = locator<TicketService>();
@@ -55,9 +57,31 @@ class TicketDetailsViewModel extends BaseViewModel {
   }
 
   // Start chat functionality
-  void startChat() {
-    // TODO: Implement chat functionality
-    // This could navigate to a chat screen or open a chat dialog
+  void startChat(BuildContext context) {
+    if (_ticketDetails == null) return;
+
+    final ticketNumber =
+        _ticketDetails!.ticketDetails?.ticketNumber ?? 'Unknown';
+    final chatWithName =
+        _ticketDetails!.processorDetails?.fullName ?? 'Customer';
+    final contactInitials =
+        chatWithName.isNotEmpty
+            ? chatWithName.substring(0, 1).toUpperCase()
+            : 'U';
+    final roomId = _ticketDetails!.chatRoom?.id ?? '';
+
+    // Navigate to chat screen
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder:
+            (context) => ChatView(
+              contactName: chatWithName,
+              contactNumber: ticketNumber,
+              contactInitials: contactInitials,
+              roomId: roomId,
+            ),
+      ),
+    );
   }
 
   // Get formatted date string

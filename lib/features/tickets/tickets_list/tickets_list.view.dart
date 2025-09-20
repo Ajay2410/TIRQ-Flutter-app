@@ -403,6 +403,9 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
 
     return GestureDetector(
       onTap: () {
+
+
+        //TODO:  don't remove
         // if (ticket.paymentStatus == 'paid') {
           model.navigateToTicketDetails(ticketId: ticket.id ?? '');
         // } else {

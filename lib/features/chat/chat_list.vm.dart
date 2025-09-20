@@ -21,15 +21,19 @@ class ChatListViewModel extends BaseViewModel {
   final _stageService = locator<StageService>();
 
   List<ChatListModel> _chatRooms = [];
+
   List<ChatListModel> get chatRooms => _chatRooms;
 
   List<ChatListModel> _allChats = [];
+
   List<ChatListModel> get allChats => _allChats;
 
   List<ChatListModel> _archivedChatRooms = [];
+
   List<ChatListModel> get archivedChatRooms => _archivedChatRooms;
 
   bool _isLoading = false;
+
   bool get isLoading => _isLoading;
 
   StreamSubscription? _refreshSubscription;
@@ -59,8 +63,11 @@ class ChatListViewModel extends BaseViewModel {
 
   // Count methods for badges
   int get ticketChatsCount => getTicketChats().length;
+
   int get departmentalChatsCount => getDepartmentalChats().length;
+
   int get externalChatsCount => getExternalChats().length;
+
   int get totalChatsCount => _chatRooms.length;
 
   // Archived filter methods - Note: These methods are not implemented as the API doesn't support archived chats yet
@@ -78,13 +85,16 @@ class ChatListViewModel extends BaseViewModel {
 
   // Archived count methods
   int get archivedTicketChatsCount => getArchivedTicketChats().length;
-  int get archivedDepartmentalChatsCount =>
-      getArchivedDepartmentalChats().length;
+
+  int get archivedDepartmentalChatsCount => getArchivedDepartmentalChats().length;
+
   int get archivedExternalChatsCount => getArchivedExternalChats().length;
+
   int get totalArchivedChatsCount => _archivedChatRooms.length;
 
   // Search functionality
   String _searchQuery = '';
+
   String get searchQuery => _searchQuery;
 
   void updateSearchQuery(String query) {
@@ -104,9 +114,7 @@ class ChatListViewModel extends BaseViewModel {
 
     return tickets
         .where(
-          (chat) =>
-              _getChatTitle(chat).toLowerCase().contains(_searchQuery) ||
-              _getLastMessagePreview(chat).toLowerCase().contains(_searchQuery),
+          (chat) => _getChatTitle(chat).toLowerCase().contains(_searchQuery) || _getLastMessagePreview(chat).toLowerCase().contains(_searchQuery),
         )
         .toList();
   }
@@ -117,9 +125,7 @@ class ChatListViewModel extends BaseViewModel {
 
     return departmental
         .where(
-          (chat) =>
-              _getChatTitle(chat).toLowerCase().contains(_searchQuery) ||
-              _getLastMessagePreview(chat).toLowerCase().contains(_searchQuery),
+          (chat) => _getChatTitle(chat).toLowerCase().contains(_searchQuery) || _getLastMessagePreview(chat).toLowerCase().contains(_searchQuery),
         )
         .toList();
   }
@@ -130,9 +136,7 @@ class ChatListViewModel extends BaseViewModel {
 
     return external
         .where(
-          (chat) =>
-              _getChatTitle(chat).toLowerCase().contains(_searchQuery) ||
-              _getLastMessagePreview(chat).toLowerCase().contains(_searchQuery),
+          (chat) => _getChatTitle(chat).toLowerCase().contains(_searchQuery) || _getLastMessagePreview(chat).toLowerCase().contains(_searchQuery),
         )
         .toList();
   }
@@ -164,8 +168,7 @@ class ChatListViewModel extends BaseViewModel {
           _allChats = [];
 
           Fluttertoast.showToast(
-            msg:
-                "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
+            msg: "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: AppColors.error,
@@ -213,9 +216,7 @@ class ChatListViewModel extends BaseViewModel {
 
       result.fold(
         (failure) {
-          AppLogger.error(
-            'Failed to get archived chat rooms: ${failure.message}',
-          );
+          AppLogger.error('Failed to get archived chat rooms: ${failure.message}');
           _archivedChatRooms = [];
 
           Fluttertoast.showToast(
@@ -228,9 +229,7 @@ class ChatListViewModel extends BaseViewModel {
         },
         (response) {
           _archivedChatRooms = response;
-          AppLogger.info(
-            'Successfully loaded ${response.length} archived chat rooms',
-          );
+          AppLogger.info('Successfully loaded ${response.length} archived chat rooms');
         },
       );
     } catch (e) {

@@ -699,7 +699,9 @@ class TicketDetailsView extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: model.startChat,
+          onPressed: () {
+            model.startChat(context);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primaryDark,
             foregroundColor: AppColors.white,
