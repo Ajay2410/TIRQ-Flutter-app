@@ -13,11 +13,15 @@ import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 import 'package:manager/core/storage/storage.dart';
 import 'package:manager/core/models/hive/user/user.dart';
+import 'package:stacked_services/stacked_services.dart';
 
+import '../../../core/locator.dart';
 import '../../../core/models/ticket_model.dart';
 import '../../../resources/app_resources/app_resources.dart';
 import '../../../resources/multimedia_resources/resources.dart';
+import '../../../services/dialogs.service.dart';
 import '../../../widgets/common/info_column.dart';
+import '../../../widgets/dialogs/loader/loader_dialog.view.dart';
 import 'tickets_list.vm.dart';
 
 class TicketsListView extends StatefulWidget {
@@ -114,12 +118,37 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
 
   Future<void> _onOnlineSupportPressed(TicketsListViewModel model) async {
     _toggleFab();
+    if(model.machineSupplierData.isEmpty) {
+      final _dialogService = locator<DialogService>();
+      await _dialogService.showCustomDialog(
+        variant: DialogType.loader,
+        data: LoaderDialogAttributes(
+          task: () => model.loadMachines(),
+        ),
+      );
+    }
+
+    if(model.machineSupplierData.isEmpty) {
+      return;
+    }
+
     Get.dialog(
       CreateTicketDialogWidget(
+        machineSupplierData: model.machineSupplierData,
         attributes: CreateTicketDialogAttributes(
-          onSubmit: (problem, errorCode, additionalNotes, attachments) async {
-            // Navigate to review ticket using Stacked navigation
-            model.navigateToReviewTicket();
+          onSubmit: (problem, errorCode, additionalNotes, attachments, machineId, organizationId) async {
+            print('Problem: $problem');
+            print('Error Code: $errorCode');
+            print('Additional Notes: $additionalNotes');
+            print('Attachments: ${attachments.length} files');
+            await model.createTicket(
+              problem: problem,
+              errorCode: errorCode,
+              additionalNotes: additionalNotes,
+              attachments: attachments,
+              machineId: machineId,
+              organizationId: organizationId,
+            );
           },
           onCancel: () {
             print('Ticket creation cancelled');
@@ -129,15 +158,35 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
     );
   }
 
-  void _onSiteVisitPressed(TicketsListViewModel model) {
+  Future<void> _onSiteVisitPressed(TicketsListViewModel model) async {
     _toggleFab();
+
+    if(model.machineSupplierData.isEmpty) {
+      final _dialogService = locator<DialogService>();
+      await _dialogService.showCustomDialog(
+        variant: DialogType.loader,
+        data: LoaderDialogAttributes(
+          task: () => model.loadMachines(),
+        ),
+      );
+    }
+
+    if(model.machineSupplierData.isEmpty) {
+      return;
+    }
+
     Get.dialog(
       SelectMaintenanceTypeDialog(
+        machineSupplierData: model.machineSupplierData,
         isWarrantyActive: true, // You can modify this based on your logic
         attributes: SelectMaintenanceTypeDialogAttributes(
-          onSubmit: (String maintenanceType) async {
-            // Navigate to review ticket using Stacked navigation
-            model.navigateToReviewTicket();
+          onSubmit: (String maintenanceType, String organizationId, String machineId) async {
+            await model.createTicket(
+              maintenanceType: maintenanceType,
+              isFromSiteVisit: true,
+              organizationId: organizationId,
+              machineId: machineId,
+            );
           },
           onCancel: () {
             // Handle cancel action if needed
@@ -254,11 +303,11 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
               ),
             ),
           ),
-          // floatingActionButton:
-          //     model.selectedTabIndex == 0 &&
-          //             getUser().userRole == UserRole.processor
-          //         ? _buildExpandableFloatingActionButton(model)
-          //         : null,
+          floatingActionButton:
+              model.selectedTabIndex == 0 &&
+                      getUser().userRole == UserRole.processor
+                  ? _buildExpandableFloatingActionButton(model)
+                  : null,
         );
       },
     );
@@ -365,7 +414,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
     );
   }
 
-  Widget _buildTicketsListWithPagination(BuildContext context, TicketsListViewModel model, List<Datum> tickets, {required bool isActive}) {
+  Widget _buildTicketsListWithPagination(BuildContext context, TicketsListViewModel model, List<TicketList> tickets, {required bool isActive}) {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollInfo) {
         if (!model.isLoadingMore && model.hasMoreTickets && scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 200) {
@@ -398,7 +447,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
     );
   }
 
-  Widget _buildTicketCard(BuildContext context, Datum ticket, TicketsListViewModel model) {
+  Widget _buildTicketCard(BuildContext context, TicketList ticket, TicketsListViewModel model) {
     final pendingDuration = _calculatePendingDuration(ticket);
 
     return GestureDetector(
@@ -587,7 +636,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
     );
   }
 
-  Widget _buildCountryFlag(BuildContext context, Datum ticket) {
+  Widget _buildCountryFlag(BuildContext context, TicketList ticket) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -610,7 +659,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
     );
   }
 
-  String _calculatePendingDuration(Datum ticket) {
+  String _calculatePendingDuration(TicketList ticket) {
     if (ticket.createdAt == null) return LanguageService.get('unknown');
 
     try {

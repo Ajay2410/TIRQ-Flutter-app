@@ -1,10 +1,21 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:manager/features/tickets/add_ticket/add_ticket.view.dart';
 import 'package:manager/routes/routes.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
+import '../../../api_endpoints.dart';
 import '../../../core/locator.dart';
+import '../../../core/models/machine_overview_model.dart';
+import '../../../core/models/machine_supplier_model.dart';
 import '../../../core/models/ticket_model.dart';
+import '../../../core/utils/app_logger.dart';
+import '../../../services/api.service.dart';
+import '../../../services/machine_supplier.service.dart';
 import '../../../services/ticket.service.dart';
 import '../../../services/stage.service.dart';
 
@@ -12,6 +23,7 @@ class TicketsListViewModel extends ReactiveViewModel {
   final _navigationService = locator<NavigationService>();
   final _ticketService = locator<TicketService>();
   final _stageService = locator<StageService>();
+  final _apiService = locator<ApiService>();
 
   // Search query
   String _searchQuery = '';
@@ -45,22 +57,22 @@ class TicketsListViewModel extends ReactiveViewModel {
   bool get isLoadingMore => _isLoadingMore.value;
 
   // Reactive values
-  final ReactiveValue<List<Datum>> _activeTickets = ReactiveValue<List<Datum>>(
+  final ReactiveValue<List<TicketList>> _activeTickets = ReactiveValue<List<TicketList>>(
     [],
   );
-  final ReactiveValue<List<Datum>> _resolvedTickets =
-      ReactiveValue<List<Datum>>([]);
+  final ReactiveValue<List<TicketList>> _resolvedTickets =
+      ReactiveValue<List<TicketList>>([]);
   final ReactiveValue<bool> _isLoading = ReactiveValue<bool>(false);
 
   // Filtered tickets for search
-  final ReactiveValue<List<Datum>> _filteredActiveTickets =
-      ReactiveValue<List<Datum>>([]);
-  final ReactiveValue<List<Datum>> _filteredResolvedTickets =
-      ReactiveValue<List<Datum>>([]);
+  final ReactiveValue<List<TicketList>> _filteredActiveTickets =
+      ReactiveValue<List<TicketList>>([]);
+  final ReactiveValue<List<TicketList>> _filteredResolvedTickets =
+      ReactiveValue<List<TicketList>>([]);
 
-  List<Datum> get activeTickets => _filteredActiveTickets.value;
+  List<TicketList> get activeTickets => _filteredActiveTickets.value;
 
-  List<Datum> get resolvedTickets => _filteredResolvedTickets.value;
+  List<TicketList> get resolvedTickets => _filteredResolvedTickets.value;
 
   bool get isLoading => _isLoading.value;
 
@@ -117,7 +129,7 @@ class TicketsListViewModel extends ReactiveViewModel {
         forceRefresh: _activePage.value == 1,
       );
 
-      List<Datum> combinedTickets = [];
+      List<TicketList> combinedTickets = [];
 
       activeResult.fold(
         (failure) {
@@ -191,7 +203,7 @@ class TicketsListViewModel extends ReactiveViewModel {
         forceRefresh: _resolvedPage.value == 1,
       );
 
-      List<Datum> combinedTickets = [];
+      List<TicketList> combinedTickets = [];
 
       resolvedResult.fold(
         (failure) {
@@ -291,7 +303,7 @@ class TicketsListViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
-  bool _matchesSearchQuery(Datum ticket, String query) {
+  bool _matchesSearchQuery(TicketList ticket, String query) {
     final fullName = ticket.processor?.fullName?.toLowerCase() ?? '';
 
     return fullName.contains(query);
@@ -309,11 +321,6 @@ class TicketsListViewModel extends ReactiveViewModel {
       Routes.addTicket,
       arguments: AddTicketViewAttributes(),
     );
-  }
-
-  void navigateToReviewTicket() async {
-    // await _navigationService.navigateTo(Routes.ticketDetails);
-    await _navigationService.navigateTo(Routes.reviewTicket);
   }
 
   void navigateToTicketDetails({required String ticketId}) async {
@@ -335,12 +342,120 @@ class TicketsListViewModel extends ReactiveViewModel {
   }
 
   // Getter for current tickets based on selected tab
-  List<Datum> get currentTickets {
+  List<TicketList> get currentTickets {
     return selectedTabIndex == 0 ? activeTickets : resolvedTickets;
   }
 
   // Getter for has more tickets based on selected tab
   bool get hasMoreTickets {
     return selectedTabIndex == 0 ? hasMoreActive : hasMoreResolved;
+  }
+
+  List<MachineSupplier> machineSupplierData = [];
+
+  Future<void> loadMachines() async {
+
+    try {
+      final MachineSupplierService _machineSupplierService = locator<MachineSupplierService>();
+
+      final result = await _machineSupplierService.getMachineSupplier();
+
+       result.fold(
+            (failure) {
+              Fluttertoast.showToast(msg: "Failed to load machines. Please try again", backgroundColor: Colors.red);
+            },
+            (machineSupplierModel) {
+              machineSupplierData = machineSupplierModel.data ?? [];
+        },
+      );
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Failed to load machines. Please try again", backgroundColor: Colors.red);
+    }
+  }
+
+  Future<void> createTicket({
+    String? problem,
+    String? errorCode,
+    String? additionalNotes,
+    List<File>? attachments,
+    String? maintenanceType,
+    bool isFromSiteVisit = false,
+    String? machineId,
+    String? organizationId,
+  }) async {
+    if (machineId == null) {
+      AppLogger.error('Machine ID is null');
+      Fluttertoast.showToast(msg: 'Machine ID not found', backgroundColor: Colors.red);
+      return;
+    }
+
+    if (organizationId == null) {
+      AppLogger.error('Organization ID is null');
+      Fluttertoast.showToast(msg: 'Organization ID not found', backgroundColor: Colors.red);
+      return;
+    }
+
+    if (isFromSiteVisit) {
+      final formData = FormData();
+      formData.fields.addAll([
+        MapEntry('ticketType', maintenanceType!),
+        MapEntry('machineId', machineId),
+        MapEntry('organisationId', organizationId),
+        MapEntry('problem', ""),
+        MapEntry('errorCode', ""),
+        MapEntry('notes', ""),
+        MapEntry('paymentStatus', "unpaid"),
+        MapEntry('type', "Offline"),
+      ]);
+
+      final response = await _apiService.post(url: ApiEndpoints.createTicket, data: formData);
+
+      if (response.statusCode == 201 && response.data['ticket'] != null) {
+        final ticketId = response.data['ticket']['_id'];
+
+        AppLogger.info('Site visit ticket created successfully: ${response.data['ticket']['_id']}');
+
+        await _navigationService.navigateTo(Routes.reviewTicket, arguments: ticketId);
+
+        Fluttertoast.showToast(msg: response.data["message"] ?? 'Site visit ticket created successfully!', backgroundColor: Colors.green);
+      } else {
+        AppLogger.error('Failed to create site visit ticket');
+      }
+    } else {
+      final formData = FormData();
+
+      formData.fields.addAll([
+        MapEntry('problem', problem!),
+        MapEntry('errorCode', errorCode!),
+        MapEntry('notes', additionalNotes!),
+        MapEntry('machineId', machineId),
+        MapEntry('organisationId', organizationId),
+        MapEntry('ticketType', "Full Machine Service"),
+        MapEntry('paymentStatus', "unpaid"),
+        MapEntry('type', "Online"),
+      ]);
+
+      for (var i = 0; i < attachments!.length; i++) {
+        final file = attachments[i];
+        final extension = file.path.split('.').last.toLowerCase();
+        final contentType = extension == 'png' ? DioMediaType('image', 'png') : DioMediaType('image', 'jpeg');
+
+        formData.files.add(
+          MapEntry('ticketImages', await MultipartFile.fromFile(file.path, filename: 'ticket_image_$i.$extension', contentType: contentType)),
+        );
+      }
+
+      final response = await _apiService.post(url: ApiEndpoints.createTicket, data: formData);
+
+      if (response.statusCode == 201 && response.data['ticket'] != null) {
+        final ticketId = response.data['ticket']['_id'];
+
+        AppLogger.info('Ticket created successfully: ${response.data['ticket']['_id']}');
+        await _navigationService.navigateTo(Routes.reviewTicket, arguments: ticketId);
+        Fluttertoast.showToast(msg: response.data["message"] ?? 'Ticket created successfully!', backgroundColor: Colors.green);
+      } else {
+        AppLogger.error('Failed to create ticket');
+      }
+    }
   }
 }

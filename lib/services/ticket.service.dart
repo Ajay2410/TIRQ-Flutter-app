@@ -367,7 +367,7 @@ class TicketService {
   }
 
   /// Get all tickets using the new getAll endpoint (kept for backward compatibility)
-  ResultFuture<List<Datum>> getAllTickets({bool forceRefresh = false}) async {
+  ResultFuture<List<TicketList>> getAllTickets({bool forceRefresh = false}) async {
     // If already refreshing and not forced, return a failure
     if (_isRefreshing && !forceRefresh) {
       return Left(Failure('Refresh already in progress'));
@@ -384,7 +384,7 @@ class TicketService {
           // Check if data is a list or a single object
           if (data is List) {
             // If it's a list, map each item to Datum
-            final tickets = data.map((e) => Datum.fromJson(e)).toList();
+            final tickets = data.map((e) => TicketList.fromJson(e)).toList();
             AppLogger.info(
               "Tickets fetched successfully: ${tickets.length} tickets",
             );
@@ -393,14 +393,14 @@ class TicketService {
             // If it's a single object, check if it has a 'data' field
             if (data.containsKey('data') && data['data'] is List) {
               final tickets =
-                  (data['data'] as List).map((e) => Datum.fromJson(e)).toList();
+                  (data['data'] as List).map((e) => TicketList.fromJson(e)).toList();
               AppLogger.info(
                 "Tickets fetched successfully: ${tickets.length} tickets",
               );
               return Right(tickets);
             } else {
               // If it's a single ticket object
-              final ticket = Datum.fromJson(data);
+              final ticket = TicketList.fromJson(data);
               AppLogger.info(
                 "Single ticket fetched successfully: ${ticket.id}",
               );

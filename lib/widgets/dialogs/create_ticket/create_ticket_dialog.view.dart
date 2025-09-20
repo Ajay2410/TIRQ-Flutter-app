@@ -4,6 +4,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:dotted_border/dotted_border.dart';
 
+import '../../../core/models/machine_supplier_model.dart';
 import '../../../resources/app_resources/app_resources.dart';
 import '../../../services/language.service.dart';
 import '../../../widgets/common_text_field.dart';
@@ -14,7 +15,7 @@ class CreateTicketDialogAttributes {
   final String? initialErrorCode;
   final String? initialAdditionalNotes;
   final List<File>? initialAttachments;
-  final Future<void> Function(String problem, String errorCode, String additionalNotes, List<File> attachments)? onSubmit;
+  final Future<void> Function(String problem, String errorCode, String additionalNotes, List<File> attachments, String machineId, String organizationId)? onSubmit;
   final VoidCallback? onCancel;
 
   CreateTicketDialogAttributes({
@@ -29,8 +30,9 @@ class CreateTicketDialogAttributes {
 
 class CreateTicketDialogWidget extends StatelessWidget {
   final CreateTicketDialogAttributes attributes;
+  final List<MachineSupplier> machineSupplierData;
 
-  const CreateTicketDialogWidget({super.key, required this.attributes});
+  const CreateTicketDialogWidget({super.key, required this.attributes, this.machineSupplierData = const []});
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ class CreateTicketDialogWidget extends StatelessWidget {
       completer: (response) {
         // Handle the response if needed
       },
+      machineSupplierData: machineSupplierData,
     );
   }
 }
@@ -46,8 +49,10 @@ class CreateTicketDialogWidget extends StatelessWidget {
 class CreateTicketDialog extends StatelessWidget {
   final DialogRequest<CreateTicketDialogAttributes> request;
   final Function(DialogResponse) completer;
+  final List<MachineSupplier> machineSupplierData;
 
-  const CreateTicketDialog({super.key, required this.request, required this.completer});
+
+  const CreateTicketDialog({super.key, required this.request, required this.completer, required this.machineSupplierData});
 
   @override
   Widget build(BuildContext context1) {
@@ -110,6 +115,52 @@ class CreateTicketDialog extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          if(machineSupplierData.isNotEmpty)
+                          Column(
+                            children: [
+                              const SizedBox(height: 5),
+                          _buildDropdownFormField(
+                            context1,
+                            value: null,
+                            label: LanguageService.get('organization_type'),
+                            items: machineSupplierData.map((e) => {
+                              "value": e.customer?.organization?.id ?? "",
+                              "display": e.customer?.organization?.fullName ?? "",
+                            }).toList(),
+                            onChanged: (value){
+                              print("selected organization ===> $value");
+                              model.selectedOrganizationId = value;
+                              model.notifyListeners();
+                            },
+                            validator: (value) {
+                              return value == null ? LanguageService.get('please_select_organization_type') : null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                            ],
+                          ),
+                          if(model.selectedOrganizationId != null)
+                          Column(
+                            children: [
+                              const SizedBox(height: 5),
+                          _buildDropdownFormField(
+                            context1,
+                            value: null,
+                            label: LanguageService.get('select_machine'),
+                            items: machineSupplierData.firstWhere((m) => m.customer?.organization?.id == model.selectedOrganizationId).customer!.machines!.map((e) => {
+                              "value": e.machine?.id ?? "",
+                              "display": e.machine?.machineName ?? "",
+                            }).toList(),
+                            onChanged: (value){
+                              print("selected machine ===> $value");
+                              model.selectedMachineId = value;
+                            },
+                            validator: (value) => value == null ? LanguageService.get('please_select_machine') : null,
+                          ),
+                          const SizedBox(height: 16),
+                            ],
+                          ),
+
                           // Problem Description
                           CommonTextField(
                             controller: model.problemController,
@@ -264,7 +315,6 @@ class CreateTicketDialog extends StatelessWidget {
                                   : () async {
                                     if (model.validateForm()) {
                                       await model.onSubmit(context1);
-                                      Navigator.of(context1).pop(DialogResponse(confirmed: true));
                                     }
                                   },
                           style: ElevatedButton.styleFrom(
@@ -293,6 +343,44 @@ class CreateTicketDialog extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildDropdownFormField(
+      BuildContext context, {
+        required String? value,
+        required String label,
+        required List<Map<String, String>> items,
+        required void Function(String?)? onChanged,
+        String? Function(String?)? validator,
+      }) {
+    return DropdownButtonFormField<String>(
+      value: value,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSizes.v12),
+          borderSide: BorderSide(color: AppColors.lightGray),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSizes.v12),
+          borderSide: BorderSide(color: AppColors.lightGray),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSizes.v12),
+          borderSide: BorderSide(color: AppColors.primary, width: 2),
+        ),
+      ),
+      dropdownColor: AppColors.white,
+      style: Theme.of(context).textTheme.bodyLarge,
+      items: items.map((Map<String, String> item) {
+        return DropdownMenuItem<String>(
+          value: item['value'], // English value for backend
+          child: Text(item['display']!), // Translated text for display
+        );
+      }).toList(),
+      onChanged: onChanged,
+      validator: validator,
     );
   }
 }

@@ -68,7 +68,7 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
     Get.dialog(
       CreateTicketDialogWidget(
         attributes: CreateTicketDialogAttributes(
-          onSubmit: (problem, errorCode, additionalNotes, attachments) async {
+          onSubmit: (problem, errorCode, additionalNotes, attachments, machineId, organizationId) async {
             print('Problem: $problem');
             print('Error Code: $errorCode');
             print('Additional Notes: $additionalNotes');
@@ -92,11 +92,12 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
   }
 
   void _onSiteVisitPressed(MachineOverviewDetailsViewModel viewModel) {
+    _toggle();
     Get.dialog(
       SelectMaintenanceTypeDialog(
         isWarrantyActive: true,
         attributes: SelectMaintenanceTypeDialogAttributes(
-          onSubmit: (String maintenanceType) async {
+          onSubmit: (String maintenanceType, String organizationId, String machineId) async {
             await viewModel.createTicket(
               maintenanceType: maintenanceType,
               isFromSiteVisit: true,

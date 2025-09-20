@@ -14,7 +14,7 @@ class TicketModel {
   int? page;
   int? pages;
   int? count;
-  List<Datum>? data;
+  List<TicketList>? data;
 
   TicketModel({this.total, this.page, this.pages, this.count, this.data});
 
@@ -26,7 +26,7 @@ class TicketModel {
     data:
         json["data"] == null
             ? []
-            : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+            : List<TicketList>.from(json["data"]!.map((x) => TicketList.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -39,7 +39,7 @@ class TicketModel {
   };
 }
 
-class Datum {
+class TicketList {
   String? id;
   String? ticketNumber;
   String? problem;
@@ -59,7 +59,7 @@ class Datum {
   DateTime? updatedAt;
   int? v;
 
-  Datum({
+  TicketList({
     this.id,
     this.ticketNumber,
     this.problem,
@@ -80,7 +80,7 @@ class Datum {
     this.v,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory TicketList.fromJson(Map<String, dynamic> json) => TicketList(
     id: json["_id"],
     ticketNumber: json["ticketNumber"],
     problem: json["problem"],

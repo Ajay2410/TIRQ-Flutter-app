@@ -30,6 +30,9 @@ class CreateTicketDialogViewModel extends ReactiveViewModel {
 
   CreateTicketDialogAttributes? _attributes;
 
+  String? selectedOrganizationId;
+  String? selectedMachineId;
+
   void init(CreateTicketDialogAttributes attributes) {
     _attributes = attributes;
 
@@ -97,6 +100,8 @@ class CreateTicketDialogViewModel extends ReactiveViewModel {
           errorCodeController.text.trim(),
           additionalNotesController.text.trim(),
           _attachments.value,
+          selectedMachineId ?? "",
+          selectedOrganizationId ?? "",
         );
 
         // Close dialog after successful submission

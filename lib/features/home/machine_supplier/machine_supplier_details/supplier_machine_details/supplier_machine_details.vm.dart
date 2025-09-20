@@ -96,7 +96,11 @@ class SupplierMachineDetailsViewModel extends BaseViewModel {
       final response = await _apiService.post(url: ApiEndpoints.createTicket, data: formData);
 
       if (response.statusCode == 201 && response.data['ticket'] != null) {
+        final ticketId = response.data['ticket']['_id'];
+
         AppLogger.info('Ticket created successfully: ${response.data['ticket']['_id']}');
+
+        await _navigationService.navigateTo(Routes.reviewTicket, arguments: ticketId);
         Fluttertoast.showToast(msg: response.data["message"] ?? 'Ticket created successfully!', backgroundColor: Colors.green);
       } else {
         AppLogger.error('Failed to create ticket');

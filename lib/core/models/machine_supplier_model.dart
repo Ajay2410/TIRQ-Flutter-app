@@ -9,14 +9,14 @@ MachineSupplierModel machineSupplierModelFromJson(String str) => MachineSupplier
 String machineSupplierModelToJson(MachineSupplierModel data) => json.encode(data.toJson());
 
 class MachineSupplierModel {
-  List<Datum>? data;
+  List<MachineSupplier>? data;
 
   MachineSupplierModel({
     this.data,
   });
 
   factory MachineSupplierModel.fromJson(Map<String, dynamic> json) => MachineSupplierModel(
-    data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+    data: json["data"] == null ? [] : List<MachineSupplier>.from(json["data"]!.map((x) => MachineSupplier.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -24,14 +24,14 @@ class MachineSupplierModel {
   };
 }
 
-class Datum {
+class MachineSupplier {
   Customer? customer;
 
-  Datum({
+  MachineSupplier({
     this.customer,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory MachineSupplier.fromJson(Map<String, dynamic> json) => MachineSupplier(
     customer: json["customer"] == null ? null : Customer.fromJson(json["customer"]),
   );
 

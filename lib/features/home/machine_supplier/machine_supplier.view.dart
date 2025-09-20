@@ -245,7 +245,7 @@ class _MachineSupplierViewState extends State<MachineSupplierView> with TickerPr
     );
   }
 
-  Widget _buildMachineCard(Datum datum, MachineSupplierViewModel model, BuildContext context) {
+  Widget _buildMachineCard(MachineSupplier datum, MachineSupplierViewModel model, BuildContext context) {
     final customer = datum.customer;
     final organization = model.getOrganizationForMachine(datum);
     final firstMachine = customer?.machines?.isNotEmpty == true ? customer!.machines!.first : null;

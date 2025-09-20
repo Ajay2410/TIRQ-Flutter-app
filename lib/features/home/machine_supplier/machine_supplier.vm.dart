@@ -25,16 +25,16 @@ class DummyOrganization {
 class MachineSupplierViewModel extends BaseViewModel {
   final MachineSupplierService _machineSupplierService = locator<MachineSupplierService>();
 
-  List<Datum> _machineSupplierData = [];
-  List<Datum> _filteredMachines = [];
+  List<MachineSupplier> _machineSupplierData = [];
+  List<MachineSupplier> _filteredMachines = [];
   String _searchQuery = '';
   bool _isLoading = false;
   bool _hasError = false;
   String _errorMessage = '';
 
-  List<Datum> get machines => _machineSupplierData;
+  List<MachineSupplier> get machines => _machineSupplierData;
 
-  List<Datum> get filteredMachines => _filteredMachines;
+  List<MachineSupplier> get filteredMachines => _filteredMachines;
 
   String get searchQuery => _searchQuery;
 
@@ -114,11 +114,11 @@ class MachineSupplierViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Organization? getOrganizationForMachine(Datum datum) {
+  Organization? getOrganizationForMachine(MachineSupplier datum) {
     return datum.customer?.organization;
   }
 
-  void onMachineTap(BuildContext context, Datum datum) async {
+  void onMachineTap(BuildContext context, MachineSupplier datum) async {
     final customerId = datum.customer?.id;
     if (customerId != null) {
       await Navigator.of(context).push(MaterialPageRoute(builder: (context) => MachineSupplierDetailsView(customerId: customerId)));

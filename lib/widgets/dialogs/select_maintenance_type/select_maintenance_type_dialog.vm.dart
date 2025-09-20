@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class SelectMaintenanceTypeDialogViewModel extends ReactiveViewModel {
@@ -9,6 +10,10 @@ class SelectMaintenanceTypeDialogViewModel extends ReactiveViewModel {
   String? get selectedType => _selectedType;
   bool get isGeneralCheckUpDisabled => _isGeneralCheckUpDisabled;
   bool get isLoading => _isLoading.value;
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  String? selectedOrganizationId;
+  String? selectedMachineId;
 
   void init({bool isGeneralCheckUpDisabled = false}) {
     _isGeneralCheckUpDisabled = isGeneralCheckUpDisabled;
@@ -43,5 +48,10 @@ class SelectMaintenanceTypeDialogViewModel extends ReactiveViewModel {
       _isLoading.value = false;
       notifyListeners();
     }
+  }
+
+  bool validateForm() {
+    bool isFormValid = formKey.currentState?.validate() ?? false;
+    return isFormValid;
   }
 }
