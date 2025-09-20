@@ -28,15 +28,26 @@ class ChatMessageModel {
   });
 
   factory ChatMessageModel.fromJson(Map<String, dynamic> json) {
+    // Handle case where sender is just an ID string instead of an object
+    Sender sender;
+    if (json['sender'] is String) {
+      // If sender is just an ID string, create a minimal Sender object
+      sender = Sender(
+        id: json['sender'] as String,
+        fullName: 'Unknown User', // You might want to fetch this separately
+        email: '',
+      );
+    } else {
+      // If sender is an object, parse it normally
+      sender = Sender.fromJson(json['sender']);
+    }
+
     return ChatMessageModel(
       id: json['_id'] ?? '',
       roomId: json['room'] ?? '',
-      sender: Sender.fromJson(json['sender']),
+      sender: sender,
       content: json['content'] ?? '',
-      attachments: (json['attachments'] as List<dynamic>?)
-          ?.map((e) => Attachment.fromJson(e))
-          .toList() ??
-          [],
+      attachments: (json['attachments'] as List<dynamic>?)?.map((e) => Attachment.fromJson(e)).toList() ?? [],
       readBy: List<String>.from(json['readBy'] ?? []),
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
@@ -66,26 +77,14 @@ class Sender {
   final String fullName;
   final String email;
 
-  Sender({
-    required this.id,
-    required this.fullName,
-    required this.email,
-  });
+  Sender({required this.id, required this.fullName, required this.email});
 
   factory Sender.fromJson(Map<String, dynamic> json) {
-    return Sender(
-      id: json['_id'] ?? '',
-      fullName: json['fullName'] ?? '',
-      email: json['email'] ?? '',
-    );
+    return Sender(id: json['_id'] ?? '', fullName: json['fullName'] ?? '', email: json['email'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'fullName': fullName,
-      'email': email,
-    };
+    return {'_id': id, 'fullName': fullName, 'email': email};
   }
 }
 
@@ -93,22 +92,13 @@ class Attachment {
   final String type; // image, video, document
   final String url;
 
-  Attachment({
-    required this.type,
-    required this.url,
-  });
+  Attachment({required this.type, required this.url});
 
   factory Attachment.fromJson(Map<String, dynamic> json) {
-    return Attachment(
-      type: json['type'] ?? '',
-      url: json['url'] ?? '',
-    );
+    return Attachment(type: json['type'] ?? '', url: json['url'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'type': type,
-      'url': url,
-    };
+    return {'type': type, 'url': url};
   }
 }

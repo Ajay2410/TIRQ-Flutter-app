@@ -16,13 +16,7 @@ class ChatView extends StatefulWidget {
   final String contactInitials;
   final String? roomId;
 
-  const ChatView({
-    super.key,
-    required this.contactName,
-    required this.contactNumber,
-    required this.contactInitials,
-    this.roomId,
-  });
+  const ChatView({super.key, required this.contactName, required this.contactNumber, required this.contactInitials, this.roomId});
 
   @override
   State<ChatView> createState() => _ChatViewState();
@@ -30,7 +24,6 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   final FocusNode _messageFocusNode = FocusNode();
-
 
   @override
   void dispose() {
@@ -65,32 +58,15 @@ class _ChatViewState extends State<ChatView> {
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return GradientAppBar(
       leading: IconButton(
-        icon: Image.asset(
-          AppImages.back,
-          width: 24,
-          height: 24,
-          color: AppColors.white,
-        ),
+        icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
         onPressed: () => Navigator.of(context).pop(),
       ),
       titleWidget: Row(
         children: [
           Container(
             padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppColors.darkGray.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                widget.contactInitials,
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-            ),
+            decoration: BoxDecoration(color: AppColors.darkGray.withValues(alpha: 0.2), shape: BoxShape.circle),
+            child: Center(child: Text(widget.contactInitials, style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold, fontSize: 16))),
           ),
           SizedBox(width: AppSizes.w12),
           Column(
@@ -98,32 +74,17 @@ class _ChatViewState extends State<ChatView> {
             children: [
               Row(
                 children: [
-                  Text(
-                    widget.contactName,
-                    style: TextStyle(
-                      color: AppColors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  Text(widget.contactName, style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.w600)),
                   SizedBox(width: AppSizes.w8),
                   Container(
                     width: 20,
                     height: 15,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(2),
-                      child: Image.asset(AppImages.flag, fit: BoxFit.cover),
-                    ),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(2)),
+                    child: ClipRRect(borderRadius: BorderRadius.circular(2), child: Image.asset(AppImages.flag, fit: BoxFit.cover)),
                   ),
                 ],
               ),
-              Text(
-                widget.contactNumber,
-                style: TextStyle(color: AppColors.white, fontSize: 12),
-              ),
+              Text(widget.contactNumber, style: TextStyle(color: AppColors.white, fontSize: 12)),
             ],
           ),
         ],
@@ -131,12 +92,7 @@ class _ChatViewState extends State<ChatView> {
       titleSpacing: 0,
       actions: [
         IconButton(
-          icon: Image.asset(
-            AppImages.search,
-            width: 20,
-            height: 20,
-            color: AppColors.white,
-          ),
+          icon: Image.asset(AppImages.search, width: 20, height: 20, color: AppColors.white),
           onPressed: () {
             // Handle search
           },
@@ -154,18 +110,8 @@ class _ChatViewState extends State<ChatView> {
   Widget _buildDateSeparator(String date) {
     return Center(
       child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppSizes.w12,
-          vertical: AppSizes.h6,
-        ),
-        child: Text(
-          date,
-          style: TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.w12, vertical: AppSizes.h6),
+        child: Text(date, style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w500)),
       ),
     );
   }
@@ -180,24 +126,15 @@ class _ChatViewState extends State<ChatView> {
           child: Opacity(
             opacity: value,
             child: Container(
-              margin: EdgeInsets.symmetric(
-                vertical: AppSizes.h2,
-                horizontal: AppSizes.w16,
-              ),
+              margin: EdgeInsets.symmetric(vertical: AppSizes.h2, horizontal: AppSizes.w16),
               child: Row(
-                mainAxisAlignment:
-                    message.isSentByMe
-                        ? MainAxisAlignment.end
-                        : MainAxisAlignment.start,
+                mainAxisAlignment: message.isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   // Message content
                   Flexible(
                     child: Column(
-                      crossAxisAlignment:
-                          message.isSentByMe
-                              ? CrossAxisAlignment.end
-                              : CrossAxisAlignment.start,
+                      crossAxisAlignment: message.isSentByMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                       children: [
                         // Message bubble
                         Material(
@@ -209,42 +146,19 @@ class _ChatViewState extends State<ChatView> {
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(AppSizes.v18),
                               topRight: Radius.circular(AppSizes.v18),
-                              bottomLeft:
-                                  message.isSentByMe
-                                      ? Radius.circular(AppSizes.v18)
-                                      : Radius.circular(0),
-                              bottomRight:
-                                  message.isSentByMe
-                                      ? Radius.circular(0)
-                                      : Radius.circular(AppSizes.v18),
+                              bottomLeft: message.isSentByMe ? Radius.circular(AppSizes.v18) : Radius.circular(0),
+                              bottomRight: message.isSentByMe ? Radius.circular(0) : Radius.circular(AppSizes.v18),
                             ),
                             child: Container(
-                              constraints: BoxConstraints(
-                                maxWidth:
-                                    MediaQuery.of(context).size.width * 0.75,
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: AppSizes.w16,
-                                vertical: AppSizes.h12,
-                              ),
+                              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+                              padding: EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h12),
                               decoration: BoxDecoration(
-                                color:
-                                    message.isSentByMe
-                                        ? AppColors.primaryDark
-                                        : AppColors.primaryLight.withValues(
-                                          alpha: 0.1,
-                                        ),
+                                color: message.isSentByMe ? AppColors.primaryDark : AppColors.primaryLight.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(AppSizes.v18),
                                   topRight: Radius.circular(AppSizes.v18),
-                                  bottomLeft:
-                                      message.isSentByMe
-                                          ? Radius.circular(AppSizes.v18)
-                                          : Radius.circular(0),
-                                  bottomRight:
-                                      message.isSentByMe
-                                          ? Radius.circular(0)
-                                          : Radius.circular(AppSizes.v18),
+                                  bottomLeft: message.isSentByMe ? Radius.circular(AppSizes.v18) : Radius.circular(0),
+                                  bottomRight: message.isSentByMe ? Radius.circular(0) : Radius.circular(AppSizes.v18),
                                 ),
                               ),
                               child: Column(
@@ -254,10 +168,7 @@ class _ChatViewState extends State<ChatView> {
                                   Text(
                                     message.content,
                                     style: TextStyle(
-                                      color:
-                                          message.isSentByMe
-                                              ? AppColors.white
-                                              : AppColors.textPrimary,
+                                      color: message.isSentByMe ? AppColors.white : AppColors.textPrimary,
                                       fontSize: AppSizes.f14,
                                       height: 1.4,
                                       fontWeight: FontWeight.w400,
@@ -311,23 +222,13 @@ class _ChatViewState extends State<ChatView> {
                           margin: EdgeInsets.only(top: AppSizes.h4),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment:
-                                message.isSentByMe
-                                    ? MainAxisAlignment.end
-                                    : MainAxisAlignment.start,
+                            mainAxisAlignment: message.isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
                             children: [
                               Text(
                                 "${_formatTimestamp(message.createdAt)} •",
-                                style: TextStyle(
-                                  color: AppColors.textGray,
-                                  fontSize: AppSizes.f10,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: TextStyle(color: AppColors.textGray, fontSize: AppSizes.f10, fontWeight: FontWeight.w500),
                               ),
-                              if (message.isSentByMe) ...[
-                                SizedBox(width: AppSizes.w6),
-                                _buildMessageStatus(message),
-                              ],
+                              if (message.isSentByMe) ...[SizedBox(width: AppSizes.w6), _buildMessageStatus(message)],
                             ],
                           ),
                         ),
@@ -362,14 +263,7 @@ class _ChatViewState extends State<ChatView> {
         break;
     }
 
-    return Text(
-      message.status.name.toUpperCase(),
-      style: TextStyle(
-        color: statusColor,
-        fontSize: AppSizes.f10,
-        fontWeight: FontWeight.w500,
-      ),
-    );
+    return Text(message.status.name.toUpperCase(), style: TextStyle(color: statusColor, fontSize: AppSizes.f10, fontWeight: FontWeight.w500));
   }
 
   String _formatTimestamp(DateTime timestamp) {
@@ -389,33 +283,17 @@ class _ChatViewState extends State<ChatView> {
 
   Widget _buildMessageInput(ChatViewModel model) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.w16,
-        vertical: AppSizes.h12,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h12),
       decoration: BoxDecoration(
         color: AppColors.white,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.08),
-            offset: Offset(0, -2),
-            blurRadius: 12,
-            spreadRadius: 0,
-          ),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.08), offset: Offset(0, -2), blurRadius: 12, spreadRadius: 0)],
       ),
       child: SafeArea(
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.lightGray.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(AppSizes.v24),
-            border: Border.all(
-              color:
-                  _messageFocusNode.hasFocus
-                      ? AppColors.primary.withValues(alpha: 0.3)
-                      : Colors.transparent,
-              width: 1,
-            ),
+            border: Border.all(color: _messageFocusNode.hasFocus ? AppColors.primary.withValues(alpha: 0.3) : Colors.transparent, width: 1),
           ),
           child: CommonTextField(
             controller: model.messageController,
@@ -425,9 +303,7 @@ class _ChatViewState extends State<ChatView> {
               onSelected: (value) => _handleAttachmentAction(value),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppSizes.v23),
-                side: BorderSide(
-                  color: AppColors.textGray.withValues(alpha: 0.1),
-                ),
+                side: BorderSide(color: AppColors.textGray.withValues(alpha: 0.1)),
               ),
               elevation: 0,
               position: PopupMenuPosition.over,
@@ -439,82 +315,44 @@ class _ChatViewState extends State<ChatView> {
                     PopupMenuItem<String>(
                       value: 'file',
                       height: 34,
-                      child: _buildAttachmentMenuItem(
-                        icon: AppImages.file,
-                        label: 'File',
-                        color: AppColors.purple,
-                        onTap: () {},
-                      ),
+                      child: _buildAttachmentMenuItem(icon: AppImages.file, label: 'File', color: AppColors.purple, onTap: () {}),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'gallery',
                       height: 34,
-                      child: _buildAttachmentMenuItem(
-                        icon: AppImages.gallery,
-                        label: 'Album',
-                        color: AppColors.primaryLight,
-                        onTap: () {},
-                      ),
+                      child: _buildAttachmentMenuItem(icon: AppImages.gallery, label: 'Album', color: AppColors.primaryLight, onTap: () {}),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'camera',
                       height: 34,
-                      child: _buildAttachmentMenuItem(
-                        icon: AppImages.camera,
-                        label: 'Camera',
-                        color: AppColors.success,
-                        onTap: () {},
-                      ),
+                      child: _buildAttachmentMenuItem(icon: AppImages.camera, label: 'Camera', color: AppColors.success, onTap: () {}),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'location',
                       height: 34,
-                      child: _buildAttachmentMenuItem(
-                        icon: AppImages.location,
-                        label: 'Location',
-                        color: AppColors.error,
-                        onTap: () {},
-                      ),
+                      child: _buildAttachmentMenuItem(icon: AppImages.location, label: 'Location', color: AppColors.error, onTap: () {}),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'video_call',
                       height: 34,
-                      child: _buildAttachmentMenuItem(
-                        icon: AppImages.video,
-                        label: 'Video Call',
-                        color: AppColors.primary,
-                        onTap: () {},
-                      ),
+                      child: _buildAttachmentMenuItem(icon: AppImages.video, label: 'Video Call', color: AppColors.primary, onTap: () {}),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'voice_call',
                       height: 34,
-                      child: _buildAttachmentMenuItem(
-                        icon: AppImages.phone,
-                        label: 'Voice Call',
-                        color: AppColors.orange,
-                        onTap: () {},
-                      ),
+                      child: _buildAttachmentMenuItem(icon: AppImages.phone, label: 'Voice Call', color: AppColors.orange, onTap: () {}),
                     ),
                   ],
               child: Container(
                 margin: EdgeInsets.all(8),
                 padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: AppColors.lightGray.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Image.asset(
-                  AppImages.attachment,
-                  width: 20,
-                  height: 20,
-                  color: AppColors.primaryDark,
-                ),
+                decoration: BoxDecoration(color: AppColors.lightGray.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(10)),
+                child: Image.asset(AppImages.attachment, width: 20, height: 20, color: AppColors.primaryDark),
               ),
             ),
             suffixIcon: Row(
@@ -523,12 +361,7 @@ class _ChatViewState extends State<ChatView> {
                 // Camera button
                 GestureDetector(
                   onTap: () => _handleAttachmentAction('camera'),
-                  child: Image.asset(
-                    AppImages.cameraOutlined,
-                    width: 20,
-                    height: 20,
-                    color: AppColors.primaryDark,
-                  ),
+                  child: Image.asset(AppImages.cameraOutlined, width: 20, height: 20, color: AppColors.primaryDark),
                 ),
                 SizedBox(width: AppSizes.w12),
                 // Microphone button
@@ -536,12 +369,7 @@ class _ChatViewState extends State<ChatView> {
                   onTap: () {
                     // Handle voice message
                   },
-                  child: Image.asset(
-                    AppImages.microphone,
-                    width: 20,
-                    height: 20,
-                    color: AppColors.primaryDark,
-                  ),
+                  child: Image.asset(AppImages.microphone, width: 20, height: 20, color: AppColors.primaryDark),
                 ),
                 SizedBox(width: AppSizes.w12),
                 GestureDetector(
@@ -550,9 +378,7 @@ class _ChatViewState extends State<ChatView> {
                           ? null
                           : () {
                             // Send message when send button is tapped
-                            if (model.messageController.text
-                                .trim()
-                                .isNotEmpty) {
+                            if (model.messageController.text.trim().isNotEmpty) {
                               model.sendMessage();
                             }
                           },
@@ -560,8 +386,7 @@ class _ChatViewState extends State<ChatView> {
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color:
-                          model.messageController.text.trim().isNotEmpty &&
-                                  !model.isSendingMessage
+                          model.messageController.text.trim().isNotEmpty && !model.isSendingMessage
                               ? AppColors.primaryDark
                               : AppColors.lightGray.withValues(alpha: 0.3),
                       shape: BoxShape.circle,
@@ -571,21 +396,13 @@ class _ChatViewState extends State<ChatView> {
                             ? SizedBox(
                               width: 16,
                               height: 16,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  AppColors.white,
-                                ),
-                              ),
+                              child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.white)),
                             )
                             : Image.asset(
                               AppImages.send,
                               width: 16,
                               height: 16,
-                              color:
-                                  model.messageController.text.trim().isNotEmpty
-                                      ? AppColors.white
-                                      : AppColors.textGray,
+                              color: model.messageController.text.trim().isNotEmpty ? AppColors.white : AppColors.textGray,
                             ),
                   ),
                 ),
@@ -598,38 +415,18 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
-  Widget _buildAttachmentMenuItem({
-    required String icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
+  Widget _buildAttachmentMenuItem({required String icon, required String label, required Color color, required VoidCallback onTap}) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.w16,
-        vertical: AppSizes.h12,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h12),
       child: Row(
         children: [
           Container(
             padding: EdgeInsets.all(9),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(AppSizes.v10),
-            ),
-            child: Center(
-              child: Image.asset(icon, width: 18, height: 18, color: color),
-            ),
+            decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(AppSizes.v10)),
+            child: Center(child: Image.asset(icon, width: 18, height: 18, color: color)),
           ),
           SizedBox(width: AppSizes.w12),
-          Text(
-            label,
-            style: TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: AppSizes.f14,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text(label, style: TextStyle(color: AppColors.textPrimary, fontSize: AppSizes.f14, fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -664,31 +461,27 @@ class _ChatViewState extends State<ChatView> {
                   child:
                       model.isLoading
                           ? ListView.builder(
-              controller: model.scrollController,
-              padding: EdgeInsets.only(top: AppSizes.h8),
-              itemCount: model.isLoading
-                  ? 6
-                  : model.messages.length + 1, // +1 for date separator
-              itemBuilder: (context, index) {
-                if (model.isLoading) {
-                  // Alternate shimmer sides for variety
-                  return MessageBubbleShimmer(isSentByMe: index % 2 == 0);
-                }
+                            controller: model.scrollController,
+                            padding: EdgeInsets.only(top: AppSizes.h8),
+                            itemCount: model.isLoading ? 6 : model.messages.length + 1, // +1 for date separator
+                            itemBuilder: (context, index) {
+                              if (model.isLoading) {
+                                // Alternate shimmer sides for variety
+                                return MessageBubbleShimmer(isSentByMe: index % 2 == 0);
+                              }
 
-                if (index == 0) {
-                  return _buildDateSeparator('Today');
-                }
+                              if (index == 0) {
+                                return _buildDateSeparator('Today');
+                              }
 
-                final message = model.messages[index - 1];
-                return _buildMessageBubble(message);
-              },
-            )
-                : ListView.builder(
+                              final message = model.messages[index - 1];
+                              return _buildMessageBubble(message);
+                            },
+                          )
+                          : ListView.builder(
                             controller: model.scrollController,
                             padding: EdgeInsets.only(top: AppSizes.h10),
-                            itemCount:
-                                model.messages.length +
-                                1, // +1 for date separator
+                            itemCount: model.messages.length + 1, // +1 for date separator
                             itemBuilder: (context, index) {
                               if (index == 0) {
                                 return _buildDateSeparator('Today');
@@ -709,6 +502,7 @@ class _ChatViewState extends State<ChatView> {
 
 class MessageBubbleShimmer extends StatelessWidget {
   final bool isSentByMe;
+
   const MessageBubbleShimmer({super.key, required this.isSentByMe});
 
   @override
@@ -719,60 +513,37 @@ class MessageBubbleShimmer extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
         child: Row(
-          mainAxisAlignment:
-          isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment: isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
             Flexible(
               child: Column(
-                crossAxisAlignment:
-                isSentByMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                crossAxisAlignment: isSentByMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 children: [
                   // Message bubble shimmer
                   Container(
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.75,
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
+                    constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                         topLeft: const Radius.circular(18),
                         topRight: const Radius.circular(18),
-                        bottomLeft: isSentByMe
-                            ? const Radius.circular(18)
-                            : const Radius.circular(0),
-                        bottomRight: isSentByMe
-                            ? const Radius.circular(0)
-                            : const Radius.circular(18),
+                        bottomLeft: isSentByMe ? const Radius.circular(18) : const Radius.circular(0),
+                        bottomRight: isSentByMe ? const Radius.circular(0) : const Radius.circular(18),
                       ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          height: 12,
-                          width: double.infinity,
-                          color: Colors.white,
-                        ),
+                        Container(height: 12, width: double.infinity, color: Colors.white),
                         const SizedBox(height: 6),
-                        Container(
-                          height: 12,
-                          width: 80,
-                          color: Colors.white,
-                        ),
+                        Container(height: 12, width: 80, color: Colors.white),
                       ],
                     ),
                   ),
                   const SizedBox(height: 4),
                   // Timestamp shimmer
-                  Container(
-                    height: 10,
-                    width: 50,
-                    color: Colors.white,
-                  ),
+                  Container(height: 10, width: 50, color: Colors.white),
                 ],
               ),
             ),

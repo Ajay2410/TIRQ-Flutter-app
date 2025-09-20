@@ -1,10 +1,4 @@
-enum MessageStatus {
-  sent,
-  delivered,
-  read,
-  failed,
-  unknown,
-}
+enum MessageStatus { sent, delivered, read, failed, unknown }
 
 extension MessageStatusX on MessageStatus {
   static MessageStatus fromString(String? status) {

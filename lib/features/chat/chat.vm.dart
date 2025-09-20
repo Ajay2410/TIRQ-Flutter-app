@@ -40,10 +40,12 @@ class ChatViewModel extends ReactiveViewModel {
   bool _isSendingMessage = false;
 
   bool _isLoading = false;
+
   bool get isLoading => _isLoading;
 
   // Messages list
   final List<ChatMessageModel> _messages = [];
+
   List<ChatMessageModel> get messages => _messages.toList();
 
   // Getters
@@ -54,19 +56,27 @@ class ChatViewModel extends ReactiveViewModel {
 
   /// Handle new incoming messages
   void _handleNewMessage(dynamic data) {
-    print(" New message received: $data");
+    print("🎯 _handleNewMessage called with: $data");
     if (data is Map<String, dynamic>) {
-      final message = ChatMessageModel.fromJson(data);
+      try {
+        final message = ChatMessageModel.fromJson(data);
+        print("✅ Message parsed successfully: ${message.content}");
 
-      if(message.sender.id == userData.id) {
-        message.isSentByMe = true;
-      } else {
-        message.isSentByMe = false;
+        if (message.sender.id == userData.id) {
+          message.isSentByMe = true;
+        } else {
+          message.isSentByMe = false;
+        }
+
+        _messages.add(message);
+        notifyListeners();
+        _scrollToBottom();
+        print("📝 Message added to list. Total messages: ${_messages.length}");
+      } catch (e) {
+        print("❌ Error parsing message: $e");
       }
-
-      _messages.add(message);
-      notifyListeners();
-      _scrollToBottom();
+    } else {
+      print("⚠️ Received data is not a Map: ${data.runtimeType}");
     }
   }
 
@@ -75,18 +85,16 @@ class ChatViewModel extends ReactiveViewModel {
     notifyListeners();
 
     roomId = roomId1 ?? roomId;
-    await Future.wait([
-      initializeSocket(),
-      getAllChatMessages(),
-    ]);
+    await Future.wait([initializeSocket(), getAllChatMessages()]);
 
     _isLoading = false;
     notifyListeners();
   }
 
-
   /// Socket implementation
   Future<void> initializeSocket() async {
+    print("🚀 Initializing socket connection...");
+
     // Initialize socket connection
     _socketService.initializeSocket(
       serverUrl: 'https://triq.onrender.com/',
@@ -95,12 +103,15 @@ class ChatViewModel extends ReactiveViewModel {
     );
 
     // Register user
+    print("👤 Registering user: ${userData.id ?? 'default_user'}");
     _socketService.registerUser(userData.id ?? 'default_user');
 
     // Join room
+    print("🏠 Joining room: $roomId");
     _socketService.joinRoom(roomId);
 
     // Listen for incoming messages
+    print("👂 Setting up message listener...");
     _socketService.onNewMessage(_handleNewMessage);
   }
 
@@ -108,11 +119,16 @@ class ChatViewModel extends ReactiveViewModel {
     if (scrollController.hasClients) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (scrollController.hasClients) {
-          scrollController.animateTo(
-            scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-          );
+          // Add a small delay to ensure the UI is fully rendered
+          Future.delayed(const Duration(milliseconds: 100), () {
+            if (scrollController.hasClients) {
+              scrollController.animateTo(
+                scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+              );
+            }
+          });
         }
       });
     }
@@ -124,29 +140,31 @@ class ChatViewModel extends ReactiveViewModel {
       final result = await _chatService.getAllChatMessages(roomId: roomId);
 
       result.fold(
-            (failure) {
+        (failure) {
           AppLogger.error('Failed to get all chats: ${failure.message}');
           _messages.clear();
 
           Fluttertoast.showToast(
-            msg:
-            "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
+            msg: "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: AppColors.error,
             textColor: AppColors.white,
           );
         },
-            (response) {
-
-              final result = response.map((element) {
+        (response) {
+          final result =
+              response.map((element) {
                 element.isSentByMe = element.sender.id == userData.id;
                 return element;
               }).toList();
 
-              _messages.clear();
-              _messages.addAll(result);
+          _messages.clear();
+          _messages.addAll(result);
           AppLogger.info('Chat Messages loaded ${response.length} messages');
+
+          // Scroll to bottom after loading initial messages
+          _scrollToBottom();
         },
       );
     } catch (e) {
@@ -169,10 +187,7 @@ class ChatViewModel extends ReactiveViewModel {
       messageController.clear();
 
       // Send message via socket
-      _socketService.sendMessage(
-        roomId: roomId,
-        content: messageText,
-      );
+      _socketService.sendMessage(roomId: roomId, content: messageText);
 
       AppLogger.info('Message sent locally for immediate display.');
     } catch (e) {
@@ -188,11 +203,7 @@ class ChatViewModel extends ReactiveViewModel {
   // because they use the old MessageModel. They need to be updated or removed.
 
   /// Send a file attachment
-  Future<void> sendAttachment({
-    required String fileUrl,
-    required MessageType messageType,
-    required String fileName,
-  }) async {
+  Future<void> sendAttachment({required String fileUrl, required MessageType messageType, required String fileName}) async {
     // This method is broken and needs to be updated for ChatMessageModel
   }
 
