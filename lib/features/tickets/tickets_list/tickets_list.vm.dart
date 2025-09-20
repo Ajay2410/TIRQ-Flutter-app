@@ -439,7 +439,6 @@ class TicketsListViewModel extends ReactiveViewModel {
         final file = attachments[i];
         final extension = file.path.split('.').last.toLowerCase();
         final contentType = extension == 'png' ? DioMediaType('image', 'png') : DioMediaType('image', 'jpeg');
-
         formData.files.add(
           MapEntry('ticketImages', await MultipartFile.fromFile(file.path, filename: 'ticket_image_$i.$extension', contentType: contentType)),
         );
