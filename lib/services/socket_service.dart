@@ -56,7 +56,7 @@ class SocketService {
     final payload = {
       "roomId": roomId,
       "content": content,
-      "attachments": attachments, // each: {"type": "image|video|document", "url": "..."}
+      "attachments": attachments, // each: {"type": "image|video|document", "url": "...", "name": "..."}
     };
 
     print("📤 Sending message with payload: $payload");

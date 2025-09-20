@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:manager/features/chat/chat_view.dart';
 import 'package:manager/features/chat/model/chat_message_model.dart';
 
 import '../api_endpoints.dart';
@@ -65,16 +64,50 @@ class ChatService {
     return Left(Failure('Failed to send message'));
   }
 
-  ResultFuture<List<ChatMessageModel>> getAllChatMessages({required String roomId}) async {
+  ResultFuture<List<ChatMessageModel>> getAllChatMessages({
+    required String roomId,
+  }) async {
     try {
-      final response = await _apiService.get(url: '${ApiEndpoints.getAllChatMessages}/$roomId');
+      final response = await _apiService.get(
+        url: '${ApiEndpoints.getAllChatMessages}/$roomId',
+      );
 
       if (response.statusCode == 200) {
         List<ChatMessageModel> messageList =
-        (response.data as List)
-            .map((e) => ChatMessageModel.fromJson(e))
-            .toList();
+            (response.data as List)
+                .map((e) => ChatMessageModel.fromJson(e))
+                .toList();
         return Right(messageList);
+      } else {
+        return Left(
+          Failure(response.data['message'] ?? 'Failed to get messages'),
+        );
+      }
+    } catch (e) {
+      if (e is DioException) {
+        AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
+      }
+      return Left(Failure('Failed to get messages: $e'));
+    }
+  }
+
+  /// Get paginated chat messages
+  ResultFuture<Map<String, dynamic>> getPaginatedChatMessages({
+    required String roomId,
+    required int page,
+    required int limit,
+  }) async {
+    try {
+      final response = await _apiService.get(
+        url: '${ApiEndpoints.getAllChatMessages}/$roomId',
+        queryParameters: {'page': page, 'limit': limit},
+      );
+
+      if (response.statusCode == 200) {
+        return Right(response.data);
       } else {
         return Left(
           Failure(response.data['message'] ?? 'Failed to get messages'),
@@ -114,6 +147,43 @@ class ChatService {
         );
       }
       return Left(Failure('Failed to get all chats: $e'));
+    }
+  }
+
+  /// Upload files for chat
+  ResultFuture<Map<String, dynamic>> uploadChatFiles(
+    List<String> filePaths,
+  ) async {
+    try {
+      final List<MultipartFile> files = [];
+
+      for (String filePath in filePaths) {
+        files.add(await MultipartFile.fromFile(filePath));
+      }
+
+      final formData = FormData.fromMap({'files': files});
+
+      final response = await _apiService.post(
+        url: ApiEndpoints.uploadChatFile,
+        data: formData,
+        options: Options(headers: {'Content-Type': 'multipart/form-data'}),
+      );
+
+      if (response.statusCode == 201) {
+        return Right(response.data);
+      } else {
+        return Left(
+          Failure(response.data['message'] ?? 'Failed to upload files'),
+        );
+      }
+    } catch (e) {
+      if (e is DioException) {
+        AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
+      }
+      return Left(Failure('Failed to upload files: $e'));
     }
   }
 }

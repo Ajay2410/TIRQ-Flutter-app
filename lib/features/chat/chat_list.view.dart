@@ -15,8 +15,7 @@ class ChatListView extends StatefulWidget {
   State<ChatListView> createState() => _ChatListViewState();
 }
 
-class _ChatListViewState extends State<ChatListView>
-    with TickerProviderStateMixin {
+class _ChatListViewState extends State<ChatListView> with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   late AnimationController _animationController;
@@ -27,24 +26,16 @@ class _ChatListViewState extends State<ChatListView>
   String _sortFilter = 'latest';
 
   // Dynamic border radius for segmented control
-  BorderRadius _dynamicBorder = BorderRadius.only(
-    topLeft: Radius.circular(AppSizes.v45),
-    bottomLeft: Radius.circular(AppSizes.v45),
-  );
+  BorderRadius _dynamicBorder = BorderRadius.only(topLeft: Radius.circular(AppSizes.v45), bottomLeft: Radius.circular(AppSizes.v45));
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
+    _animationController = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0.0, -0.5),
       end: const Offset(0.0, 0.0),
-    ).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
   }
 
   @override
@@ -74,64 +65,24 @@ class _ChatListViewState extends State<ChatListView>
     }
   }
 
-  PreferredSizeWidget _buildAppBar(
-    BuildContext context,
-    ChatListViewModel model,
-  ) {
+  PreferredSizeWidget _buildAppBar(BuildContext context, ChatListViewModel model) {
     return GradientAppBar(
       titleSpacing: 0,
-      leading: IconButton(
-        onPressed: () => model.navigateToHome(),
-        icon: Image.asset(
-          AppImages.back,
-          width: 24,
-          height: 24,
-          color: AppColors.white,
-        ),
-      ),
+      leading: IconButton(onPressed: () => model.navigateToHome(), icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white)),
       titleKey: 'messages',
       actions: [
-        InkWell(
-          onTap: _toggleSearch,
-          child: Image.asset(
-            AppImages.search,
-            width: 23,
-            height: 23,
-            color: AppColors.white,
-          ),
-        ),
+        InkWell(onTap: _toggleSearch, child: Image.asset(AppImages.search, width: 23, height: 23, color: AppColors.white)),
         SizedBox(width: 15),
-        InkWell(
-          onTap: () => model.navigateToArchivedChats(),
-          child: Image.asset(
-            AppImages.archive,
-            width: 23,
-            height: 23,
-            color: AppColors.white,
-          ),
-        ),
+        InkWell(onTap: () => model.navigateToArchivedChats(), child: Image.asset(AppImages.archive, width: 23, height: 23, color: AppColors.white)),
         PopupMenuButton<String>(
           icon: Stack(
             children: [
-              Image.asset(
-                AppImages.filter,
-                width: 23,
-                height: 23,
-                color: AppColors.white,
-              ),
-              if (_statusFilter != 'all' ||
-                  (_sortFilter != 'latest' && _statusFilter == 'all'))
+              Image.asset(AppImages.filter, width: 23, height: 23, color: AppColors.white),
+              if (_statusFilter != 'all' || (_sortFilter != 'latest' && _statusFilter == 'all'))
                 Positioned(
                   right: 0,
                   top: 0,
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
+                  child: Container(width: 8, height: 8, decoration: BoxDecoration(color: AppColors.primary, shape: BoxShape.circle)),
                 ),
             ],
           ),
@@ -168,21 +119,14 @@ class _ChatListViewState extends State<ChatListView>
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
                       children: [
-                        if (_statusFilter == 'in_progress')
-                          Icon(Icons.check, color: AppColors.primary, size: 20),
+                        if (_statusFilter == 'in_progress') Icon(Icons.check, color: AppColors.primary, size: 20),
                         if (_statusFilter == 'in_progress') SizedBox(width: 8),
                         Text(
                           'In Progress',
                           style: TextStyle(
-                            color:
-                                _statusFilter == 'in_progress'
-                                    ? AppColors.primary
-                                    : AppColors.textPrimary,
+                            color: _statusFilter == 'in_progress' ? AppColors.primary : AppColors.textPrimary,
                             fontSize: 16,
-                            fontWeight:
-                                _statusFilter == 'in_progress'
-                                    ? FontWeight.w600
-                                    : FontWeight.normal,
+                            fontWeight: _statusFilter == 'in_progress' ? FontWeight.w600 : FontWeight.normal,
                           ),
                         ),
                       ],
@@ -196,21 +140,14 @@ class _ChatListViewState extends State<ChatListView>
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
                       children: [
-                        if (_statusFilter == 'on_hold')
-                          Icon(Icons.check, color: AppColors.primary, size: 20),
+                        if (_statusFilter == 'on_hold') Icon(Icons.check, color: AppColors.primary, size: 20),
                         if (_statusFilter == 'on_hold') SizedBox(width: 8),
                         Text(
                           'On Hold',
                           style: TextStyle(
-                            color:
-                                _statusFilter == 'on_hold'
-                                    ? AppColors.primary
-                                    : AppColors.textPrimary,
+                            color: _statusFilter == 'on_hold' ? AppColors.primary : AppColors.textPrimary,
                             fontSize: 16,
-                            fontWeight:
-                                _statusFilter == 'on_hold'
-                                    ? FontWeight.w600
-                                    : FontWeight.normal,
+                            fontWeight: _statusFilter == 'on_hold' ? FontWeight.w600 : FontWeight.normal,
                           ),
                         ),
                       ],
@@ -224,24 +161,14 @@ class _ChatListViewState extends State<ChatListView>
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
                       children: [
-                        if (_sortFilter == 'latest' && _statusFilter == 'all')
-                          Icon(Icons.check, color: AppColors.primary, size: 20),
-                        if (_sortFilter == 'latest' && _statusFilter == 'all')
-                          SizedBox(width: 8),
+                        if (_sortFilter == 'latest' && _statusFilter == 'all') Icon(Icons.check, color: AppColors.primary, size: 20),
+                        if (_sortFilter == 'latest' && _statusFilter == 'all') SizedBox(width: 8),
                         Text(
                           'Latest to Oldest',
                           style: TextStyle(
-                            color:
-                                (_sortFilter == 'latest' &&
-                                        _statusFilter == 'all')
-                                    ? AppColors.primary
-                                    : AppColors.textPrimary,
+                            color: (_sortFilter == 'latest' && _statusFilter == 'all') ? AppColors.primary : AppColors.textPrimary,
                             fontSize: 16,
-                            fontWeight:
-                                (_sortFilter == 'latest' &&
-                                        _statusFilter == 'all')
-                                    ? FontWeight.w600
-                                    : FontWeight.normal,
+                            fontWeight: (_sortFilter == 'latest' && _statusFilter == 'all') ? FontWeight.w600 : FontWeight.normal,
                           ),
                         ),
                       ],
@@ -255,24 +182,14 @@ class _ChatListViewState extends State<ChatListView>
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
                       children: [
-                        if (_sortFilter == 'oldest' && _statusFilter == 'all')
-                          Icon(Icons.check, color: AppColors.primary, size: 20),
-                        if (_sortFilter == 'oldest' && _statusFilter == 'all')
-                          SizedBox(width: 8),
+                        if (_sortFilter == 'oldest' && _statusFilter == 'all') Icon(Icons.check, color: AppColors.primary, size: 20),
+                        if (_sortFilter == 'oldest' && _statusFilter == 'all') SizedBox(width: 8),
                         Text(
                           'Oldest to Latest',
                           style: TextStyle(
-                            color:
-                                (_sortFilter == 'oldest' &&
-                                        _statusFilter == 'all')
-                                    ? AppColors.primary
-                                    : AppColors.textPrimary,
+                            color: (_sortFilter == 'oldest' && _statusFilter == 'all') ? AppColors.primary : AppColors.textPrimary,
                             fontSize: 16,
-                            fontWeight:
-                                (_sortFilter == 'oldest' &&
-                                        _statusFilter == 'all')
-                                    ? FontWeight.w600
-                                    : FontWeight.normal,
+                            fontWeight: (_sortFilter == 'oldest' && _statusFilter == 'all') ? FontWeight.w600 : FontWeight.normal,
                           ),
                         ),
                       ],
@@ -280,9 +197,7 @@ class _ChatListViewState extends State<ChatListView>
                   ),
                 ),
               ],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           color: AppColors.white,
           shadowColor: AppColors.black.withValues(alpha: 0.1),
         ),
@@ -337,20 +252,11 @@ class _ChatListViewState extends State<ChatListView>
                 child: Column(
                   children: [
                     // Animated search bar
-                    SlideTransition(
-                      position: _slideAnimation,
-                      child:
-                          _isSearchVisible
-                              ? _buildSearchBar(context, model)
-                              : const SizedBox.shrink(),
-                    ),
+                    SlideTransition(position: _slideAnimation, child: _isSearchVisible ? _buildSearchBar(context, model) : const SizedBox.shrink()),
                     // Tab Bar
                     Container(
                       color: AppColors.white,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppSizes.w20,
-                        vertical: AppSizes.h16,
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: AppSizes.w20, vertical: AppSizes.h16),
                       child: CustomSlidingSegmentedControl<int>(
                         height: 40,
                         innerPadding: EdgeInsets.zero,
@@ -367,10 +273,7 @@ class _ChatListViewState extends State<ChatListView>
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
-                              color:
-                                  selectedTabIndex == 0
-                                      ? AppColors.white
-                                      : AppColors.black,
+                              color: selectedTabIndex == 0 ? AppColors.white : AppColors.black,
                             ),
                           ),
                           1: Text(
@@ -378,10 +281,7 @@ class _ChatListViewState extends State<ChatListView>
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
-                              color:
-                                  selectedTabIndex == 1
-                                      ? AppColors.white
-                                      : AppColors.black,
+                              color: selectedTabIndex == 1 ? AppColors.white : AppColors.black,
                             ),
                           ),
                           2: Text(
@@ -389,28 +289,19 @@ class _ChatListViewState extends State<ChatListView>
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
-                              color:
-                                  selectedTabIndex == 2
-                                      ? AppColors.white
-                                      : AppColors.black,
+                              color: selectedTabIndex == 2 ? AppColors.white : AppColors.black,
                             ),
                           ),
                         },
                         fromMax: true,
-                        thumbDecoration: BoxDecoration(
-                          borderRadius: _dynamicBorder,
-                          color: AppColors.primary,
-                        ),
+                        thumbDecoration: BoxDecoration(borderRadius: _dynamicBorder, color: AppColors.primary),
                         onValueChanged: (int value) {
                           setState(() {
                             selectedTabIndex = value;
                             // Update dynamic border radius based on selected segment
                             switch (value) {
                               case 0:
-                                _dynamicBorder = BorderRadius.only(
-                                  topLeft: Radius.circular(AppSizes.v45),
-                                  bottomLeft: Radius.circular(AppSizes.v45),
-                                );
+                                _dynamicBorder = BorderRadius.only(topLeft: Radius.circular(AppSizes.v45), bottomLeft: Radius.circular(AppSizes.v45));
                                 break;
                               case 1:
                                 _dynamicBorder = BorderRadius.circular(0);
@@ -432,11 +323,7 @@ class _ChatListViewState extends State<ChatListView>
                         color: AppColors.scaffoldBackground,
                         child:
                             model.isLoading
-                                ? Center(
-                                  child: CircularProgressIndicator(
-                                    color: AppColors.primary,
-                                  ),
-                                )
+                                ? Center(child: CircularProgressIndicator(color: AppColors.primary))
                                 : _buildFilteredChatList(context, model),
                       ),
                     ),
@@ -514,10 +401,7 @@ class _ChatListViewState extends State<ChatListView>
       },
       child: ListView.separated(
         separatorBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Divider(height: 0),
-          );
+          return Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: Divider(height: 0));
         },
         itemCount: filteredChats.length,
         itemBuilder: (context, index) {
@@ -530,19 +414,10 @@ class _ChatListViewState extends State<ChatListView>
 
   Widget _buildSearchBar(BuildContext context, ChatListViewModel model) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.w20,
-        vertical: AppSizes.h16,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: AppSizes.w20, vertical: AppSizes.h16),
       decoration: BoxDecoration(
         color: AppColors.white,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.05),
-            offset: const Offset(0, 2),
-            blurRadius: 8,
-          ),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), offset: const Offset(0, 2), blurRadius: 8)],
       ),
       child: TextField(
         controller: _searchController,
@@ -556,14 +431,8 @@ class _ChatListViewState extends State<ChatListView>
           prefixIcon: Icon(Icons.search, color: AppColors.primary),
           fillColor: AppColors.lightGray.withValues(alpha: 0.3),
           filled: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppSizes.v12),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: EdgeInsets.symmetric(
-            vertical: AppSizes.h12,
-            horizontal: AppSizes.w16,
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: BorderSide.none),
+          contentPadding: EdgeInsets.symmetric(vertical: AppSizes.h12, horizontal: AppSizes.w16),
           suffixIcon:
               _searchController.text.isNotEmpty
                   ? IconButton(
@@ -579,44 +448,20 @@ class _ChatListViewState extends State<ChatListView>
     );
   }
 
-  Widget _buildEmptyState(
-    BuildContext context,
-    String title,
-    String subtitle,
-    IconData icon,
-  ) {
+  Widget _buildEmptyState(BuildContext context, String title, String subtitle, IconData icon) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             padding: EdgeInsets.all(AppSizes.v24),
-            decoration: BoxDecoration(
-              color: AppColors.lightGray.withValues(alpha: 0.3),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              size: 80,
-              color: AppColors.primary.withValues(alpha: 0.7),
-            ),
+            decoration: BoxDecoration(color: AppColors.lightGray.withValues(alpha: 0.3), shape: BoxShape.circle),
+            child: Icon(icon, size: 80, color: AppColors.primary.withValues(alpha: 0.7)),
           ),
           SizedBox(height: AppSizes.h16),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-            ),
-          ),
+          Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
           SizedBox(height: AppSizes.h8),
-          Text(
-            subtitle,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
-            textAlign: TextAlign.center,
-          ),
+          Text(subtitle, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary), textAlign: TextAlign.center),
         ],
       ),
     );
@@ -628,42 +473,23 @@ class _ChatListViewState extends State<ChatListView>
       children: [
         Container(
           padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(AppSizes.v16),
-          ),
+          decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(AppSizes.v16)),
           alignment: Alignment.center,
           child: Text(
             "VG - Van Group".substring(0, 2).toUpperCase(),
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-              color: AppColors.primary,
-            ),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: AppColors.primary),
           ),
         ),
         Positioned(
           bottom: -4,
           right: -4,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(2),
-            child: Image.asset(
-              AppImages.flag,
-              width: 17,
-              height: 17,
-              fit: BoxFit.cover,
-            ),
-          ),
+          child: ClipRRect(borderRadius: BorderRadius.circular(2), child: Image.asset(AppImages.flag, width: 17, height: 17, fit: BoxFit.cover)),
         ),
       ],
     );
   }
 
-  Widget _buildChatItem(
-    BuildContext context,
-    ChatListViewModel model,
-    dynamic chatRoom,
-  ) {
+  Widget _buildChatItem(BuildContext context, ChatListViewModel model, dynamic chatRoom) {
     final chatTitle = _getChatTitle(chatRoom);
     final lastMessage = _getLastMessagePreview(chatRoom);
     final ticketNumber = chatRoom.ticket?.ticketNumber ?? 'Unknown';
@@ -679,20 +505,14 @@ class _ChatListViewState extends State<ChatListView>
                 (context) => ChatView(
                   contactName: chatWithName,
                   contactNumber: ticketNumber,
-                  contactInitials:
-                      chatWithName.isNotEmpty
-                          ? chatWithName.substring(0, 1).toUpperCase()
-                          : 'U',
+                  contactInitials: chatWithName.isNotEmpty ? chatWithName.substring(0, 1).toUpperCase() : 'U',
                   roomId: chatRoom.id,
                 ),
           ),
         );
       },
       child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: AppSizes.h15,
-          horizontal: AppSizes.w16,
-        ),
+        padding: EdgeInsets.symmetric(vertical: AppSizes.h15, horizontal: AppSizes.w16),
         decoration: BoxDecoration(color: AppColors.white),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -710,54 +530,25 @@ class _ChatListViewState extends State<ChatListView>
                           chatTitle,
                           style: Theme.of(
                             context,
-                          ).textTheme.titleMedium?.copyWith(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
+                          ).textTheme.titleMedium?.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 14),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppSizes.w8,
-                          vertical: AppSizes.h2,
-                        ),
+                        padding: EdgeInsets.symmetric(horizontal: AppSizes.w8, vertical: AppSizes.h2),
                         decoration: BoxDecoration(
                           color: _getStatusColor(status).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(AppSizes.v6),
                         ),
-                        child: Text(
-                          status,
-                          style: TextStyle(
-                            color: _getStatusColor(status),
-                            fontSize: AppSizes.v12,
-                          ),
-                        ),
+                        child: Text(status, style: TextStyle(color: _getStatusColor(status), fontSize: AppSizes.v12)),
                       ),
                     ],
                   ),
                   SizedBox(height: 2),
                   Row(
                     children: [
-                      Expanded(
-                        child: Text(
-                          lastMessage,
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: AppColors.textGray,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Text(
-                        ticketNumber,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: AppColors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      Expanded(child: Text(lastMessage, style: TextStyle(fontSize: 11, color: AppColors.textGray), overflow: TextOverflow.ellipsis)),
+                      Text(ticketNumber, style: TextStyle(fontSize: 10, color: AppColors.black, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ],

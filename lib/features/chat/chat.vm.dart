@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:manager/core/storage/storage.dart';
 import 'package:manager/core/utils/app_logger.dart';
 import 'package:stacked/stacked.dart';
@@ -35,13 +36,35 @@ class ChatViewModel extends ReactiveViewModel {
   final ScrollController scrollController = ScrollController();
 
   final SocketService _socketService = SocketService();
+  final ImagePicker _imagePicker = ImagePicker();
 
   // State variables
   bool _isSendingMessage = false;
+  bool _isUploadingImage = false;
+  bool _isSearchMode = false;
+  String _searchQuery = '';
+  final TextEditingController _searchController = TextEditingController();
+  int _currentSearchIndex = -1;
 
+  // Image preview variables
+  List<String> _selectedImagePaths = [];
+  List<String> _selectedImageNames = [];
+
+  // Pagination variables
   bool _isLoading = false;
+  bool _isLoadingMore = false;
+  int _currentPage = 1;
+  int _totalMessages = 0;
+  int _limit = 20;
+  bool _hasMoreMessages = true;
 
   bool get isLoading => _isLoading;
+
+  bool get isLoadingMore => _isLoadingMore;
+
+  bool get hasMoreMessages => _hasMoreMessages;
+
+  int get totalMessages => _totalMessages;
 
   // Messages list
   final List<ChatMessageModel> _messages = [];
@@ -50,6 +73,22 @@ class ChatViewModel extends ReactiveViewModel {
 
   // Getters
   bool get isSendingMessage => _isSendingMessage;
+
+  bool get isUploadingImage => _isUploadingImage;
+
+  bool get isSearchMode => _isSearchMode;
+
+  String get searchQuery => _searchQuery;
+
+  TextEditingController get searchController => _searchController;
+
+  int get currentSearchIndex => _currentSearchIndex;
+
+  List<String> get selectedImagePaths => _selectedImagePaths;
+
+  List<String> get selectedImageNames => _selectedImageNames;
+
+  bool get hasImagePreview => _selectedImagePaths.isNotEmpty;
 
   User userData = getUser();
   String roomId = "default_room";
@@ -68,9 +107,8 @@ class ChatViewModel extends ReactiveViewModel {
           message.isSentByMe = false;
         }
 
-        _messages.add(message);
+        _messages.insert(0, message);
         notifyListeners();
-        _scrollToBottom();
         print("📝 Message added to list. Total messages: ${_messages.length}");
       } catch (e) {
         print("❌ Error parsing message: $e");
@@ -82,10 +120,13 @@ class ChatViewModel extends ReactiveViewModel {
 
   Future<void> fetchInitialData({required String? roomId1}) async {
     _isLoading = true;
+    _currentPage = 1;
+    _hasMoreMessages = true;
+    _messages.clear();
     notifyListeners();
 
     roomId = roomId1 ?? roomId;
-    await Future.wait([initializeSocket(), getAllChatMessages()]);
+    await Future.wait([initializeSocket(), loadMessages()]);
 
     _isLoading = false;
     notifyListeners();
@@ -115,26 +156,72 @@ class ChatViewModel extends ReactiveViewModel {
     _socketService.onNewMessage(_handleNewMessage);
   }
 
-  void _scrollToBottom() {
-    if (scrollController.hasClients) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (scrollController.hasClients) {
-          // Add a small delay to ensure the UI is fully rendered
-          Future.delayed(const Duration(milliseconds: 100), () {
-            if (scrollController.hasClients) {
-              scrollController.animateTo(
-                scrollController.position.maxScrollExtent,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOut,
-              );
-            }
-          });
-        }
-      });
+  /// Fetch all messages
+  Future<void> loadMessages() async {
+    try {
+      final result = await _chatService.getPaginatedChatMessages(
+        roomId: roomId,
+        page: _currentPage,
+        limit: _limit,
+      );
+
+      result.fold(
+        (failure) {
+          AppLogger.error('Failed to fetch messages: ${failure.message}');
+          Fluttertoast.showToast(
+            msg:
+                "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: AppColors.error,
+            textColor: AppColors.white,
+          );
+        },
+        (response) {
+          final List<dynamic> messagesData = response['messages'] ?? [];
+          final List<ChatMessageModel> newMessages =
+              messagesData.map((e) => ChatMessageModel.fromJson(e)).toList();
+
+          // Set isSentByMe for each message
+          for (var message in newMessages) {
+            message.isSentByMe = message.sender.id == userData.id;
+          }
+
+          if (_currentPage == 1) {
+            _messages.clear();
+            _messages.addAll(newMessages);
+          } else {
+            // For pagination, add older messages to the end of the list
+            _messages.addAll(newMessages);
+          }
+
+          // Update pagination state
+          _totalMessages = response['total'] ?? 0;
+          _hasMoreMessages = _messages.length < _totalMessages;
+
+          AppLogger.info(
+            'Loaded ${newMessages.length} messages (Page $_currentPage)',
+          );
+        },
+      );
+    } catch (e) {
+      AppLogger.error('Error loading messages: $e');
     }
   }
 
-  /// Fetch all messages
+  Future<void> loadMoreMessages() async {
+    if (_isLoadingMore || !_hasMoreMessages) return;
+
+    _isLoadingMore = true;
+    notifyListeners();
+
+    _currentPage++;
+    await loadMessages();
+
+    _isLoadingMore = false;
+    notifyListeners();
+  }
+
   Future<void> getAllChatMessages() async {
     try {
       final result = await _chatService.getAllChatMessages(roomId: roomId);
@@ -145,7 +232,8 @@ class ChatViewModel extends ReactiveViewModel {
           _messages.clear();
 
           Fluttertoast.showToast(
-            msg: "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
+            msg:
+                "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: AppColors.error,
@@ -162,9 +250,6 @@ class ChatViewModel extends ReactiveViewModel {
           _messages.clear();
           _messages.addAll(result);
           AppLogger.info('Chat Messages loaded ${response.length} messages');
-
-          // Scroll to bottom after loading initial messages
-          _scrollToBottom();
         },
       );
     } catch (e) {
@@ -174,7 +259,7 @@ class ChatViewModel extends ReactiveViewModel {
 
   /// Send a text message
   Future<void> sendMessage() async {
-    if (messageController.text.trim().isEmpty) {
+    if (messageController.text.trim().isEmpty && !hasImagePreview) {
       AppLogger.warning('Cannot send empty message');
       return;
     }
@@ -186,10 +271,17 @@ class ChatViewModel extends ReactiveViewModel {
       final messageText = messageController.text.trim();
       messageController.clear();
 
-      // Send message via socket
-      _socketService.sendMessage(roomId: roomId, content: messageText);
-
-      AppLogger.info('Message sent locally for immediate display.');
+      // If there are images, send them with text
+      if (hasImagePreview && _selectedImagePaths.isNotEmpty) {
+        await _sendImagesWithText(_selectedImagePaths, messageText);
+        // Clear image previews after sending
+        _selectedImagePaths.clear();
+        _selectedImageNames.clear();
+      } else {
+        // Send text-only message
+        _socketService.sendMessage(roomId: roomId, content: messageText);
+        AppLogger.info('Text message sent');
+      }
     } catch (e) {
       AppLogger.error('Error sending message: $e');
       // Optionally, update the temporary message to show a 'failed' state.
@@ -199,11 +291,284 @@ class ChatViewModel extends ReactiveViewModel {
     }
   }
 
+  /// Pick multiple images from gallery
+  Future<void> pickMultipleImagesFromGallery() async {
+    try {
+      final List<XFile> images = await _imagePicker.pickMultiImage(
+        imageQuality: 80,
+        maxWidth: 1920,
+        maxHeight: 1920,
+      );
+
+      if (images.isNotEmpty) {
+        _selectedImagePaths = images.map((image) => image.path).toList();
+        _selectedImageNames = images.map((image) => image.name).toList();
+        notifyListeners();
+      }
+    } catch (e) {
+      AppLogger.error('Error picking multiple images: $e');
+      Fluttertoast.showToast(
+        msg: 'Failed to pick images',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: AppColors.error,
+        textColor: AppColors.white,
+      );
+    }
+  }
+
+  /// Pick image from camera and add to multiple selection
+  Future<void> pickImageFromCamera() async {
+    try {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 80,
+        maxWidth: 1920,
+        maxHeight: 1920,
+      );
+
+      if (image != null) {
+        _selectedImagePaths.add(image.path);
+        _selectedImageNames.add(image.name);
+        notifyListeners();
+      }
+    } catch (e) {
+      AppLogger.error('Error taking photo: $e');
+      Fluttertoast.showToast(
+        msg: 'Failed to take photo',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: AppColors.error,
+        textColor: AppColors.white,
+      );
+    }
+  }
+
+  /// Remove multiple image previews
+  void removeMultipleImagePreviews() {
+    _selectedImagePaths.clear();
+    _selectedImageNames.clear();
+    notifyListeners();
+  }
+
+  /// Remove specific image from multiple selection
+  void removeImageFromMultiple(int index) {
+    if (index >= 0 && index < _selectedImagePaths.length) {
+      _selectedImagePaths.removeAt(index);
+      _selectedImageNames.removeAt(index);
+      notifyListeners();
+    }
+  }
+
+  /// Send images with optional text
+  Future<void> _sendImagesWithText(List<String> imagePaths, String text) async {
+    try {
+      _isUploadingImage = true;
+      notifyListeners();
+
+      // Upload images to server
+      final result = await _chatService.uploadChatFiles(imagePaths);
+
+      result.fold(
+        (failure) {
+          AppLogger.error('Failed to upload images: ${failure.message}');
+          Fluttertoast.showToast(
+            msg: 'Failed to upload images: ${failure.message}',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: AppColors.error,
+            textColor: AppColors.white,
+          );
+        },
+        (response) {
+          // Extract files info from response
+          final List<dynamic> files = response['files'] ?? [];
+
+          if (files.isNotEmpty) {
+            // Convert to attachment format
+            final List<Map<String, dynamic>> attachments =
+                files.map((file) {
+                  return {
+                    'url': file['url'] ?? '',
+                    'name': file['name'] ?? 'image.jpg',
+                    'type': file['type'] ?? 'image',
+                  };
+                }).toList();
+            // Send message with image attachments and text via socket
+            _socketService.sendMessage(
+              roomId: roomId,
+              content: text, // Include text content
+              attachments: attachments,
+            );
+
+            AppLogger.info('Images with text message sent successfully');
+          } else {
+            throw Exception('Invalid response from server');
+          }
+        },
+      );
+    } catch (e) {
+      AppLogger.error('Error sending images with text: $e');
+      Fluttertoast.showToast(
+        msg: 'Failed to send images',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: AppColors.error,
+        textColor: AppColors.white,
+      );
+    } finally {
+      _isUploadingImage = false;
+      notifyListeners();
+    }
+  }
+
+  /// Toggle search mode
+  void toggleSearchMode() {
+    _isSearchMode = !_isSearchMode;
+    if (!_isSearchMode) {
+      _searchQuery = '';
+      _searchController.clear();
+      _currentSearchIndex = -1;
+    }
+    notifyListeners();
+  }
+
+  /// Update search query
+  void updateSearchQuery(String query) {
+    _searchQuery = query;
+    _currentSearchIndex = -1; // Reset search index when query changes
+    notifyListeners();
+  }
+
+  /// Get filtered messages based on search query
+  List<ChatMessageModel> get filteredMessages {
+    if (_searchQuery.isEmpty) {
+      return _messages;
+    }
+
+    return _messages.where((message) {
+      // Search in message content
+      final contentMatch = message.content.toLowerCase().contains(
+        _searchQuery.toLowerCase(),
+      );
+
+      // Search in attachment names (if any)
+      final attachmentMatch = message.attachments.any(
+        (attachment) =>
+            attachment.url.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+            (attachment.url
+                .split('/')
+                .last
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase())),
+      );
+
+      return contentMatch || attachmentMatch;
+    }).toList();
+  }
+
+  /// Get search results with indices
+  List<Map<String, dynamic>> get searchResults {
+    if (_searchQuery.isEmpty) return [];
+
+    List<Map<String, dynamic>> results = [];
+    for (int i = 0; i < _messages.length; i++) {
+      final message = _messages[i];
+      final contentMatch = message.content.toLowerCase().contains(
+        _searchQuery.toLowerCase(),
+      );
+
+      if (contentMatch) {
+        results.add({'message': message, 'index': i, 'type': 'content'});
+      }
+
+      // Check attachments
+      for (int j = 0; j < message.attachments.length; j++) {
+        final attachment = message.attachments[j];
+        final attachmentMatch =
+            attachment.url.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+            (attachment.url
+                .split('/')
+                .last
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()));
+
+        if (attachmentMatch) {
+          results.add({
+            'message': message,
+            'index': i,
+            'type': 'attachment',
+            'attachmentIndex': j,
+          });
+        }
+      }
+    }
+
+    return results;
+  }
+
+  /// Navigate to next search result
+  void nextSearchResult() {
+    final results = searchResults;
+    if (results.isNotEmpty) {
+      _currentSearchIndex = (_currentSearchIndex + 1) % results.length;
+      _scrollToSearchResult(results[_currentSearchIndex]['index']);
+      notifyListeners();
+    }
+  }
+
+  /// Navigate to previous search result
+  void previousSearchResult() {
+    final results = searchResults;
+    if (results.isNotEmpty) {
+      _currentSearchIndex =
+          _currentSearchIndex <= 0
+              ? results.length - 1
+              : _currentSearchIndex - 1;
+      _scrollToSearchResult(results[_currentSearchIndex]['index']);
+      notifyListeners();
+    }
+  }
+
+  /// Scroll to specific search result
+  void _scrollToSearchResult(int messageIndex) {
+    if (scrollController.hasClients) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (scrollController.hasClients) {
+          // Calculate approximate position (each message is roughly 100px + date separator)
+          final double targetPosition =
+              (messageIndex + 1) * 100.0; // +1 for date separator
+          final double maxScroll = scrollController.position.maxScrollExtent;
+          final double scrollPosition =
+              targetPosition > maxScroll ? maxScroll : targetPosition;
+
+          scrollController.animateTo(
+            scrollPosition,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+    }
+  }
+
+  /// Clear search
+  void clearSearch() {
+    _searchQuery = '';
+    _searchController.clear();
+    _currentSearchIndex = -1;
+    notifyListeners();
+  }
+
   // NOTE: The 'sendAttachment' and 'addSampleMessage' methods are now broken
   // because they use the old MessageModel. They need to be updated or removed.
 
   /// Send a file attachment
-  Future<void> sendAttachment({required String fileUrl, required MessageType messageType, required String fileName}) async {
+  Future<void> sendAttachment({
+    required String fileUrl,
+    required MessageType messageType,
+    required String fileName,
+  }) async {
     // This method is broken and needs to be updated for ChatMessageModel
   }
 
@@ -216,6 +581,7 @@ class ChatViewModel extends ReactiveViewModel {
     // Dispose controllers
     messageController.dispose();
     scrollController.dispose();
+    _searchController.dispose();
 
     super.dispose();
   }

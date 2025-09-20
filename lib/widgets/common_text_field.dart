@@ -22,6 +22,7 @@ class CommonTextField extends StatelessWidget {
   final Color? disabledBackgroundColor;
   final EdgeInsets? contentPadding;
   final TextStyle? textStyle;
+  final void Function(PointerDownEvent)? onTapOutside;
 
   const CommonTextField({
     super.key,
@@ -45,6 +46,7 @@ class CommonTextField extends StatelessWidget {
     this.disabledBackgroundColor,
     this.contentPadding,
     this.textStyle,
+    this.onTapOutside,
   });
 
   @override
@@ -71,9 +73,11 @@ class CommonTextField extends StatelessWidget {
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
-          onTapOutside: (event) {
-            FocusScope.of(context).unfocus();
-          },
+          onTapOutside:
+              onTapOutside ??
+              (event) {
+                FocusScope.of(context).unfocus();
+              },
           readOnly: readOnly,
           maxLines: maxLines,
           maxLength: maxLength,
