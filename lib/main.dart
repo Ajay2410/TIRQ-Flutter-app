@@ -29,9 +29,9 @@ void main() async {
   await LanguageService.load();
 
   // Initialize notification service
-  final notificationService = NotificationService();
-  await notificationService.init();
-  await notificationService.getToken();
+  // final notificationService = NotificationService();
+  // await notificationService.init();
+  // await notificationService.getToken();
 
   runApp(AppView());
 }
