@@ -166,18 +166,13 @@ class ChatViewModel extends ReactiveViewModel {
   /// Fetch all messages
   Future<void> loadMessages() async {
     try {
-      final result = await _chatService.getPaginatedChatMessages(
-        roomId: roomId,
-        page: _currentPage,
-        limit: _limit,
-      );
+      final result = await _chatService.getPaginatedChatMessages(roomId: roomId, page: _currentPage, limit: _limit);
 
       result.fold(
         (failure) {
           AppLogger.error('Failed to fetch messages: ${failure.message}');
           Fluttertoast.showToast(
-            msg:
-                "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
+            msg: "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: AppColors.error,
@@ -186,8 +181,7 @@ class ChatViewModel extends ReactiveViewModel {
         },
         (response) {
           final List<dynamic> messagesData = response['messages'] ?? [];
-          final List<ChatMessageModel> newMessages =
-              messagesData.map((e) => ChatMessageModel.fromJson(e)).toList();
+          final List<ChatMessageModel> newMessages = messagesData.map((e) => ChatMessageModel.fromJson(e)).toList();
 
           // Set isSentByMe for each message
           for (var message in newMessages) {
@@ -206,9 +200,7 @@ class ChatViewModel extends ReactiveViewModel {
           _totalMessages = response['total'] ?? 0;
           _hasMoreMessages = _messages.length < _totalMessages;
 
-          AppLogger.info(
-            'Loaded ${newMessages.length} messages (Page $_currentPage)',
-          );
+          AppLogger.info('Loaded ${newMessages.length} messages (Page $_currentPage)');
         },
       );
     } catch (e) {
@@ -239,8 +231,7 @@ class ChatViewModel extends ReactiveViewModel {
           _messages.clear();
 
           Fluttertoast.showToast(
-            msg:
-                "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
+            msg: "${LanguageService.get("failed_to_load_chats")}: ${failure.message}",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: AppColors.error,
@@ -280,15 +271,14 @@ class ChatViewModel extends ReactiveViewModel {
 
       // If there are media files, send them with text
       if (hasImagePreview && _selectedMediaPaths.isNotEmpty) {
-        await _sendMediaWithText(
-          _selectedMediaPaths,
-          _selectedMediaTypes,
-          messageText,
-        );
-        // Clear media previews after sending
+        List<String> selectedMediaPaths = List.from(_selectedMediaPaths);
+        List<String> selectedMediaTypes = List.from(_selectedMediaTypes);
+
         _selectedMediaPaths.clear();
         _selectedMediaNames.clear();
         _selectedMediaTypes.clear();
+
+        await _sendMediaWithText(selectedMediaPaths, selectedMediaTypes, messageText);
       } else {
         // Send text-only message
         _socketService.sendMessage(roomId: roomId, content: messageText);
@@ -306,11 +296,7 @@ class ChatViewModel extends ReactiveViewModel {
   /// Pick multiple media (images and videos) from album
   Future<void> pickMultipleMediaFromAlbum() async {
     try {
-      final List<XFile> media = await _imagePicker.pickMultipleMedia(
-        imageQuality: 80,
-        maxWidth: 1920,
-        maxHeight: 1920,
-      );
+      final List<XFile> media = await _imagePicker.pickMultipleMedia(imageQuality: 80, maxWidth: 1920, maxHeight: 1920);
 
       if (media.isNotEmpty) {
         _selectedMediaPaths = media.map((file) => file.path).toList();
@@ -319,16 +305,7 @@ class ChatViewModel extends ReactiveViewModel {
             media.map((file) {
               // Determine if it's a video or image based on file extension
               final extension = file.name.toLowerCase().split('.').last;
-              return [
-                    'mp4',
-                    'mov',
-                    'avi',
-                    'mkv',
-                    'webm',
-                    '3gp',
-                  ].contains(extension)
-                  ? 'video'
-                  : 'image';
+              return ['mp4', 'mov', 'avi', 'mkv', 'webm', '3gp'].contains(extension) ? 'video' : 'image';
             }).toList();
         notifyListeners();
       }
@@ -347,12 +324,7 @@ class ChatViewModel extends ReactiveViewModel {
   /// Pick image from camera and add to multiple selection
   Future<void> pickImageFromCamera() async {
     try {
-      final XFile? image = await _imagePicker.pickImage(
-        source: ImageSource.camera,
-        imageQuality: 80,
-        maxWidth: 1920,
-        maxHeight: 1920,
-      );
+      final XFile? image = await _imagePicker.pickImage(source: ImageSource.camera, imageQuality: 80, maxWidth: 1920, maxHeight: 1920);
 
       if (image != null) {
         _selectedMediaPaths.add(image.path);
@@ -391,11 +363,7 @@ class ChatViewModel extends ReactiveViewModel {
   }
 
   /// Send media (images and videos) with optional text
-  Future<void> _sendMediaWithText(
-    List<String> mediaPaths,
-    List<String> mediaTypes,
-    String text,
-  ) async {
+  Future<void> _sendMediaWithText(List<String> mediaPaths, List<String> mediaTypes, String text) async {
     try {
       _isUploadingImage = true;
       notifyListeners();
@@ -426,9 +394,7 @@ class ChatViewModel extends ReactiveViewModel {
               final mediaType = i < mediaTypes.length ? mediaTypes[i] : 'image';
               attachments.add({
                 'url': file['url'] ?? '',
-                'name':
-                    file['name'] ??
-                    (mediaType == 'video' ? 'video.mp4' : 'image.jpg'),
+                'name': file['name'] ?? (mediaType == 'video' ? 'video.mp4' : 'image.jpg'),
                 'type': mediaType,
               });
             }
@@ -487,19 +453,13 @@ class ChatViewModel extends ReactiveViewModel {
 
     return _messages.where((message) {
       // Search in message content
-      final contentMatch = message.content.toLowerCase().contains(
-        _searchQuery.toLowerCase(),
-      );
+      final contentMatch = message.content.toLowerCase().contains(_searchQuery.toLowerCase());
 
       // Search in attachment names (if any)
       final attachmentMatch = message.attachments.any(
         (attachment) =>
             attachment.url.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            (attachment.url
-                .split('/')
-                .last
-                .toLowerCase()
-                .contains(_searchQuery.toLowerCase())),
+            (attachment.url.split('/').last.toLowerCase().contains(_searchQuery.toLowerCase())),
       );
 
       return contentMatch || attachmentMatch;
@@ -513,9 +473,7 @@ class ChatViewModel extends ReactiveViewModel {
     List<Map<String, dynamic>> results = [];
     for (int i = 0; i < _messages.length; i++) {
       final message = _messages[i];
-      final contentMatch = message.content.toLowerCase().contains(
-        _searchQuery.toLowerCase(),
-      );
+      final contentMatch = message.content.toLowerCase().contains(_searchQuery.toLowerCase());
 
       if (contentMatch) {
         results.add({'message': message, 'index': i, 'type': 'content'});
@@ -526,19 +484,10 @@ class ChatViewModel extends ReactiveViewModel {
         final attachment = message.attachments[j];
         final attachmentMatch =
             attachment.url.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            (attachment.url
-                .split('/')
-                .last
-                .toLowerCase()
-                .contains(_searchQuery.toLowerCase()));
+            (attachment.url.split('/').last.toLowerCase().contains(_searchQuery.toLowerCase()));
 
         if (attachmentMatch) {
-          results.add({
-            'message': message,
-            'index': i,
-            'type': 'attachment',
-            'attachmentIndex': j,
-          });
+          results.add({'message': message, 'index': i, 'type': 'attachment', 'attachmentIndex': j});
         }
       }
     }
@@ -560,10 +509,7 @@ class ChatViewModel extends ReactiveViewModel {
   void previousSearchResult() {
     final results = searchResults;
     if (results.isNotEmpty) {
-      _currentSearchIndex =
-          _currentSearchIndex <= 0
-              ? results.length - 1
-              : _currentSearchIndex - 1;
+      _currentSearchIndex = _currentSearchIndex <= 0 ? results.length - 1 : _currentSearchIndex - 1;
       _scrollToSearchResult(results[_currentSearchIndex]['index']);
       notifyListeners();
     }
@@ -575,17 +521,11 @@ class ChatViewModel extends ReactiveViewModel {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (scrollController.hasClients) {
           // Calculate approximate position (each message is roughly 100px + date separator)
-          final double targetPosition =
-              (messageIndex + 1) * 100.0; // +1 for date separator
+          final double targetPosition = (messageIndex + 1) * 100.0; // +1 for date separator
           final double maxScroll = scrollController.position.maxScrollExtent;
-          final double scrollPosition =
-              targetPosition > maxScroll ? maxScroll : targetPosition;
+          final double scrollPosition = targetPosition > maxScroll ? maxScroll : targetPosition;
 
-          scrollController.animateTo(
-            scrollPosition,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-          );
+          scrollController.animateTo(scrollPosition, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
         }
       });
     }
@@ -603,11 +543,7 @@ class ChatViewModel extends ReactiveViewModel {
   // because they use the old MessageModel. They need to be updated or removed.
 
   /// Send a file attachment
-  Future<void> sendAttachment({
-    required String fileUrl,
-    required MessageType messageType,
-    required String fileName,
-  }) async {
+  Future<void> sendAttachment({required String fileUrl, required MessageType messageType, required String fileName}) async {
     // This method is broken and needs to be updated for ChatMessageModel
   }
 

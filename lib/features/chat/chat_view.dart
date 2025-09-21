@@ -804,7 +804,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                           ? SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.white)),
+                            child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.black)),
                           )
                           : Image.asset(
                             AppImages.send,
