@@ -128,10 +128,11 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
       ),
       titleSpacing: 0,
       actions: [
-        IconButton(icon: Image.asset(AppImages.search, width: 20, height: 20, color: AppColors.white), onPressed: () => _toggleSearch(model)),
-        IconButton(
-          icon: Icon(Icons.more_vert, color: AppColors.white, size: 20),
-          onPressed: () {
+        InkWell(child: Image.asset(AppImages.search, width: 20, height: 20, color: AppColors.white), onTap: () => _toggleSearch(model)),
+        SizedBox(width: 16),
+        InkWell(
+          child: Icon(Icons.more_vert, color: AppColors.white, size: 20),
+          onTap: () {
             // Handle more options
           },
         ),
@@ -312,21 +313,31 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
 
                                         return Container(
                                           margin: EdgeInsets.only(bottom: AppSizes.h8),
-                                          child: ChatCachedImage(
-                                            imageUrl: attachment.url,
-                                            width: 200,
-                                            height: 200,
-                                            borderRadius: BorderRadius.circular(AppSizes.v8),
-                                            allImageUrls: imageUrls,
-                                            imageIndex: imageUrls.indexOf(attachment.url),
-                                            messageContent: message.content.isNotEmpty ? message.content : null,
+                                          child: Hero(
+                                            tag: 'chat_image_${attachment.url}',
+                                            child: ChatCachedImage(
+                                              imageUrl: attachment.url,
+                                              width: 200,
+                                              height: 200,
+                                              borderRadius: BorderRadius.circular(AppSizes.v8),
+                                              allImageUrls: imageUrls,
+                                              imageIndex: imageUrls.indexOf(attachment.url),
+                                              messageContent: message.content.isNotEmpty ? message.content : null,
+                                            ),
                                           ),
                                         );
                                       } else if (attachment.type == 'video') {
                                         // Video attachment
                                         return Container(
                                           margin: EdgeInsets.only(bottom: AppSizes.h8),
-                                          child: _buildVideoAttachment(attachment.url, message.content.isNotEmpty ? message.content : null),
+                                          child: Hero(
+                                            tag: 'chat_video_${attachment.url}',
+                                            child: _buildVideoAttachment(
+                                              attachment.url,
+                                              message.content.isNotEmpty ? message.content : null,
+                                              message.isSentByMe,
+                                            ),
+                                          ),
                                         );
                                       }
                                       return SizedBox.shrink();
@@ -504,21 +515,24 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSizes.v8)),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(AppSizes.v8),
-                          child:
-                              mediaType == 'video'
-                                  ? _buildVideoThumbnail(model.selectedMediaPaths[index])
-                                  : Image.file(
-                                    File(model.selectedMediaPaths[index]),
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(
-                                        color: AppColors.lightGray.withValues(alpha: 0.3),
-                                        child: Icon(Icons.broken_image, color: AppColors.textGray, size: 30),
-                                      );
-                                    },
-                                  ),
+                        child: Hero(
+                          tag: 'preview_${mediaType}_${model.selectedMediaPaths[index]}',
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(AppSizes.v8),
+                            child:
+                                mediaType == 'video'
+                                    ? _buildVideoThumbnail(model.selectedMediaPaths[index])
+                                    : Image.file(
+                                      File(model.selectedMediaPaths[index]),
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Container(
+                                          color: AppColors.lightGray.withValues(alpha: 0.3),
+                                          child: Icon(Icons.broken_image, color: AppColors.textGray, size: 30),
+                                        );
+                                      },
+                                    ),
+                          ),
                         ),
                       ),
                       // Video play icon overlay
@@ -530,7 +544,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                           bottom: 0,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: AppColors.black.withValues(alpha: 0.3),
+                              color: AppColors.white.withValues(alpha: 0.3),
                               borderRadius: BorderRadius.circular(AppSizes.v8),
                             ),
                             child: Center(child: Icon(Icons.play_circle_filled, color: AppColors.white, size: 30)),
@@ -560,7 +574,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildVideoAttachment(String videoUrl, String? messageContent) {
+  Widget _buildVideoAttachment(String videoUrl, String? messageContent, bool isSentByMe) {
     return GestureDetector(
       onTap: () {
         // Navigate to video player or show video in fullscreen
@@ -581,7 +595,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                 child: Center(
                   child: Container(
                     padding: EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: AppColors.white.withValues(alpha: 0.9), shape: BoxShape.circle),
+                    decoration: BoxDecoration(color: AppColors.white.withValues(alpha: 0.5), shape: BoxShape.circle),
                     child: Icon(Icons.play_arrow, color: AppColors.primary, size: 30),
                   ),
                 ),
@@ -644,7 +658,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container(
             color: AppColors.primarySuperLight.withValues(alpha: 0.1),
-            child: Center(child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary))),
+            child: Center(child: CircularProgressIndicator(strokeWidth: 5, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary))),
           );
         }
 
@@ -712,37 +726,42 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                     PopupMenuItem<String>(
                       value: 'file',
                       height: 34,
-                      child: _buildAttachmentMenuItem(icon: AppImages.file, label: 'File', color: AppColors.purple, onTap: () {}),
+                      child: _buildAttachmentMenuItem(icon: AppImages.file, label: 'File', color: AppColors.violetBlue, onTap: () {}),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'gallery',
                       height: 34,
-                      child: _buildAttachmentMenuItem(icon: AppImages.gallery, label: 'Album', color: AppColors.primary, onTap: () {}),
+                      child: _buildAttachmentMenuItem(icon: AppImages.gallery, label: 'Album', color: AppColors.bluebackground, onTap: () {}),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'camera',
                       height: 34,
-                      child: _buildAttachmentMenuItem(icon: AppImages.camera, label: 'Camera', color: AppColors.success, onTap: () {}),
+                      child: _buildAttachmentMenuItem(icon: AppImages.camera, label: 'Camera', color: AppColors.greenbackground, onTap: () {}),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'location',
                       height: 34,
-                      child: _buildAttachmentMenuItem(icon: AppImages.location, label: 'Location', color: AppColors.error, onTap: () {}),
+                      child: _buildAttachmentMenuItem(icon: AppImages.location, label: 'Location', color: AppColors.redbackground, onTap: () {}),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'video_call',
                       height: 34,
-                      child: _buildAttachmentMenuItem(icon: AppImages.video, label: 'Video Call', color: AppColors.primary, onTap: () {}),
+                      child: _buildAttachmentMenuItem(
+                        icon: AppImages.video,
+                        label: 'Video Call',
+                        color: AppColors.backgroundlightgreen,
+                        onTap: () {},
+                      ),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'voice_call',
                       height: 34,
-                      child: _buildAttachmentMenuItem(icon: AppImages.phone, label: 'Voice Call', color: AppColors.orange, onTap: () {}),
+                      child: _buildAttachmentMenuItem(icon: AppImages.phone, label: 'Voice Call', color: AppColors.colorFFB141, onTap: () {}),
                     ),
                   ],
               child: Container(
@@ -755,11 +774,19 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
             suffixIcon: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // Camera button
+                GestureDetector(
+                  onTap:
+                      () => // Handle camera - add single image to multiple selection
+                          model.pickImageFromCamera(),
+                  child: Image.asset(AppImages.cameraOutlined, width: 20, height: 20, color: AppColors.textGray),
+                ),
+                SizedBox(width: AppSizes.w12),
                 GestureDetector(
                   onTap: () {
                     // Handle voice message
                   },
-                  child: Image.asset(AppImages.microphone, width: 20, height: 20, color: AppColors.primaryDark),
+                  child: Image.asset(AppImages.microphone, width: 20, height: 20, color: AppColors.textGray),
                 ),
                 SizedBox(width: AppSizes.w12),
                 GestureDetector(
@@ -777,7 +804,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                           ? SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.black)),
+                            child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.white)),
                           )
                           : Image.asset(
                             AppImages.send,
