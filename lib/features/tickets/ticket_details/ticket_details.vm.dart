@@ -1,12 +1,19 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stacked/stacked.dart';
 import 'package:manager/core/locator.dart';
 import 'package:manager/core/models/ticket_details_model.dart';
 import 'package:manager/services/ticket.service.dart';
 import 'package:manager/features/chat/chat_view.dart';
 
+import '../../../api_endpoints.dart';
+import '../../../core/utils/app_logger.dart';
+import '../../../services/api.service.dart';
+
 class TicketDetailsViewModel extends BaseViewModel {
   final TicketService _ticketService = locator<TicketService>();
+  final _apiService = locator<ApiService>();
 
   TicketDetailsModel? _ticketDetails;
   String? _errorMessage;
@@ -17,6 +24,9 @@ class TicketDetailsViewModel extends BaseViewModel {
   String? get errorMessage => _errorMessage;
   bool get hasError => _errorMessage != null;
   bool get isLoading => isBusy;
+
+  String rescheduleTime = '';
+  final formKey = GlobalKey<FormState>();
 
   // Initialize the view model with ticket ID
   void init({String? ticketId}) {
@@ -82,6 +92,22 @@ class TicketDetailsViewModel extends BaseViewModel {
             ),
       ),
     );
+  }
+
+  // Reschedule functionality
+  Future<void> rescheduleTicket(BuildContext context) async {
+      final body = {'reschedule_time': rescheduleTime};
+
+      final response = await _apiService.put(url: "${ApiEndpoints.updateTicket}/${_ticketId ?? ""}", data: body);
+
+      if (response.statusCode == 200) {
+        fetchTicketDetails();
+        AppLogger.info('Site visit ticket created successfully: ${response.data['ticket']['_id']}');
+        Fluttertoast.showToast(msg: response.data["message"] ?? 'Reschedule successfully!', backgroundColor: Colors.green);
+      } else {
+        AppLogger.error('Failed to Reschedule');
+        Fluttertoast.showToast(msg: 'Failed to Reschedule', backgroundColor: Colors.green);
+      }
   }
 
   // Get formatted date string

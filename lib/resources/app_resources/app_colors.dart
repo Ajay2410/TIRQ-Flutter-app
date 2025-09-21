@@ -7,6 +7,10 @@ abstract class AppColors {
   // Basic Colors
   static const Color white = Colors.white;
   static const Color black = Colors.black;
+  static const Color red = Colors.red;
+  static const Color grey = Colors.grey;
+  static const Color orange = Colors.orange;
+  static const Color blue = Colors.blue;
   static const Color transparent = Colors.transparent;
 
   // Primary Theme Colors
@@ -102,7 +106,7 @@ abstract class AppColors {
   static const Color warningLightRed = Color(0xFFFCE8E6);
 
   // Additional Colors
-  static const Color orange = Color(0xFFFF9800);
+  static const Color orangeColor = Color(0xFFFF9800);
   static const Color colorFF6868 = Color(0xFFFF6868);
   static const Color colorF2A22E = Color(0xFFF2A22E);
   static const Color color41C293 = Color(0xFF41C293);

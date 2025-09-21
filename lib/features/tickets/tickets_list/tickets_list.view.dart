@@ -454,6 +454,8 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
       onTap: () {
 
 
+
+
         //TODO:  don't remove
         // if (ticket.paymentStatus == 'paid') {
           model.navigateToTicketDetails(ticketId: ticket.id ?? '');

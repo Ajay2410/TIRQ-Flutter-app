@@ -130,6 +130,7 @@ class CreateTicketDialog extends StatelessWidget {
                             onChanged: (value){
                               print("selected organization ===> $value");
                               model.selectedOrganizationId = value;
+                              model.formKey.currentState?.validate();
                               model.notifyListeners();
                             },
                             validator: (value) {
@@ -153,6 +154,7 @@ class CreateTicketDialog extends StatelessWidget {
                             }).toList(),
                             onChanged: (value){
                               print("selected machine ===> $value");
+                              model.formKey.currentState?.validate();
                               model.selectedMachineId = value;
                             },
                             validator: (value) => value == null ? LanguageService.get('please_select_machine') : null,

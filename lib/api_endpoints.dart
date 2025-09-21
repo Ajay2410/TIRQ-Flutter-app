@@ -77,6 +77,7 @@ abstract class ApiEndpoints {
   static const String getMachineOverview = 'machinesupplier/getMachineOverview';
   static const String getMachineById = 'machines/getById';
   static const String createTicket = 'ticket/create';
+  static const String updateTicket = 'ticket/update';
   static const String getAllTickets = 'ticket/getAll';
   static const String getTicketsByStatus = 'ticket/getticket';
   static const String getTicketSummary = 'ticket/getTicketSummary';

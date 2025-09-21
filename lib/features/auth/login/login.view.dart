@@ -29,36 +29,38 @@ class LoginView extends StatelessWidget {
           backgroundColor: AppColors.white,
           body: Container(
             color: AppColors.white,
-            child: SingleChildScrollView(
-              physics: ClampingScrollPhysics(),
-              child: IntrinsicHeight(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSizes.w20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      if (model.showOtpLogin || model.showForgotPassword || model.showOtpField)
-                        _buildBackButton(context, model)
-                      else
-                        SizedBox(height: AppSizes.h45),
-                      _buildHeaderSection(context, model),
-                      SizedBox(height: AppSizes.h5),
-                      _buildMainContent(context, model),
-                      // if (!model.showForgotPassword &&
-                      //     !model.showOtpLogin &&
-                      //     (model.loginMode == LoginMode.email || model.loginMode == LoginMode.phone) &&
-                      //     !model.showOtpField)
-                      //   _buildSocialLoginSection(context, model),
+            child: SafeArea(
+              child: SingleChildScrollView(
+                physics: ClampingScrollPhysics(),
+                child: IntrinsicHeight(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: AppSizes.w20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        if (model.showOtpLogin || model.showForgotPassword || model.showOtpField)
+                          _buildBackButton(context, model)
+                        else
+                          SizedBox(height: AppSizes.h45),
+                        _buildHeaderSection(context, model),
+                        SizedBox(height: AppSizes.h5),
+                        _buildMainContent(context, model),
+                        // if (!model.showForgotPassword &&
+                        //     !model.showOtpLogin &&
+                        //     (model.loginMode == LoginMode.email || model.loginMode == LoginMode.phone) &&
+                        //     !model.showOtpField)
+                        //   _buildSocialLoginSection(context, model),
 
-                      if (!model.showForgotPassword &&
-                          !model.showOtpLogin &&
-                          (model.loginMode == LoginMode.email || model.loginMode == LoginMode.phone) &&
-                          !model.showOtpField) ...[
-                        _buildSignUpPrompt(context, model),
-                        _buildTermsAndConditionsCheckbox(context),
-                        SizedBox(height: AppSizes.h20),
+                        if (!model.showForgotPassword &&
+                            !model.showOtpLogin &&
+                            (model.loginMode == LoginMode.email || model.loginMode == LoginMode.phone) &&
+                            !model.showOtpField) ...[
+                          _buildSignUpPrompt(context, model),
+                          _buildTermsAndConditionsCheckbox(context),
+                          SizedBox(height: AppSizes.h20),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ),

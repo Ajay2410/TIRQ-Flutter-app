@@ -844,7 +844,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                       child: _buildAttachmentMenuItem(
                         icon: AppImages.phone,
                         label: 'Voice Call',
-                        color: AppColors.orange,
+                        color: AppColors.orangeColor,
                         onTap: () {},
                       ),
                     ),
