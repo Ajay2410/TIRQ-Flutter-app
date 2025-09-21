@@ -21,7 +21,7 @@ abstract class ApiEndpoints {
   static const String resetPassword = 'auth/reset-password';
   static const String googleLogin = 'auth/google-login';
   static const String facebookLogin = 'auth/facebook-login';
-  // static const String logout = 'auth/logout';
+  static const String logout = 'auth/logout';
 
   static const String addPartner = 'org/add-partner';
   static const String addNewPartner = 'org/add-new';

@@ -30,6 +30,13 @@
             {
               "client_id": "90978168723-s60ndf5u06jhgu22lksd2uua0ipoinoc.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "90978168723-rbcb3lon7cq0r79alsuuasiemub5b4tg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.triqinnovations.app"
+              }
             }
           ]
         }
@@ -49,6 +56,22 @@
           "android_info": {
             "package_name": "com.triqinnovations.app",
             "certificate_hash": "0cb500fc600161ccdf1137fe6c32b27cfd6db8b5"
+          }
+        },
+        {
+          "client_id": "90978168723-dfv3e36ionblvcp9kps1qahp9lrihlag.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.triqinnovations.app",
+            "certificate_hash": "ea439cbf51c735a9760a9433b2c1109eb68ee313"
+          }
+        },
+        {
+          "client_id": "90978168723-tkhkas6j38ersnfpp0gp4hq073k4a010.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.triqinnovations.app",
+            "certificate_hash": "0e767d3e8603db9ec0f65b9b2a9292fc6b5cca0e"
           }
         },
         {
@@ -75,6 +98,13 @@
             {
               "client_id": "90978168723-s60ndf5u06jhgu22lksd2uua0ipoinoc.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "90978168723-rbcb3lon7cq0r79alsuuasiemub5b4tg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.triqinnovations.app"
+              }
             }
           ]
         }

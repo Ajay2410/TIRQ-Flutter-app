@@ -1,4 +1,5 @@
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:flutter/material.dart';
 
 class SocketService {
   static final SocketService _instance = SocketService._internal();
@@ -10,22 +11,41 @@ class SocketService {
   IO.Socket? _socket;
 
   /// Initialize socket connection
-  void initializeSocket({required String serverUrl, Map<String, dynamic>? queryParams, Map<String, dynamic>? extraHeaders}) {
+  void initializeSocket({
+    required String serverUrl,
+    Map<String, dynamic>? queryParams,
+    Map<String, dynamic>? extraHeaders,
+    VoidCallback? onConnected,
+    VoidCallback? onDisconnected,
+  }) {
     print("🔌 Initializing socket to: $serverUrl");
     print("📋 Query params: $queryParams");
     print("🔑 Headers: $extraHeaders");
 
     _socket = IO.io(
       serverUrl,
-      IO.OptionBuilder().setTransports(['websocket']).setQuery(queryParams ?? {}).setExtraHeaders(extraHeaders ?? {}).enableAutoConnect().build(),
+      IO.OptionBuilder()
+          .setTransports(['websocket'])
+          .setQuery(queryParams ?? {})
+          .setExtraHeaders(extraHeaders ?? {})
+          .enableAutoConnect()
+          .build(),
     );
 
     _socket!.onConnect((_) {
       print("✅ Socket connected with ID: ${_socket!.id}");
+      if (onConnected != null) {
+        print("🔄 Calling onConnected callback...");
+        onConnected();
+      }
     });
 
     _socket!.onDisconnect((_) {
       print("🔌 Socket disconnected");
+      if (onDisconnected != null) {
+        print("🔄 Calling onDisconnected callback...");
+        onDisconnected();
+      }
     });
 
     _socket!.onError((err) {
@@ -52,11 +72,16 @@ class SocketService {
   }
 
   /// Send message with optional attachments
-  void sendMessage({required String roomId, required String content, List<Map<String, dynamic>> attachments = const []}) {
+  void sendMessage({
+    required String roomId,
+    required String content,
+    List<Map<String, dynamic>> attachments = const [],
+  }) {
     final payload = {
       "roomId": roomId,
       "content": content,
-      "attachments": attachments, // each: {"type": "image|video|document", "url": "...", "name": "..."}
+      "attachments":
+          attachments, // each: {"type": "image|video|document", "url": "...", "name": "..."}
     };
 
     print("📤 Sending message with payload: $payload");

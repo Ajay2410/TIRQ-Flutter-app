@@ -1,8 +1,5 @@
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hive/hive.dart';
 import 'package:manager/core/models/employee.dart';
 import 'package:manager/core/models/organization.dart';
-import 'package:manager/core/utils/app_logger.dart';
 import 'package:manager/features/profile/create_or_edit_org/create_or_edit_org.view.dart';
 import 'package:manager/routes/routes.dart';
 import 'package:stacked/stacked.dart';
@@ -11,7 +8,6 @@ import 'package:stacked_services/stacked_services.dart';
 import '../../../core/locator.dart';
 import '../../../core/models/hive/user/user.dart';
 import '../../../core/storage/storage.dart';
-import '../../../resources/app_resources/app_resources.dart';
 import '../../../services/account.service.dart';
 import '../../../services/auth.service.dart';
 import '../../../services/employee_profile.service.dart';
@@ -100,7 +96,10 @@ class ProfileViewModel extends ReactiveViewModel {
   }
 
   void onBackPress() async {
-    await _navigationService.clearStackAndShow(Routes.stage, arguments: StageViewAttributes(selectedBottomNavIndex: 0));
+    await _navigationService.clearStackAndShow(
+      Routes.stage,
+      arguments: StageViewAttributes(selectedBottomNavIndex: 0),
+    );
   }
 
   void navigateToEmployeeProfileView() async {
@@ -128,15 +127,6 @@ class ProfileViewModel extends ReactiveViewModel {
 
     String? fcmToken = getUser().fcmToken;
     _authService.logout(fcmToken);
-
-    try {
-      await Hive.box(AppStrings.triqBox).delete(AppStrings.triqUser);
-    } catch (e) {
-      AppLogger.error('Error clearing user data: $e');
-    }
-
-    await _navigationService.clearStackAndShow(Routes.login);
-    Fluttertoast.showToast(msg: 'Logged out successfully!');
   }
 
   void navigateToGeneralSetting() async {

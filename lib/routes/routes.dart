@@ -162,6 +162,7 @@ abstract class Routes {
   static const String approval = '/approval';
 
   static const String chat = '/chat';
+  static const String chatView = '/chatView';
   static const String chatsList = '/chatsList';
   static const String permissions = '/permissions';
   static const String createGroupChat = '/createGroupChat';

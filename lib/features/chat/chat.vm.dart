@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:manager/core/storage/storage.dart';
 import 'package:manager/core/utils/app_logger.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../core/locator.dart';
 import '../../core/models/hive/user/user.dart';
 import '../../resources/app_resources/app_resources.dart';
@@ -46,9 +45,10 @@ class ChatViewModel extends ReactiveViewModel {
   final TextEditingController _searchController = TextEditingController();
   int _currentSearchIndex = -1;
 
-  // Image preview variables
-  List<String> _selectedImagePaths = [];
-  List<String> _selectedImageNames = [];
+  // Media preview variables (images and videos)
+  List<String> _selectedMediaPaths = [];
+  List<String> _selectedMediaNames = [];
+  List<String> _selectedMediaTypes = []; // 'image' or 'video'
 
   // Pagination variables
   bool _isLoading = false;
@@ -84,11 +84,13 @@ class ChatViewModel extends ReactiveViewModel {
 
   int get currentSearchIndex => _currentSearchIndex;
 
-  List<String> get selectedImagePaths => _selectedImagePaths;
+  List<String> get selectedMediaPaths => _selectedMediaPaths;
 
-  List<String> get selectedImageNames => _selectedImageNames;
+  List<String> get selectedMediaNames => _selectedMediaNames;
 
-  bool get hasImagePreview => _selectedImagePaths.isNotEmpty;
+  List<String> get selectedMediaTypes => _selectedMediaTypes;
+
+  bool get hasImagePreview => _selectedMediaPaths.isNotEmpty;
 
   User userData = getUser();
   String roomId = "default_room";
@@ -141,19 +143,24 @@ class ChatViewModel extends ReactiveViewModel {
       serverUrl: 'https://triq.onrender.com/',
       queryParams: {'userId': userData.id ?? 'default_user', 'roomId': roomId},
       extraHeaders: {'Authorization': "${userData.token}"},
+      onDisconnected: () {
+        _socketService.off('newMessage');
+        _socketService.off('joinRoom');
+      },
+      onConnected: () {
+        // Register user
+        print("👤 Registering user: ${userData.id ?? 'default_user'}");
+        _socketService.registerUser(userData.id ?? 'default_user');
+
+        // Join room
+        print("🏠 Joining room: $roomId");
+        _socketService.joinRoom(roomId);
+
+        // Listen for incoming messages
+        print("👂 Setting up message listener...");
+        _socketService.onNewMessage(_handleNewMessage);
+      },
     );
-
-    // Register user
-    print("👤 Registering user: ${userData.id ?? 'default_user'}");
-    _socketService.registerUser(userData.id ?? 'default_user');
-
-    // Join room
-    print("🏠 Joining room: $roomId");
-    _socketService.joinRoom(roomId);
-
-    // Listen for incoming messages
-    print("👂 Setting up message listener...");
-    _socketService.onNewMessage(_handleNewMessage);
   }
 
   /// Fetch all messages
@@ -271,12 +278,17 @@ class ChatViewModel extends ReactiveViewModel {
       final messageText = messageController.text.trim();
       messageController.clear();
 
-      // If there are images, send them with text
-      if (hasImagePreview && _selectedImagePaths.isNotEmpty) {
-        await _sendImagesWithText(_selectedImagePaths, messageText);
-        // Clear image previews after sending
-        _selectedImagePaths.clear();
-        _selectedImageNames.clear();
+      // If there are media files, send them with text
+      if (hasImagePreview && _selectedMediaPaths.isNotEmpty) {
+        await _sendMediaWithText(
+          _selectedMediaPaths,
+          _selectedMediaTypes,
+          messageText,
+        );
+        // Clear media previews after sending
+        _selectedMediaPaths.clear();
+        _selectedMediaNames.clear();
+        _selectedMediaTypes.clear();
       } else {
         // Send text-only message
         _socketService.sendMessage(roomId: roomId, content: messageText);
@@ -291,24 +303,39 @@ class ChatViewModel extends ReactiveViewModel {
     }
   }
 
-  /// Pick multiple images from gallery
-  Future<void> pickMultipleImagesFromGallery() async {
+  /// Pick multiple media (images and videos) from album
+  Future<void> pickMultipleMediaFromAlbum() async {
     try {
-      final List<XFile> images = await _imagePicker.pickMultiImage(
+      final List<XFile> media = await _imagePicker.pickMultipleMedia(
         imageQuality: 80,
         maxWidth: 1920,
         maxHeight: 1920,
       );
 
-      if (images.isNotEmpty) {
-        _selectedImagePaths = images.map((image) => image.path).toList();
-        _selectedImageNames = images.map((image) => image.name).toList();
+      if (media.isNotEmpty) {
+        _selectedMediaPaths = media.map((file) => file.path).toList();
+        _selectedMediaNames = media.map((file) => file.name).toList();
+        _selectedMediaTypes =
+            media.map((file) {
+              // Determine if it's a video or image based on file extension
+              final extension = file.name.toLowerCase().split('.').last;
+              return [
+                    'mp4',
+                    'mov',
+                    'avi',
+                    'mkv',
+                    'webm',
+                    '3gp',
+                  ].contains(extension)
+                  ? 'video'
+                  : 'image';
+            }).toList();
         notifyListeners();
       }
     } catch (e) {
-      AppLogger.error('Error picking multiple images: $e');
+      AppLogger.error('Error picking multiple media: $e');
       Fluttertoast.showToast(
-        msg: 'Failed to pick images',
+        msg: 'Failed to pick media',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: AppColors.error,
@@ -328,8 +355,9 @@ class ChatViewModel extends ReactiveViewModel {
       );
 
       if (image != null) {
-        _selectedImagePaths.add(image.path);
-        _selectedImageNames.add(image.name);
+        _selectedMediaPaths.add(image.path);
+        _selectedMediaNames.add(image.name);
+        _selectedMediaTypes.add('image');
         notifyListeners();
       }
     } catch (e) {
@@ -344,36 +372,42 @@ class ChatViewModel extends ReactiveViewModel {
     }
   }
 
-  /// Remove multiple image previews
+  /// Remove multiple media previews
   void removeMultipleImagePreviews() {
-    _selectedImagePaths.clear();
-    _selectedImageNames.clear();
+    _selectedMediaPaths.clear();
+    _selectedMediaNames.clear();
+    _selectedMediaTypes.clear();
     notifyListeners();
   }
 
-  /// Remove specific image from multiple selection
+  /// Remove specific media from multiple selection
   void removeImageFromMultiple(int index) {
-    if (index >= 0 && index < _selectedImagePaths.length) {
-      _selectedImagePaths.removeAt(index);
-      _selectedImageNames.removeAt(index);
+    if (index >= 0 && index < _selectedMediaPaths.length) {
+      _selectedMediaPaths.removeAt(index);
+      _selectedMediaNames.removeAt(index);
+      _selectedMediaTypes.removeAt(index);
       notifyListeners();
     }
   }
 
-  /// Send images with optional text
-  Future<void> _sendImagesWithText(List<String> imagePaths, String text) async {
+  /// Send media (images and videos) with optional text
+  Future<void> _sendMediaWithText(
+    List<String> mediaPaths,
+    List<String> mediaTypes,
+    String text,
+  ) async {
     try {
       _isUploadingImage = true;
       notifyListeners();
 
-      // Upload images to server
-      final result = await _chatService.uploadChatFiles(imagePaths);
+      // Upload media files to server
+      final result = await _chatService.uploadChatFiles(mediaPaths);
 
       result.fold(
         (failure) {
-          AppLogger.error('Failed to upload images: ${failure.message}');
+          AppLogger.error('Failed to upload media: ${failure.message}');
           Fluttertoast.showToast(
-            msg: 'Failed to upload images: ${failure.message}',
+            msg: 'Failed to upload media: ${failure.message}',
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: AppColors.error,
@@ -385,32 +419,37 @@ class ChatViewModel extends ReactiveViewModel {
           final List<dynamic> files = response['files'] ?? [];
 
           if (files.isNotEmpty) {
-            // Convert to attachment format
-            final List<Map<String, dynamic>> attachments =
-                files.map((file) {
-                  return {
-                    'url': file['url'] ?? '',
-                    'name': file['name'] ?? 'image.jpg',
-                    'type': file['type'] ?? 'image',
-                  };
-                }).toList();
-            // Send message with image attachments and text via socket
+            // Convert to attachment format with proper types
+            final List<Map<String, dynamic>> attachments = [];
+            for (int i = 0; i < files.length; i++) {
+              final file = files[i];
+              final mediaType = i < mediaTypes.length ? mediaTypes[i] : 'image';
+              attachments.add({
+                'url': file['url'] ?? '',
+                'name':
+                    file['name'] ??
+                    (mediaType == 'video' ? 'video.mp4' : 'image.jpg'),
+                'type': mediaType,
+              });
+            }
+
+            // Send message with media attachments and text via socket
             _socketService.sendMessage(
               roomId: roomId,
               content: text, // Include text content
               attachments: attachments,
             );
 
-            AppLogger.info('Images with text message sent successfully');
+            AppLogger.info('Media with text message sent successfully');
           } else {
             throw Exception('Invalid response from server');
           }
         },
       );
     } catch (e) {
-      AppLogger.error('Error sending images with text: $e');
+      AppLogger.error('Error sending media with text: $e');
       Fluttertoast.showToast(
-        msg: 'Failed to send images',
+        msg: 'Failed to send media',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: AppColors.error,
