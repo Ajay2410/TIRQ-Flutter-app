@@ -107,7 +107,7 @@ abstract class AppThemes {
       showUnselectedLabels: true,
       type: BottomNavigationBarType.fixed,
     ),
-    dialogTheme: DialogTheme(
+    dialogTheme: DialogThemeData(
       backgroundColor: AppColors.white,
       surfaceTintColor: AppColors.white,
       elevation: 8,

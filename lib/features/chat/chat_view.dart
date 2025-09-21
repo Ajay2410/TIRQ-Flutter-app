@@ -5,10 +5,13 @@ import 'package:manager/widgets/common_app_bar.dart';
 import 'package:manager/widgets/common_text_field.dart';
 import 'package:manager/widgets/common/common_cached_image.dart';
 import 'package:manager/features/chat/chat.vm.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import '../../resources/app_resources/app_resources.dart';
 import '../../resources/enums/chat_enum.dart';
+import '../../routes/routes.dart';
 import 'model/chat_message_model.dart';
 
 class ChatView extends StatefulWidget {
@@ -17,13 +20,7 @@ class ChatView extends StatefulWidget {
   final String contactInitials;
   final String? roomId;
 
-  const ChatView({
-    super.key,
-    required this.contactName,
-    required this.contactNumber,
-    required this.contactInitials,
-    this.roomId,
-  });
+  const ChatView({super.key, required this.contactName, required this.contactNumber, required this.contactInitials, this.roomId});
 
   @override
   State<ChatView> createState() => _ChatViewState();
@@ -38,16 +35,11 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
+    _animationController = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0.0, -0.5),
       end: const Offset(0.0, 0.0),
-    ).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
   }
 
   @override
@@ -81,8 +73,8 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
         // Handle file selection
         break;
       case 'gallery':
-        // Handle multiple gallery selection
-        model.pickMultipleImagesFromGallery();
+        // Handle multiple album selection (images and videos)
+        model.pickMultipleMediaFromAlbum();
         break;
       case 'camera':
         // Handle camera - add single image to multiple selection
@@ -103,32 +95,15 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
   PreferredSizeWidget _buildAppBar(BuildContext context, ChatViewModel model) {
     return GradientAppBar(
       leading: IconButton(
-        icon: Image.asset(
-          AppImages.back,
-          width: 24,
-          height: 24,
-          color: AppColors.white,
-        ),
+        icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
         onPressed: () => Navigator.of(context).pop(),
       ),
       titleWidget: Row(
         children: [
           Container(
             padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppColors.darkGray.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                widget.contactInitials,
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-            ),
+            decoration: BoxDecoration(color: AppColors.darkGray.withValues(alpha: 0.2), shape: BoxShape.circle),
+            child: Center(child: Text(widget.contactInitials, style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold, fontSize: 16))),
           ),
           SizedBox(width: AppSizes.w12),
           Column(
@@ -136,47 +111,24 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
             children: [
               Row(
                 children: [
-                  Text(
-                    widget.contactName,
-                    style: TextStyle(
-                      color: AppColors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  Text(widget.contactName, style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.w600)),
                   SizedBox(width: AppSizes.w8),
                   Container(
                     width: 20,
                     height: 15,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(2),
-                      child: Image.asset(AppImages.flag, fit: BoxFit.cover),
-                    ),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(2)),
+                    child: ClipRRect(borderRadius: BorderRadius.circular(2), child: Image.asset(AppImages.flag, fit: BoxFit.cover)),
                   ),
                 ],
               ),
-              Text(
-                widget.contactNumber,
-                style: TextStyle(color: AppColors.white, fontSize: 12),
-              ),
+              Text(widget.contactNumber, style: TextStyle(color: AppColors.white, fontSize: 12)),
             ],
           ),
         ],
       ),
       titleSpacing: 0,
       actions: [
-        IconButton(
-          icon: Image.asset(
-            AppImages.search,
-            width: 20,
-            height: 20,
-            color: AppColors.white,
-          ),
-          onPressed: () => _toggleSearch(model),
-        ),
+        IconButton(icon: Image.asset(AppImages.search, width: 20, height: 20, color: AppColors.white), onPressed: () => _toggleSearch(model)),
         IconButton(
           icon: Icon(Icons.more_vert, color: AppColors.white, size: 20),
           onPressed: () {
@@ -189,19 +141,10 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
 
   Widget _buildSearchBar(ChatViewModel model) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.w20,
-        vertical: AppSizes.h16,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: AppSizes.w20, vertical: AppSizes.h16),
       decoration: BoxDecoration(
         color: AppColors.white,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.05),
-            offset: const Offset(0, 2),
-            blurRadius: 8,
-          ),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), offset: const Offset(0, 2), blurRadius: 8)],
       ),
       child: TextField(
         controller: model.searchController,
@@ -215,14 +158,8 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
           prefixIcon: Icon(Icons.search, color: AppColors.primary),
           fillColor: AppColors.lightGray.withValues(alpha: 0.3),
           filled: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppSizes.v12),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: EdgeInsets.symmetric(
-            vertical: AppSizes.h12,
-            horizontal: AppSizes.w16,
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: BorderSide.none),
+          contentPadding: EdgeInsets.symmetric(vertical: AppSizes.h12, horizontal: AppSizes.w16),
           suffixIcon:
               model.searchController.text.isNotEmpty
                   ? IconButton(
@@ -238,11 +175,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildHighlightedText(
-    String text,
-    String searchQuery,
-    bool isSentByMe,
-  ) {
+  Widget _buildHighlightedText(String text, String searchQuery, bool isSentByMe) {
     if (searchQuery.isEmpty) {
       return Text(
         text,
@@ -273,22 +206,14 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
 
     final baseColor = isSentByMe ? AppColors.white : AppColors.textPrimary;
     final highlightColor = isSentByMe ? AppColors.white : AppColors.primary;
-    final highlightBackground =
-        isSentByMe
-            ? AppColors.white.withValues(alpha: 0.3)
-            : AppColors.primary.withValues(alpha: 0.2);
+    final highlightBackground = isSentByMe ? AppColors.white.withValues(alpha: 0.3) : AppColors.primary.withValues(alpha: 0.2);
 
     return RichText(
       text: TextSpan(
         children: [
           TextSpan(
             text: text.substring(0, index),
-            style: TextStyle(
-              color: baseColor,
-              fontSize: AppSizes.f14,
-              height: 1.4,
-              fontWeight: FontWeight.w400,
-            ),
+            style: TextStyle(color: baseColor, fontSize: AppSizes.f14, height: 1.4, fontWeight: FontWeight.w400),
           ),
           TextSpan(
             text: text.substring(index, index + searchQuery.length),
@@ -302,12 +227,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
           ),
           TextSpan(
             text: text.substring(index + searchQuery.length),
-            style: TextStyle(
-              color: baseColor,
-              fontSize: AppSizes.f14,
-              height: 1.4,
-              fontWeight: FontWeight.w400,
-            ),
+            style: TextStyle(color: baseColor, fontSize: AppSizes.f14, height: 1.4, fontWeight: FontWeight.w400),
           ),
         ],
       ),
@@ -324,20 +244,10 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
             SizedBox(
               width: 16,
               height: 16,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-              ),
+              child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary)),
             ),
             SizedBox(width: AppSizes.w8),
-            Text(
-              'Loading more messages...',
-              style: TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            Text('Loading more messages...', style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w500)),
           ],
         ),
       ),
@@ -354,24 +264,15 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
           child: Opacity(
             opacity: value,
             child: Container(
-              margin: EdgeInsets.symmetric(
-                vertical: AppSizes.h2,
-                horizontal: AppSizes.w16,
-              ),
+              margin: EdgeInsets.symmetric(vertical: AppSizes.h2, horizontal: AppSizes.w16),
               child: Row(
-                mainAxisAlignment:
-                    message.isSentByMe
-                        ? MainAxisAlignment.end
-                        : MainAxisAlignment.start,
+                mainAxisAlignment: message.isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   // Message content
                   Flexible(
                     child: Column(
-                      crossAxisAlignment:
-                          message.isSentByMe
-                              ? CrossAxisAlignment.end
-                              : CrossAxisAlignment.start,
+                      crossAxisAlignment: message.isSentByMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                       children: [
                         // Message bubble
                         Material(
@@ -383,107 +284,63 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(AppSizes.v18),
                               topRight: Radius.circular(AppSizes.v18),
-                              bottomLeft:
-                                  message.isSentByMe
-                                      ? Radius.circular(AppSizes.v18)
-                                      : Radius.circular(0),
-                              bottomRight:
-                                  message.isSentByMe
-                                      ? Radius.circular(0)
-                                      : Radius.circular(AppSizes.v18),
+                              bottomLeft: message.isSentByMe ? Radius.circular(AppSizes.v18) : Radius.circular(0),
+                              bottomRight: message.isSentByMe ? Radius.circular(0) : Radius.circular(AppSizes.v18),
                             ),
                             child: Container(
-                              constraints: BoxConstraints(
-                                maxWidth:
-                                    MediaQuery.of(context).size.width * 0.75,
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: AppSizes.w16,
-                                vertical: AppSizes.h12,
-                              ),
+                              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+                              padding: EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h12),
                               decoration: BoxDecoration(
-                                color:
-                                    message.isSentByMe
-                                        ? AppColors.primaryDark
-                                        : AppColors.primaryLight.withValues(
-                                          alpha: 0.1,
-                                        ),
+                                color: message.isSentByMe ? AppColors.primaryDark : AppColors.primaryLight.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(AppSizes.v18),
                                   topRight: Radius.circular(AppSizes.v18),
-                                  bottomLeft:
-                                      message.isSentByMe
-                                          ? Radius.circular(AppSizes.v18)
-                                          : Radius.circular(0),
-                                  bottomRight:
-                                      message.isSentByMe
-                                          ? Radius.circular(0)
-                                          : Radius.circular(AppSizes.v18),
+                                  bottomLeft: message.isSentByMe ? Radius.circular(AppSizes.v18) : Radius.circular(0),
+                                  bottomRight: message.isSentByMe ? Radius.circular(0) : Radius.circular(AppSizes.v18),
                                 ),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // Image attachments
+                                  // Media attachments (images and videos)
                                   if (message.attachments.isNotEmpty) ...[
-                                    ...message.attachments.asMap().entries.map((
-                                      entry,
-                                    ) {
+                                    ...message.attachments.asMap().entries.map((entry) {
                                       final attachment = entry.value;
-                                      if (attachment.type == 'image' ||
-                                          attachment.type == 'document') {
+                                      if (attachment.type == 'image') {
                                         // Get all image URLs from this message
-                                        final imageUrls =
-                                            message.attachments
-                                                .where(
-                                                  (att) =>
-                                                      att.type == 'image' ||
-                                                      att.type == 'document',
-                                                )
-                                                .map((att) => att.url)
-                                                .toList();
+                                        final imageUrls = message.attachments.where((att) => att.type == 'image').map((att) => att.url).toList();
 
                                         return Container(
-                                          margin: EdgeInsets.only(
-                                            bottom: AppSizes.h8,
-                                          ),
+                                          margin: EdgeInsets.only(bottom: AppSizes.h8),
                                           child: ChatCachedImage(
                                             imageUrl: attachment.url,
                                             width: 200,
                                             height: 200,
-                                            borderRadius: BorderRadius.circular(
-                                              AppSizes.v8,
-                                            ),
+                                            borderRadius: BorderRadius.circular(AppSizes.v8),
                                             allImageUrls: imageUrls,
-                                            imageIndex: imageUrls.indexOf(
-                                              attachment.url,
-                                            ),
-                                            messageContent:
-                                                message.content.isNotEmpty
-                                                    ? message.content
-                                                    : null,
+                                            imageIndex: imageUrls.indexOf(attachment.url),
+                                            messageContent: message.content.isNotEmpty ? message.content : null,
                                           ),
+                                        );
+                                      } else if (attachment.type == 'video') {
+                                        // Video attachment
+                                        return Container(
+                                          margin: EdgeInsets.only(bottom: AppSizes.h8),
+                                          child: _buildVideoAttachment(attachment.url, message.content.isNotEmpty ? message.content : null),
                                         );
                                       }
                                       return SizedBox.shrink();
-                                    }).toList(),
+                                    }),
                                   ],
 
                                   // Message text (only show if not empty)
                                   if (message.content.isNotEmpty) ...[
                                     model.isSearchMode
-                                        ? _buildHighlightedText(
-                                          message.content,
-                                          model.searchQuery,
-                                          message.isSentByMe,
-                                        )
+                                        ? _buildHighlightedText(message.content, model.searchQuery, message.isSentByMe)
                                         : Text(
                                           message.content,
                                           style: TextStyle(
-                                            color:
-                                                message.isSentByMe
-                                                    ? AppColors.white
-                                                    : AppColors.textPrimary,
+                                            color: message.isSentByMe ? AppColors.white : AppColors.textPrimary,
                                             fontSize: AppSizes.f14,
                                             height: 1.4,
                                             fontWeight: FontWeight.w400,
@@ -538,23 +395,13 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                           margin: EdgeInsets.only(top: AppSizes.h4),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment:
-                                message.isSentByMe
-                                    ? MainAxisAlignment.end
-                                    : MainAxisAlignment.start,
+                            mainAxisAlignment: message.isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
                             children: [
                               Text(
                                 "${_formatTimestamp(message.createdAt)} •",
-                                style: TextStyle(
-                                  color: AppColors.textGray,
-                                  fontSize: AppSizes.f10,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: TextStyle(color: AppColors.textGray, fontSize: AppSizes.f10, fontWeight: FontWeight.w500),
                               ),
-                              if (message.isSentByMe) ...[
-                                SizedBox(width: AppSizes.w6),
-                                _buildMessageStatus(message),
-                              ],
+                              if (message.isSentByMe) ...[SizedBox(width: AppSizes.w6), _buildMessageStatus(message)],
                             ],
                           ),
                         ),
@@ -589,14 +436,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
         break;
     }
 
-    return Text(
-      message.status.name.toUpperCase(),
-      style: TextStyle(
-        color: statusColor,
-        fontSize: AppSizes.f10,
-        fontWeight: FontWeight.w500,
-      ),
-    );
+    return Text(message.status.name.toUpperCase(), style: TextStyle(color: statusColor, fontSize: AppSizes.f10, fontWeight: FontWeight.w500));
   }
 
   String _formatTimestamp(DateTime timestamp) {
@@ -624,10 +464,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
   Widget _buildMultipleImagePreview(ChatViewModel model) {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.symmetric(
-        horizontal: AppSizes.w16,
-        vertical: AppSizes.h8,
-      ),
+      margin: EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h8),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -637,41 +474,28 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${model.selectedImagePaths.length} image${model.selectedImagePaths.length > 1 ? 's' : ''} selected',
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
+                '${model.selectedMediaPaths.length} media file${model.selectedMediaPaths.length > 1 ? 's' : ''} selected',
+                style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w600),
               ),
               GestureDetector(
                 onTap: () => model.removeMultipleImagePreviews(),
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppColors.error.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    'Clear All',
-                    style: TextStyle(
-                      color: AppColors.error,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
+                  child: Text('Clear All', style: TextStyle(color: AppColors.error, fontSize: 12, fontWeight: FontWeight.w500)),
                 ),
               ),
             ],
           ),
           SizedBox(height: AppSizes.h8),
-          // Images grid
+          // Media grid
           SizedBox(
             height: 80,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: model.selectedImagePaths.length,
+              itemCount: model.selectedMediaPaths.length,
               itemBuilder: (context, index) {
+                final mediaType = index < model.selectedMediaTypes.length ? model.selectedMediaTypes[index] : 'image';
                 return Container(
                   margin: EdgeInsets.only(right: AppSizes.w8),
                   child: Stack(
@@ -679,29 +503,39 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                       Container(
                         width: 80,
                         height: 80,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(AppSizes.v8),
-                        ),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSizes.v8)),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(AppSizes.v8),
-                          child: Image.file(
-                            File(model.selectedImagePaths[index]),
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                color: AppColors.lightGray.withValues(
-                                  alpha: 0.3,
-                                ),
-                                child: Icon(
-                                  Icons.broken_image,
-                                  color: AppColors.textGray,
-                                  size: 30,
-                                ),
-                              );
-                            },
-                          ),
+                          child:
+                              mediaType == 'video'
+                                  ? _buildVideoThumbnail(model.selectedMediaPaths[index])
+                                  : Image.file(
+                                    File(model.selectedMediaPaths[index]),
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        color: AppColors.lightGray.withValues(alpha: 0.3),
+                                        child: Icon(Icons.broken_image, color: AppColors.textGray, size: 30),
+                                      );
+                                    },
+                                  ),
                         ),
                       ),
+                      // Video play icon overlay
+                      if (mediaType == 'video')
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.black.withValues(alpha: 0.3),
+                              borderRadius: BorderRadius.circular(AppSizes.v8),
+                            ),
+                            child: Center(child: Icon(Icons.play_circle_filled, color: AppColors.white, size: 30)),
+                          ),
+                        ),
                       // Remove button
                       Positioned(
                         top: 4,
@@ -710,15 +544,8 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                           onTap: () => model.removeImageFromMultiple(index),
                           child: Container(
                             padding: EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              color: AppColors.black.withValues(alpha: 0.6),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.close,
-                              color: AppColors.white,
-                              size: 10,
-                            ),
+                            decoration: BoxDecoration(color: AppColors.black.withValues(alpha: 0.6), shape: BoxShape.circle),
+                            child: Icon(Icons.close, color: AppColors.white, size: 10),
                           ),
                         ),
                       ),
@@ -733,35 +560,146 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
     );
   }
 
+  Widget _buildVideoAttachment(String videoUrl, String? messageContent) {
+    return GestureDetector(
+      onTap: () {
+        // Navigate to video player or show video in fullscreen
+        _showVideoPlayer(videoUrl);
+      },
+      child: Container(
+        width: 200,
+        height: 200,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSizes.v8), color: AppColors.lightGray.withValues(alpha: 0.3)),
+        child: Stack(
+          children: [
+            // Video thumbnail
+            ClipRRect(borderRadius: BorderRadius.circular(AppSizes.v8), child: _buildVideoThumbnail(videoUrl)),
+            // Play button overlay
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(color: AppColors.black.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(AppSizes.v8)),
+                child: Center(
+                  child: Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(color: AppColors.white.withValues(alpha: 0.9), shape: BoxShape.circle),
+                    child: Icon(Icons.play_arrow, color: AppColors.primary, size: 30),
+                  ),
+                ),
+              ),
+            ),
+            // Message content overlay if available
+            if (messageContent != null && messageContent.isNotEmpty)
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.black.withValues(alpha: 0.7),
+                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(AppSizes.v8), bottomRight: Radius.circular(AppSizes.v8)),
+                  ),
+                  child: Text(
+                    messageContent,
+                    style: TextStyle(color: AppColors.white, fontSize: 12, fontWeight: FontWeight.w500),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<String?> _generateVideoThumbnail(String videoUrl) async {
+    try {
+      final thumbnailPath = await VideoThumbnail.thumbnailFile(
+        video: videoUrl,
+        thumbnailPath: (await getTemporaryDirectory()).path,
+        imageFormat: ImageFormat.JPEG,
+        maxHeight: 200,
+        quality: 75,
+      ).timeout(
+        Duration(seconds: 15),
+        onTimeout: () {
+          // Video thumbnail generation timed out
+          return null;
+        },
+      );
+      return thumbnailPath;
+    } catch (e) {
+      // Error generating video thumbnail
+      return null;
+    }
+  }
+
+  Widget _buildVideoThumbnail(String videoUrl) {
+    return   Image.file(
+      File(videoUrl),
+      width: double.infinity,
+      fit: BoxFit.fill,
+      cacheWidth: 200,
+      cacheHeight: 200,
+      errorBuilder:
+          (context, error, stackTrace) => Container(
+        color: AppColors.primarySuperLight.withValues(alpha: 0.1),
+        child: Icon(Icons.videocam, color: AppColors.textGray, size: 20),
+      ),
+    );
+    return FutureBuilder<String?>(
+      future: _generateVideoThumbnail(videoUrl),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            color: AppColors.primarySuperLight.withValues(alpha: 0.1),
+            child: Center(child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary))),
+          );
+        }
+
+        if (snapshot.hasError || snapshot.data == null) {
+          return Container(
+            color: AppColors.primarySuperLight.withValues(alpha: 0.1),
+            child: Icon(Icons.videocam, color: AppColors.textGray, size: 20),
+          );
+        }
+
+        // Use Image.file with cacheWidth and cacheHeight for memory optimization
+        return Image.file(
+          File(snapshot.data!),
+          width: double.infinity,
+          fit: BoxFit.fill,
+          cacheWidth: 200,
+          cacheHeight: 200,
+          errorBuilder:
+              (context, error, stackTrace) => Container(
+                color: AppColors.primarySuperLight.withValues(alpha: 0.1),
+                child: Icon(Icons.videocam, color: AppColors.textGray, size: 20),
+              ),
+        );
+      },
+    );
+  }
+
+  void _showVideoPlayer(String videoUrl) {
+    // Navigate to the existing video player screen
+    Navigator.pushNamed(context, Routes.videoPlayer, arguments: videoUrl);
+  }
+
   Widget _buildMessageInput(ChatViewModel model) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.w16,
-        vertical: AppSizes.h12,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h12),
       decoration: BoxDecoration(
         color: AppColors.white,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.08),
-            offset: Offset(0, -2),
-            blurRadius: 12,
-            spreadRadius: 0,
-          ),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.08), offset: Offset(0, -2), blurRadius: 12, spreadRadius: 0)],
       ),
       child: SafeArea(
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.lightGray.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(AppSizes.v24),
-            border: Border.all(
-              color:
-                  _messageFocusNode.hasFocus
-                      ? AppColors.primary.withValues(alpha: 0.3)
-                      : Colors.transparent,
-              width: 1,
-            ),
+            border: Border.all(color: _messageFocusNode.hasFocus ? AppColors.primary.withValues(alpha: 0.3) : Colors.transparent, width: 1),
           ),
           child: CommonTextField(
             controller: model.messageController,
@@ -772,9 +710,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
               onSelected: (value) => _handleAttachmentAction(value, model),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppSizes.v23),
-                side: BorderSide(
-                  color: AppColors.textGray.withValues(alpha: 0.1),
-                ),
+                side: BorderSide(color: AppColors.textGray.withValues(alpha: 0.1)),
               ),
               elevation: 0,
               position: PopupMenuPosition.over,
@@ -786,82 +722,44 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                     PopupMenuItem<String>(
                       value: 'file',
                       height: 34,
-                      child: _buildAttachmentMenuItem(
-                        icon: AppImages.file,
-                        label: 'File',
-                        color: AppColors.purple,
-                        onTap: () {},
-                      ),
+                      child: _buildAttachmentMenuItem(icon: AppImages.file, label: 'File', color: AppColors.purple, onTap: () {}),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'gallery',
                       height: 34,
-                      child: _buildAttachmentMenuItem(
-                        icon: AppImages.gallery,
-                        label: 'Photos',
-                        color: AppColors.primary,
-                        onTap: () {},
-                      ),
+                      child: _buildAttachmentMenuItem(icon: AppImages.gallery, label: 'Album', color: AppColors.primary, onTap: () {}),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'camera',
                       height: 34,
-                      child: _buildAttachmentMenuItem(
-                        icon: AppImages.camera,
-                        label: 'Camera',
-                        color: AppColors.success,
-                        onTap: () {},
-                      ),
+                      child: _buildAttachmentMenuItem(icon: AppImages.camera, label: 'Camera', color: AppColors.success, onTap: () {}),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'location',
                       height: 34,
-                      child: _buildAttachmentMenuItem(
-                        icon: AppImages.location,
-                        label: 'Location',
-                        color: AppColors.error,
-                        onTap: () {},
-                      ),
+                      child: _buildAttachmentMenuItem(icon: AppImages.location, label: 'Location', color: AppColors.error, onTap: () {}),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'video_call',
                       height: 34,
-                      child: _buildAttachmentMenuItem(
-                        icon: AppImages.video,
-                        label: 'Video Call',
-                        color: AppColors.primary,
-                        onTap: () {},
-                      ),
+                      child: _buildAttachmentMenuItem(icon: AppImages.video, label: 'Video Call', color: AppColors.primary, onTap: () {}),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'voice_call',
                       height: 34,
-                      child: _buildAttachmentMenuItem(
-                        icon: AppImages.phone,
-                        label: 'Voice Call',
-                        color: AppColors.orange,
-                        onTap: () {},
-                      ),
+                      child: _buildAttachmentMenuItem(icon: AppImages.phone, label: 'Voice Call', color: AppColors.orange, onTap: () {}),
                     ),
                   ],
               child: Container(
                 margin: EdgeInsets.all(8),
                 padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: AppColors.lightGray.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Image.asset(
-                  AppImages.attachment,
-                  width: 20,
-                  height: 20,
-                  color: AppColors.primaryDark,
-                ),
+                decoration: BoxDecoration(color: AppColors.lightGray.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(10)),
+                child: Image.asset(AppImages.attachment, width: 20, height: 20, color: AppColors.primaryDark),
               ),
             ),
             suffixIcon: Row(
@@ -871,12 +769,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                   onTap: () {
                     // Handle voice message
                   },
-                  child: Image.asset(
-                    AppImages.microphone,
-                    width: 20,
-                    height: 20,
-                    color: AppColors.primaryDark,
-                  ),
+                  child: Image.asset(AppImages.microphone, width: 20, height: 20, color: AppColors.primaryDark),
                 ),
                 SizedBox(width: AppSizes.w12),
                 GestureDetector(
@@ -885,10 +778,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                           ? null
                           : () {
                             // Send message when send button is tapped
-                            if (model.messageController.text
-                                    .trim()
-                                    .isNotEmpty ||
-                                model.hasImagePreview) {
+                            if (model.messageController.text.trim().isNotEmpty || model.hasImagePreview) {
                               model.sendMessage();
                             }
                           },
@@ -897,22 +787,14 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                           ? SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                AppColors.white,
-                              ),
-                            ),
+                            child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.black)),
                           )
                           : Image.asset(
                             AppImages.send,
                             width: 20,
                             height: 20,
                             color:
-                                (model.messageController.text
-                                                .trim()
-                                                .isNotEmpty ||
-                                            model.hasImagePreview) &&
+                                (model.messageController.text.trim().isNotEmpty || model.hasImagePreview) &&
                                         !model.isSendingMessage &&
                                         !model.isUploadingImage
                                     ? AppColors.primaryDark
@@ -928,38 +810,18 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildAttachmentMenuItem({
-    required String icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
+  Widget _buildAttachmentMenuItem({required String icon, required String label, required Color color, required VoidCallback onTap}) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.w16,
-        vertical: AppSizes.h12,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h12),
       child: Row(
         children: [
           Container(
             padding: EdgeInsets.all(9),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(AppSizes.v10),
-            ),
-            child: Center(
-              child: Image.asset(icon, width: 18, height: 18, color: color),
-            ),
+            decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(AppSizes.v10)),
+            child: Center(child: Image.asset(icon, width: 18, height: 18, color: color)),
           ),
           SizedBox(width: AppSizes.w12),
-          Text(
-            label,
-            style: TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: AppSizes.f14,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text(label, style: TextStyle(color: AppColors.textPrimary, fontSize: AppSizes.f14, fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -990,13 +852,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 // Animated search bar
-                SlideTransition(
-                  position: _slideAnimation,
-                  child:
-                      model.isSearchMode
-                          ? _buildSearchBar(model)
-                          : const SizedBox.shrink(),
-                ),
+                SlideTransition(position: _slideAnimation, child: model.isSearchMode ? _buildSearchBar(model) : const SizedBox.shrink()),
                 // Messages list
                 Flexible(
                   child:
@@ -1009,20 +865,14 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                                     ? 6
                                     : model.isSearchMode
                                     ? model.filteredMessages.length
-                                    : model.messages.length +
-                                        1, // +1 for date separator
+                                    : model.messages.length + 1, // +1 for date separator
                             itemBuilder: (context, index) {
                               if (model.isLoading) {
                                 // Alternate shimmer sides for variety
-                                return MessageBubbleShimmer(
-                                  isSentByMe: index % 2 == 0,
-                                );
+                                return MessageBubbleShimmer(isSentByMe: index % 2 == 0);
                               }
 
-                              final message =
-                                  model.isSearchMode
-                                      ? model.filteredMessages[index]
-                                      : model.messages[index - 1];
+                              final message = model.isSearchMode ? model.filteredMessages[index] : model.messages[index - 1];
                               return _buildMessageBubble(message, model);
                             },
                           )
@@ -1031,9 +881,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                               if (scrollInfo is ScrollUpdateNotification) {
                                 // Check if user scrolled to the bottom (for loading more messages)
                                 // Since list is reversed, bottom is where older messages are
-                                if (scrollInfo.metrics.pixels >=
-                                        scrollInfo.metrics.maxScrollExtent -
-                                            100 &&
+                                if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 100 &&
                                     model.hasMoreMessages &&
                                     !model.isLoadingMore) {
                                   model.loadMoreMessages();
@@ -1044,38 +892,28 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                             child: ListView.builder(
                               controller: model.scrollController,
                               reverse: true,
-                              padding: EdgeInsets.only(
-                                top: AppSizes.h10,
-                                bottom: 20,
-                              ),
+                              padding: EdgeInsets.only(top: AppSizes.h10, bottom: 20),
                               itemCount:
                                   model.isSearchMode
                                       ? model.filteredMessages.length
                                       : model.messages.length +
                                           1 + // +1 for date separator
-                                          (model.isLoadingMore
-                                              ? 1
-                                              : 0), // +1 for loading indicator
+                                          (model.isLoadingMore ? 1 : 0),
+                              // +1 for loading indicator
                               itemBuilder: (context, index) {
                                 // Show loading indicator at the bottom (visually top) when loading more
-                                if (!model.isSearchMode &&
-                                    model.isLoadingMore &&
-                                    index == 0) {
+                                if (!model.isSearchMode && model.isLoadingMore && index == 0) {
                                   return _buildLoadingIndicator();
                                 }
 
                                 // Adjust index for loading indicator
-                                final adjustedIndex =
-                                    model.isLoadingMore ? index - 1 : index;
+                                final adjustedIndex = model.isLoadingMore ? index - 1 : index;
 
                                 if (!model.isSearchMode && adjustedIndex == 0) {
                                   return SizedBox();
                                 }
 
-                                final message =
-                                    model.isSearchMode
-                                        ? model.filteredMessages[adjustedIndex]
-                                        : model.messages[adjustedIndex - 1];
+                                final message = model.isSearchMode ? model.filteredMessages[adjustedIndex] : model.messages[adjustedIndex - 1];
                                 return _buildMessageBubble(message, model);
                               },
                             ),
@@ -1105,48 +943,29 @@ class MessageBubbleShimmer extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
         child: Row(
-          mainAxisAlignment:
-              isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment: isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
             Flexible(
               child: Column(
-                crossAxisAlignment:
-                    isSentByMe
-                        ? CrossAxisAlignment.end
-                        : CrossAxisAlignment.start,
+                crossAxisAlignment: isSentByMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 children: [
                   // Message bubble shimmer
                   Container(
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.75,
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
+                    constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                         topLeft: const Radius.circular(18),
                         topRight: const Radius.circular(18),
-                        bottomLeft:
-                            isSentByMe
-                                ? const Radius.circular(18)
-                                : const Radius.circular(0),
-                        bottomRight:
-                            isSentByMe
-                                ? const Radius.circular(0)
-                                : const Radius.circular(18),
+                        bottomLeft: isSentByMe ? const Radius.circular(18) : const Radius.circular(0),
+                        bottomRight: isSentByMe ? const Radius.circular(0) : const Radius.circular(18),
                       ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          height: 12,
-                          width: double.infinity,
-                          color: Colors.white,
-                        ),
+                        Container(height: 12, width: double.infinity, color: Colors.white),
                         const SizedBox(height: 6),
                         Container(height: 12, width: 80, color: Colors.white),
                       ],

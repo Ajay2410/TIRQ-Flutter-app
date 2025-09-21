@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manager/features/chat/chat_list.view.dart';
+import 'package:manager/features/chat/chat_view.dart';
 import 'package:manager/features/auth/login/login.view.dart';
 import 'package:manager/features/auth/otp_verification/otp_verification.view.dart';
 import 'package:manager/features/auth/register/register.view.dart';
@@ -370,6 +371,19 @@ class AppRouter extends RouterBase {
         settings: data,
       );
     },
+    ChatView: (data) {
+      final args = data.arguments as Map<String, dynamic>?;
+      return MaterialPageRoute(
+        builder:
+            (BuildContext _) => ChatView(
+              contactName: args?['contactName'] ?? 'Unknown Contact',
+              contactNumber: args?['contactNumber'] ?? '',
+              contactInitials: args?['contactInitials'] ?? 'U',
+              roomId: args?['roomId'],
+            ),
+        settings: data,
+      );
+    },
     PermissionsView: (data) {
       return MaterialPageRoute(
         builder: (BuildContext _) => PermissionsView(),
@@ -684,6 +698,7 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.addMachine, page: AddMachineView),
     RouteDef(Routes.search, page: SearchView),
     RouteDef(Routes.chatsList, page: ChatListView),
+    RouteDef(Routes.chatView, page: ChatView),
     RouteDef(Routes.permissions, page: PermissionsView),
     RouteDef(Routes.createGroupChat, page: CreateGroupChat),
     RouteDef(Routes.archivedChats, page: ArchivedChatList),

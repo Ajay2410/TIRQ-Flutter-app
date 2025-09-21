@@ -49,7 +49,8 @@ class OrganizationHomeViewModel extends ReactiveViewModel {
 
   initNotifications() async {
     final oldToken = getUser().fcmToken;
-    final newToken = await NotificationService().getToken();
+    final notificationService = NotificationService();
+    final newToken = await notificationService.getToken();
 
     if (newToken != null) {
       await _authService.updateFcmToken(token: newToken, oldToken: oldToken);

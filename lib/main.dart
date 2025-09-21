@@ -1,10 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:manager/core/storage/storage.dart';
 import 'package:manager/core/utils/app_logger.dart';
-import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/services/bottom_sheets.service.dart';
 import 'package:manager/services/dialogs.service.dart';
 import 'package:manager/services/language.service.dart';
@@ -30,8 +28,10 @@ void main() async {
   setUpDialogs();
   await LanguageService.load();
 
-  NotificationService notificationService = NotificationService();
+  // Initialize notification service
+  final notificationService = NotificationService();
   await notificationService.init();
+  await notificationService.getToken();
 
   runApp(AppView());
 }

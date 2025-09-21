@@ -6,6 +6,7 @@ import 'package:manager/core/storage/storage.dart';
 import 'package:manager/core/utils/app_logger.dart';
 import 'package:manager/core/utils/type_def.dart';
 import 'package:manager/services/api.service.dart';
+import 'package:manager/services/notification.service.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../core/models/hive/user/user.dart';
@@ -199,9 +200,22 @@ class AuthService {
     required String password,
   }) async {
     try {
+      // Get FCM token
+      String? fcmToken;
+      try {
+        final notificationService = NotificationService();
+        fcmToken = await notificationService.getToken();
+      } catch (e) {
+        AppLogger.error('Failed to get FCM token: $e');
+      }
+
       final response = await apiService.post(
         url: ApiEndpoints.login,
-        data: {'email': email, 'password': password},
+        data: {
+          'email': email,
+          'password': password,
+          if (fcmToken != null) 'notificationToken': fcmToken,
+        },
       );
 
       if (response.data['success'] == true) {
@@ -249,9 +263,22 @@ class AuthService {
 
   ResultFuture<User> googleLogin({required String email, String? token}) async {
     try {
+      // Get FCM token
+      String? fcmToken;
+      try {
+        final notificationService = NotificationService();
+        fcmToken = await notificationService.getToken();
+      } catch (e) {
+        AppLogger.error('Failed to get FCM token: $e');
+      }
+
       final response = await apiService.post(
         url: ApiEndpoints.googleLogin,
-        data: {'email': email, 'idToken': token ?? ""},
+        data: {
+          'email': email,
+          'idToken': token ?? "",
+          if (fcmToken != null) 'notificationToken': fcmToken,
+        },
       );
 
       if (response.data['success'] == true) {
@@ -286,9 +313,22 @@ class AuthService {
     String? token,
   }) async {
     try {
+      // Get FCM token
+      String? fcmToken;
+      try {
+        final notificationService = NotificationService();
+        fcmToken = await notificationService.getToken();
+      } catch (e) {
+        AppLogger.error('Failed to get FCM token: $e');
+      }
+
       final response = await apiService.post(
-        url: ApiEndpoints.googleLogin,
-        data: {'email': email, 'idToken': token ?? ""},
+        url: ApiEndpoints.facebookLogin,
+        data: {
+          'email': email,
+          'idToken': token ?? "",
+          if (fcmToken != null) 'notificationToken': fcmToken,
+        },
       );
 
       if (response.data['success'] == true) {
@@ -323,9 +363,22 @@ class AuthService {
     required String otp,
   }) async {
     try {
+      // Get FCM token
+      String? fcmToken;
+      try {
+        final notificationService = NotificationService();
+        fcmToken = await notificationService.getToken();
+      } catch (e) {
+        AppLogger.error('Failed to get FCM token: $e');
+      }
+
       final response = await apiService.post(
         url: ApiEndpoints.otpLogin,
-        data: {'email': email, 'otp': otp},
+        data: {
+          'email': email,
+          'otp': otp,
+          if (fcmToken != null) 'notificationToken': fcmToken,
+        },
       );
 
       if (response.data['success'] == true) {
