@@ -116,8 +116,6 @@ class CustomerEditDetailsView extends StatelessWidget {
           label: LanguageService.get('contact_person'),
           placeholder: LanguageService.get('person_name'),
           validator: CommonValidators.required(LanguageService.get('please_enter_contact_person')),
-          enabled: false,
-          readOnly: true,
         ),
         const SizedBox(height: 16),
         _buildPhoneField(context, model),
@@ -135,15 +133,7 @@ class CustomerEditDetailsView extends StatelessWidget {
         ),
         const SizedBox(height: 16),
 
-        CommonTextField(
-          controller: model.designationController,
-          label: LanguageService.get('designation'),
-          placeholder: LanguageService.get('designation_placeholder'),
-          validator: CommonValidators.required(LanguageService.get('please_enter_designation')),
-          enabled: false,
-          readOnly: true,
-          textStyle: TextStyle(color: AppColors.black),
-        ),
+        _buildDesignationDropdown(context, model),
         const SizedBox(height: 16),
 
         if (machineElement != null) ...{
@@ -169,7 +159,7 @@ class CustomerEditDetailsView extends StatelessWidget {
         Text(LanguageService.get('phone_number'), style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         AbsorbPointer(
-          absorbing: true,
+          absorbing: isFromSearchOrganization,
           child: IntlPhoneField(
             pickerDialogStyle: PickerDialogStyle(
               backgroundColor: AppColors.colorF8FBFE,
@@ -206,6 +196,60 @@ class CustomerEditDetailsView extends StatelessWidget {
               return null;
             },
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDesignationDropdown(BuildContext context, CustomerEditDetailsViewModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(LanguageService.get('designation'), style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+        const SizedBox(height: 8),
+        FormField<String>(
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return LanguageService.get('please_select_designation');
+            }
+            return null;
+          },
+          builder: (FormFieldState<String> field) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 50,
+                  child: DropdownFlutter<String>(
+                    items: model.designationItems,
+                    onChanged: (value) {
+                      model.updateDesignation(value);
+                      field.didChange(value);
+                      field.validate();
+                    },
+                    initialItem: model.selectedDesignation,
+                    hintText: LanguageService.get('select_designation'),
+                    decoration: CustomDropdownDecoration(
+                      headerStyle: TextStyle(color: AppColors.textPrimary, fontSize: 14),
+                      listItemStyle: TextStyle(color: AppColors.textPrimary, fontSize: 14),
+                      hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                      closedFillColor: AppColors.white,
+                      closedBorder: Border.all(color: field.hasError ? AppColors.error : AppColors.lightGray),
+                      closedBorderRadius: BorderRadius.circular(12),
+                      closedErrorBorder: Border.all(color: AppColors.error, width: 1),
+                      closedSuffixIcon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                    ),
+                  ),
+                ),
+                if (field.hasError)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, top: 4),
+                    child: Text(field.errorText!, style: const TextStyle(color: AppColors.error, fontSize: 11)),
+                  ),
+              ],
+            );
+          },
         ),
       ],
     );
@@ -351,7 +395,7 @@ class CustomerEditDetailsView extends StatelessWidget {
                 LanguageService.get('warranty_status'),
                 model.warrantyStatus,
                 model.warrantyStatusColor,
-                () => model.toggleWarrantyStatus(),
+                () {},
               ),
             ),
             const SizedBox(width: 14),

@@ -163,22 +163,22 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CommonTextField(
-          controller: _serialNumberController,
-          label: 'serial_number'.lang,
-          placeholder: 'SN-12345',
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return '${'serial_number'.lang} ${'required'.lang}';
-            }
-            return null;
-          },
-        ),
-        const SizedBox(height: 16),
+        // CommonTextField(
+        //   controller: _serialNumberController,
+        //   label: 'serial_number'.lang,
+        //   placeholder: 'SN-12345',
+        //   validator: (value) {
+        //     if (value == null || value.trim().isEmpty) {
+        //       return '${'serial_number'.lang} ${'required'.lang}';
+        //     }
+        //     return null;
+        //   },
+        // ),
+        // const SizedBox(height: 16),
         CommonTextField(
           controller: _machineNameController,
           label: 'machine_model_name'.lang,
-          placeholder: '#1234 - Machine Name',
+          placeholder: '1234 - Machine Name',
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return '${'machine_model_name'.lang} ${'required'.lang}';
@@ -190,7 +190,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
         CommonTextField(
           controller: _modelNumberController,
           label: 'model_number'.lang,
-          placeholder: '#1234',
+          placeholder: '1234',
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return '${'model_number'.lang} ${'required'.lang}';

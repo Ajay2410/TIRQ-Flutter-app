@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -119,17 +120,12 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
 
   Future<void> _onOnlineSupportPressed(TicketsListViewModel model) async {
     _toggleFab();
-    if(model.machineSupplierData.isEmpty) {
+    if (model.machineSupplierData.isEmpty) {
       final _dialogService = locator<DialogService>();
-      await _dialogService.showCustomDialog(
-        variant: DialogType.loader,
-        data: LoaderDialogAttributes(
-          task: () => model.loadMachines(),
-        ),
-      );
+      await _dialogService.showCustomDialog(variant: DialogType.loader, data: LoaderDialogAttributes(task: () => model.loadMachines()));
     }
 
-    if(model.machineSupplierData.isEmpty) {
+    if (model.machineSupplierData.isEmpty) {
       return;
     }
 
@@ -162,17 +158,12 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
   Future<void> _onSiteVisitPressed(TicketsListViewModel model) async {
     _toggleFab();
 
-    if(model.machineSupplierData.isEmpty) {
+    if (model.machineSupplierData.isEmpty) {
       final _dialogService = locator<DialogService>();
-      await _dialogService.showCustomDialog(
-        variant: DialogType.loader,
-        data: LoaderDialogAttributes(
-          task: () => model.loadMachines(),
-        ),
-      );
+      await _dialogService.showCustomDialog(variant: DialogType.loader, data: LoaderDialogAttributes(task: () => model.loadMachines()));
     }
 
-    if(model.machineSupplierData.isEmpty) {
+    if (model.machineSupplierData.isEmpty) {
       return;
     }
 
@@ -182,12 +173,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
         isWarrantyActive: true, // You can modify this based on your logic
         attributes: SelectMaintenanceTypeDialogAttributes(
           onSubmit: (String maintenanceType, String organizationId, String machineId) async {
-            await model.createTicket(
-              maintenanceType: maintenanceType,
-              isFromSiteVisit: true,
-              organizationId: organizationId,
-              machineId: machineId,
-            );
+            await model.createTicket(maintenanceType: maintenanceType, isFromSiteVisit: true, organizationId: organizationId, machineId: machineId);
           },
           onCancel: () {
             // Handle cancel action if needed
@@ -305,10 +291,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
             ),
           ),
           floatingActionButton:
-              model.selectedTabIndex == 0 &&
-                      getUser().userRole == UserRole.processor
-                  ? _buildExpandableFloatingActionButton(model)
-                  : null,
+              model.selectedTabIndex == 0 && getUser().userRole == UserRole.processor ? _buildExpandableFloatingActionButton(model) : null,
         );
       },
     );
@@ -453,13 +436,9 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
 
     return GestureDetector(
       onTap: () {
-
-
-
-
         //TODO:  don't remove
         // if (ticket.paymentStatus == 'paid') {
-          model.navigateToTicketDetails(ticketId: ticket.id ?? '');
+        model.navigateToTicketDetails(ticketId: ticket.id ?? '');
         // } else {
         //   model.navigateToReviewTicketWithId(ticketId: ticket.id ?? '');
         // }
@@ -520,7 +499,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                                 ),
                               ),
                               Text(
-                                "#${ticket.machine?.machineName ?? 'N/A'}",
+                                ticket.machine?.machineName ?? 'N/A',
                                 style: TextStyle(fontSize: 10, color: AppColors.black, fontWeight: FontWeight.bold),
                               ),
                             ],
@@ -585,7 +564,11 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                   if (ticket.status == "Active") ...[
                     ElevatedButton(
                       onPressed:
-                          ticket.status == "Active" || ticket.status == "In Progress" ? _openChat(ticket) : null,
+                          ticket.IsShowChatOption == true
+                              ? () {
+                                _openChat(ticket);
+                              }
+                              : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: AppColors.white,
@@ -791,32 +774,22 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
   }
 
   _openChat(TicketList ticket) {
+    if (ticket == null) return;
+    if (ticket.chatRoom?.id == null) {
+      Fluttertoast.showToast(msg: "Chat room not found");
+      return;
+    }
+    final ticketNumber = ticket.ticketNumber ?? 'Unknown';
+    final chatWithName = ticket.processor?.fullName ?? 'Customer';
+    final contactInitials = chatWithName.isNotEmpty ? chatWithName.substring(0, 1).toUpperCase() : 'U';
+    final roomId = ticket.chatRoom?.id ?? '';
 
-    // if (ticket == null) return;
-    //
-    // final ticketNumber =
-    //     ticket.ticketNumber ?? 'Unknown';
-    // final chatWithName =
-    //     ticket.processor?.fullName ?? 'Customer';
-    // final contactInitials =
-    // chatWithName.isNotEmpty
-    //     ? chatWithName.substring(0, 1).toUpperCase()
-    //     : 'U';
-    // final roomId = ticket.chatRoom?.id ?? '';
-    //
-    // // Navigate to chat screen
-    // Navigator.of(context).push(
-    //   MaterialPageRoute(
-    //     builder:
-    //         (context) => ChatView(
-    //       contactName: chatWithName,
-    //       contactNumber: ticketNumber,
-    //       contactInitials: contactInitials,
-    //       roomId: roomId,
-    //     ),
-    //   ),
-    // );
-
+    // Navigate to chat screen
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ChatView(contactName: chatWithName, contactNumber: ticketNumber, contactInitials: contactInitials, roomId: roomId),
+      ),
+    );
   }
 }
 

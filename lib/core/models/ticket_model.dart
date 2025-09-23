@@ -4,8 +4,7 @@
 
 import 'dart:convert';
 
-TicketModel ticketModelFromJson(String str) =>
-    TicketModel.fromJson(json.decode(str));
+TicketModel ticketModelFromJson(String str) => TicketModel.fromJson(json.decode(str));
 
 String ticketModelToJson(TicketModel data) => json.encode(data.toJson());
 
@@ -23,10 +22,7 @@ class TicketModel {
     page: json["page"],
     pages: json["pages"],
     count: json["count"],
-    data:
-        json["data"] == null
-            ? []
-            : List<TicketList>.from(json["data"]!.map((x) => TicketList.fromJson(x))),
+    data: json["data"] == null ? [] : List<TicketList>.from(json["data"]!.map((x) => TicketList.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -34,8 +30,7 @@ class TicketModel {
     "page": page,
     "pages": pages,
     "count": count,
-    "data":
-        data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+    "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
   };
 }
 
@@ -58,6 +53,8 @@ class TicketList {
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
+  ChatRoom? chatRoom;
+  bool? IsShowChatOption;
 
   TicketList({
     this.id,
@@ -78,6 +75,8 @@ class TicketList {
     this.createdAt,
     this.updatedAt,
     this.v,
+    this.chatRoom,
+    this.IsShowChatOption,
   });
 
   factory TicketList.fromJson(Map<String, dynamic> json) => TicketList(
@@ -86,30 +85,21 @@ class TicketList {
     problem: json["problem"],
     errorCode: json["errorCode"],
     notes: json["notes"],
-    media:
-        json["media"] == null
-            ? []
-            : List<Media>.from(json["media"]!.map((x) => Media.fromJson(x))),
+    media: json["media"] == null ? [] : List<Media>.from(json["media"]!.map((x) => Media.fromJson(x))),
     ticketType: json["ticketType"],
     type: json["type"],
     status: json["status"],
     isActive: json["isActive"],
     machine: json["machine"] == null ? null : Machine.fromJson(json["machine"]),
-    processor:
-        json["processor"] == null
-            ? null
-            : Organisation.fromJson(json["processor"]),
-    organisation:
-        json["organisation"] == null
-            ? null
-            : Organisation.fromJson(json["organisation"]),
+    processor: json["processor"] == null ? null : Organisation.fromJson(json["processor"]),
+    organisation: json["organisation"] == null ? null : Organisation.fromJson(json["organisation"]),
     pricing: json["pricing"],
     paymentStatus: json["paymentStatus"],
-    createdAt:
-        json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
-    updatedAt:
-        json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
+    createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
+    updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
+    chatRoom: json["chatRoom"] == null ? null : ChatRoom.fromJson(json["chatRoom"]),
+    IsShowChatOption: json["IsShowChatOption"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -118,8 +108,7 @@ class TicketList {
     "problem": problem,
     "errorCode": errorCode,
     "notes": notes,
-    "media":
-        media == null ? [] : List<dynamic>.from(media!.map((x) => x.toJson())),
+    "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x.toJson())),
     "ticketType": ticketType,
     "type": type,
     "status": status,
@@ -132,6 +121,8 @@ class TicketList {
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
     "__v": v,
+    "chatRoom": chatRoom?.toJson(),
+    "IsShowChatOption": IsShowChatOption,
   };
 }
 
@@ -173,10 +164,7 @@ class Machine {
   });
 
   factory Machine.fromJson(Map<String, dynamic> json) => Machine(
-    processingDimensions:
-        json["processingDimensions"] == null
-            ? null
-            : ProcessingDimensions.fromJson(json["processingDimensions"]),
+    processingDimensions: json["processingDimensions"] == null ? null : ProcessingDimensions.fromJson(json["processingDimensions"]),
     id: json["_id"],
     machineName: json["machineName"],
     modelNumber: json["modelNumber"],
@@ -189,10 +177,8 @@ class Machine {
     status: json["status"],
     isActive: json["isActive"],
     remarks: json["remarks"],
-    createdAt:
-        json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
-    updatedAt:
-        json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
+    createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
+    updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
   );
 
@@ -224,24 +210,16 @@ class ProcessingDimensions {
   String? thickness;
   int? maxSpeed;
 
-  ProcessingDimensions({
-    this.maxHeight,
-    this.maxWidth,
-    this.minHeight,
-    this.minWidth,
-    this.thickness,
-    this.maxSpeed,
-  });
+  ProcessingDimensions({this.maxHeight, this.maxWidth, this.minHeight, this.minWidth, this.thickness, this.maxSpeed});
 
-  factory ProcessingDimensions.fromJson(Map<String, dynamic> json) =>
-      ProcessingDimensions(
-        maxHeight: json["maxHeight"],
-        maxWidth: json["maxWidth"],
-        minHeight: json["minHeight"],
-        minWidth: json["minWidth"],
-        thickness: json["thickness"],
-        maxSpeed: json["maxSpeed"],
-      );
+  factory ProcessingDimensions.fromJson(Map<String, dynamic> json) => ProcessingDimensions(
+    maxHeight: json["maxHeight"],
+    maxWidth: json["maxWidth"],
+    minHeight: json["minHeight"],
+    minWidth: json["minWidth"],
+    thickness: json["thickness"],
+    maxSpeed: json["maxSpeed"],
+  );
 
   Map<String, dynamic> toJson() => {
     "maxHeight": maxHeight,
@@ -260,8 +238,7 @@ class Media {
 
   Media({this.url, this.type, this.id});
 
-  factory Media.fromJson(Map<String, dynamic> json) =>
-      Media(url: json["url"], type: json["type"], id: json["_id"]);
+  factory Media.fromJson(Map<String, dynamic> json) => Media(url: json["url"], type: json["type"], id: json["_id"]);
 
   Map<String, dynamic> toJson() => {"url": url, "type": type, "_id": id};
 }
@@ -300,10 +277,7 @@ class Organisation {
     password: json["password"],
     phone: json["phone"],
     countryCode: json["countryCode"],
-    roles:
-        json["roles"] == null
-            ? []
-            : List<String>.from(json["roles"]!.map((x) => x)),
+    roles: json["roles"] == null ? [] : List<String>.from(json["roles"]!.map((x) => x)),
     emailOtp: json["emailOTP"],
     isEmailVerified: json["isEmailVerified"],
     isPhoneVerified: json["isPhoneVerified"],
@@ -323,4 +297,48 @@ class Organisation {
     "isPhoneVerified": isPhoneVerified,
     "__v": v,
   };
+}
+
+class ChatRoom {
+  String? id;
+  String? ticket;
+  ChatUser? organisation;
+  ChatUser? processor;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  int? v;
+
+  ChatRoom({this.id, this.ticket, this.organisation, this.processor, this.createdAt, this.updatedAt, this.v});
+
+  factory ChatRoom.fromJson(Map<String, dynamic> json) => ChatRoom(
+    id: json["_id"],
+    ticket: json["ticket"],
+    organisation: json["organisation"] == null ? null : ChatUser.fromJson(json["organisation"]),
+    processor: json["processor"] == null ? null : ChatUser.fromJson(json["processor"]),
+    createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
+    updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
+    v: json["__v"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "_id": id,
+    "ticket": ticket,
+    "organisation": organisation?.toJson(),
+    "processor": processor?.toJson(),
+    "createdAt": createdAt?.toIso8601String(),
+    "updatedAt": updatedAt?.toIso8601String(),
+    "__v": v,
+  };
+}
+
+class ChatUser {
+  String? id;
+  String? fullName;
+  String? email;
+
+  ChatUser({this.id, this.fullName, this.email});
+
+  factory ChatUser.fromJson(Map<String, dynamic> json) => ChatUser(id: json["_id"], fullName: json["fullName"], email: json["email"]);
+
+  Map<String, dynamic> toJson() => {"_id": id, "fullName": fullName, "email": email};
 }

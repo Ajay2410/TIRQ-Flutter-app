@@ -96,7 +96,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CommonTextField(
-          controller: TextEditingController(text: "#${widget.machine.modelNumber} - ${widget.machine.machineName}"),
+          controller: TextEditingController(text: "${widget.machine.modelNumber} - ${widget.machine.machineName}"),
           label: 'machine_model_name'.lang,
           placeholder: '',
           readOnly: true,
@@ -107,7 +107,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
         const SizedBox(height: 16),
 
         CommonTextField(
-          controller: TextEditingController(text: "#${widget.machine.modelNumber}"),
+          controller: TextEditingController(text: "${widget.machine.modelNumber}"),
           label: 'model_number'.lang,
           placeholder: '',
           readOnly: true,

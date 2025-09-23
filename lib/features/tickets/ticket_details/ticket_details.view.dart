@@ -145,14 +145,8 @@ class TicketDetailsView extends StatelessWidget {
       value: value,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: BorderSide(color: AppColors.lightGray)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: BorderSide(color: AppColors.lightGray)),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
           borderSide: BorderSide(color: AppColors.primary, width: 2),
@@ -292,20 +286,14 @@ class TicketDetailsView extends StatelessWidget {
                   children: [
                     Image.asset(AppImages.payment, width: 20, height: 20, color: AppColors.primarySuperLight),
                     SizedBox(width: 8),
-                    Text(
-                      LanguageService.get('payment'),
-                      style: TextStyle(color: AppColors.black, fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
+                    Text(LanguageService.get('payment'), style: TextStyle(color: AppColors.black, fontSize: 16, fontWeight: FontWeight.w600)),
                   ],
                 ),
                 SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      LanguageService.get('total_payment'),
-                      style: TextStyle(color: AppColors.black, fontSize: 14, fontWeight: FontWeight.w600),
-                    ),
+                    Text(LanguageService.get('total_payment'), style: TextStyle(color: AppColors.black, fontSize: 14, fontWeight: FontWeight.w600)),
                     Text(
                       model.formatCurrency(totalCost, currency),
                       style: TextStyle(color: AppColors.black, fontSize: 16, fontWeight: FontWeight.w600),
@@ -336,17 +324,9 @@ class TicketDetailsView extends StatelessWidget {
                   children: [
                     Text(
                       LanguageService.get('support_mode'),
-                      style: TextStyle(
-                        color: AppColors.textGray,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                      ),
+                      style: TextStyle(color: AppColors.textGray, fontSize: 11, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
                     ),
-                    Text(
-                      supportMode,
-                      style: TextStyle(color: AppColors.textGray, fontSize: 11, fontWeight: FontWeight.w500),
-                    ),
+                    Text(supportMode, style: TextStyle(color: AppColors.textGray, fontSize: 11, fontWeight: FontWeight.w500)),
                   ],
                 ),
                 Divider(height: 24, color: AppColors.textGray.withValues(alpha: 0.1)),
@@ -355,17 +335,9 @@ class TicketDetailsView extends StatelessWidget {
                   children: [
                     Text(
                       LanguageService.get('ticket_type'),
-                      style: TextStyle(
-                        color: AppColors.textGray,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                      ),
+                      style: TextStyle(color: AppColors.textGray, fontSize: 11, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
                     ),
-                    Text(
-                      ticketType,
-                      style: TextStyle(color: AppColors.textGray, fontSize: 11, fontWeight: FontWeight.w500),
-                    ),
+                    Text(ticketType, style: TextStyle(color: AppColors.textGray, fontSize: 11, fontWeight: FontWeight.w500)),
                   ],
                 ),
               ],
@@ -415,12 +387,7 @@ class TicketDetailsView extends StatelessWidget {
           ),
         ),
       ),
-      title: Text(
-        ticketNumber,
-        style: Theme.of(
-          context,
-        ).textTheme.headlineMedium?.copyWith(color: AppColors.white, fontWeight: FontWeight.bold),
-      ),
+      title: Text(ticketNumber, style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: AppColors.white, fontWeight: FontWeight.bold)),
       actions: [
         SizedBox(
           height: 25,
@@ -448,8 +415,7 @@ class TicketDetailsView extends StatelessWidget {
     final config = locator<Configurations>();
 
     final customerName = orgDetails?.fullName ?? 'Unknown Customer';
-    final flag =
-        orgDetails?.flag?.startsWith('/') == true ? orgDetails!.flag!.substring(1) : orgDetails?.flag ?? 'flags/us.svg';
+    final flag = orgDetails?.flag?.startsWith('/') == true ? orgDetails!.flag!.substring(1) : orgDetails?.flag ?? 'flags/us.svg';
     final flagUrl = '${config.baseUrl}$flag';
     final supportType = ticketDetails?.ticketType ?? 'Unknown';
     final createdAt = ticketDetails?.createdAt;
@@ -511,15 +477,9 @@ class TicketDetailsView extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(
-              'Support Type',
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400),
-            ),
+            Text('Support Type', style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
             const SizedBox(height: 4),
-            Text(
-              supportType,
-              style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500),
-            ),
+            Text(supportType, style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
           ],
         ),
       ],
@@ -540,10 +500,7 @@ class TicketDetailsView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          LanguageService.get('ticket_details'),
-          style: TextStyle(color: AppColors.black, fontSize: 16, fontWeight: FontWeight.w600),
-        ),
+        Text(LanguageService.get('ticket_details'), style: TextStyle(color: AppColors.black, fontSize: 16, fontWeight: FontWeight.w600)),
         SizedBox(height: 16),
         Row(
           children: [
@@ -553,8 +510,7 @@ class TicketDetailsView extends StatelessWidget {
               child: _buildDetailItem(
                 LanguageService.get('warranty_status'),
                 model.getWarrantyStatusColor(warrantyStatus),
-                valueColor:
-                    warrantyStatus.toLowerCase() == 'in warranty' ? AppColors.color41C293 : AppColors.crimsonRed,
+                valueColor: warrantyStatus.toLowerCase() == 'in warranty' ? AppColors.color41C293 : AppColors.crimsonRed,
               ),
             ),
           ],
@@ -602,10 +558,7 @@ class TicketDetailsView extends StatelessWidget {
         if (mediaList.isEmpty) ...[
           SizedBox(),
         ] else ...[
-          Text(
-            LanguageService.get('photos_video'),
-            style: TextStyle(color: AppColors.black, fontSize: 14, fontWeight: FontWeight.w400),
-          ),
+          Text(LanguageService.get('photos_video'), style: TextStyle(color: AppColors.black, fontSize: 14, fontWeight: FontWeight.w400)),
           SizedBox(height: 10),
 
           SizedBox(
@@ -639,16 +592,10 @@ class TicketDetailsView extends StatelessWidget {
   Widget _buildWarrantyInfoCard(BuildContext context, TicketDetailsViewModel model) {
     final customerMachineDetails = model.ticketDetails?.customerMachineDetails;
 
-    final purchaseDate =
-        customerMachineDetails?.purchaseDate != null ? model.formatDate(customerMachineDetails!.purchaseDate) : 'N/A';
-    final installationDate =
-        customerMachineDetails?.installationDate != null
-            ? model.formatDate(customerMachineDetails!.installationDate)
-            : 'N/A';
-    final warrantyStart =
-        customerMachineDetails?.warrantyStart != null ? model.formatDate(customerMachineDetails!.warrantyStart) : 'N/A';
-    final warrantyEnd =
-        customerMachineDetails?.warrantyEnd != null ? model.formatDate(customerMachineDetails!.warrantyEnd) : 'N/A';
+    final purchaseDate = customerMachineDetails?.purchaseDate != null ? model.formatDate(customerMachineDetails!.purchaseDate) : 'N/A';
+    final installationDate = customerMachineDetails?.installationDate != null ? model.formatDate(customerMachineDetails!.installationDate) : 'N/A';
+    final warrantyStart = customerMachineDetails?.warrantyStart != null ? model.formatDate(customerMachineDetails!.warrantyStart) : 'N/A';
+    final warrantyEnd = customerMachineDetails?.warrantyEnd != null ? model.formatDate(customerMachineDetails!.warrantyEnd) : 'N/A';
     final warrantyStatus = customerMachineDetails?.warrantyStatus ?? 'Unknown';
     final invoiceContractNo = customerMachineDetails?.invoiceContractNo ?? 'N/A';
 
@@ -658,18 +605,9 @@ class TicketDetailsView extends StatelessWidget {
         const SizedBox(height: 10),
         Row(
           children: [
-            Expanded(
-              child: _buildInfoRow(AppImages.purchaseDate, 'purchase_date'.lang, purchaseDate, AppColors.colorF2A22E),
-            ),
+            Expanded(child: _buildInfoRow(AppImages.purchaseDate, 'purchase_date'.lang, purchaseDate, AppColors.colorF2A22E)),
             SizedBox(width: 14),
-            Expanded(
-              child: _buildInfoRow(
-                AppImages.installationDate,
-                'installation_date'.lang,
-                installationDate,
-                AppColors.colorFF6868,
-              ),
-            ),
+            Expanded(child: _buildInfoRow(AppImages.installationDate, 'installation_date'.lang, installationDate, AppColors.colorFF6868)),
           ],
         ),
         const SizedBox(height: 10),
@@ -677,24 +615,9 @@ class TicketDetailsView extends StatelessWidget {
         const SizedBox(height: 10),
         Row(
           children: [
-            Expanded(
-              child: _buildInfoRow(
-                AppImages.warrantyDate,
-                'warranty_start'.lang,
-                warrantyStart,
-                AppColors.primarySuperLight,
-              ),
-            ),
+            Expanded(child: _buildInfoRow(AppImages.warrantyDate, 'warranty_start'.lang, warrantyStart, AppColors.primarySuperLight)),
             SizedBox(width: 14),
-            Expanded(
-              child: _buildInfoRow(
-                AppImages.warrantyDate,
-                'warranty_end'.lang,
-                warrantyEnd,
-                AppColors.primarySuperLight,
-                isWarning: true,
-              ),
-            ),
+            Expanded(child: _buildInfoRow(AppImages.warrantyDate, 'warranty_end'.lang, warrantyEnd, AppColors.primarySuperLight, isWarning: true)),
           ],
         ),
         const SizedBox(height: 10),
@@ -711,14 +634,7 @@ class TicketDetailsView extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 16),
-            Expanded(
-              child: _buildInfoRow(
-                AppImages.invoice,
-                'invoice_contract_no'.lang,
-                invoiceContractNo,
-                AppColors.color41C293,
-              ),
-            ),
+            Expanded(child: _buildInfoRow(AppImages.invoice, 'invoice_contract_no'.lang, invoiceContractNo, AppColors.color41C293)),
           ],
         ),
       ],
@@ -738,19 +654,9 @@ class TicketDetailsView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                label,
-                style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400),
-              ),
+              Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
               const SizedBox(height: 4),
-              Text(
-                value,
-                style: TextStyle(
-                  color: isWarning ? AppColors.redBack : AppColors.textPrimary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              Text(value, style: TextStyle(color: isWarning ? AppColors.redBack : AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
             ],
           ),
         ),
@@ -764,10 +670,7 @@ class TicketDetailsView extends StatelessWidget {
       children: [
         Text(label, style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
         const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(color: valueColor ?? AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500),
-        ),
+        Text(value, style: TextStyle(color: valueColor ?? AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
       ],
     );
   }
@@ -802,12 +705,7 @@ class TicketDetailsView extends StatelessWidget {
                 placeholder:
                     (context, url) => Container(
                       color: AppColors.primarySuperLight.withValues(alpha: 0.1),
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                        ),
-                      ),
+                      child: Center(child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary))),
                     ),
                 errorWidget:
                     (context, url, error) => Container(
@@ -833,12 +731,7 @@ class TicketDetailsView extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container(
             color: AppColors.primarySuperLight.withValues(alpha: 0.1),
-            child: Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-              ),
-            ),
+            child: Center(child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary))),
           );
         }
 
@@ -915,22 +808,19 @@ class TicketDetailsView extends StatelessWidget {
               child: SizedBox(
                 // width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    model.startChat(context);
-                  },
+                  onPressed:
+                      model.ticketDetails?.ticketDetails?.IsShowChatOption == false
+                          ? null
+                          : () {
+                            model.startChat(context);
+                          },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        model.ticketDetails?.ticketDetails?.status == "On Hold"
-                            ? AppColors.gray
-                            : AppColors.primaryDark,
+                    backgroundColor: model.ticketDetails?.ticketDetails?.IsShowChatOption == false ? AppColors.gray : AppColors.primaryDark,
                     foregroundColor: AppColors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.v50)),
                     padding: EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: Text(
-                    LanguageService.get('see_chat'),
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
+                  child: Text(LanguageService.get('see_chat'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                 ),
               ),
             ),
@@ -955,18 +845,12 @@ class TicketDetailsView extends StatelessWidget {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          model.ticketDetails?.ticketDetails?.status == "On Hold"
-                              ? AppColors.gray
-                              : AppColors.primaryLight,
+                      backgroundColor: model.ticketDetails?.ticketDetails?.status == "On Hold" ? AppColors.gray : AppColors.primaryLight,
                       foregroundColor: AppColors.white,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.v50)),
                       padding: EdgeInsets.symmetric(vertical: 16),
                     ),
-                    child: Text(
-                      LanguageService.get('Reschedule'),
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
+                    child: Text(LanguageService.get('Reschedule'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   ),
                 ),
               ),
@@ -983,11 +867,7 @@ class TicketDetailsView extends StatelessWidget {
       highlightColor: AppColors.textGray.withValues(alpha: 0.3),
       child: Row(
         children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(14)),
-          ),
+          Container(width: 50, height: 50, decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(14))),
           SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -1113,33 +993,15 @@ class TicketDetailsView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(child: _buildShimmerInfoRow()),
-              SizedBox(width: 14),
-              Expanded(child: _buildShimmerInfoRow()),
-            ],
-          ),
+          Row(children: [Expanded(child: _buildShimmerInfoRow()), SizedBox(width: 14), Expanded(child: _buildShimmerInfoRow())]),
           SizedBox(height: 10),
           Divider(color: AppColors.lightGray),
           SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(child: _buildShimmerInfoRow()),
-              SizedBox(width: 14),
-              Expanded(child: _buildShimmerInfoRow()),
-            ],
-          ),
+          Row(children: [Expanded(child: _buildShimmerInfoRow()), SizedBox(width: 14), Expanded(child: _buildShimmerInfoRow())]),
           SizedBox(height: 10),
           Divider(color: AppColors.lightGray),
           SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(child: _buildShimmerInfoRow()),
-              SizedBox(width: 16),
-              Expanded(child: _buildShimmerInfoRow()),
-            ],
-          ),
+          Row(children: [Expanded(child: _buildShimmerInfoRow()), SizedBox(width: 16), Expanded(child: _buildShimmerInfoRow())]),
         ],
       ),
     );
@@ -1148,11 +1010,7 @@ class TicketDetailsView extends StatelessWidget {
   Widget _buildShimmerInfoRow() {
     return Row(
       children: [
-        Container(
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(8)),
-        ),
+        Container(width: 36, height: 36, decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(8))),
         SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -1195,37 +1053,25 @@ class TicketDetailsView extends StatelessWidget {
                   SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(height: 14, width: 100, color: AppColors.white),
-                      Container(height: 16, width: 80, color: AppColors.white),
-                    ],
+                    children: [Container(height: 14, width: 100, color: AppColors.white), Container(height: 16, width: 80, color: AppColors.white)],
                   ),
                   SizedBox(height: 24),
                   Divider(height: 24, color: AppColors.textGray.withValues(alpha: 0.1)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(height: 11, width: 80, color: AppColors.white),
-                      Container(height: 11, width: 60, color: AppColors.white),
-                    ],
+                    children: [Container(height: 11, width: 80, color: AppColors.white), Container(height: 11, width: 60, color: AppColors.white)],
                   ),
                   SizedBox(height: 24),
                   Divider(height: 24, color: AppColors.textGray.withValues(alpha: 0.1)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(height: 11, width: 80, color: AppColors.white),
-                      Container(height: 11, width: 60, color: AppColors.white),
-                    ],
+                    children: [Container(height: 11, width: 80, color: AppColors.white), Container(height: 11, width: 60, color: AppColors.white)],
                   ),
                   SizedBox(height: 24),
                   Divider(height: 24, color: AppColors.textGray.withValues(alpha: 0.1)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(height: 11, width: 80, color: AppColors.white),
-                      Container(height: 11, width: 60, color: AppColors.white),
-                    ],
+                    children: [Container(height: 11, width: 80, color: AppColors.white), Container(height: 11, width: 60, color: AppColors.white)],
                   ),
                 ],
               ),

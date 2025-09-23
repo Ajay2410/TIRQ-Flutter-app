@@ -256,7 +256,7 @@ class _MachineRecordsViewState extends State<MachineRecordsView> with TickerProv
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "#${machine.machineName} - ${machine.machineName}",
+                  "${machine.modelNumber} - ${machine.machineName?.toUpperCase()}",
                   style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),

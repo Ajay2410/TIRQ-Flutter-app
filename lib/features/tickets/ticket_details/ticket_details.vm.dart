@@ -161,9 +161,9 @@ class TicketDetailsViewModel extends BaseViewModel {
   String getWarrantyStatusColor(String? status) {
     switch (status?.toLowerCase()) {
       case 'in warranty':
-        return 'In Warranty';
+        return 'In warranty';
       case 'out of warranty':
-        return 'Out of Warranty';
+        return 'Out Of Warranty';
       case 'expired':
         return 'Expired';
       default:

@@ -538,7 +538,7 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
       children: [
         CommonTextField(
           controller: TextEditingController(
-            text: "#${machineData.modelNumber} - ${machineData.machineName}",
+            text: "${machineData.modelNumber} - ${machineData.machineName}",
           ),
           label: 'machine_model_name'.lang,
           placeholder: '',
@@ -552,7 +552,7 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
 
         CommonTextField(
           controller: TextEditingController(
-            text: "#${machineData.modelNumber} - ${machineData.modelNumber}",
+            text: "${machineData.modelNumber}",
           ),
           textStyle: TextStyle(color: AppColors.black),
           label: 'model_number'.lang,

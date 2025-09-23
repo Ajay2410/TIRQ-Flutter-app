@@ -236,7 +236,7 @@ class _MachineOverviewViewState extends State<MachineOverviewView> with TickerPr
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "#${machine.modelNumber ?? 'N/A'} - ${machine.machineName ?? 'Unknown Machine'}",
+                  "${machine.modelNumber ?? 'N/A'} - ${machine.machineName?.toUpperCase() ?? 'Unknown Machine'}",
                   style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),

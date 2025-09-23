@@ -293,6 +293,7 @@ class TicketDetails {
   DateTime? updatedAt;
   String? paymentStatus;
   List<Media>? media;
+  bool? IsShowChatOption;
 
   TicketDetails({
     this.id,
@@ -307,6 +308,7 @@ class TicketDetails {
     this.updatedAt,
     this.paymentStatus,
     this.media,
+    this.IsShowChatOption,
   });
 
   factory TicketDetails.fromJson(Map<String, dynamic> json) => TicketDetails(
@@ -322,6 +324,7 @@ class TicketDetails {
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     paymentStatus: json["paymentStatus"],
     media: json["media"] == null ? [] : List<Media>.from(json["media"]!.map((x) => Media.fromJson(x))),
+    IsShowChatOption: json["IsShowChatOption"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -337,6 +340,7 @@ class TicketDetails {
     "updatedAt": updatedAt?.toIso8601String(),
     "paymentStatus": paymentStatus,
     "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x.toJson())),
+    "IsShowChatOption": IsShowChatOption,
   };
 }
 
