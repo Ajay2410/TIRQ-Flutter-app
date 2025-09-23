@@ -16366,5 +16366,27 @@
     "Polish": "Proszę wybrać typ organizacji",
     "Malay/Indonesian": "Silakan pilih jenis organisasi",
     "Ukrainian": "Будь ласка, оберіть тип організації"
+  },
+  "currency": {
+    "English": "Currency",
+    "Hindi": "मुद्रा",
+    "Chinese (Simplified)": "货币",
+    "Spanish": "Moneda",
+    "Japanese": "通貨",
+    "German": "Währung",
+    "French": "Devise",
+    "Arabic": "العملة",
+    "Portuguese": "Moeda",
+    "Russian": "Валюта",
+    "Bengali": "মুদ্রা",
+    "Turkish": "Para birimi",
+    "Italian": "Valuta",
+    "Korean": "통화",
+    "Vietnamese": "Tiền tệ",
+    "Thai": "สกุลเงิน",
+    "Dutch": "Valuta",
+    "Polish": "Waluta",
+    "Malay/Indonesian": "Mata uang",
+    "Ukrainian": "Валюта"
   }
 }

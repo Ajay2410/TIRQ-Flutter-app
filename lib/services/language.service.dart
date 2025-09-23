@@ -8,11 +8,14 @@ import '../core/utils/app_logger.dart';
 
 class LanguageService {
   static Map<String, dynamic> _data = {};
-  String get _selectedLanguage => locator<UserService>().selectedLanguage; // Default fallback
+  String get _selectedLanguage =>
+      locator<UserService>().selectedLanguage; // Default fallback
 
   static Future<void> load() async {
     try {
-      String jsonString = await rootBundle.loadString('assets/lang/language.json');
+      String jsonString = await rootBundle.loadString(
+        'assets/lang/language.json',
+      );
       _data = json.decode(jsonString);
     } catch (e) {
       AppLogger.error('Error loading language file: ${e.toString()}');

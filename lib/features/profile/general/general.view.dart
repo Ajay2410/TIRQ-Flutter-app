@@ -13,17 +13,21 @@ class GeneralSettingView extends StatelessWidget {
   void showTranslationDialog(BuildContext context) {
     Get.dialog(
       Dialog(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.white,insetPadding: EdgeInsets.symmetric(horizontal: 14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(15.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Align(alignment: Alignment.topRight, child: IconButton(onPressed: () {}, icon: Icon(Icons.close))),
-              CircleAvatar(backgroundColor: Color(0xFF687FE5).withValues(alpha: 0.1), radius: 40, child: Image.asset('assets/images/translate.png')),
+              Container(padding: EdgeInsets.all(13),decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.progressBlue.withValues(alpha: 0.1)
+              ), child: Image.asset('assets/images/translate.png')),
               SizedBox(height: 10),
-              Text(LanguageService.get("chat_translation"), style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text(LanguageService.get("chat_translation"), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,color:AppColors.primaryDark
+              )),
               const SizedBox(height: 20),
               Container(
                 decoration: BoxDecoration(),

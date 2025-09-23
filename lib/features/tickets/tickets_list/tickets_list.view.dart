@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:manager/features/chat/chat_view.dart';
 import 'package:manager/services/language.service.dart';
 import 'package:manager/widgets/dialogs/create_ticket/create_ticket_dialog.view.dart';
 import 'package:manager/widgets/dialogs/select_maintenance_type/select_maintenance_type_dialog.view.dart';
@@ -584,7 +585,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                   if (ticket.status == "Active") ...[
                     ElevatedButton(
                       onPressed:
-                          ticket.status == "Active" || ticket.status == "In Progress" ? () => print("Chat pressed for ticket: ${ticket.id}") : null,
+                          ticket.status == "Active" || ticket.status == "In Progress" ? _openChat(ticket) : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: AppColors.white,
@@ -751,7 +752,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
     final count = 2; // Online Support and Site Visit
     final step = 40.0 / (count - 1);
     final buttons = [
-      _ActionButton(onPressed: () => _onSiteVisitPressed(model), label: 'site_visit'.lang, backgroundColor: AppColors.primary),
+      _ActionButton(onPressed: () => _onSiteVisitPressed(model), label: 'site_visit'.lang, backgroundColor: AppColors.primaryLight),
       _ActionButton(onPressed: () => _onOnlineSupportPressed(model), label: 'online_support'.lang, backgroundColor: AppColors.primary),
     ];
 
@@ -787,6 +788,35 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
         ),
       ),
     );
+  }
+
+  _openChat(TicketList ticket) {
+
+    // if (ticket == null) return;
+    //
+    // final ticketNumber =
+    //     ticket.ticketNumber ?? 'Unknown';
+    // final chatWithName =
+    //     ticket.processor?.fullName ?? 'Customer';
+    // final contactInitials =
+    // chatWithName.isNotEmpty
+    //     ? chatWithName.substring(0, 1).toUpperCase()
+    //     : 'U';
+    // final roomId = ticket.chatRoom?.id ?? '';
+    //
+    // // Navigate to chat screen
+    // Navigator.of(context).push(
+    //   MaterialPageRoute(
+    //     builder:
+    //         (context) => ChatView(
+    //       contactName: chatWithName,
+    //       contactNumber: ticketNumber,
+    //       contactInitials: contactInitials,
+    //       roomId: roomId,
+    //     ),
+    //   ),
+    // );
+
   }
 }
 

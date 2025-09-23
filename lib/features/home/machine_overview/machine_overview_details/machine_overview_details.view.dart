@@ -223,7 +223,7 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
       _ActionButton(
         onPressed: () => _onSiteVisitPressed(viewModel),
         label: 'site_visit'.lang,
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryLight,
       ),
       _ActionButton(
         onPressed: () => _onOnlineSupportPressed(viewModel),

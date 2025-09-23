@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:manager/features/profile/my_wallet/controller/languageController';
 import 'package:manager/resources/app_resources/app_resources.dart';
+import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/services/language.service.dart';
 import 'package:manager/widgets/common_app_bar.dart';
 import 'package:manager/widgets/common_elevated_button.dart';
+import 'package:manager/widgets/common_text_field.dart';
+
+import '../my_wallet/controller/languageController.dart';
 
 class AppLanguageView extends StatefulWidget {
   const AppLanguageView({super.key});
@@ -13,8 +17,7 @@ class AppLanguageView extends StatefulWidget {
   State<AppLanguageView> createState() => _AppLanguageViewState();
 }
 
-class _AppLanguageViewState extends State<AppLanguageView>
-    with SingleTickerProviderStateMixin {
+class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProviderStateMixin {
   final controller = Get.put(LanguageController());
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
@@ -32,12 +35,7 @@ class _AppLanguageViewState extends State<AppLanguageView>
       backgroundColor: AppColors.white,
       appBar: _buildAppBar(context),
       bottomNavigationBar: _buildSaveButton(context),
-      body: Column(
-        children: [
-          _buildSearchBar(context),
-          Expanded(child: _buildLanguageList(context)),
-        ],
-      ),
+      body: Column(children: [_buildSearchBar(context), Expanded(child: _buildLanguageList(context))]),
     );
   }
 
@@ -50,152 +48,80 @@ class _AppLanguageViewState extends State<AppLanguageView>
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
         color: AppColors.white,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withOpacity(0.05),
-            offset: const Offset(0, 2),
-            blurRadius: 8,
-          ),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withOpacity(0.05), offset: const Offset(0, 2), blurRadius: 8)],
       ),
-      child: TextField(
+      child: CommonTextField(
         controller: _searchController,
-        focusNode: _searchFocusNode,
+        placeholder: LanguageService.get('search_language'),
         onChanged: (value) {
           controller.updateSearch(value);
         },
-        decoration: InputDecoration(
-          hintText: 'Search Language',
-          hintStyle: TextStyle(color: AppColors.gray),
-          prefixIcon: Icon(Icons.search, color: AppColors.primary),
-          fillColor: AppColors.lightGray.withOpacity(0.3),
-          filled: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          suffixIcon:
-              _searchController.text.isNotEmpty
-                  ? IconButton(
-                    icon: Icon(Icons.clear, color: AppColors.gray),
-                    onPressed: () {
-                      _searchController.clear();
-                      controller.updateSearch('');
-                    },
-                  )
-                  : null,
-        ),
+        prefixIcon: Padding(padding: const EdgeInsets.all(12), child: Image.asset(AppImages.search, height: 17, width: 17, color: AppColors.black)),
+        suffixIcon:
+            _searchController.text.isNotEmpty
+                ? IconButton(
+                  icon: Icon(Icons.clear, color: AppColors.gray),
+                  onPressed: () {
+                    _searchController.clear();
+                    controller.updateSearch('');
+                  },
+                )
+                : null,
+        contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       ),
     );
   }
 
   Widget _buildLanguageList(BuildContext context) {
-    return Obx(
-      () => ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+    return Container(
+      color: AppColors.white,
+      child: ListView.separated(
+        separatorBuilder: (BuildContext context, int index) {
+          return Divider(height: 20, color: AppColors.textGray.withValues(alpha: 0.1));
+        },
+        padding: EdgeInsets.symmetric(horizontal: 13, vertical: 16),
         itemCount: controller.filteredLanguages.length,
         itemBuilder: (_, index) {
           final lang = controller.filteredLanguages[index];
-          final isSelected = controller.selectedLanguageCode.value == lang.code;
 
-          return Container(
-            margin: EdgeInsets.only(bottom: 12),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
-                  blurRadius: 8,
-                  offset: Offset(0, 2),
+          return InkWell(
+            onTap: () => controller.selectLanguage(lang.code),
+            child: Row(
+              children: [
+                // Flag container
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: AppColors.softGray.withOpacity(0.1)),
+                  child: Center(child: Text(lang.flag, style: TextStyle(fontSize: 24))),
+                ),
+                SizedBox(width: 10),
+                // Language info
+                Expanded(child: Text(lang.name, style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w700))),
+                // Radio button
+                StreamBuilder<Object>(
+                  stream: controller.selectedLanguageCode.stream,
+                  builder: (context, snapshot) {
+                    final isSelected = controller.selectedLanguageCode.value == lang.code;
+
+                    return Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: isSelected ? AppColors.primaryLight : AppColors.textGray.withValues(alpha: 0.1), width: 1.5),
+                        color: AppColors.white,
+                      ),
+                      child: Center(
+                        child: Container(
+                          width: 9,
+                          height: 9,
+                          decoration: BoxDecoration(shape: BoxShape.circle, color: isSelected ? AppColors.primaryLight : AppColors.transparent),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(16),
-                onTap: () => controller.selectLanguage(lang.code),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                  child: Row(
-                    children: [
-                      // Flag container
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: AppColors.softGray.withOpacity(0.1),
-                        ),
-                        child: Center(
-                          child: Text(
-                            lang.flag,
-                            style: TextStyle(fontSize: 28),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      // Language info
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              lang.name,
-                              style: TextStyle(
-                                color: AppColors.textPrimary,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              _getCountryName(lang.code),
-                              style: TextStyle(
-                                color: AppColors.textSecondary,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Radio button
-                      Container(
-                        width: 24,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color:
-                                isSelected
-                                    ? AppColors.primary
-                                    : AppColors.lightGray,
-                            width: 2,
-                          ),
-                          color:
-                              isSelected ? AppColors.primary : AppColors.white,
-                        ),
-                        child:
-                            isSelected
-                                ? Center(
-                                  child: Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.white,
-                                    ),
-                                  ),
-                                )
-                                : null,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             ),
           );
         },
@@ -203,39 +129,31 @@ class _AppLanguageViewState extends State<AppLanguageView>
     );
   }
 
-  String _getCountryName(String code) {
-    switch (code) {
-      case 'us':
-        return 'United States';
-      case 'uk':
-        return 'United Kingdom';
-      case 'eg':
-        return 'Egypt (Syria)';
-      case 'th':
-        return 'Thailand (ประเทศไทย)';
-      case 'dk':
-        return 'Denmark (Storbritannien)';
-      case 'de':
-        return 'Germany (Deutschland)';
-      default:
-        return '';
-    }
-  }
-
   Widget _buildSaveButton(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 13),
       margin: EdgeInsets.only(bottom: 10),
-      child: CommonElevatedButton(
-        label: LanguageService.get('save_changes'),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        backgroundColor: AppColors.primaryDark,
-        textColor: AppColors.white,
-        borderRadius: 45,
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        boxShadow: [BoxShadow(color: AppColors.black.withOpacity(0.1), offset: const Offset(0, 2), blurRadius: 8)],
+      ),
+      child: Obx(
+        () => CommonElevatedButton(
+          height: 48,
+          label: controller.isLoading.value ? 'Saving...' : LanguageService.get('save_changes'),
+          onPressed:
+              controller.isLoading.value
+                  ? null
+                  : () async {
+                    await controller.saveLanguage();
+                    // App will restart automatically, no need to navigate back
+                  },
+          backgroundColor: AppColors.primaryDark,
+          textColor: AppColors.white,
+          borderRadius: 45,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

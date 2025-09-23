@@ -564,7 +564,7 @@ class _SupplierMachineDetailsViewState extends State<SupplierMachineDetailsView>
       _ActionButton(
         onPressed: () => _onSiteVisitPressed(viewModel),
         label: 'site_visit'.lang,
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryLight,
       ),
       _ActionButton(
         onPressed: () => _onOnlineSupportPressed(viewModel),

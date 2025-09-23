@@ -131,6 +131,7 @@ class CustomerEditDetailsView extends StatelessWidget {
           validator: CommonValidators.email(LanguageService.get('please_enter_valid_email')),
           enabled: false,
           readOnly: true,
+          textStyle: TextStyle(color: AppColors.black),
         ),
         const SizedBox(height: 16),
 
@@ -141,6 +142,7 @@ class CustomerEditDetailsView extends StatelessWidget {
           validator: CommonValidators.required(LanguageService.get('please_enter_designation')),
           enabled: false,
           readOnly: true,
+          textStyle: TextStyle(color: AppColors.black),
         ),
         const SizedBox(height: 16),
 

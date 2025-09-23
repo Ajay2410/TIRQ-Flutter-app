@@ -191,6 +191,21 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
     HapticFeedback.lightImpact();
   }
 
+  Color _getAppBarColor(int index) {
+    switch (index) {
+      case 0:
+        return AppColors.peachPuff; // Index 1: #FEF2E6
+      case 1:
+        return AppColors.mistyRose; // Index 2: #FFEAEA
+      case 2:
+        return AppColors.teaGreen; // Index 3: #F0F6EB
+      case 3:
+        return AppColors.lavenderBlue; // Index 4: #E9ECFB
+      default:
+        return AppColors.white; // Default fallback
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentPage = _pages[_currentIndex];
@@ -203,8 +218,41 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
       ),
       child: Scaffold(
         backgroundColor: AppColors.white,
+        appBar: AppBar(
+          backgroundColor: _getAppBarColor(_currentIndex),
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AnimatedBuilder(
+                animation: _pulseController,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: _pulseAnimation.value,
+                    child: Image.asset('assets/images/logo2.png', height: 32, width: 65, fit: BoxFit.contain),
+                  );
+                },
+              ),
+
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginView()));
+                },
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Text(LanguageService.get("skip"), style: TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.bold)),
+                ),
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: _buildNavigationButtons(currentPage),
         body: SafeArea(
-          child: Column(children: [_buildHeader(), Expanded(child: _buildPageContent()), _buildNavigationButtons(currentPage)]),
+          child: SingleChildScrollView(child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [_buildHeader(), _buildPageContent()])),
         ),
       ),
     );
@@ -214,33 +262,26 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
     return ClipRRect(
       child: SizedBox(
         height: Get.height * 0.5,
+        width: Get.width,
         child: Stack(
           children: [
             AnimatedBuilder(
               animation: _imageTransitionController,
               builder: (context, child) {
-                return Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Positioned(
-                      top: -65,
-                      child: AnimatedBuilder(
-                        animation: _backgroundController,
-                        builder: (context, child) {
-                          return Transform.scale(
-                            scale: _imageScaleAnimation.value * (1.0 + _backgroundAnimation.value * 0.03), // Subtle breathing effect
-                            child: Opacity(
-                              opacity: _imageFadeAnimation.value,
-                              child: Image.asset(_pages[_currentIndex].imagePath, height: Get.height * 0.5, width: Get.width, fit: BoxFit.contain),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-
-                    // Gradient overlay that changes color based on current page
-                    AnimatedContainer(duration: Duration(milliseconds: 600), decoration: BoxDecoration()),
-                  ],
+                return Positioned(
+                  top: -65,
+                  child: AnimatedBuilder(
+                    animation: _backgroundController,
+                    builder: (context, child) {
+                      return Transform.scale(
+                        scale: _imageScaleAnimation.value * (1.0 + _backgroundAnimation.value * 0.03), // Subtle breathing effect
+                        child: Opacity(
+                          opacity: _imageFadeAnimation.value,
+                          child: Image.asset(_pages[_currentIndex].imagePath, height: Get.height * 0.5, width: Get.width, fit: BoxFit.fill),
+                        ),
+                      );
+                    },
+                  ),
                 );
               },
             ),
@@ -277,39 +318,6 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                 );
               },
             ),
-
-            // Foreground content
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 7, vertical: 16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AnimatedBuilder(
-                    animation: _pulseController,
-                    builder: (context, child) {
-                      return Transform.scale(
-                        scale: _pulseAnimation.value,
-                        child: Image.asset('assets/images/logo2.png', height: 32, width: 65, fit: BoxFit.contain),
-                      );
-                    },
-                  ),
-
-                  GestureDetector(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginView()));
-                    },
-                    child: AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
-                      padding: EdgeInsets.symmetric(vertical: 8),
-
-                      child: Text(LanguageService.get("skip"), style: TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
@@ -317,30 +325,36 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
   }
 
   Widget _buildPageContent() {
-    return PageView.builder(
-      controller: _pageController,
-      onPageChanged: _onPageChanged,
-      itemCount: _pages.length,
-      itemBuilder: (context, index) {
-        return _buildPageItem(_pages[index]);
-      },
+    return Stack(
+      children: [
+        SizedBox(
+          height: 200,
+          child: PageView.builder(
+            controller: _pageController,
+            onPageChanged: _onPageChanged,
+            itemCount: _pages.length,
+            itemBuilder: (context, index) {
+              return _buildPageItem(_pages[index]);
+            },
+          ),
+        ),
+        Positioned(left: 14,child: _buildCapitalLatter(_pages[_currentIndex].subtitleImagePath ?? "")),
+      ],
     );
   }
 
   Widget _buildCapitalLatter(String subtitleImagePath) {
-    return Container(
-      child: Image.asset(
-        subtitleImagePath,
-        height: subtitleImagePath == "assets/images/Q.png" ? 140 : 128,
-        width:
-            subtitleImagePath == "assets/images/Q.png"
-                ? 115
-                : subtitleImagePath == "assets/images/I.png"
-                ? 70
-                : subtitleImagePath == "assets/images/R.png"
-                ? 90
-                : 105,
-      ),
+    return Image.asset(
+      subtitleImagePath,
+      height: subtitleImagePath == "assets/images/Q.png" ? 140 : 128,
+      width:
+          subtitleImagePath == "assets/images/Q.png"
+              ? 115
+              : subtitleImagePath == "assets/images/I.png"
+              ? 70
+              : subtitleImagePath == "assets/images/R.png"
+              ? 90
+              : 105,
     );
   }
 
@@ -352,116 +366,21 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
           opacity: _fadeAnimation.value,
           child: Column(
             children: [
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(width: 20),
-                    _buildCapitalLatter(page.subtitleImagePath ?? ""),
-                    Column(
-                      children: [
-                        _buildPageIndicators(),
-                        SizedBox(height: 40),
-                        Text(
-                          page.title,
-                          style: TextStyle(fontSize: 34, fontWeight: FontWeight.w900, color: Colors.black),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              _buildPageIndicators(),
+              Text(
+                page.title,
+                style: TextStyle(fontSize: 34, fontWeight: FontWeight.w900, color: Colors.black),
+                textAlign: TextAlign.center,
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: Text(
-                  page.description,
-                  style: TextStyle(fontSize: 14, color: AppColors.textGray, fontWeight: FontWeight.w400),
-                  textAlign: TextAlign.center,
-                ),
+              SizedBox(height: 6),
+
+              Text(
+                page.description,
+                style: TextStyle(fontSize: 14, color: AppColors.textGray, fontWeight: FontWeight.w400),
+                textAlign: TextAlign.center,
               ),
             ],
           ),
-
-          // children: [
-          //   Stack(
-          //     children: [
-          //       // Large background letter positioned in the upper area
-          //       Positioned(
-          //         left: 10,
-          //         top: 25,
-          //         child: AnimatedDefaultTextStyle(
-          //           duration: Duration(milliseconds: 600),
-          //           style: TextStyle(
-          //             fontSize: 180,
-          //             fontWeight: FontWeight.w900,
-          //             color: Color(0xFF042c74).withOpacity(0.1),
-          //             letterSpacing: -10,
-          //             height: 0.8,
-          //           ),
-          //           child: Text(page.subtitle),
-          //         ),
-          //       ),
-          //
-          //       // Page indicators positioned in the middle area
-          //       Positioned(
-          //         top: MediaQuery.of(context).size.height * 0.02, // Positioned at 45% of screen height
-          //         left: 0,
-          //         right: 0,
-          //         child: _buildPageIndicators(),
-          //       ),
-          //
-          //       // Content area with title and description
-          //       Positioned(
-          //         bottom: -30,
-          //         left: 0,
-          //         right: 0,
-          //         height: 250, // Reduced height since indicators are now separate
-          //         child: Column(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           children: [
-          //             // Main title
-          //             Transform.translate(
-          //               offset: Offset(0, _slideUpAnimation.value * 0.5),
-          //               child:
-          //               Text(
-          //                 page.title,
-          //                 style: TextStyle(
-          //                   fontSize: 34,
-          //                   fontWeight: FontWeight.w900,
-          //                   color: Colors.black,
-          //                 ),
-          //                 textAlign: TextAlign.center,
-          //               ),
-          //             ),
-          //
-          //               SizedBox(height: 10),
-          //
-          //             // Description
-          //             Transform.translate(
-          //               offset: Offset(0, _slideUpAnimation.value * 0.3),
-          //               child:
-          //               Container(
-          //                 padding: EdgeInsets.symmetric(horizontal: 10),
-          //                 child:
-          //                 Text(
-          //                   page.description,
-          //                   style: TextStyle(
-          //                     fontSize: 14,
-          //                     color: AppColors.textGray,
-          //                     fontWeight: FontWeight.w400,
-          //                   ),
-          //                   textAlign: TextAlign.center,
-          //                 ),
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ],
         );
       },
     );
@@ -469,7 +388,7 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
 
   Widget _buildPageIndicators() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 20),
+      padding: EdgeInsets.symmetric(vertical: 36),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: List.generate(_pages.length, (index) => _buildDotIndicator(index))),
     );
   }
