@@ -498,10 +498,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                                   ],
                                 ),
                               ),
-                              Text(
-                                ticket.machine?.machineName ?? 'N/A',
-                                style: TextStyle(fontSize: 10, color: AppColors.black, fontWeight: FontWeight.bold),
-                              ),
+                              Text(ticket.ticketNumber ?? 'N/A', style: TextStyle(fontSize: 10, color: AppColors.black, fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ],
@@ -520,12 +517,14 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InfoColumn(label: LanguageService.get("created_date"), value: _formatTicketDate(ticket.createdAt!.toIso8601String())),
-                  InfoColumn(label: LanguageService.get("error_code"), value: "#${ticket.errorCode ?? "N/A"}"),
+                  InfoColumn(
+                    label: LanguageService.get("error_code"),
+                    value: ticket.errorCode == null || ticket.errorCode == "" ? "N/A" : ticket.errorCode ?? 'N/A',
+                  ),
                   InfoColumn(
                     label: LanguageService.get("warranty_status"),
-                    value: "N/A",
-                    // Warranty status not available in current model
-                    valueColor: AppColors.textGray,
+                    value: ticket.warrantyStatus ?? "N/A",
+                    valueColor: ticket.warrantyStatus == 'In warranty' ? AppColors.success : AppColors.redBack,
                     valueFontWeight: FontWeight.w600,
                     valueFontSize: 10,
                     maxLines: 1,
@@ -561,12 +560,12 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (ticket.status == "Active") ...[
+                  if (ticket.status != "Resolved") ...[
                     ElevatedButton(
                       onPressed:
                           ticket.IsShowChatOption == true
                               ? () {
-                                _openChat(ticket);
+                                _openChat(ticket, model);
                               }
                               : null,
                       style: ElevatedButton.styleFrom(
@@ -773,8 +772,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
     );
   }
 
-  _openChat(TicketList ticket) {
-    if (ticket == null) return;
+  _openChat(TicketList ticket, TicketsListViewModel model) async {
     if (ticket.chatRoom?.id == null) {
       Fluttertoast.showToast(msg: "Chat room not found");
       return;
@@ -784,12 +782,24 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
     final contactInitials = chatWithName.isNotEmpty ? chatWithName.substring(0, 1).toUpperCase() : 'U';
     final roomId = ticket.chatRoom?.id ?? '';
 
-    // Navigate to chat screen
-    Navigator.of(context).push(
+    // Navigate to chat screen and wait for result
+    final result = await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => ChatView(contactName: chatWithName, contactNumber: ticketNumber, contactInitials: contactInitials, roomId: roomId),
+        builder:
+            (context) => ChatView(
+              contactName: chatWithName,
+              contactNumber: ticketNumber,
+              contactInitials: contactInitials,
+              roomId: roomId,
+              ticketId: ticket.id,
+            ),
       ),
     );
+
+    // If ticket was resolved, refresh the tickets list
+    if (result == true) {
+      await model.loadTickets(forceRefresh: true);
+    }
   }
 }
 

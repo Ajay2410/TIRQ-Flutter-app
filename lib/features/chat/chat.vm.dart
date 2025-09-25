@@ -6,12 +6,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:manager/core/storage/storage.dart';
 import 'package:manager/core/utils/app_logger.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../../core/locator.dart';
 import '../../core/models/hive/user/user.dart';
 import '../../resources/app_resources/app_resources.dart';
+import '../../services/api.service.dart';
 import '../../services/chat.service.dart';
+import '../../services/dialogs.service.dart';
 import '../../services/language.service.dart';
 import '../../services/socket_service.dart';
+import '../../widgets/dialogs/loader/loader_dialog.view.dart';
 import 'model/chat_message_model.dart';
 
 enum MessageType {
@@ -31,6 +35,8 @@ enum MessageType {
 
 class ChatViewModel extends ReactiveViewModel {
   final _chatService = locator<ChatService>();
+  final _apiService = locator<ApiService>();
+  final _dialogService = locator<DialogService>();
   final TextEditingController messageController = TextEditingController();
   final ScrollController scrollController = ScrollController();
 
@@ -545,6 +551,51 @@ class ChatViewModel extends ReactiveViewModel {
   /// Send a file attachment
   Future<void> sendAttachment({required String fileUrl, required MessageType messageType, required String fileName}) async {
     // This method is broken and needs to be updated for ChatMessageModel
+  }
+
+  /// Resolve chat by updating ticket status
+  Future<bool> resolveChat(String ticketId) async {
+    final response = await _dialogService.showCustomDialog(
+      variant: DialogType.loader,
+      data: LoaderDialogAttributes(
+        message: 'Resolving chat...',
+        task: () async {
+          try {
+            final response = await _apiService.put(url: 'ticket/update/$ticketId', data: {'status': 'Resolved'});
+
+            if (response.statusCode == 200) {
+              AppLogger.info('Ticket resolved successfully');
+              return 'success';
+            } else {
+              throw Exception('Failed to resolve ticket: ${response.statusCode}');
+            }
+          } catch (e) {
+            AppLogger.error('Error resolving chat: $e');
+            throw e;
+          }
+        },
+      ),
+    );
+
+    if (response?.confirmed == true) {
+      Fluttertoast.showToast(
+        msg: 'Chat resolved successfully',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: AppColors.success,
+        textColor: AppColors.white,
+      );
+      return true;
+    } else {
+      Fluttertoast.showToast(
+        msg: 'Failed to resolve chat: ${response?.data ?? 'Unknown error'}',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: AppColors.error,
+        textColor: AppColors.white,
+      );
+      return false;
+    }
   }
 
   @override

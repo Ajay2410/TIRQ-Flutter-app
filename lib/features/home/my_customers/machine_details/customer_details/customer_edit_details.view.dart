@@ -16,22 +16,34 @@ class CustomerEditDetailsView extends StatelessWidget {
   final MachineElement? machineElement;
   final bool isFromSearchOrganization;
 
-  const CustomerEditDetailsView({super.key, required this.customer, this.machineElement, this.isFromSearchOrganization = false});
+  const CustomerEditDetailsView({
+    super.key,
+    required this.customer,
+    this.machineElement,
+    this.isFromSearchOrganization = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CustomerEditDetailsViewModel>.reactive(
       viewModelBuilder:
-          () =>
-              CustomerEditDetailsViewModel(customer: customer, isFromSearchOrganization: isFromSearchOrganization)
-                ..init(machineElement: machineElement),
+          () => CustomerEditDetailsViewModel(
+            customer: customer,
+            isFromSearchOrganization: isFromSearchOrganization,
+          )..init(machineElement: machineElement),
       builder: (context, model, child) {
-        return Scaffold(appBar: _buildAppBar(context, model), body: _buildBody(context, model));
+        return Scaffold(
+          appBar: _buildAppBar(context, model),
+          body: _buildBody(context, model),
+        );
       },
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context, CustomerEditDetailsViewModel model) {
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context,
+    CustomerEditDetailsViewModel model,
+  ) {
     return AppBar(
       elevation: 0,
       flexibleSpace: Container(
@@ -45,7 +57,12 @@ class CustomerEditDetailsView extends StatelessWidget {
         ),
       ),
       leading: IconButton(
-        icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
+        icon: Image.asset(
+          AppImages.back,
+          width: 24,
+          height: 24,
+          color: AppColors.white,
+        ),
         onPressed: () => Navigator.of(context).pop(),
       ),
       titleSpacing: 0,
@@ -53,31 +70,56 @@ class CustomerEditDetailsView extends StatelessWidget {
         children: [
           Container(
             padding: EdgeInsets.all(2),
-            decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorF0F2FC),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.colorF0F2FC,
+            ),
             child: Stack(
               clipBehavior: Clip.none,
               children: [
                 Container(
                   height: 26,
                   width: 26,
-                  decoration: BoxDecoration(color: AppColors.bluebackground, shape: BoxShape.circle),
+                  decoration: BoxDecoration(
+                    color: AppColors.bluebackground,
+                    shape: BoxShape.circle,
+                  ),
                   child: Center(
                     child: Text(
-                      customer.customerName?.substring(0, 2).toUpperCase() ?? 'NA',
-                      style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                      customer.customerName?.substring(0, 2).toUpperCase() ??
+                          'NA',
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
                 Positioned(
                   bottom: -4,
                   right: -4,
-                  child: ClipRRect(borderRadius: BorderRadius.circular(2), child: AppImages.getSvgFlag(customer.flag ?? "", width: 14, height: 14)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(2),
+                    child: AppImages.getSvgFlag(
+                      customer.flag ?? "",
+                      width: 14,
+                      height: 14,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 12),
-          Text(customer.customerName ?? 'Unknown Customer', style: TextStyle(color: AppColors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+          Text(
+            customer.customerName ?? 'Unknown Customer',
+            style: TextStyle(
+              color: AppColors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );
@@ -96,10 +138,17 @@ class CustomerEditDetailsView extends StatelessWidget {
                 color: AppColors.white,
                 padding: const EdgeInsets.all(16),
                 child: Column(
-                  children: [_buildCustomerInfoSection(context, model), const SizedBox(height: 24), _buildMachineOwnershipSection(context, model)],
+                  children: [
+                    _buildCustomerInfoSection(context, model),
+                    const SizedBox(height: 24),
+                    _buildMachineOwnershipSection(context, model),
+                  ],
                 ),
               ),
-              Padding(padding: const EdgeInsets.all(16), child: _buildSaveButton(context, model)),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: _buildSaveButton(context, model),
+              ),
             ],
           ),
         ),
@@ -107,7 +156,10 @@ class CustomerEditDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildCustomerInfoSection(BuildContext context, CustomerEditDetailsViewModel model) {
+  Widget _buildCustomerInfoSection(
+    BuildContext context,
+    CustomerEditDetailsViewModel model,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -115,7 +167,9 @@ class CustomerEditDetailsView extends StatelessWidget {
           controller: model.contactPersonController,
           label: LanguageService.get('contact_person'),
           placeholder: LanguageService.get('person_name'),
-          validator: CommonValidators.required(LanguageService.get('please_enter_contact_person')),
+          validator: CommonValidators.required(
+            LanguageService.get('please_enter_contact_person'),
+          ),
         ),
         const SizedBox(height: 16),
         _buildPhoneField(context, model),
@@ -126,7 +180,9 @@ class CustomerEditDetailsView extends StatelessWidget {
           label: LanguageService.get('email_address'),
           placeholder: LanguageService.get('email_address_placeholder'),
           keyboardType: TextInputType.emailAddress,
-          validator: CommonValidators.email(LanguageService.get('please_enter_valid_email')),
+          validator: CommonValidators.email(
+            LanguageService.get('please_enter_valid_email'),
+          ),
           enabled: false,
           readOnly: true,
           textStyle: TextStyle(color: AppColors.black),
@@ -138,10 +194,14 @@ class CustomerEditDetailsView extends StatelessWidget {
 
         if (machineElement != null) ...{
           CommonTextField(
-            controller: TextEditingController(text: machineElement?.machine?.machineName ?? ""),
+            controller: TextEditingController(
+              text: machineElement?.machine?.machineName ?? "",
+            ),
             label: LanguageService.get('assign_machine'),
             placeholder: LanguageService.get('please_select_machine'),
-            validator: CommonValidators.required(LanguageService.get('please_enter_designation')),
+            validator: CommonValidators.required(
+              LanguageService.get('please_enter_designation'),
+            ),
             enabled: false,
             readOnly: true,
           ),
@@ -152,11 +212,21 @@ class CustomerEditDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildPhoneField(BuildContext context, CustomerEditDetailsViewModel model) {
+  Widget _buildPhoneField(
+    BuildContext context,
+    CustomerEditDetailsViewModel model,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(LanguageService.get('phone_number'), style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+        Text(
+          LanguageService.get('phone_number'),
+          style: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         const SizedBox(height: 8),
         AbsorbPointer(
           absorbing: isFromSearchOrganization,
@@ -174,17 +244,35 @@ class CustomerEditDetailsView extends StatelessWidget {
             readOnly: true,
             decoration: InputDecoration(
               hintText: LanguageService.get('phone_number_placeholder'),
-              hintStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+              hintStyle: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 14,
+              ),
               filled: true,
               fillColor: AppColors.colorF8FBFE,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.lightGray)),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.lightGray)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: AppColors.lightGray),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: AppColors.lightGray),
+              ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                borderSide: const BorderSide(
+                  color: AppColors.primary,
+                  width: 2,
+                ),
               ),
-              errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.error)),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: AppColors.error),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
+              ),
             ),
             validator: (phone) {
               if (phone == null || phone.number.isEmpty) {
@@ -201,13 +289,24 @@ class CustomerEditDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildDesignationDropdown(BuildContext context, CustomerEditDetailsViewModel model) {
+  Widget _buildDesignationDropdown(
+    BuildContext context,
+    CustomerEditDetailsViewModel model,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(LanguageService.get('designation'), style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+        Text(
+          LanguageService.get('designation'),
+          style: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         const SizedBox(height: 8),
         FormField<String>(
+          initialValue: model.selectedDesignation,
           validator: (value) {
             if (value == null || value.isEmpty) {
               return LanguageService.get('please_select_designation');
@@ -231,21 +330,47 @@ class CustomerEditDetailsView extends StatelessWidget {
                     initialItem: model.selectedDesignation,
                     hintText: LanguageService.get('select_designation'),
                     decoration: CustomDropdownDecoration(
-                      headerStyle: TextStyle(color: AppColors.textPrimary, fontSize: 14),
-                      listItemStyle: TextStyle(color: AppColors.textPrimary, fontSize: 14),
-                      hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                      headerStyle: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 14,
+                      ),
+                      listItemStyle: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 14,
+                      ),
+                      hintStyle: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 14,
+                      ),
                       closedFillColor: AppColors.white,
-                      closedBorder: Border.all(color: field.hasError ? AppColors.error : AppColors.lightGray),
+                      closedBorder: Border.all(
+                        color:
+                            field.hasError
+                                ? AppColors.error
+                                : AppColors.lightGray,
+                      ),
                       closedBorderRadius: BorderRadius.circular(12),
-                      closedErrorBorder: Border.all(color: AppColors.error, width: 1),
-                      closedSuffixIcon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                      closedErrorBorder: Border.all(
+                        color: AppColors.error,
+                        width: 1,
+                      ),
+                      closedSuffixIcon: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                   ),
                 ),
                 if (field.hasError)
                   Padding(
                     padding: const EdgeInsets.only(left: 16, top: 4),
-                    child: Text(field.errorText!, style: const TextStyle(color: AppColors.error, fontSize: 11)),
+                    child: Text(
+                      field.errorText!,
+                      style: const TextStyle(
+                        color: AppColors.error,
+                        fontSize: 11,
+                      ),
+                    ),
                   ),
               ],
             );
@@ -255,13 +380,24 @@ class CustomerEditDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildMachineDropdown(BuildContext context, CustomerEditDetailsViewModel model) {
+  Widget _buildMachineDropdown(
+    BuildContext context,
+    CustomerEditDetailsViewModel model,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(LanguageService.get('assign_machine'), style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+        Text(
+          LanguageService.get('assign_machine'),
+          style: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         const SizedBox(height: 8),
         FormField<String>(
+          initialValue: model.selectedMachine,
           validator: (value) {
             if (value == null || value.isEmpty) {
               return LanguageService.get('please_select_machine');
@@ -278,16 +414,29 @@ class CustomerEditDetailsView extends StatelessWidget {
                       model.isLoadingMachines
                           ? Container(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
-                            decoration: BoxDecoration(border: Border.all(color: AppColors.lightGray), borderRadius: BorderRadius.circular(12)),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColors.lightGray),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                             child: Row(
                               children: [
                                 const SizedBox(
                                   width: 16,
                                   height: 16,
-                                  child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary)),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      AppColors.primary,
+                                    ),
+                                  ),
                                 ),
                                 const SizedBox(width: 12),
-                                Text(LanguageService.get('loading_machines'), style: const TextStyle(color: AppColors.textSecondary)),
+                                Text(
+                                  LanguageService.get('loading_machines'),
+                                  style: const TextStyle(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
                               ],
                             ),
                           )
@@ -300,23 +449,53 @@ class CustomerEditDetailsView extends StatelessWidget {
                             },
                             initialItem: model.selectedMachine,
                             hintText:
-                                model.machineItems.isEmpty ? LanguageService.get('no_machines_available') : LanguageService.get('select_machine'),
+                                model.machineItems.isEmpty
+                                    ? LanguageService.get(
+                                      'no_machines_available',
+                                    )
+                                    : LanguageService.get('select_machine'),
                             decoration: CustomDropdownDecoration(
-                              headerStyle: TextStyle(color: AppColors.textPrimary, fontSize: 14),
-                              listItemStyle: TextStyle(color: AppColors.textPrimary, fontSize: 14),
-                              hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                              headerStyle: TextStyle(
+                                color: AppColors.textPrimary,
+                                fontSize: 14,
+                              ),
+                              listItemStyle: TextStyle(
+                                color: AppColors.textPrimary,
+                                fontSize: 14,
+                              ),
+                              hintStyle: TextStyle(
+                                color: AppColors.textSecondary,
+                                fontSize: 14,
+                              ),
                               closedFillColor: AppColors.white,
-                              closedBorder: Border.all(color: field.hasError ? AppColors.redBack : AppColors.lightGray),
+                              closedBorder: Border.all(
+                                color:
+                                    field.hasError
+                                        ? AppColors.redBack
+                                        : AppColors.lightGray,
+                              ),
                               closedBorderRadius: BorderRadius.circular(12),
-                              closedErrorBorder: Border.all(color: AppColors.redBack, width: 1),
-                              closedSuffixIcon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                              closedErrorBorder: Border.all(
+                                color: AppColors.redBack,
+                                width: 1,
+                              ),
+                              closedSuffixIcon: const Icon(
+                                Icons.keyboard_arrow_down,
+                                color: AppColors.textSecondary,
+                              ),
                             ),
                           ),
                 ),
                 if (field.hasError)
                   Padding(
                     padding: const EdgeInsets.only(left: 16, top: 4),
-                    child: Text(field.errorText!, style: const TextStyle(color: AppColors.error, fontSize: 11)),
+                    child: Text(
+                      field.errorText!,
+                      style: const TextStyle(
+                        color: AppColors.error,
+                        fontSize: 11,
+                      ),
+                    ),
                   ),
               ],
             );
@@ -326,13 +505,20 @@ class CustomerEditDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildMachineOwnershipSection(BuildContext context, CustomerEditDetailsViewModel model) {
+  Widget _buildMachineOwnershipSection(
+    BuildContext context,
+    CustomerEditDetailsViewModel model,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           LanguageService.get('machine_ownership'),
-          style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 10),
         Row(
@@ -403,7 +589,9 @@ class CustomerEditDetailsView extends StatelessWidget {
               child: _buildClickableInvoiceRow(
                 AppImages.invoice,
                 LanguageService.get('invoice_contract_no'),
-                model.invoiceContractNo.isEmpty ? LanguageService.get('not_available') : model.invoiceContractNo,
+                model.invoiceContractNo.isEmpty
+                    ? LanguageService.get('not_available')
+                    : model.invoiceContractNo,
                 AppColors.color41C293,
                 () => _showInvoiceContractDialog(context, model),
               ),
@@ -414,7 +602,13 @@ class CustomerEditDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildClickableDateRow(String iconPath, String label, String value, Color iconColor, VoidCallback onTap) {
+  Widget _buildClickableDateRow(
+    String iconPath,
+    String label,
+    String value,
+    Color iconColor,
+    VoidCallback onTap,
+  ) {
     final bool isNotAvailable = value == LanguageService.get('not_available');
 
     return InkWell(
@@ -424,19 +618,41 @@ class CustomerEditDetailsView extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
-            child: Image.asset(iconPath, width: 20, height: 20, color: iconColor),
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Image.asset(
+              iconPath,
+              width: 20,
+              height: 20,
+              color: iconColor,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
                 const SizedBox(height: 4),
                 Text(
                   value,
-                  style: TextStyle(color: isNotAvailable ? AppColors.redBack : AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                    color:
+                        isNotAvailable
+                            ? AppColors.redBack
+                            : AppColors.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
@@ -446,7 +662,13 @@ class CustomerEditDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildClickableWarrantyStatusRow(String iconPath, String label, String value, Color iconColor, VoidCallback onTap) {
+  Widget _buildClickableWarrantyStatusRow(
+    String iconPath,
+    String label,
+    String value,
+    Color iconColor,
+    VoidCallback onTap,
+  ) {
     final bool isEmpty = value.isEmpty;
 
     return InkWell(
@@ -456,17 +678,39 @@ class CustomerEditDetailsView extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
-            child: Image.asset(iconPath, width: 20, height: 20, color: AppColors.success),
+            decoration: BoxDecoration(
+              color: AppColors.success.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Image.asset(
+              iconPath,
+              width: 20,
+              height: 20,
+              color: AppColors.success,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Text(value, style: TextStyle(color: isEmpty ? AppColors.redBack : iconColor, fontSize: 14, fontWeight: FontWeight.w500)),
+                Text(
+                  value,
+                  style: TextStyle(
+                    color: isEmpty ? AppColors.redBack : iconColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ],
             ),
           ),
@@ -475,7 +719,13 @@ class CustomerEditDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildClickableInvoiceRow(String iconPath, String label, String value, Color iconColor, VoidCallback onTap) {
+  Widget _buildClickableInvoiceRow(
+    String iconPath,
+    String label,
+    String value,
+    Color iconColor,
+    VoidCallback onTap,
+  ) {
     final bool isEmpty = value == LanguageService.get('not_available');
 
     return InkWell(
@@ -484,17 +734,39 @@ class CustomerEditDetailsView extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
-            child: Image.asset(iconPath, width: 20, height: 20, color: iconColor),
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Image.asset(
+              iconPath,
+              width: 20,
+              height: 20,
+              color: iconColor,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Text(value, style: TextStyle(color: isEmpty ? AppColors.redBack : AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+                Text(
+                  value,
+                  style: TextStyle(
+                    color: isEmpty ? AppColors.redBack : AppColors.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ],
             ),
           ),
@@ -503,8 +775,13 @@ class CustomerEditDetailsView extends StatelessWidget {
     );
   }
 
-  void _showInvoiceContractDialog(BuildContext context, CustomerEditDetailsViewModel model) {
-    final TextEditingController controller = TextEditingController(text: model.invoiceContractNo);
+  void _showInvoiceContractDialog(
+    BuildContext context,
+    CustomerEditDetailsViewModel model,
+  ) {
+    final TextEditingController controller = TextEditingController(
+      text: model.invoiceContractNo,
+    );
 
     showDialog(
       context: context,
@@ -513,7 +790,11 @@ class CustomerEditDetailsView extends StatelessWidget {
           backgroundColor: AppColors.white,
           title: Text(
             LanguageService.get('invoice_contract_no'),
-            style: const TextStyle(color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600),
+            style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -532,7 +813,11 @@ class CustomerEditDetailsView extends StatelessWidget {
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(
                   LanguageService.get('cancel'),
-                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 16, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
@@ -547,10 +832,18 @@ class CustomerEditDetailsView extends StatelessWidget {
                   backgroundColor: AppColors.primary,
                   foregroundColor: AppColors.white,
                   padding: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   elevation: 0,
                 ),
-                child: Text(LanguageService.get('save'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                child: Text(
+                  LanguageService.get('save'),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: 8),
@@ -560,7 +853,10 @@ class CustomerEditDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildSaveButton(BuildContext context, CustomerEditDetailsViewModel model) {
+  Widget _buildSaveButton(
+    BuildContext context,
+    CustomerEditDetailsViewModel model,
+  ) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -569,7 +865,9 @@ class CustomerEditDetailsView extends StatelessWidget {
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(45),
+          ),
           elevation: 5,
         ),
         child:
@@ -577,9 +875,18 @@ class CustomerEditDetailsView extends StatelessWidget {
                 ? const SizedBox(
                   height: 20,
                   width: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.white)),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
+                  ),
                 )
-                : Text(LanguageService.get('save'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                : Text(
+                  LanguageService.get('save'),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
       ),
     );
   }

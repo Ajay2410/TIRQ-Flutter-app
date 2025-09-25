@@ -25,12 +25,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
   final VoidCallback? onCustomerCreated;
   final String? customerId;
 
-  CreateNewCustomerViewModel({
-    this.isEditMode = false,
-    this.machineData,
-    this.onCustomerCreated,
-    this.customerId,
-  });
+  CreateNewCustomerViewModel({this.isEditMode = false, this.machineData, this.onCustomerCreated, this.customerId});
 
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -64,8 +59,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
 
   String get warrantyStatus => _warrantyStatus;
 
-  Color get warrantyStatusColor =>
-      _warrantyStatus == 'In Warranty' ? AppColors.success : AppColors.redBack;
+  Color get warrantyStatusColor => _warrantyStatus == 'In Warranty' ? AppColors.success : AppColors.redBack;
 
   String _invoiceContractNo = '';
 
@@ -87,41 +81,28 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
   List<MachineElement>? get existingMachines => _existingMachines;
 
   String get displayPhoneNumber {
-    AppLogger.info(
-      "displayPhoneNumber getter called - _fullPhoneNumber: '$_fullPhoneNumber'",
-    );
+    AppLogger.info("displayPhoneNumber getter called - _fullPhoneNumber: '$_fullPhoneNumber'");
     return _fullPhoneNumber.isNotEmpty ? _fullPhoneNumber : '';
   }
 
-  bool get hasPhoneNumber =>
-      _fullPhoneNumber.isNotEmpty && _countryCode.isNotEmpty;
+  bool get hasPhoneNumber => _fullPhoneNumber.isNotEmpty && _countryCode.isNotEmpty;
 
   String get formattedPurchaseDate =>
-      _purchaseDate != null
-          ? DateFormat('MMM dd, yyyy').format(_purchaseDate!)
-          : LanguageService.get('not_available');
+      _purchaseDate != null ? DateFormat('MMM dd, yyyy').format(_purchaseDate!) : LanguageService.get('not_available');
 
   String get formattedInstallationDate =>
-      _installationDate != null
-          ? DateFormat('MMM dd, yyyy').format(_installationDate!)
-          : LanguageService.get('not_available');
+      _installationDate != null ? DateFormat('MMM dd, yyyy').format(_installationDate!) : LanguageService.get('not_available');
 
   String get formattedWarrantyStartDate =>
-      _warrantyStartDate != null
-          ? DateFormat('MMM dd, yyyy').format(_warrantyStartDate!)
-          : LanguageService.get('not_available');
+      _warrantyStartDate != null ? DateFormat('MMM dd, yyyy').format(_warrantyStartDate!) : LanguageService.get('not_available');
 
   String get formattedWarrantyEndDate =>
-      _warrantyEndDate != null
-          ? DateFormat('MMM dd, yyyy').format(_warrantyEndDate!)
-          : LanguageService.get('not_available');
+      _warrantyEndDate != null ? DateFormat('MMM dd, yyyy').format(_warrantyEndDate!) : LanguageService.get('not_available');
 
   List<String> get designationItems {
     List<String> baseItems = ['MD', 'CEO', 'Chairman', 'Other'];
 
-    if (isEditMode &&
-        _selectedDesignation != null &&
-        _selectedDesignation!.isNotEmpty) {
+    if (isEditMode && _selectedDesignation != null && _selectedDesignation!.isNotEmpty) {
       if (!baseItems.contains(_selectedDesignation)) {
         baseItems.insert(0, _selectedDesignation!);
       }
@@ -131,15 +112,9 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
   }
 
   List<String> get machineItems {
-    List<String> items =
-        _machineStorageService.machines
-            .map((machine) => machine.machineName ?? '')
-            .where((name) => name.isNotEmpty)
-            .toList();
+    List<String> items = _machineStorageService.machines.map((machine) => machine.machineName ?? '').where((name) => name.isNotEmpty).toList();
 
-    if (isEditMode &&
-        _selectedMachine != null &&
-        _selectedMachine!.isNotEmpty) {
+    if (isEditMode && _selectedMachine != null && _selectedMachine!.isNotEmpty) {
       if (!items.contains(_selectedMachine)) {
         items.insert(0, _selectedMachine!);
       }
@@ -161,6 +136,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       _purchaseDate = DateTime.now();
       _installationDate = DateTime.now();
       _warrantyStartDate = DateTime.now();
+      _updateWarrantyStatus();
       notifyListeners();
     }
   }
@@ -187,38 +163,28 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
                 if (parts.length >= 2) {
                   _countryCode = parts[0].substring(1);
                   _fullPhoneNumber = parts[1];
-                  AppLogger.info(
-                    "Parsed phone with space - Country: $_countryCode, Number: $_fullPhoneNumber",
-                  );
+                  AppLogger.info("Parsed phone with space - Country: $_countryCode, Number: $_fullPhoneNumber");
                 }
               } else {
                 if (phone.length >= 3) {
                   _countryCode = phone.substring(1, 3);
                   _fullPhoneNumber = phone.substring(3);
-                  AppLogger.info(
-                    "Parsed phone without space - Country: $_countryCode, Number: $_fullPhoneNumber",
-                  );
+                  AppLogger.info("Parsed phone without space - Country: $_countryCode, Number: $_fullPhoneNumber");
                 }
               }
             } else {
               _fullPhoneNumber = phone;
-              AppLogger.info(
-                "Parsed phone without + - Number: $_fullPhoneNumber",
-              );
+              AppLogger.info("Parsed phone without + - Number: $_fullPhoneNumber");
             }
 
-            AppLogger.info(
-              "Final phone data - Country: $_countryCode, Number: $_fullPhoneNumber, Display: $displayPhoneNumber",
-            );
+            AppLogger.info("Final phone data - Country: $_countryCode, Number: $_fullPhoneNumber, Display: $displayPhoneNumber");
           } else {
             AppLogger.warning("No phone number found in customer data");
           }
 
           if (customer.machines != null && customer.machines!.isNotEmpty) {
             _existingMachines = customer.machines;
-            AppLogger.info(
-              "Customer has ${customer.machines!.length} machines",
-            );
+            AppLogger.info("Customer has ${customer.machines!.length} machines");
             AppLogger.info("Existing machines data loaded for editing");
           } else {
             AppLogger.info("No existing machines found for customer");
@@ -237,9 +203,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
     if (machineData == null) return;
 
     AppLogger.error("Machine data in edit mode: $machineData");
-    AppLogger.error(
-      "Available machine data keys: ${machineData!.keys.toList()}",
-    );
+    AppLogger.error("Available machine data keys: ${machineData!.keys.toList()}");
 
     emailController.text = machineData!['email'] ?? '';
     contactPersonController.text = machineData!['contactPerson'] ?? '';
@@ -250,9 +214,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       try {
         _purchaseDate = DateTime.parse(machineData!['purchaseDate']);
       } catch (e) {
-        AppLogger.error(
-          "Error parsing purchase date: ${machineData!['purchaseDate']}",
-        );
+        AppLogger.error("Error parsing purchase date: ${machineData!['purchaseDate']}");
       }
     }
 
@@ -260,9 +222,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       try {
         _installationDate = DateTime.parse(machineData!['installationDate']);
       } catch (e) {
-        AppLogger.error(
-          "Error parsing installation date: ${machineData!['installationDate']}",
-        );
+        AppLogger.error("Error parsing installation date: ${machineData!['installationDate']}");
       }
     }
 
@@ -270,9 +230,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       try {
         _warrantyStartDate = DateTime.parse(machineData!['warrantyStartDate']);
       } catch (e) {
-        AppLogger.error(
-          "Error parsing warranty start date: ${machineData!['warrantyStartDate']}",
-        );
+        AppLogger.error("Error parsing warranty start date: ${machineData!['warrantyStartDate']}");
       }
     }
 
@@ -280,15 +238,12 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       try {
         _warrantyEndDate = DateTime.parse(machineData!['warrantyEndDate']);
       } catch (e) {
-        AppLogger.error(
-          "Error parsing warranty end date: ${machineData!['warrantyEndDate']}",
-        );
+        AppLogger.error("Error parsing warranty end date: ${machineData!['warrantyEndDate']}");
       }
     }
 
-    if (machineData!['warrantyStatus'] != null) {
-      _warrantyStatus = machineData!['warrantyStatus'];
-    }
+    // Update warranty status based on the loaded warranty end date
+    _updateWarrantyStatus();
 
     if (machineData!['invoiceContractNo'] != null) {
       _invoiceContractNo = machineData!['invoiceContractNo'];
@@ -307,19 +262,13 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       AppLogger.info("Found phone number in 'phoneNumber' field: $phoneNumber");
     } else if (machineData!['phone_number'] != null) {
       phoneNumber = machineData!['phone_number'].toString();
-      AppLogger.info(
-        "Found phone number in 'phone_number' field: $phoneNumber",
-      );
+      AppLogger.info("Found phone number in 'phone_number' field: $phoneNumber");
     } else if (machineData!['contactPhone'] != null) {
       phoneNumber = machineData!['contactPhone'].toString();
-      AppLogger.info(
-        "Found phone number in 'contactPhone' field: $phoneNumber",
-      );
+      AppLogger.info("Found phone number in 'contactPhone' field: $phoneNumber");
     } else if (machineData!['contact_phone'] != null) {
       phoneNumber = machineData!['contact_phone'].toString();
-      AppLogger.info(
-        "Found phone number in 'contact_phone' field: $phoneNumber",
-      );
+      AppLogger.info("Found phone number in 'contact_phone' field: $phoneNumber");
     }
 
     if (phoneNumber != null) {
@@ -331,33 +280,23 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
           if (parts.length >= 2) {
             _countryCode = parts[0].substring(1);
             _fullPhoneNumber = parts[1];
-            AppLogger.info(
-              "Parsed machine phone with space - Country: $_countryCode, Number: $_fullPhoneNumber",
-            );
+            AppLogger.info("Parsed machine phone with space - Country: $_countryCode, Number: $_fullPhoneNumber");
           }
         } else {
           if (phoneNumber.length >= 3) {
             _countryCode = phoneNumber.substring(1, 3);
             _fullPhoneNumber = phoneNumber.substring(3);
-            AppLogger.info(
-              "Parsed machine phone without space - Country: $_countryCode, Number: $_fullPhoneNumber",
-            );
+            AppLogger.info("Parsed machine phone without space - Country: $_countryCode, Number: $_fullPhoneNumber");
           }
         }
       } else {
         _fullPhoneNumber = phoneNumber;
-        AppLogger.info(
-          "Parsed machine phone without + - Number: $_fullPhoneNumber",
-        );
+        AppLogger.info("Parsed machine phone without + - Number: $_fullPhoneNumber");
       }
 
-      AppLogger.info(
-        "Final machine phone data - Country: $_countryCode, Number: $_fullPhoneNumber, Display: $displayPhoneNumber",
-      );
+      AppLogger.info("Final machine phone data - Country: $_countryCode, Number: $_fullPhoneNumber, Display: $displayPhoneNumber");
     } else {
-      AppLogger.warning(
-        "No phone number found in machine data with any known field name",
-      );
+      AppLogger.warning("No phone number found in machine data with any known field name");
     }
 
     notifyListeners();
@@ -374,9 +313,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       AppLogger.info("Phone number updated to: $_fullPhoneNumber");
     }
 
-    AppLogger.info(
-      "Phone/Country updated - Country: $_countryCode, Number: $_fullPhoneNumber",
-    );
+    AppLogger.info("Phone/Country updated - Country: $_countryCode, Number: $_fullPhoneNumber");
   }
 
   void updateCountryCode(String countryCode) {
@@ -387,33 +324,22 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
   }
 
   void updateDesignation(String? value) {
-    AppLogger.info(
-      "Designation updating - Before: $_selectedDesignation, After: $value, Current country code: $_countryCode",
-    );
+    AppLogger.info("Designation updating - Before: $_selectedDesignation, After: $value, Current country code: $_countryCode");
     _selectedDesignation = value;
     notifyListeners();
-    AppLogger.info(
-      "Designation updated - Country code after notifyListeners: $_countryCode",
-    );
+    AppLogger.info("Designation updated - Country code after notifyListeners: $_countryCode");
   }
 
   void updateMachine(String? value) {
-    AppLogger.info(
-      "Machine updating - Before: $_selectedMachine, After: $value, Current country code: $_countryCode",
-    );
+    AppLogger.info("Machine updating - Before: $_selectedMachine, After: $value, Current country code: $_countryCode");
     _selectedMachine = value;
     notifyListeners();
-    AppLogger.info(
-      "Machine updated - Country code after notifyListeners: $_countryCode",
-    );
+    AppLogger.info("Machine updated - Country code after notifyListeners: $_countryCode");
   }
 
   Datum? get selectedMachineObject {
     if (_selectedMachine == null) return null;
-    return _machineStorageService.machines.firstWhere(
-      (machine) => machine.machineName == _selectedMachine,
-      orElse: () => Datum(),
-    );
+    return _machineStorageService.machines.firstWhere((machine) => machine.machineName == _selectedMachine, orElse: () => Datum());
   }
 
   Future<void> selectPurchaseDate(BuildContext context) async {
@@ -451,6 +377,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
     );
     if (picked != null && picked != _warrantyStartDate) {
       _warrantyStartDate = picked;
+      _updateWarrantyStatus();
       notifyListeners();
     }
   }
@@ -460,29 +387,17 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
     DateTime initialDate;
 
     if (_warrantyEndDate != null) {
-      initialDate =
-          _warrantyEndDate!.isBefore(firstDate) ? firstDate : _warrantyEndDate!;
+      initialDate = _warrantyEndDate!.isBefore(firstDate) ? firstDate : _warrantyEndDate!;
     } else {
-      initialDate =
-          firstDate.isAfter(DateTime.now()) ? firstDate : DateTime.now();
+      initialDate = firstDate.isAfter(DateTime.now()) ? firstDate : DateTime.now();
     }
 
-    final DateTime? picked = await CustomDatePicker.show(
-      context: context,
-      initialDate: initialDate,
-      firstDate: firstDate,
-      lastDate: DateTime(2100),
-    );
+    final DateTime? picked = await CustomDatePicker.show(context: context, initialDate: initialDate, firstDate: firstDate, lastDate: DateTime(2100));
     if (picked != null && picked != _warrantyEndDate) {
       _warrantyEndDate = picked;
+      _updateWarrantyStatus();
       notifyListeners();
     }
-  }
-
-  void toggleWarrantyStatus() {
-    _warrantyStatus =
-        _warrantyStatus == 'In Warranty' ? 'Out of Warranty' : 'In Warranty';
-    notifyListeners();
   }
 
   void updateInvoiceContractNo(String value) {
@@ -490,9 +405,25 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
+  void _updateWarrantyStatus() {
+    if (_warrantyEndDate == null) {
+      _warrantyStatus = 'In Warranty';
+      return;
+    }
+
+    final DateTime today = DateTime.now();
+    final DateTime todayOnly = DateTime(today.year, today.month, today.day);
+    final DateTime warrantyEndOnly = DateTime(_warrantyEndDate!.year, _warrantyEndDate!.month, _warrantyEndDate!.day);
+
+    if (warrantyEndOnly.isAfter(todayOnly) || warrantyEndOnly.isAtSameMomentAs(todayOnly)) {
+      _warrantyStatus = 'In Warranty';
+    } else {
+      _warrantyStatus = 'Out of Warranty';
+    }
+  }
+
   Future<void> onSavePressed(BuildContext context) async {
-    if (formKey.currentState?.validate() == true &&
-        _validateMachineOwnership()) {
+    if (formKey.currentState?.validate() == true && _validateMachineOwnership()) {
       if (isEditMode) {
         AppLogger.error("Form is valid! Updating customer...");
         await _updateCustomer(context);
@@ -514,21 +445,14 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       if (_selectedMachine != null && _selectedMachine!.isNotEmpty) {
         final selectedMachineObj = selectedMachineObject;
         if (selectedMachineObj != null) {
-          final String apiWarrantyStatus =
-              _warrantyStatus == 'In Warranty'
-                  ? 'In warranty'
-                  : 'Out Of Warranty';
+          final String apiWarrantyStatus = _warrantyStatus == 'In Warranty' ? 'In warranty' : 'Out Of Warranty';
 
           machines.add({
             'machine': selectedMachineObj.id ?? '',
-            'purchaseDate':
-                _purchaseDate?.toIso8601String().split('T')[0] ?? '',
-            'installationDate':
-                _installationDate?.toIso8601String().split('T')[0] ?? '',
-            'warrantyStart':
-                _warrantyStartDate?.toIso8601String().split('T')[0] ?? '',
-            'warrantyEnd':
-                _warrantyEndDate?.toIso8601String().split('T')[0] ?? '',
+            'purchaseDate': _purchaseDate?.toIso8601String().split('T')[0] ?? '',
+            'installationDate': _installationDate?.toIso8601String().split('T')[0] ?? '',
+            'warrantyStart': _warrantyStartDate?.toIso8601String().split('T')[0] ?? '',
+            'warrantyEnd': _warrantyEndDate?.toIso8601String().split('T')[0] ?? '',
             'warrantyStatus': apiWarrantyStatus,
             'invoiceContractNo': _invoiceContractNo,
           });
@@ -547,12 +471,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       result.fold(
         (failure) {
           AppLogger.error("Failed to create customer: ${failure.message}");
-          Fluttertoast.showToast(
-            msg: failure.message,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            toastLength: Toast.LENGTH_SHORT,
-          );
+          Fluttertoast.showToast(msg: failure.message, backgroundColor: Colors.red, textColor: Colors.white, toastLength: Toast.LENGTH_SHORT);
         },
         (customer) {
           AppLogger.error("Customer created successfully: ${customer.id}");
@@ -589,26 +508,14 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       final List<Map<String, dynamic>> machines = [];
 
       if (_existingMachines != null && _existingMachines!.isNotEmpty) {
-        AppLogger.info(
-          "Preserving ${_existingMachines!.length} existing machines for update",
-        );
+        AppLogger.info("Preserving ${_existingMachines!.length} existing machines for update");
         for (var machineElement in _existingMachines!) {
           final machineData = {
             'machine': machineElement.machine?.id ?? '',
-            'purchaseDate':
-                machineElement.purchaseDate?.toIso8601String().split('T')[0] ??
-                '',
-            'installationDate':
-                machineElement.installationDate?.toIso8601String().split(
-                  'T',
-                )[0] ??
-                '',
-            'warrantyStart':
-                machineElement.warrantyStart?.toIso8601String().split('T')[0] ??
-                '',
-            'warrantyEnd':
-                machineElement.warrantyEnd?.toIso8601String().split('T')[0] ??
-                '',
+            'purchaseDate': machineElement.purchaseDate?.toIso8601String().split('T')[0] ?? '',
+            'installationDate': machineElement.installationDate?.toIso8601String().split('T')[0] ?? '',
+            'warrantyStart': machineElement.warrantyStart?.toIso8601String().split('T')[0] ?? '',
+            'warrantyEnd': machineElement.warrantyEnd?.toIso8601String().split('T')[0] ?? '',
             'warrantyStatus': machineElement.warrantyStatus ?? 'Active',
             'invoiceContractNo': machineElement.invoiceContractNo ?? '',
           };
@@ -632,12 +539,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       result.fold(
         (failure) {
           AppLogger.error("Failed to update customer: ${failure.message}");
-          Fluttertoast.showToast(
-            msg: failure.message,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            toastLength: Toast.LENGTH_SHORT,
-          );
+          Fluttertoast.showToast(msg: failure.message, backgroundColor: Colors.red, textColor: Colors.white, toastLength: Toast.LENGTH_SHORT);
         },
         (customer) {
           AppLogger.error("Customer updated successfully: ${customer.id}");
@@ -739,12 +641,9 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       return _convertCountryCodeToIsoCode(country.code);
     }
 
-    final normalizedCode =
-        countryCode.startsWith('+') ? countryCode.substring(1) : countryCode;
+    final normalizedCode = countryCode.startsWith('+') ? countryCode.substring(1) : countryCode;
 
-    final matchingCountries = CountryHelper.getCountriesByDialCode(
-      normalizedCode,
-    );
+    final matchingCountries = CountryHelper.getCountriesByDialCode(normalizedCode);
     if (matchingCountries.isNotEmpty) {
       return _convertCountryCodeToIsoCode(matchingCountries.first.code);
     }
@@ -1166,9 +1065,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
       case 'MK':
         return IsoCode.MK;
       default:
-        AppLogger.warning(
-          "Unknown country code: $countryCode, falling back to IN",
-        );
+        AppLogger.warning("Unknown country code: $countryCode, falling back to IN");
         return IsoCode.IN;
     }
   }

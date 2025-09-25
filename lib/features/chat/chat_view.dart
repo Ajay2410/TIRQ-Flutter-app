@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/widgets/common_app_bar.dart';
 import 'package:manager/widgets/common_text_field.dart';
@@ -19,8 +20,9 @@ class ChatView extends StatefulWidget {
   final String contactNumber;
   final String contactInitials;
   final String? roomId;
+  final String? ticketId;
 
-  const ChatView({super.key, required this.contactName, required this.contactNumber, required this.contactInitials, this.roomId});
+  const ChatView({super.key, required this.contactName, required this.contactNumber, required this.contactInitials, this.roomId, this.ticketId});
 
   @override
   State<ChatView> createState() => _ChatViewState();
@@ -92,6 +94,37 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
     }
   }
 
+  void _handleResolveAction(ChatViewModel model) {
+    // Handle resolve action
+    if (widget.ticketId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('No ticket ID available for resolution')));
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Resolve Chat'),
+          content: Text('Are you sure you want to resolve this chat?'),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                final result = await model.resolveChat(widget.ticketId!);
+                if (result == true) {
+                  Get.back(result: true);
+                }
+              },
+              child: Text('Resolve'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   PreferredSizeWidget _buildAppBar(BuildContext context, ChatViewModel model) {
     return GradientAppBar(
       leading: IconButton(
@@ -130,11 +163,28 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
       actions: [
         InkWell(child: Image.asset(AppImages.search, width: 20, height: 20, color: AppColors.white), onTap: () => _toggleSearch(model)),
         SizedBox(width: 16),
-        InkWell(
-          child: Icon(Icons.more_vert, color: AppColors.white, size: 20),
-          onTap: () {
-            // Handle more options
+        PopupMenuButton<String>(
+          icon: Icon(Icons.more_vert, color: AppColors.white, size: 20),
+          menuPadding: EdgeInsets.zero,
+          offset: Offset(-10, 40),
+          onSelected: (String value) {
+            if (value == 'resolve') {
+              _handleResolveAction(model);
+            }
           },
+          itemBuilder:
+              (BuildContext context) => [
+                PopupMenuItem<String>(
+                  value: 'resolve',
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Text('Resolve', style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+                  ),
+                ),
+              ],
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          color: AppColors.white,
+          shadowColor: AppColors.black.withValues(alpha: 0.1),
         ),
       ],
     );

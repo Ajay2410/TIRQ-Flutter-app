@@ -19,21 +19,16 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
   final Customer customer;
   final bool isFromSearchOrganization;
 
-  CustomerEditDetailsViewModel({
-    required this.customer,
-    this.isFromSearchOrganization = false,
-  });
+  CustomerEditDetailsViewModel({required this.customer, this.isFromSearchOrganization = false});
 
   final formKey = GlobalKey<FormState>();
 
-  final TextEditingController organizationNameController =
-      TextEditingController();
+  final TextEditingController organizationNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController contactPersonController = TextEditingController();
   final TextEditingController designationController = TextEditingController();
-  final TextEditingController invoiceContractNoController =
-      TextEditingController();
+  final TextEditingController invoiceContractNoController = TextEditingController();
 
   String? _selectedDesignation;
 
@@ -107,11 +102,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
   }
 
   List<String> get machineItems {
-    List<String> items =
-        _machineStorageService.machines
-            .map((machine) => machine.machineName ?? '')
-            .where((name) => name.isNotEmpty)
-            .toList();
+    List<String> items = _machineStorageService.machines.map((machine) => machine.machineName ?? '').where((name) => name.isNotEmpty).toList();
 
     if (_selectedMachine != null && _selectedMachine!.isNotEmpty) {
       if (!items.contains(_selectedMachine)) {
@@ -163,9 +154,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
       }
 
       if (_fullPhoneNumber.length > 10) {
-        phoneController.text = _fullPhoneNumber.substring(
-          (customer.phoneNumber ?? "").length - 11,
-        );
+        phoneController.text = _fullPhoneNumber.substring((customer.phoneNumber ?? "").length - 11);
       } else {
         phoneController.text = _fullPhoneNumber;
       }
@@ -184,6 +173,8 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
       _warrantyStatus = editMachineElement?.warrantyStatus ?? "In warranty";
       _invoiceContractNo = editMachineElement?.invoiceContractNo ?? "";
       invoiceContractNoController.text = _invoiceContractNo;
+      // Update warranty status based on the loaded warranty end date
+      _updateWarrantyStatus();
     } else {
       _purchaseDate = DateTime.now();
       _installationDate = DateTime.now();
@@ -192,6 +183,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
       _warrantyStatus = 'In warranty';
       _invoiceContractNo = '';
       invoiceContractNoController.text = _invoiceContractNo;
+      _updateWarrantyStatus();
     }
 
     notifyListeners();
@@ -228,50 +220,32 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
       context: context,
       initialDate: _warrantyStartDate ?? DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(
-        DateTime.now().year + 10,
-        DateTime.now().month,
-        DateTime.now().day,
-      ),
+      lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
     );
     if (picked != null) {
       _warrantyStartDate = picked;
       if (_warrantyEndDate != null && _warrantyEndDate!.isBefore(picked)) {
         _warrantyEndDate = null;
       }
+      _updateWarrantyStatus();
       notifyListeners();
     }
   }
 
   Future<void> selectWarrantyEndDate(BuildContext context) async {
-    if (_warrantyStartDate == null) {
-      Fluttertoast.showToast(
-        msg: LanguageService.get('please_select_warranty_start_date_first'),
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        toastLength: Toast.LENGTH_SHORT,
-      );
-      return;
-    }
-
-    final DateTime firstDate = _warrantyStartDate!.add(const Duration(days: 1));
+    final DateTime firstDate = _warrantyStartDate ?? DateTime(2000);
     DateTime initialDate;
 
     if (_warrantyEndDate != null) {
-      initialDate =
-          _warrantyEndDate!.isBefore(firstDate) ? firstDate : _warrantyEndDate!;
+      initialDate = _warrantyEndDate!.isBefore(firstDate) ? firstDate : _warrantyEndDate!;
     } else {
-      initialDate = firstDate;
+      initialDate = firstDate.isAfter(DateTime.now()) ? firstDate : DateTime.now();
     }
 
-    final DateTime? picked = await CustomDatePicker.show(
-      context: context,
-      initialDate: initialDate,
-      firstDate: firstDate,
-      lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
-    );
+    final DateTime? picked = await CustomDatePicker.show(context: context, initialDate: initialDate, firstDate: firstDate, lastDate: DateTime(2100));
     if (picked != null) {
       _warrantyEndDate = picked;
+      _updateWarrantyStatus();
       notifyListeners();
     }
   }
@@ -279,6 +253,23 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
   void updateInvoiceContractNo(String value) {
     _invoiceContractNo = value;
     notifyListeners();
+  }
+
+  void _updateWarrantyStatus() {
+    if (_warrantyEndDate == null) {
+      _warrantyStatus = 'In warranty';
+      return;
+    }
+
+    final DateTime today = DateTime.now();
+    final DateTime todayOnly = DateTime(today.year, today.month, today.day);
+    final DateTime warrantyEndOnly = DateTime(_warrantyEndDate!.year, _warrantyEndDate!.month, _warrantyEndDate!.day);
+
+    if (warrantyEndOnly.isAfter(todayOnly) || warrantyEndOnly.isAtSameMomentAs(todayOnly)) {
+      _warrantyStatus = 'In warranty';
+    } else {
+      _warrantyStatus = 'Out Of Warranty';
+    }
   }
 
   void updatePhoneNumber(PhoneNumber phoneNumber) {
@@ -297,8 +288,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
   }
 
   Future<void> onSavePressed(BuildContext context) async {
-    if (formKey.currentState?.validate() == true &&
-        _validateMachineOwnership()) {
+    if (formKey.currentState?.validate() == true && _validateMachineOwnership()) {
       AppLogger.info("Form is valid! Updating customer...");
 
       try {
@@ -320,12 +310,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
 
         result.fold(
           (failure) {
-            Fluttertoast.showToast(
-              msg: failure.message,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              toastLength: Toast.LENGTH_LONG,
-            );
+            Fluttertoast.showToast(msg: failure.message, backgroundColor: Colors.red, textColor: Colors.white, toastLength: Toast.LENGTH_LONG);
             AppLogger.error("Failed to update customer: ${failure.message}");
           },
           (updatedCustomer) {
@@ -335,9 +320,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
               textColor: Colors.white,
               toastLength: Toast.LENGTH_LONG,
             );
-            AppLogger.info(
-              "Customer updated successfully: ${updatedCustomer.id}",
-            );
+            AppLogger.info("Customer updated successfully: ${updatedCustomer.id}");
 
             Navigator.of(context).pop(updatedCustomer);
           },
@@ -368,8 +351,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
         machines.add({
           'machine': machine.id,
           'purchaseDate': _purchaseDate!.toIso8601String().split('T')[0],
-          'installationDate':
-              _installationDate!.toIso8601String().split('T')[0],
+          'installationDate': _installationDate!.toIso8601String().split('T')[0],
           'warrantyStart': _warrantyStartDate!.toIso8601String().split('T')[0],
           'warrantyEnd': _warrantyEndDate!.toIso8601String().split('T')[0],
           'warrantyStatus': _warrantyStatus,
@@ -389,10 +371,8 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
           machines.add({
             'machine': machine?.id,
             'purchaseDate': _purchaseDate!.toIso8601String().split('T')[0],
-            'installationDate':
-                _installationDate!.toIso8601String().split('T')[0],
-            'warrantyStart':
-                _warrantyStartDate!.toIso8601String().split('T')[0],
+            'installationDate': _installationDate!.toIso8601String().split('T')[0],
+            'warrantyStart': _warrantyStartDate!.toIso8601String().split('T')[0],
             'warrantyEnd': _warrantyEndDate!.toIso8601String().split('T')[0],
             'warrantyStatus': _warrantyStatus,
             'invoiceContractNo': _invoiceContractNo,
@@ -400,22 +380,10 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
         } else {
           machines.add({
             'machine': existingMachine.machine?.id,
-            'purchaseDate':
-                existingMachine.purchaseDate?.toIso8601String().split('T')[0] ??
-                '',
-            'installationDate':
-                existingMachine.installationDate?.toIso8601String().split(
-                  'T',
-                )[0] ??
-                '',
-            'warrantyStart':
-                existingMachine.warrantyStart?.toIso8601String().split(
-                  'T',
-                )[0] ??
-                '',
-            'warrantyEnd':
-                existingMachine.warrantyEnd?.toIso8601String().split('T')[0] ??
-                '',
+            'purchaseDate': existingMachine.purchaseDate?.toIso8601String().split('T')[0] ?? '',
+            'installationDate': existingMachine.installationDate?.toIso8601String().split('T')[0] ?? '',
+            'warrantyStart': existingMachine.warrantyStart?.toIso8601String().split('T')[0] ?? '',
+            'warrantyEnd': existingMachine.warrantyEnd?.toIso8601String().split('T')[0] ?? '',
             'warrantyStatus': existingMachine.warrantyStatus ?? '',
             'invoiceContractNo': existingMachine.invoiceContractNo ?? '',
           });

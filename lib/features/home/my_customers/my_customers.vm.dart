@@ -8,6 +8,7 @@ import '../../../api_endpoints.dart';
 import '../../../services/language.service.dart';
 import 'search_organization/search_organization.view.dart';
 import 'create_customer/create_new_customer.view.dart';
+import 'scan_code/scan_code.view.dart';
 
 class MyCustomersViewModel extends BaseViewModel {
   final _apiService = locator<ApiService>();
@@ -125,7 +126,9 @@ class MyCustomersViewModel extends BaseViewModel {
     );
   }
 
-  void onScanFromCamera() {}
+  void onScanFromCamera(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ScanCodeView()));
+  }
 
   void onSearchByPhone(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SearchOrganizationView()));

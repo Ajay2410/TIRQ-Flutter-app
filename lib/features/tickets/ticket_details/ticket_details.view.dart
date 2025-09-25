@@ -390,18 +390,22 @@ class TicketDetailsView extends StatelessWidget {
       title: Text(ticketNumber, style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: AppColors.white, fontWeight: FontWeight.bold)),
       actions: [
         SizedBox(
-          height: 25,
+          height: 23,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               elevation: 0,
-              backgroundColor: model.ticketDetails?.ticketDetails?.status == "resolved" ? AppColors.red : AppColors.white,
+              backgroundColor: model.ticketDetails?.ticketDetails?.status?.toLowerCase() == "resolved" ? AppColors.success : AppColors.white,
               padding: EdgeInsets.all(5),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(6))),
             ),
             onPressed: () {},
             child: Text(
               model.getStatusColor(status),
-              style: TextStyle(color: _getStatusColorFromString(model.ticketDetails?.ticketDetails?.status), fontSize: 10),
+              style: TextStyle(
+                color: _getStatusColorFromString(model.ticketDetails?.ticketDetails?.status),
+                fontWeight: FontWeight.w700,
+                fontSize: 10,
+              ),
             ),
           ),
         ),
@@ -492,7 +496,7 @@ class TicketDetailsView extends StatelessWidget {
     final customerMachineDetails = model.ticketDetails?.customerMachineDetails;
 
     final createdDate = ticketDetails?.createdAt != null ? model.formatDate(ticketDetails!.createdAt) : 'N/A';
-    final errorCode = ticketDetails?.errorCode ?? 'N/A';
+    final errorCode = ticketDetails?.errorCode == null || ticketDetails?.errorCode == '' ? 'N/A' : ticketDetails?.errorCode ?? 'N/A';
     final warrantyStatus = customerMachineDetails?.warrantyStatus ?? 'Unknown';
     final machineName = machineDetails?.machineName ?? 'Unknown';
     final modelNumber = machineDetails?.modelNumber ?? 'Unknown';
@@ -617,7 +621,7 @@ class TicketDetailsView extends StatelessWidget {
           children: [
             Expanded(child: _buildInfoRow(AppImages.warrantyDate, 'warranty_start'.lang, warrantyStart, AppColors.primarySuperLight)),
             SizedBox(width: 14),
-            Expanded(child: _buildInfoRow(AppImages.warrantyDate, 'warranty_end'.lang, warrantyEnd, AppColors.primarySuperLight, isWarning: true)),
+            Expanded(child: _buildInfoRow(AppImages.warrantyDate, 'warranty_end'.lang, warrantyEnd, AppColors.primarySuperLight)),
           ],
         ),
         const SizedBox(height: 10),
@@ -630,7 +634,8 @@ class TicketDetailsView extends StatelessWidget {
                 AppImages.warrantyStatus,
                 'warranty_status'.lang,
                 model.getWarrantyStatusColor(warrantyStatus),
-                AppColors.color41C293,
+                AppColors.primarySuperLight,
+                valueColor: warrantyStatus.toLowerCase() == 'in warranty' ? AppColors.success : AppColors.redBack,
               ),
             ),
             const SizedBox(width: 16),
@@ -641,7 +646,7 @@ class TicketDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(String iconPath, String label, String value, Color iconColor, {bool isWarning = false}) {
+  Widget _buildInfoRow(String iconPath, String label, String value, Color iconColor, {Color? valueColor}) {
     return Row(
       children: [
         Container(
@@ -656,7 +661,7 @@ class TicketDetailsView extends StatelessWidget {
             children: [
               Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
               const SizedBox(height: 4),
-              Text(value, style: TextStyle(color: isWarning ? AppColors.redBack : AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+              Text(value, style: TextStyle(color: valueColor ?? AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
             ],
           ),
         ),
@@ -820,12 +825,15 @@ class TicketDetailsView extends StatelessWidget {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.v50)),
                     padding: EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: Text(LanguageService.get('see_chat'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  child: Text(
+                    getUser().primaryRole == UserRole.organization ? LanguageService.get('see_chat') : LanguageService.get('lets_chat'),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
                 ),
               ),
             ),
           ),
-          if (getUser().primaryRole == UserRole.organization)
+          if (getUser().primaryRole == UserRole.organization && model.ticketDetails?.ticketDetails?.status?.toLowerCase() != "resolved")
             Expanded(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),

@@ -52,6 +52,7 @@ class TicketList {
   String? paymentStatus;
   DateTime? createdAt;
   DateTime? updatedAt;
+  String? warrantyStatus;
   int? v;
   ChatRoom? chatRoom;
   bool? IsShowChatOption;
@@ -74,6 +75,7 @@ class TicketList {
     this.paymentStatus,
     this.createdAt,
     this.updatedAt,
+    this.warrantyStatus,
     this.v,
     this.chatRoom,
     this.IsShowChatOption,
@@ -100,6 +102,7 @@ class TicketList {
     v: json["__v"],
     chatRoom: json["chatRoom"] == null ? null : ChatRoom.fromJson(json["chatRoom"]),
     IsShowChatOption: json["IsShowChatOption"],
+    warrantyStatus: json["warrantyStatus"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -123,6 +126,7 @@ class TicketList {
     "__v": v,
     "chatRoom": chatRoom?.toJson(),
     "IsShowChatOption": IsShowChatOption,
+    "warrantyStatus": warrantyStatus,
   };
 }
 

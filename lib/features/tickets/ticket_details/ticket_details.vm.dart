@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stacked/stacked.dart';
@@ -21,8 +20,11 @@ class TicketDetailsViewModel extends BaseViewModel {
 
   // Getters
   TicketDetailsModel? get ticketDetails => _ticketDetails;
+
   String? get errorMessage => _errorMessage;
+
   bool get hasError => _errorMessage != null;
+
   bool get isLoading => isBusy;
 
   String rescheduleTime = '';
@@ -67,21 +69,16 @@ class TicketDetailsViewModel extends BaseViewModel {
   }
 
   // Start chat functionality
-  void startChat(BuildContext context) {
+  void startChat(BuildContext context) async {
     if (_ticketDetails == null) return;
 
-    final ticketNumber =
-        _ticketDetails!.ticketDetails?.ticketNumber ?? 'Unknown';
-    final chatWithName =
-        _ticketDetails!.processorDetails?.fullName ?? 'Customer';
-    final contactInitials =
-        chatWithName.isNotEmpty
-            ? chatWithName.substring(0, 1).toUpperCase()
-            : 'U';
+    final ticketNumber = _ticketDetails!.ticketDetails?.ticketNumber ?? 'Unknown';
+    final chatWithName = _ticketDetails!.processorDetails?.fullName ?? 'Customer';
+    final contactInitials = chatWithName.isNotEmpty ? chatWithName.substring(0, 1).toUpperCase() : 'U';
     final roomId = _ticketDetails!.chatRoom?.id ?? '';
 
-    // Navigate to chat screen
-    Navigator.of(context).push(
+    // Navigate to chat screen and wait for result
+    final result = await Navigator.of(context).push(
       MaterialPageRoute(
         builder:
             (context) => ChatView(
@@ -89,45 +86,38 @@ class TicketDetailsViewModel extends BaseViewModel {
               contactNumber: ticketNumber,
               contactInitials: contactInitials,
               roomId: roomId,
+              ticketId: _ticketId,
             ),
       ),
     );
+
+    // If ticket was resolved, refresh the ticket details
+    if (result == true) {
+      await refreshTicketDetails();
+    }
   }
 
   // Reschedule functionality
   Future<void> rescheduleTicket(BuildContext context) async {
-      final body = {'reschedule_time': rescheduleTime};
+    final body = {'reschedule_time': rescheduleTime};
 
-      final response = await _apiService.put(url: "${ApiEndpoints.updateTicket}/${_ticketId ?? ""}", data: body);
+    final response = await _apiService.put(url: "${ApiEndpoints.updateTicket}/${_ticketId ?? ""}", data: body);
 
-      if (response.statusCode == 200) {
-        fetchTicketDetails();
-        AppLogger.info('Site visit ticket created successfully: ${response.data['ticket']['_id']}');
-        Fluttertoast.showToast(msg: response.data["message"] ?? 'Reschedule successfully!', backgroundColor: Colors.green);
-      } else {
-        AppLogger.error('Failed to Reschedule');
-        Fluttertoast.showToast(msg: 'Failed to Reschedule', backgroundColor: Colors.green);
-      }
+    if (response.statusCode == 200) {
+      fetchTicketDetails();
+      AppLogger.info('Site visit ticket created successfully: ${response.data['ticket']['_id']}');
+      Fluttertoast.showToast(msg: response.data["message"] ?? 'Reschedule successfully!', backgroundColor: Colors.green);
+    } else {
+      AppLogger.error('Failed to Reschedule');
+      Fluttertoast.showToast(msg: 'Failed to Reschedule', backgroundColor: Colors.green);
+    }
   }
 
   // Get formatted date string
   String formatDate(DateTime? date) {
     if (date == null) return 'N/A';
 
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     final month = months[date.month - 1];
     final day = date.day.toString().padLeft(2, '0');

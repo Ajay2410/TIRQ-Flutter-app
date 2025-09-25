@@ -4,8 +4,7 @@
 
 import 'dart:convert';
 
-CustomerModel customerModelFromJson(String str) =>
-    CustomerModel.fromJson(json.decode(str));
+CustomerModel customerModelFromJson(String str) => CustomerModel.fromJson(json.decode(str));
 
 String customerModelToJson(CustomerModel data) => json.encode(data.toJson());
 
@@ -15,21 +14,10 @@ class CustomerModel {
 
   CustomerModel({this.count, this.data});
 
-  factory CustomerModel.fromJson(Map<String, dynamic> json) => CustomerModel(
-    count: json["count"],
-    data:
-        json["data"] == null
-            ? []
-            : List<Customer>.from(
-              json["data"]!.map((x) => Customer.fromJson(x)),
-            ),
-  );
+  factory CustomerModel.fromJson(Map<String, dynamic> json) =>
+      CustomerModel(count: json["count"], data: json["data"] == null ? [] : List<Customer>.from(json["data"]!.map((x) => Customer.fromJson(x))));
 
-  Map<String, dynamic> toJson() => {
-    "count": count,
-    "data":
-        data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
-  };
+  Map<String, dynamic> toJson() => {"count": count, "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson()))};
 }
 
 class Customer {
@@ -81,20 +69,12 @@ class Customer {
             ? null
             : json["users"] is String
             ? Users(id: json["users"]) // Handle case where users is a string ID
-            : Users.fromJson(
-              json["users"],
-            ), // Handle case where users is an object
-    machines:
-        json["machines"] == null
-            ? []
-            : List<MachineElement>.from(
-              json["machines"]!.map((x) => MachineElement.fromJson(x)),
-            ),
+            : Users.fromJson(json["users"]),
+    // Handle case where users is an object
+    machines: json["machines"] == null ? [] : List<MachineElement>.from(json["machines"]!.map((x) => MachineElement.fromJson(x))),
     isActive: json["isActive"],
-    createdAt:
-        json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
-    updatedAt:
-        json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
+    createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
+    updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
     flag: json["flag"],
   );
@@ -109,10 +89,7 @@ class Customer {
     "designation": designation,
     "countryOrigin": countryOrigin,
     "users": users?.toJson(),
-    "machines":
-        machines == null
-            ? []
-            : List<dynamic>.from(machines!.map((x) => x.toJson())),
+    "machines": machines == null ? [] : List<dynamic>.from(machines!.map((x) => x.toJson())),
     "isActive": isActive,
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
@@ -146,23 +123,14 @@ class MachineElement {
     machine:
         json["machine"] == null
             ? null
+            : json["machine"] is String
+            ? MachineMachine(id: json["machine"]) // Handle case where machine is a string ID
             : MachineMachine.fromJson(json["machine"]),
-    purchaseDate:
-        json["purchaseDate"] == null
-            ? null
-            : DateTime.parse(json["purchaseDate"]),
-    installationDate:
-        json["installationDate"] == null
-            ? null
-            : DateTime.parse(json["installationDate"]),
-    warrantyStart:
-        json["warrantyStart"] == null
-            ? null
-            : DateTime.parse(json["warrantyStart"]),
-    warrantyEnd:
-        json["warrantyEnd"] == null
-            ? null
-            : DateTime.parse(json["warrantyEnd"]),
+    // Handle case where machine is an object
+    purchaseDate: json["purchaseDate"] == null ? null : DateTime.parse(json["purchaseDate"]),
+    installationDate: json["installationDate"] == null ? null : DateTime.parse(json["installationDate"]),
+    warrantyStart: json["warrantyStart"] == null ? null : DateTime.parse(json["warrantyStart"]),
+    warrantyEnd: json["warrantyEnd"] == null ? null : DateTime.parse(json["warrantyEnd"]),
     warrantyStatus: json["warrantyStatus"],
     invoiceContractNo: json["invoiceContractNo"],
     id: json["_id"],
@@ -216,10 +184,7 @@ class MachineMachine {
   });
 
   factory MachineMachine.fromJson(Map<String, dynamic> json) => MachineMachine(
-    processingDimensions:
-        json["processingDimensions"] == null
-            ? null
-            : ProcessingDimensions.fromJson(json["processingDimensions"]),
+    processingDimensions: json["processingDimensions"] == null ? null : ProcessingDimensions.fromJson(json["processingDimensions"]),
     id: json["_id"],
     machineName: json["machineName"],
     modelNumber: json["modelNumber"],
@@ -231,10 +196,8 @@ class MachineMachine {
     status: json["status"],
     isActive: json["isActive"],
     remarks: json["remarks"],
-    createdAt:
-        json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
-    updatedAt:
-        json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
+    createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
+    updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
   );
 
@@ -265,24 +228,16 @@ class ProcessingDimensions {
   String? thickness;
   int? maxSpeed;
 
-  ProcessingDimensions({
-    this.maxHeight,
-    this.maxWidth,
-    this.minHeight,
-    this.minWidth,
-    this.thickness,
-    this.maxSpeed,
-  });
+  ProcessingDimensions({this.maxHeight, this.maxWidth, this.minHeight, this.minWidth, this.thickness, this.maxSpeed});
 
-  factory ProcessingDimensions.fromJson(Map<String, dynamic> json) =>
-      ProcessingDimensions(
-        maxHeight: json["maxHeight"],
-        maxWidth: json["maxWidth"],
-        minHeight: json["minHeight"],
-        minWidth: json["minWidth"],
-        thickness: json["thickness"],
-        maxSpeed: json["maxSpeed"],
-      );
+  factory ProcessingDimensions.fromJson(Map<String, dynamic> json) => ProcessingDimensions(
+    maxHeight: json["maxHeight"],
+    maxWidth: json["maxWidth"],
+    minHeight: json["minHeight"],
+    minWidth: json["minWidth"],
+    thickness: json["thickness"],
+    maxSpeed: json["maxSpeed"],
+  );
 
   Map<String, dynamic> toJson() => {
     "maxHeight": maxHeight,
@@ -301,12 +256,7 @@ class Users {
 
   Users({this.id, this.fullName, this.email});
 
-  factory Users.fromJson(Map<String, dynamic> json) =>
-      Users(id: json["_id"], fullName: json["fullName"], email: json["email"]);
+  factory Users.fromJson(Map<String, dynamic> json) => Users(id: json["_id"], fullName: json["fullName"], email: json["email"]);
 
-  Map<String, dynamic> toJson() => {
-    "_id": id,
-    "fullName": fullName,
-    "email": email,
-  };
+  Map<String, dynamic> toJson() => {"_id": id, "fullName": fullName, "email": email};
 }

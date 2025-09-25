@@ -40,21 +40,17 @@ class ChatListViewModel extends BaseViewModel {
 
   // Filter methods for different chat types based on ticket type
   List<ChatListModel> getTicketChats() {
-    return _allChats.where((chat) {
-      return chat.ticket?.ticketType?.toLowerCase().contains("machine") == true;
-    }).toList();
+    return _allChats;
   }
 
   List<ChatListModel> getDepartmentalChats() {
-    return _allChats.where((chat) {
-      return chat.ticket?.type?.toLowerCase() == "online";
-    }).toList();
+    // API not ready yet - return empty list
+    return [];
   }
 
   List<ChatListModel> getExternalChats() {
-    return _allChats.where((chat) {
-      return chat.ticket?.type?.toLowerCase() != "online";
-    }).toList();
+    // API not ready yet - return empty list
+    return [];
   }
 
   void navigateToHome() {

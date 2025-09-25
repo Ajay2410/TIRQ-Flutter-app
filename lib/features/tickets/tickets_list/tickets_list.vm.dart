@@ -10,7 +10,6 @@ import 'package:stacked_services/stacked_services.dart';
 
 import '../../../api_endpoints.dart';
 import '../../../core/locator.dart';
-import '../../../core/models/machine_overview_model.dart';
 import '../../../core/models/machine_supplier_model.dart';
 import '../../../core/models/ticket_model.dart';
 import '../../../core/utils/app_logger.dart';
@@ -57,18 +56,13 @@ class TicketsListViewModel extends ReactiveViewModel {
   bool get isLoadingMore => _isLoadingMore.value;
 
   // Reactive values
-  final ReactiveValue<List<TicketList>> _activeTickets = ReactiveValue<List<TicketList>>(
-    [],
-  );
-  final ReactiveValue<List<TicketList>> _resolvedTickets =
-      ReactiveValue<List<TicketList>>([]);
+  final ReactiveValue<List<TicketList>> _activeTickets = ReactiveValue<List<TicketList>>([]);
+  final ReactiveValue<List<TicketList>> _resolvedTickets = ReactiveValue<List<TicketList>>([]);
   final ReactiveValue<bool> _isLoading = ReactiveValue<bool>(false);
 
   // Filtered tickets for search
-  final ReactiveValue<List<TicketList>> _filteredActiveTickets =
-      ReactiveValue<List<TicketList>>([]);
-  final ReactiveValue<List<TicketList>> _filteredResolvedTickets =
-      ReactiveValue<List<TicketList>>([]);
+  final ReactiveValue<List<TicketList>> _filteredActiveTickets = ReactiveValue<List<TicketList>>([]);
+  final ReactiveValue<List<TicketList>> _filteredResolvedTickets = ReactiveValue<List<TicketList>>([]);
 
   List<TicketList> get activeTickets => _filteredActiveTickets.value;
 
@@ -122,27 +116,11 @@ class TicketsListViewModel extends ReactiveViewModel {
         forceRefresh: _activePage.value == 1,
       );
 
-      final inProgressResult = await _ticketService.getTicketsByStatus(
-        status: 'In Progress',
-        page: _activePage.value,
-        limit: 5,
-        forceRefresh: _activePage.value == 1,
-      );
-
       List<TicketList> combinedTickets = [];
 
       activeResult.fold(
         (failure) {
           print('Error loading active tickets: ${failure.message}');
-        },
-        (paginatedResponse) {
-          combinedTickets.addAll(paginatedResponse.data ?? []);
-        },
-      );
-
-      inProgressResult.fold(
-        (failure) {
-          print('Error loading in progress tickets: ${failure.message}');
         },
         (paginatedResponse) {
           combinedTickets.addAll(paginatedResponse.data ?? []);
@@ -157,17 +135,11 @@ class TicketsListViewModel extends ReactiveViewModel {
 
       // Check if we have more tickets from either status
       bool hasMoreActive = false;
-      bool hasMoreInProgress = false;
 
       activeResult.fold((failure) {}, (paginatedResponse) {
         hasMoreActive = _activePage.value < (paginatedResponse.pages ?? 1);
       });
-
-      inProgressResult.fold((failure) {}, (paginatedResponse) {
-        hasMoreInProgress = _activePage.value < (paginatedResponse.pages ?? 1);
-      });
-
-      _hasMoreActive.value = hasMoreActive || hasMoreInProgress;
+      _hasMoreActive.value = hasMoreActive;
     } catch (e) {
       print('Exception loading active tickets: $e');
       if (_activePage.value == 1) {
@@ -196,13 +168,6 @@ class TicketsListViewModel extends ReactiveViewModel {
         forceRefresh: _resolvedPage.value == 1,
       );
 
-      final rejectedResult = await _ticketService.getTicketsByStatus(
-        status: 'Rejected',
-        page: _resolvedPage.value,
-        limit: 5,
-        forceRefresh: _resolvedPage.value == 1,
-      );
-
       List<TicketList> combinedTickets = [];
 
       resolvedResult.fold(
@@ -214,37 +179,20 @@ class TicketsListViewModel extends ReactiveViewModel {
         },
       );
 
-      rejectedResult.fold(
-        (failure) {
-          print('Error loading rejected tickets: ${failure.message}');
-        },
-        (paginatedResponse) {
-          combinedTickets.addAll(paginatedResponse.data ?? []);
-        },
-      );
-
       if (_resolvedPage.value == 1) {
         _resolvedTickets.value = combinedTickets;
       } else {
-        _resolvedTickets.value = [
-          ..._resolvedTickets.value,
-          ...combinedTickets,
-        ];
+        _resolvedTickets.value = [..._resolvedTickets.value, ...combinedTickets];
       }
 
       // Check if we have more tickets from either status
       bool hasMoreResolved = false;
-      bool hasMoreRejected = false;
 
       resolvedResult.fold((failure) {}, (paginatedResponse) {
         hasMoreResolved = _resolvedPage.value < (paginatedResponse.pages ?? 1);
       });
 
-      rejectedResult.fold((failure) {}, (paginatedResponse) {
-        hasMoreRejected = _resolvedPage.value < (paginatedResponse.pages ?? 1);
-      });
-
-      _hasMoreResolved.value = hasMoreResolved || hasMoreRejected;
+      _hasMoreResolved.value = hasMoreResolved;
     } catch (e) {
       print('Exception loading resolved tickets: $e');
       if (_resolvedPage.value == 1) {
@@ -317,24 +265,15 @@ class TicketsListViewModel extends ReactiveViewModel {
   }
 
   void navigateToCreateOrEditTicketView() async {
-    await _navigationService.navigateTo(
-      Routes.addTicket,
-      arguments: AddTicketViewAttributes(),
-    );
+    await _navigationService.navigateTo(Routes.addTicket, arguments: AddTicketViewAttributes());
   }
 
   void navigateToTicketDetails({required String ticketId}) async {
-    await _navigationService.navigateTo(
-      Routes.ticketDetails,
-      arguments: ticketId,
-    );
+    await _navigationService.navigateTo(Routes.ticketDetails, arguments: ticketId);
   }
 
   void navigateToReviewTicketWithId({required String ticketId}) async {
-    await _navigationService.navigateTo(
-      Routes.reviewTicket,
-      arguments: ticketId,
-    );
+    await _navigationService.navigateTo(Routes.reviewTicket, arguments: ticketId);
   }
 
   void navigateToHome() {
@@ -354,18 +293,17 @@ class TicketsListViewModel extends ReactiveViewModel {
   List<MachineSupplier> machineSupplierData = [];
 
   Future<void> loadMachines() async {
-
     try {
       final MachineSupplierService _machineSupplierService = locator<MachineSupplierService>();
 
       final result = await _machineSupplierService.getMachineSupplier();
 
-       result.fold(
-            (failure) {
-              Fluttertoast.showToast(msg: "Failed to load machines. Please try again", backgroundColor: Colors.red);
-            },
-            (machineSupplierModel) {
-              machineSupplierData = machineSupplierModel.data ?? [];
+      result.fold(
+        (failure) {
+          Fluttertoast.showToast(msg: "Failed to load machines. Please try again", backgroundColor: Colors.red);
+        },
+        (machineSupplierModel) {
+          machineSupplierData = machineSupplierModel.data ?? [];
         },
       );
     } catch (e) {
