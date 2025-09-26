@@ -15145,6 +15145,28 @@
     "Malay/Indonesian": "Tanggal Dibuat",
     "Ukrainian": "Дата Створення"
   },
+  "close_date": {
+    "English": "Close Date",
+    "Hindi": "समापन तिथि",
+    "Chinese (Simplified)": "关闭日期",
+    "Spanish": "Fecha de Cierre",
+    "Japanese": "終了日",
+    "German": "Abschlussdatum",
+    "French": "Date de Clôture",
+    "Arabic": "تاريخ الإغلاق",
+    "Portuguese": "Data de Encerramento",
+    "Russian": "Дата Закрытия",
+    "Bengali": "সমাপ্তির তারিখ",
+    "Turkish": "Kapanış Tarihi",
+    "Italian": "Data di Chiusura",
+    "Korean": "종료 날짜",
+    "Vietnamese": "Ngày Kết Thúc",
+    "Thai": "วันที่ปิด",
+    "Dutch": "Sluitingsdatum",
+    "Polish": "Data Zamknięcia",
+    "Malay/Indonesian": "Tanggal Penutupan",
+    "Ukrainian": "Дата Закриття"
+  },
   "problem_description": {
     "English": "Problem Description",
     "Hindi": "समस्या का विवरण",

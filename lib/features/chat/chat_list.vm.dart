@@ -172,6 +172,7 @@ class ChatListViewModel extends BaseViewModel {
           );
         },
         (response) {
+          print("-----chat response------------${response}");
           _allChats = response;
           AppLogger.info('Successfully loaded ${response.length} chats');
 

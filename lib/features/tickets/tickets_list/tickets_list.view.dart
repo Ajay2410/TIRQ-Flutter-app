@@ -536,6 +536,8 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
 
               Divider(),
               AppGaps.h8,
+              if ((ticket.problem != null && ticket.problem!.isNotEmpty) ||
+                  (ticket.notes != null && ticket.notes!.isNotEmpty))
               Row(
                 children: [
                   Expanded(
@@ -554,8 +556,11 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                   ),
                 ],
               ),
-
+              if ((ticket.problem != null && ticket.problem!.isNotEmpty) ||
+                  (ticket.notes != null && ticket.notes!.isNotEmpty))
               AppGaps.h8,
+              if ((ticket.problem != null && ticket.problem!.isNotEmpty) ||
+                  (ticket.notes != null && ticket.notes!.isNotEmpty))
               Divider(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -686,9 +691,13 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
       case 'resolved':
         return Colors.green;
       case 'in progress':
-        return Colors.orange;
+        return Colors.blue;
       case 'rejected':
         return Colors.red;
+        case 'on hold':
+        return Colors.red;
+        case 'waiting for accept':
+        return Colors.orange;
       default:
         return Colors.grey;
     }

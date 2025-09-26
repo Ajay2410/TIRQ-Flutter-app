@@ -299,6 +299,8 @@ class ChatViewModel extends ReactiveViewModel {
     }
   }
 
+
+
   /// Pick multiple media (images and videos) from album
   Future<void> pickMultipleMediaFromAlbum() async {
     try {
@@ -554,14 +556,14 @@ class ChatViewModel extends ReactiveViewModel {
   }
 
   /// Resolve chat by updating ticket status
-  Future<bool> resolveChat(String ticketId) async {
+  Future<bool> resolveChat(String ticketId,String engineerRemark) async {
     final response = await _dialogService.showCustomDialog(
       variant: DialogType.loader,
       data: LoaderDialogAttributes(
         message: 'Resolving chat...',
         task: () async {
           try {
-            final response = await _apiService.put(url: 'ticket/update/$ticketId', data: {'status': 'Resolved'});
+            final response = await _apiService.put(url: 'ticket/update/$ticketId', data: {'status': 'Resolved','engineerRemark': engineerRemark});
 
             if (response.statusCode == 200) {
               AppLogger.info('Ticket resolved successfully');
@@ -576,7 +578,6 @@ class ChatViewModel extends ReactiveViewModel {
         },
       ),
     );
-
     if (response?.confirmed == true) {
       Fluttertoast.showToast(
         msg: 'Chat resolved successfully',
@@ -597,6 +598,51 @@ class ChatViewModel extends ReactiveViewModel {
       return false;
     }
   }
+
+
+  /// Resolve chat by updating ticket status
+  // Future<bool> engineerRemark(String ticketId, String engineerRemark) async {
+  //   final response = await _dialogService.showCustomDialog(
+  //     variant: DialogType.loader,
+  //     data: LoaderDialogAttributes(
+  //       message: 'Resolving chat...',
+  //       task: () async {
+  //         try {
+  //           final response = await _apiService.put(url: 'ticket/update/$ticketId', data: {'engineerRemark': engineerRemark});
+  //
+  //           if (response.statusCode == 200) {
+  //             AppLogger.info('Engineer remarked successfully');
+  //             return 'success';
+  //           } else {
+  //             throw Exception('Failed to Engineer Remark: ${response.statusCode}');
+  //           }
+  //         } catch (e) {
+  //           AppLogger.error('Error Engineer Remark: $e');
+  //           throw e;
+  //         }
+  //       },
+  //     ),
+  //   );
+  //   if (response?.confirmed == true) {
+  //     Fluttertoast.showToast(
+  //       msg: 'Engineer remark successfully',
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       gravity: ToastGravity.BOTTOM,
+  //       backgroundColor: AppColors.success,
+  //       textColor: AppColors.white,
+  //     );
+  //     return true;
+  //   } else {
+  //     Fluttertoast.showToast(
+  //       msg: 'Failed to Engineer Remark: ${response?.data ?? 'Unknown error'}',
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       gravity: ToastGravity.BOTTOM,
+  //       backgroundColor: AppColors.error,
+  //       textColor: AppColors.white,
+  //     );
+  //     return false;
+  //   }
+  // }
 
   @override
   void dispose() {

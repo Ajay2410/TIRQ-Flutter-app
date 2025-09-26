@@ -95,13 +95,13 @@ class TicketsListViewModel extends ReactiveViewModel {
     }
 
     if (selectedTabIndex == 0) {
-      await _loadActiveTickets();
+      await loadActiveTickets();
     } else {
       await _loadResolvedTickets();
     }
   }
 
-  Future<void> _loadActiveTickets() async {
+  Future<void> loadActiveTickets() async {
     if (_isLoading.value) return;
 
     _isLoading.value = true;
@@ -215,7 +215,7 @@ class TicketsListViewModel extends ReactiveViewModel {
     try {
       if (selectedTabIndex == 0) {
         _activePage.value++;
-        await _loadActiveTickets();
+        await loadActiveTickets();
       } else {
         _resolvedPage.value++;
         await _loadResolvedTickets();

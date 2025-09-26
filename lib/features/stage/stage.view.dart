@@ -65,7 +65,7 @@ class StageView extends StatelessWidget {
 
   Widget _buildCustomBottomNavBar(StageViewModel model, BuildContext context) {
     return Container(
-      height: AppSizes.v72,
+      height: AppSizes.v80,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(AppSizes.v30),

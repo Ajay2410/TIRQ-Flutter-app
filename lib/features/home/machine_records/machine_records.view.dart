@@ -260,17 +260,18 @@ class _MachineRecordsViewState extends State<MachineRecordsView> with TickerProv
                   style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text("${"add_on".lang}: ", style: TextStyle(color: AppColors.black, fontSize: 12, fontWeight: FontWeight.bold)),
-                    Expanded(
-                      child: Text(
-                        machine.remarks ?? 'No add-ons',
-                        style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400, overflow: TextOverflow.ellipsis),
+                if (machine.remarks != null && machine.remarks!.isNotEmpty)
+                  Row(
+                    children: [
+                      Text("${"add_on".lang}: ", style: TextStyle(color: AppColors.black, fontSize: 12, fontWeight: FontWeight.bold)),
+                      Expanded(
+                        child: Text(
+                          machine.remarks!,
+                          style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400, overflow: TextOverflow.ellipsis),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
               ],
             ),
           ),

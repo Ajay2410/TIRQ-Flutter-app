@@ -40,8 +40,10 @@ class TicketDetailsViewModel extends BaseViewModel {
 
   // Fetch ticket details from API
   Future<void> fetchTicketDetails() async {
-    if (_ticketId == null) return;
+    print("-------hellohellooo1111--------------${_ticketId}");
 
+    if (_ticketId == null) return;
+print("-------hellohellooo--------------${_ticketId}");
     setBusy(true);
     _errorMessage = null;
     notifyListeners();
@@ -76,6 +78,8 @@ class TicketDetailsViewModel extends BaseViewModel {
     final chatWithName = _ticketDetails!.processorDetails?.fullName ?? 'Customer';
     final contactInitials = chatWithName.isNotEmpty ? chatWithName.substring(0, 1).toUpperCase() : 'U';
     final roomId = _ticketDetails!.chatRoom?.id ?? '';
+    final ticketStatus = _ticketDetails!.ticketDetails?.status ?? '';
+    final userRole = _ticketDetails?.role;
 
     // Navigate to chat screen and wait for result
     final result = await Navigator.of(context).push(
@@ -87,6 +91,8 @@ class TicketDetailsViewModel extends BaseViewModel {
               contactInitials: contactInitials,
               roomId: roomId,
               ticketId: _ticketId,
+              ticketStatus: ticketStatus,
+              userRole: userRole,
             ),
       ),
     );

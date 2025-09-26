@@ -16,6 +16,7 @@ class TicketDetailsModel {
   Details? organisationDetails;
   PricingDetails? pricingDetails;
   ChatRoom? chatRoom;
+  String? role;
 
   TicketDetailsModel({
     this.ticketDetails,
@@ -25,6 +26,8 @@ class TicketDetailsModel {
     this.organisationDetails,
     this.pricingDetails,
     this.chatRoom,
+    this.role
+
   });
 
   factory TicketDetailsModel.fromJson(Map<String, dynamic> json) => TicketDetailsModel(
@@ -35,6 +38,7 @@ class TicketDetailsModel {
     organisationDetails: json["organisationDetails"] == null ? null : Details.fromJson(json["organisationDetails"]),
     pricingDetails: json["pricingDetails"] == null ? null : PricingDetails.fromJson(json["pricingDetails"]),
     chatRoom: json["chatRoom"] == null ? null : ChatRoom.fromJson(json["chatRoom"]),
+    role: json["role"]
   );
 
   Map<String, dynamic> toJson() => {
@@ -289,6 +293,7 @@ class TicketDetails {
   String? type;
   String? ticketType;
   String? notes;
+  String? engineerRemark;
   DateTime? createdAt;
   DateTime? updatedAt;
   String? paymentStatus;
@@ -309,6 +314,7 @@ class TicketDetails {
     this.paymentStatus,
     this.media,
     this.IsShowChatOption,
+    this.engineerRemark
   });
 
   factory TicketDetails.fromJson(Map<String, dynamic> json) => TicketDetails(
@@ -319,6 +325,7 @@ class TicketDetails {
     status: json["status"],
     type: json["type"],
     ticketType: json["ticketType"],
+    engineerRemark: json["engineerRemark"],
     notes: json["notes"],
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
