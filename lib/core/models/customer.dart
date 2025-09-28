@@ -22,7 +22,7 @@ class CustomerModel {
 
 class Customer {
   String? id;
-  String? organization;
+  Users? organization;
   String? phoneNumber;
   String? customerName;
   String? email;
@@ -36,6 +36,8 @@ class Customer {
   DateTime? updatedAt;
   int? v;
   String? flag;
+  String? userImage;
+  String? qrCode;
 
   Customer({
     this.id,
@@ -53,11 +55,18 @@ class Customer {
     this.updatedAt,
     this.v,
     this.flag,
+    this.userImage,
+    this.qrCode,
   });
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
     id: json["_id"],
-    organization: json["organization"],
+    organization:
+        json["organization"] == null
+            ? null
+            : json["organization"] is String
+            ? Users(id: json["organization"]) // Handle case where users is a string ID
+            : Users.fromJson(json["organization"]),
     phoneNumber: json["phoneNumber"],
     customerName: json["customerName"],
     email: json["email"],
@@ -77,11 +86,13 @@ class Customer {
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
     flag: json["flag"],
+    userImage: json["userImage"],
+    qrCode: json["qrCode"],
   );
 
   Map<String, dynamic> toJson() => {
     "_id": id,
-    "organization": organization,
+    "organization": organization?.toJson(),
     "phoneNumber": phoneNumber,
     "customerName": customerName,
     "email": email,
@@ -95,6 +106,8 @@ class Customer {
     "updatedAt": updatedAt?.toIso8601String(),
     "__v": v,
     "flag": flag,
+    "userImage": userImage,
+    "qrCode": qrCode,
   };
 }
 
@@ -253,10 +266,15 @@ class Users {
   String? id;
   String? fullName;
   String? email;
+  String? phone;
+  String? contactPerson;
+  String? designation;
 
-  Users({this.id, this.fullName, this.email});
+  Users({this.id, this.fullName, this.email, this.phone, this.contactPerson, this.designation});
 
-  factory Users.fromJson(Map<String, dynamic> json) => Users(id: json["_id"], fullName: json["fullName"], email: json["email"]);
+  factory Users.fromJson(Map<String, dynamic> json) => Users(id: json["_id"], fullName: json["fullName"], email: json["email"], phone:
+  json["phone"], contactPerson: json["contactPerson"], designation: json["designation"]);
 
-  Map<String, dynamic> toJson() => {"_id": id, "fullName": fullName, "email": email};
+  Map<String, dynamic> toJson() => {"_id": id, "fullName": fullName, "email": email, "phone": phone, "contactPerson": contactPerson, "designation": designation};
 }
+

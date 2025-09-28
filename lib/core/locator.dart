@@ -20,6 +20,7 @@ import '../services/machine_storage.service.dart';
 import '../services/customer.service.dart';
 import '../services/machine_supplier.service.dart';
 import '../services/machine_supplier_details.service.dart';
+import '../services/customer_storage.service.dart';
 
 /// **Service Locator Setup**
 ///
@@ -69,4 +70,5 @@ void setUpLocators() {
   locator.registerLazySingleton(() => FilePickerService());
   locator.registerLazySingleton(() => MachineSupplierService());
   locator.registerLazySingleton(() => MachineSupplierDetailsService());
+  locator.registerLazySingleton(() => CustomerStorageService());
 }

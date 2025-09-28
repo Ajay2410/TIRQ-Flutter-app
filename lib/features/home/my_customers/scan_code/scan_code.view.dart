@@ -1,84 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
-import 'package:manager/services/language.service.dart';
+import 'package:stacked/stacked.dart';
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart' as mlkit;
+import 'scan_code.vm.dart';
 
-import '../../../../resources/multimedia_resources/resources.dart';
-
-class ScanCodeView extends StatefulWidget {
+class ScanCodeView extends StatelessWidget {
   const ScanCodeView({super.key});
 
   @override
-  State<ScanCodeView> createState() => _ScanCodeViewState();
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<ScanCodeViewModel>.reactive(
+      viewModelBuilder: () => ScanCodeViewModel(),
+      builder: (context, model, child) {
+        return _ScanCodeViewContent();
+      },
+    );
+  }
 }
 
-class _ScanCodeViewState extends State<ScanCodeView> with TickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _scanAnimation;
+class _ScanCodeViewContent extends StatefulWidget {
+  @override
+  State<_ScanCodeViewContent> createState() => _ScanCodeViewContentState();
+}
+
+class _ScanCodeViewContentState extends State<_ScanCodeViewContent> {
   MobileScannerController? _scannerController;
   final ImagePicker _imagePicker = ImagePicker();
-  bool _isScanning = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(duration: const Duration(seconds: 2), vsync: this);
-    _scanAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
-    _animationController.repeat(reverse: true);
-  }
 
   @override
   void dispose() {
-    _animationController.dispose();
     _scannerController?.dispose();
     super.dispose();
   }
 
-  void _onCodeDetected(BarcodeCapture capture) {
-    if (!_isScanning) return;
+  void _onCodeDetected(BarcodeCapture capture, ScanCodeViewModel model) {
+    if (!model.isScanning || model.isProcessing) return;
 
     final List<Barcode> barcodes = capture.barcodes;
     for (final barcode in barcodes) {
       if (barcode.rawValue != null) {
-        _isScanning = false;
-        _handleScannedCode(barcode.rawValue!);
+        model.handleScannedCode(barcode.rawValue!, context);
         break;
       }
     }
-  }
-
-  void _handleScannedCode(String code) {
-    // Handle the scanned code here
-    print('Scanned code: $code');
-
-    // Show result dialog or navigate to next screen
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text('Code Scanned'),
-            content: Text('Scanned code: $code'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    _isScanning = true;
-                  });
-                },
-                child: Text('Scan Again'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
-                child: Text('Done'),
-              ),
-            ],
-          ),
-    );
   }
 
   Future<void> _pickFromGallery() async {
@@ -86,8 +53,7 @@ class _ScanCodeViewState extends State<ScanCodeView> with TickerProviderStateMix
       final XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 80);
 
       if (image != null) {
-        // Process the selected image for QR/barcode detection
-        _processImageFromGallery(image.path);
+        await _processImageFromGallery(image.path);
       }
     } catch (e) {
       print('Error picking image from gallery: $e');
@@ -95,15 +61,57 @@ class _ScanCodeViewState extends State<ScanCodeView> with TickerProviderStateMix
     }
   }
 
-  void _processImageFromGallery(String imagePath) {
-    // Here you would process the image to detect QR/barcode
-    // For now, just show a placeholder
+  Future<void> _processImageFromGallery(String imagePath) async {
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(content: Row(children: [CircularProgressIndicator(), SizedBox(width: 16), Text('Processing image...')])),
+      );
+
+      final inputImage = mlkit.InputImage.fromFilePath(imagePath);
+      final barcodeScanner = mlkit.BarcodeScanner(formats: [mlkit.BarcodeFormat.qrCode]);
+      final List<mlkit.Barcode> barcodes = await barcodeScanner.processImage(inputImage);
+      await barcodeScanner.close();
+      Navigator.of(context).pop();
+
+      if (barcodes.isNotEmpty) {
+        final barcode = barcodes.first;
+        if (barcode.displayValue != null) {
+          final model = ScanCodeViewModel();
+          await model.handleScannedCode(barcode.displayValue!, context);
+        } else {
+          _showNoQRCodeDialog();
+        }
+      } else {
+        _showNoQRCodeDialog();
+      }
+    } catch (e) {
+      Navigator.of(context).pop();
+      print('Error processing image: $e');
+      _showErrorDialog('Failed to process the image. Please try again.');
+    }
+  }
+
+  void _showNoQRCodeDialog() {
     showDialog(
       context: context,
       builder:
           (context) => AlertDialog(
-            title: Text('Image Selected'),
-            content: Text('Processing image from gallery...'),
+            title: Text('No QR Code Found'),
+            content: Text('No QR code was detected in the selected image. Please try another image.'),
+            actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('OK'))],
+          ),
+    );
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text('Error'),
+            content: Text(message),
             actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('OK'))],
           ),
     );
@@ -111,211 +119,231 @@ class _ScanCodeViewState extends State<ScanCodeView> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildAppBar(),
-          Stack(
+    return ViewModelBuilder<ScanCodeViewModel>.reactive(
+      viewModelBuilder: () => ScanCodeViewModel(),
+      builder: (context, model, child) {
+        return Scaffold(
+          backgroundColor: AppColors.black,
+          body: Stack(
             children: [
-              // Camera view
-              if (_isScanning)
-                MobileScanner(onDetect: _onCodeDetected, controller: _scannerController)
+              if (model.isScanning && !model.isProcessing)
+                MobileScanner(onDetect: (capture) => _onCodeDetected(capture, model), controller: _scannerController)
+              else if (model.isProcessing)
+                Container(
+                  color: AppColors.black,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(color: AppColors.white),
+                        SizedBox(height: 16),
+                        Text('Processing scan...', style: TextStyle(color: AppColors.white, fontSize: 16)),
+                      ],
+                    ),
+                  ),
+                )
               else
                 Container(color: AppColors.black, child: Center(child: Text('Camera paused', style: TextStyle(color: AppColors.white)))),
 
-              // Scanning overlay
-              if (_isScanning) _buildScanningOverlay(),
+              _buildStatusBarAndHeader(),
+              if (model.isScanning && !model.isProcessing) _buildScanningFrame(),
+              _buildBottomActionBar(model),
 
-              // Bottom action bar
-              _buildBottomActionBar(),
+              Positioned(
+                bottom: 25,
+                right: 0,
+                left: 0,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 13.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildActionButton(
+                        icon: Icons.qr_code,
+                        label: 'My Qr Code',
+                        image: AppImages.qr,
+                        isDisabled: model.isProcessing,
+                        onTap: () {
+                          print('My QR Code tapped');
+                        },
+                      ),
+                      _buildActionButton(
+                        icon: Icons.photo_library,
+                        label: 'Album',
+                        image: AppImages.gallery,
+                        isDisabled: model.isProcessing,
+                        onTap: _pickFromGallery,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: AppColors.transparent,
-      elevation: 0,
-      leading: IconButton(onPressed: () {}, icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white)),
-      title: Text(LanguageService.get('scan_code'), style: TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.w600)),
-    );
-  }
-
-  Widget _buildScanningOverlay() {
-    return Container(
-      decoration: BoxDecoration(color: AppColors.black.withValues(alpha: 0.3)),
-      child: Stack(
-        children: [
-          // Scanning frame
-          Center(
-            child: Container(
-              width: 280,
-              height: 280,
-              decoration: BoxDecoration(border: Border.all(color: AppColors.white, width: 3), borderRadius: BorderRadius.circular(20)),
-              child: Stack(
-                children: [
-                  // Corner indicators
-                  ..._buildCornerIndicators(),
-                  // Scanning line animation
-                  _buildScanningLine(),
-                ],
-              ),
-            ),
-          ),
-
-          // Instructions
-          Positioned(
-            top: 120,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Text(
-                'Position the code within the frame',
-                style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  List<Widget> _buildCornerIndicators() {
-    return [
-      // Top left
-      Positioned(
-        top: -2,
-        left: -2,
-        child: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.blue, width: 6), left: BorderSide(color: Colors.blue, width: 6))),
-        ),
-      ),
-      // Top right
-      Positioned(
-        top: -2,
-        right: -2,
-        child: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.blue, width: 6), right: BorderSide(color: Colors.blue, width: 6))),
-        ),
-      ),
-      // Bottom left
-      Positioned(
-        bottom: -2,
-        left: -2,
-        child: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.blue, width: 6), left: BorderSide(color: Colors.blue, width: 6))),
-        ),
-      ),
-      // Bottom right
-      Positioned(
-        bottom: -2,
-        right: -2,
-        child: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: Colors.blue, width: 6), right: BorderSide(color: Colors.blue, width: 6)),
-          ),
-        ),
-      ),
-    ];
-  }
-
-  Widget _buildScanningLine() {
-    return AnimatedBuilder(
-      animation: _scanAnimation,
-      builder: (context, child) {
-        return Positioned(
-          top: _scanAnimation.value * 280,
-          left: 0,
-          right: 0,
-          child: Container(
-            height: 4,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [Colors.transparent, Colors.blue, Colors.transparent], stops: [0.0, 0.5, 1.0]),
-            ),
           ),
         );
       },
     );
   }
 
-  Widget _buildBottomActionBar() {
+  Widget _buildStatusBarAndHeader() {
     return Positioned(
-      bottom: 0,
+      top: 0,
       left: 0,
       right: 0,
-      child: Container(
-        height: 120,
-        decoration: BoxDecoration(
-          color: AppColors.black,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+      child: SafeArea(
+        child: Row(
+          children: [
+            IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
+            ),
+            SizedBox(width: 8),
+            Text('Scan Code', style: TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.w600)),
+          ],
         ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildActionButton(
-                icon: Icons.qr_code,
-                label: LanguageService.get('my_qr_code'),
-                onTap: () {
-                  // Handle My QR Code
-                  print('My QR Code tapped');
-                },
-              ),
-              _buildActionButton(
-                icon: Icons.camera_alt,
-                label: '',
-                onTap: () {
-                  // Camera is already active, just toggle scanning
-                  setState(() {
-                    _isScanning = !_isScanning;
-                  });
-                },
-                isActive: _isScanning,
-              ),
-              _buildActionButton(icon: Icons.photo_library, label: LanguageService.get('album'), onTap: _pickFromGallery),
-            ],
+      ),
+    );
+  }
+
+  Widget _buildScanningFrame() {
+    return Center(
+      child: SizedBox(
+        width: 280,
+        height: 350,
+        child: Stack(
+          children: [
+            Positioned.fill(child: Image.asset(AppImages.scannerBody, fit: BoxFit.contain, height: 500)),
+            Positioned.fill(child: Padding(padding: const EdgeInsets.all(10), child: _AnimatedScanningLine())),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomActionBar(ScanCodeViewModel model) {
+    final bool isDisabled = model.isProcessing;
+
+    return Positioned(
+      bottom: 50,
+      left: 0,
+      right: 0,
+      child: GestureDetector(
+        onTap: isDisabled ? null : () => model.setScanning(!model.isScanning),
+        child: Container(
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(color: isDisabled ? AppColors.white.withOpacity(0.5) : AppColors.white, shape: BoxShape.circle),
+          child: Center(
+            child:
+                isDisabled
+                    ? SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.black))
+                    : Image.asset(AppImages.camera, width: 36, height: 36, color: AppColors.black),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildActionButton({required IconData icon, required String label, required VoidCallback onTap, bool isActive = false}) {
+  Widget _buildActionButton({required IconData icon, required String label, required VoidCallback onTap, String? image, bool isDisabled = false}) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: isDisabled ? null : onTap,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              shape: BoxShape.circle,
-              border: isActive ? Border.all(color: Colors.blue, width: 3) : null,
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(color: isDisabled ? AppColors.white.withOpacity(0.5) : AppColors.white, shape: BoxShape.circle),
+            child: Center(
+              child:
+                  image != null
+                      ? Image.asset(image, width: 22, height: 22, color: isDisabled ? AppColors.textGray.withOpacity(0.5) : AppColors.textGray)
+                      : Icon(icon, size: 22, color: isDisabled ? AppColors.black.withOpacity(0.5) : AppColors.black),
             ),
-            child: Center(child: Icon(icon, size: 24, color: AppColors.black)),
           ),
           if (label.isNotEmpty) ...[
-            SizedBox(height: 8),
-            Text(label, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.white)),
+            SizedBox(height: 5),
+            Text(
+              label,
+              style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: isDisabled ? AppColors.white.withOpacity(0.5) : AppColors.white),
+            ),
           ],
         ],
       ),
     );
+  }
+}
+
+class _AnimatedScanningLine extends StatefulWidget {
+  @override
+  _AnimatedScanningLineState createState() => _AnimatedScanningLineState();
+}
+
+class _AnimatedScanningLineState extends State<_AnimatedScanningLine> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(duration: Duration(seconds: 2), vsync: this);
+
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+
+    _animationController.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return CustomPaint(painter: ScanningLinePainter(_animation.value));
+      },
+    );
+  }
+}
+
+class ScanningLinePainter extends CustomPainter {
+  final double animationValue;
+
+  ScanningLinePainter(this.animationValue);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint =
+        Paint()
+          ..shader = LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.transparent,
+              AppColors.blue.withOpacity(0.8),
+              AppColors.blue.withOpacity(0.9),
+              AppColors.blue.withOpacity(0.8),
+              Colors.transparent,
+            ],
+            stops: [0.0, 0.2, 0.5, 0.8, 1.0],
+          ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
+
+    final lineHeight = 4.0;
+    final lineY = (size.height - lineHeight - 10) * animationValue;
+
+    canvas.drawRect(Rect.fromLTWH(0, lineY, size.width, lineHeight), paint);
+    final glowPaint =
+        Paint()
+          ..color = AppColors.blue.withOpacity(0.3)
+          ..maskFilter = MaskFilter.blur(BlurStyle.normal, 2);
+
+    canvas.drawRect(Rect.fromLTWH(0, lineY - 1, size.width, lineHeight + 2), glowPaint);
+  }
+
+  @override
+  bool shouldRepaint(ScanningLinePainter oldDelegate) {
+    return oldDelegate.animationValue != animationValue;
   }
 }

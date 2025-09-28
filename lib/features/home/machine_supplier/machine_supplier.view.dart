@@ -154,7 +154,7 @@ class _MachineSupplierViewState extends State<MachineSupplierView> with TickerPr
       backgroundColor: AppColors.white,
       child: ListView.separated(
         separatorBuilder: (context, index) {
-          return Divider(color: AppColors.lightGray, thickness: 1);
+          return SizedBox(height: 15);
         },
         padding: const EdgeInsets.all(13),
         itemCount: model.filteredMachines.length,

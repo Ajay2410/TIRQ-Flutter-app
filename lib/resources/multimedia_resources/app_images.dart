@@ -9,6 +9,7 @@ abstract class AppImages {
   static const String microsoft = "assets/images/microsoft.svg";
   static const String cornerCircle = "assets/images/corner-circle.svg";
   static const String back = "assets/images/back.png";
+  static const String scannerBody = "assets/images/scanner_body.png";
 
   static const String contactBookActive =
       "assets/images/contact-book-active1.png";

@@ -39,11 +39,7 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
             children: [
               Padding(padding: const EdgeInsets.all(12), child: _buildCustomerContactCard(model)),
               Expanded(
-                child: Container(
-                  color: AppColors.scaffoldBackground,
-                  padding: const EdgeInsets.all(12),
-                  child: _buildMachineList(context, model),
-                ),
+                child: Container(color: AppColors.scaffoldBackground, padding: const EdgeInsets.all(12), child: _buildMachineList(context, model)),
               ),
             ],
           ),
@@ -79,6 +75,7 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
 
   Widget _buildCustomerContactCard(MachineSupplierDetailsViewModel model) {
     final customer = model.customerDetails;
+    final organization = customer?.organization;
 
     if (model.isLoading) {
       return _buildShimmerContactCard();
@@ -107,9 +104,9 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildContactInfoRow('contact_person'.lang, customer.contactPerson ?? 'N/A'),
+                _buildContactInfoRow('contact_person'.lang, organization?.contactPerson ?? 'N/A'),
                 const SizedBox(height: 12),
-                _buildContactInfoRow('email'.lang, customer.email ?? 'N/A'),
+                _buildContactInfoRow('email'.lang, organization?.email ?? 'N/A'),
               ],
             ),
           ),
@@ -118,9 +115,9 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildContactInfoRow('designation'.lang, customer.designation ?? 'N/A'),
+                _buildContactInfoRow('designation'.lang, organization?.designation ?? 'N/A'),
                 const SizedBox(height: 12),
-                _buildContactInfoRow('phone'.lang, customer.phoneNumber ?? 'N/A'),
+                _buildContactInfoRow('phone'.lang, organization?.phone ?? customer.phoneNumber ?? 'N/A'),
               ],
             ),
           ),

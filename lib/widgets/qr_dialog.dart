@@ -12,18 +12,26 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'dart:convert';
 
 import '../resources/app_resources/app_resources.dart';
 import '../services/language.service.dart';
 import '../core/models/hive/user/user.dart';
+import '../core/models/customer.dart';
 import '../core/utils/app_logger.dart';
 import 'common_elevated_button.dart';
 
 class QRDialog extends StatefulWidget {
   final User user;
   final String? organizationName;
+  final Customer? customer;
 
-  const QRDialog({super.key, required this.user, this.organizationName});
+  const QRDialog({
+    super.key,
+    required this.user,
+    this.organizationName,
+    this.customer,
+  });
 
   @override
   State<QRDialog> createState() => _QRDialogState();
@@ -48,27 +56,52 @@ class _QRDialogState extends State<QRDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                GestureDetector(onTap: () => Navigator.of(context).pop(), child: const Icon(Icons.close, size: 20, color: AppColors.textGray)),
+                GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: const Icon(
+                    Icons.close,
+                    size: 20,
+                    color: AppColors.textGray,
+                  ),
+                ),
               ],
             ),
 
             Container(
-              decoration: BoxDecoration(color: AppColors.periwinkleBlue.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(40)),
+              decoration: BoxDecoration(
+                color: AppColors.periwinkleBlue.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(40),
+              ),
               padding: EdgeInsets.all(8),
               child: ClipOval(
                 child:
-                    widget.user.logoUrl != null
+                    (widget.customer?.userImage ?? widget.user.logoUrl) != null
                         ? CachedNetworkImage(
-                          imageUrl: widget.user.logoUrl ?? 'https://img.freepik.com/free-vector/search-engine-logo_1071-76.jpg',
+                          imageUrl:
+                              widget.customer?.userImage ??
+                              widget.user.logoUrl ??
+                              'https://img.freepik.com/free-vector/search-engine-logo_1071-76.jpg',
                           width: 44,
                           height: 44,
                           fit: BoxFit.cover,
                           placeholder:
-                              (context, url) =>
-                                  Container(color: const Color(0xFFE8E8E8), child: const Icon(Icons.person, size: 40, color: Colors.grey)),
+                              (context, url) => Container(
+                                color: const Color(0xFFE8E8E8),
+                                child: const Icon(
+                                  Icons.person,
+                                  size: 40,
+                                  color: Colors.grey,
+                                ),
+                              ),
                           errorWidget:
-                              (context, url, error) =>
-                                  Container(color: AppColors.textGray, child: const Icon(Icons.person, size: 40, color: Colors.grey)),
+                              (context, url, error) => Container(
+                                color: AppColors.textGray,
+                                child: const Icon(
+                                  Icons.person,
+                                  size: 40,
+                                  color: Colors.grey,
+                                ),
+                              ),
                         )
                         : Icon(Icons.person, size: 40, color: Colors.grey),
               ),
@@ -80,11 +113,26 @@ class _QRDialogState extends State<QRDialog> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  widget.organizationName ?? widget.user.name ?? 'User',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                  widget.customer?.customerName ??
+                      widget.organizationName ??
+                      widget.user.name ??
+                      'User',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
                 const SizedBox(height: 4),
-                Text(widget.user.email ?? 'yourmail@gmail.com', style: const TextStyle(fontSize: 14, color: AppColors.textGray)),
+                Text(
+                  widget.customer?.email ??
+                      widget.user.email ??
+                      'yourmail@gmail.com',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: AppColors.textGray,
+                  ),
+                ),
               ],
             ),
 
@@ -101,18 +149,46 @@ class _QRDialogState extends State<QRDialog> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.textGray.withValues(alpha: 0.2), width: 1),
+                      border: Border.all(
+                        color: AppColors.textGray.withValues(alpha: 0.2),
+                        width: 1,
+                      ),
                     ),
-                    child: QrImageView(
-                      data: widget.user.id ?? 'user_${widget.user.email}',
-                      version: QrVersions.auto,
-                      size: 200,
-                      gapless: true,
-                      eyeStyle: const QrEyeStyle(eyeShape: QrEyeShape.square, color: Colors.black),
-                      dataModuleStyle: const QrDataModuleStyle(dataModuleShape: QrDataModuleShape.square, color: Colors.black),
+                    child:
+                        widget.customer?.qrCode != null
+                            ? Image.memory(
+                              base64Decode(
+                                widget.customer!.qrCode!.split(',')[1],
+                              ),
+                              width: 200,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            )
+                            : QrImageView(
+                              data:
+                                  widget.user.id ?? 'user_${widget.user.email}',
+                              version: QrVersions.auto,
+                              size: 200,
+                              gapless: true,
+                              eyeStyle: const QrEyeStyle(
+                                eyeShape: QrEyeShape.square,
+                                color: Colors.black,
+                              ),
+                              dataModuleStyle: const QrDataModuleStyle(
+                                dataModuleShape: QrDataModuleShape.square,
+                                color: Colors.black,
+                              ),
+                            ),
+                  ),
+                  Positioned(
+                    bottom: 4,
+                    right: 4,
+                    child: Image.asset(
+                      AppImages.triqLogo2,
+                      height: 12,
+                      width: 21,
                     ),
                   ),
-                  Positioned(bottom: 4, right: 4, child: Image.asset(AppImages.triqLogo2, height: 12, width: 21)),
                 ],
               ),
             ),
@@ -189,7 +265,11 @@ class _QRDialogState extends State<QRDialog> {
       await file.writeAsBytes(qrImage);
 
       // Share the file
-      await Share.shareXFiles([XFile(filePath)], subject: 'My QR Code', text: 'Here is my QR code');
+      await Share.shareXFiles(
+        [XFile(filePath)],
+        subject: 'My QR Code',
+        text: 'Here is my QR code',
+      );
 
       // Clean up
       await file.delete();
@@ -214,7 +294,9 @@ class _QRDialogState extends State<QRDialog> {
       // Check storage permission
       final permissionStatus = await _checkPermission();
       if (!permissionStatus) {
-        Fluttertoast.showToast(msg: 'Storage permission is required to save QR code');
+        Fluttertoast.showToast(
+          msg: 'Storage permission is required to save QR code',
+        );
         return;
       }
 
@@ -234,21 +316,29 @@ class _QRDialogState extends State<QRDialog> {
       await file.writeAsBytes(qrImage);
 
       // Save to gallery using saver_gallery
-      final result = await SaverGallery.saveImage(qrImage, fileName: fileName, skipIfExists: true);
+      final result = await SaverGallery.saveImage(
+        qrImage,
+        fileName: fileName,
+        skipIfExists: true,
+      );
 
       AppLogger.info('QR code save result: $result');
 
       if (result.isSuccess) {
         Fluttertoast.showToast(msg: 'QR code saved to gallery');
       } else {
-        Fluttertoast.showToast(msg: 'Failed to save QR code to gallery: ${result.errorMessage}');
+        Fluttertoast.showToast(
+          msg: 'Failed to save QR code to gallery: ${result.errorMessage}',
+        );
       }
 
       // Delete the temporary file
       await file.delete();
     } catch (e) {
       AppLogger.error('Error downloading QR: $e');
-      Fluttertoast.showToast(msg: 'Failed to download QR code: ${e.toString()}');
+      Fluttertoast.showToast(
+        msg: 'Failed to download QR code: ${e.toString()}',
+      );
     } finally {
       setState(() {
         _isSaving = false;
@@ -277,7 +367,11 @@ class _QRDialogState extends State<QRDialog> {
 
       if (result.isPermanentlyDenied) {
         // User needs to enable permission from settings
-        Fluttertoast.showToast(msg: 'Photo permission is permanently denied. Please enable it in app settings.', toastLength: Toast.LENGTH_LONG);
+        Fluttertoast.showToast(
+          msg:
+              'Photo permission is permanently denied. Please enable it in app settings.',
+          toastLength: Toast.LENGTH_LONG,
+        );
 
         await openAppSettings();
       }
@@ -296,7 +390,9 @@ class _QRDialogState extends State<QRDialog> {
       }
 
       if (renderObject is! RenderRepaintBoundary) {
-        AppLogger.error('RenderObject is not RenderRepaintBoundary: ${renderObject.runtimeType}');
+        AppLogger.error(
+          'RenderObject is not RenderRepaintBoundary: ${renderObject.runtimeType}',
+        );
         return null;
       }
 

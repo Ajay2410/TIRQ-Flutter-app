@@ -67,7 +67,7 @@ class MachineSupplierDetailsViewModel extends BaseViewModel {
   }
 
   void onMachineTap(BuildContext context, MachineElement machineElement) async {
-    final organizationId = _customerDetails?.organization;
+    final organizationId = _customerDetails?.organization?.id;
     if (organizationId != null) {
       await Navigator.of(
         context,

@@ -579,7 +579,7 @@ class CustomerEditDetailsView extends StatelessWidget {
               child: _buildClickableWarrantyStatusRow(
                 AppImages.warrantyStatus,
                 LanguageService.get('warranty_status'),
-                model.warrantyStatus,
+                model.warrantyStatus.isEmpty ? LanguageService.get('not_available') : model.warrantyStatus,
                 model.warrantyStatusColor,
                 () {},
               ),
@@ -669,7 +669,7 @@ class CustomerEditDetailsView extends StatelessWidget {
     Color iconColor,
     VoidCallback onTap,
   ) {
-    final bool isEmpty = value.isEmpty;
+    final bool isNotAvailable = value == LanguageService.get('not_available');
 
     return InkWell(
       onTap: onTap,
@@ -706,7 +706,7 @@ class CustomerEditDetailsView extends StatelessWidget {
                 Text(
                   value,
                   style: TextStyle(
-                    color: isEmpty ? AppColors.redBack : iconColor,
+                    color: isNotAvailable ? AppColors.redBack : iconColor,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),

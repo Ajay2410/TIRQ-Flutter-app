@@ -16,7 +16,7 @@ class MachineSupplierDetailsModel {
   String? contactPerson;
   String? designation;
   String? countryOrigin;
-  String? organization;
+  Users? organization;
   List<MachineElement>? machines;
   bool? isActive;
   DateTime? createdAt;
@@ -53,7 +53,7 @@ class MachineSupplierDetailsModel {
     contactPerson: json["contactPerson"],
     designation: json["designation"],
     countryOrigin: json["countryOrigin"],
-    organization: json["organization"],
+    organization: json["organization"] == null ? null : Users.fromJson(json["organization"]),
     machines: json["machines"] == null ? [] : List<MachineElement>.from(json["machines"]!.map((x) => MachineElement.fromJson(x))),
     isActive: json["isActive"],
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
@@ -72,7 +72,7 @@ class MachineSupplierDetailsModel {
     "contactPerson": contactPerson,
     "designation": designation,
     "countryOrigin": countryOrigin,
-    "organization": organization,
+    "organization": organization?.toJson(),
     "machines": machines == null ? [] : List<dynamic>.from(machines!.map((x) => x.toJson())),
     "isActive": isActive,
     "createdAt": createdAt?.toIso8601String(),
@@ -212,14 +212,7 @@ class ProcessingDimensions {
   String? thickness;
   int? maxSpeed;
 
-  ProcessingDimensions({
-    this.maxHeight,
-    this.maxWidth,
-    this.minHeight,
-    this.minWidth,
-    this.thickness,
-    this.maxSpeed,
-  });
+  ProcessingDimensions({this.maxHeight, this.maxWidth, this.minHeight, this.minWidth, this.thickness, this.maxSpeed});
 
   factory ProcessingDimensions.fromJson(Map<String, dynamic> json) => ProcessingDimensions(
     maxHeight: json["maxHeight"],
@@ -244,22 +237,14 @@ class Users {
   String? id;
   String? fullName;
   String? email;
+  String? phone;
+  String? contactPerson;
+  String? designation;
 
-  Users({
-    this.id,
-    this.fullName,
-    this.email,
-  });
+  Users({this.id, this.fullName, this.email, this.phone, this.contactPerson, this.designation});
 
-  factory Users.fromJson(Map<String, dynamic> json) => Users(
-    id: json["_id"],
-    fullName: json["fullName"],
-    email: json["email"],
-  );
+  factory Users.fromJson(Map<String, dynamic> json) => Users(id: json["_id"], fullName: json["fullName"], email: json["email"], phone:
+  json["phone"], contactPerson: json["contactPerson"], designation: json["designation"]);
 
-  Map<String, dynamic> toJson() => {
-    "_id": id,
-    "fullName": fullName,
-    "email": email,
-  };
+  Map<String, dynamic> toJson() => {"_id": id, "fullName": fullName, "email": email, "phone": phone, "contactPerson": contactPerson, "designation": designation};
 }

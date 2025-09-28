@@ -478,7 +478,7 @@ class _MyCustomersViewState extends State<MyCustomersView> with TickerProviderSt
                             title: LanguageService.get('scan_from_camera_gallery'),
                             onTap: () {
                               _toggleAddMenu();
-                              // model.onScanFromCamera(context);
+                              model.onScanFromCamera(context);
                             },
                             iconColor: AppColors.colorFFB141,
                           ),

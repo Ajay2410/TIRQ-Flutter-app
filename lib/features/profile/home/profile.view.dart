@@ -114,6 +114,7 @@ class ProfileView extends StatelessWidget {
                     child: ClipOval(
                       child: CachedNetworkImage(
                         imageUrl:
+                            model.customer?.userImage ??
                             model.user.logoUrl ??
                             'https://img.freepik.com/free-vector/search-engine-logo_1071-76.jpg',
                         width: 44,
@@ -174,7 +175,8 @@ class ProfileView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      model.organization?.name ??
+                      model.customer?.customerName ??
+                          model.organization?.name ??
                           model.user.name ??
                           'Leslie Alexander',
                       style: const TextStyle(
@@ -185,7 +187,9 @@ class ProfileView extends StatelessWidget {
                     ).animate().fadeIn(duration: 500.ms),
                     const SizedBox(height: 4),
                     Text(
-                      model.user.email ?? 'yourmail@email.com',
+                      model.customer?.email ??
+                          model.user.email ??
+                          'yourmail@email.com',
                       style: const TextStyle(
                         fontSize: 11,
                         color: AppColors.textGray,
@@ -535,7 +539,11 @@ class ProfileView extends StatelessWidget {
 
   void _showQRDialog(ProfileViewModel model) {
     Get.dialog(
-      QRDialog(user: model.user, organizationName: model.organization?.name),
+      QRDialog(
+        user: model.user,
+        organizationName: model.organization?.name,
+        customer: model.customer,
+      ),
     );
   }
 }
