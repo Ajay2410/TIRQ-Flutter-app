@@ -73,7 +73,7 @@ class QrScanBottomSheet extends StatelessWidget {
                     width: AppSizes.w40,
                     height: AppSizes.h4,
                     decoration: BoxDecoration(
-                      color: AppColors.lightGray,
+                      color: AppColors.lightGrey,
                       borderRadius: BorderRadius.circular(AppSizes.w2),
                     ),
                   ),
@@ -158,7 +158,7 @@ class QrScanBottomSheet extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.softGray,
           borderRadius: BorderRadius.circular(AppSizes.v14),
-          border: Border.all(color: AppColors.lightGray, width: 1),
+          border: Border.all(color: AppColors.lightGrey, width: 1),
         ),
         padding: EdgeInsets.symmetric(
           horizontal: AppSizes.w16,

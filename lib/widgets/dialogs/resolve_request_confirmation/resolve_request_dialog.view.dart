@@ -87,11 +87,11 @@ class ResolveRequestDialog extends StatelessWidget {
                 hintText: LanguageService.get("add_remarks_here"),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSizes.v12),
-                  borderSide: BorderSide(color: AppColors.lightGray),
+                  borderSide: BorderSide(color: AppColors.lightGrey),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSizes.v12),
-                  borderSide: BorderSide(color: AppColors.lightGray),
+                  borderSide: BorderSide(color: AppColors.lightGrey),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSizes.v12),

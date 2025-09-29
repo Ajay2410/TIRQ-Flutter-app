@@ -37,7 +37,7 @@ class CustomerCard extends StatelessWidget {
           color: AppColors.white,
           borderRadius: BorderRadius.circular(AppSizes.v12),
           border: Border.all(
-            color: AppColors.lightGray.withOpacity(0.3),
+            color: AppColors.lightGrey.withOpacity(0.3),
             width: 1,
           ),
         ),
@@ -72,7 +72,7 @@ class CustomerCard extends StatelessWidget {
                         child: Text(
                           _getMachineModelsText(),
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.textGray,
+                            color: AppColors.textGrey,
                             fontWeight: FontWeight.normal,
                             fontSize: 12,
                           ),
@@ -144,10 +144,10 @@ class CustomerCard extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,  // Changed to circular
             border: Border.all(
-              color: AppColors.lightGray.withOpacity(0.3),
+              color: AppColors.lightGrey.withOpacity(0.3),
               width: 5,
             ),
-            color: AppColors.lightGray.withOpacity(0.1),
+            color: AppColors.lightGrey.withOpacity(0.1),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(AppSizes.w48 / 2), // Circular clipping
@@ -159,7 +159,7 @@ class CustomerCard extends StatelessWidget {
               placeholder: (context, url) => Container(
                 width: AppSizes.w48,
                 height: AppSizes.w48,
-                color: AppColors.lightGray.withOpacity(0.3),
+                color: AppColors.lightGrey.withOpacity(0.3),
                 child: Icon(
                   Icons.business,
                   color: AppColors.primary,
@@ -169,7 +169,7 @@ class CustomerCard extends StatelessWidget {
               errorWidget: (context, url, error) => Container(
                 width: AppSizes.w48,
                 height: AppSizes.w48,
-                color: AppColors.lightGray.withOpacity(0.3),
+                color: AppColors.lightGrey.withOpacity(0.3),
                 child: Icon(
                   Icons.business,
                   color: AppColors.primary,
@@ -272,7 +272,7 @@ class CustomerCardShimmer extends StatelessWidget {
         color: AppColors.white,
         borderRadius: BorderRadius.circular(AppSizes.v12),
         border: Border.all(
-          color: AppColors.lightGray.withOpacity(0.3),
+          color: AppColors.lightGrey.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -283,7 +283,7 @@ class CustomerCardShimmer extends StatelessWidget {
             width: AppSizes.w48,
             height: AppSizes.w48,
             decoration: BoxDecoration(
-              color: AppColors.lightGray.withOpacity(0.3),
+              color: AppColors.lightGrey.withOpacity(0.3),
               borderRadius: BorderRadius.circular(AppSizes.v8),
             ),
           ),
@@ -297,7 +297,7 @@ class CustomerCardShimmer extends StatelessWidget {
                   height: AppSizes.h16,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: AppColors.lightGray.withOpacity(0.3),
+                    color: AppColors.lightGrey.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(AppSizes.v4),
                   ),
                 ),
@@ -309,7 +309,7 @@ class CustomerCardShimmer extends StatelessWidget {
                       width: AppSizes.w24,
                       height: AppSizes.w16,
                       decoration: BoxDecoration(
-                        color: AppColors.lightGray.withOpacity(0.3),
+                        color: AppColors.lightGrey.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(AppSizes.v4),
                       ),
                     ),
@@ -318,7 +318,7 @@ class CustomerCardShimmer extends StatelessWidget {
                       height: AppSizes.h12,
                       width: AppSizes.w100,
                       decoration: BoxDecoration(
-                        color: AppColors.lightGray.withOpacity(0.3),
+                        color: AppColors.lightGrey.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(AppSizes.v4),
                       ),
                     ),
@@ -333,7 +333,7 @@ class CustomerCardShimmer extends StatelessWidget {
             width: AppSizes.w60,
             height: AppSizes.h24,
             decoration: BoxDecoration(
-              color: AppColors.lightGray.withOpacity(0.3),
+              color: AppColors.lightGrey.withOpacity(0.3),
               borderRadius: BorderRadius.circular(AppSizes.v16),
             ),
           ),

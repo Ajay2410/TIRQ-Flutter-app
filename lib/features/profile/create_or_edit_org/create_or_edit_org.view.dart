@@ -134,7 +134,7 @@ class UpdateOrganizationView extends StatelessWidget {
                       const SizedBox(height: 5),
                       Text(
                         model.emailController.text.isNotEmpty ? model.emailController.text : "yourmail@gmail.com",
-                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: AppColors.textGray),
+                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: AppColors.textGrey),
                       ),
                     ],
                   ),
@@ -200,8 +200,8 @@ class UpdateOrganizationView extends StatelessWidget {
                       style: TextStyle(color: AppColors.white, fontSize: 9, fontWeight: FontWeight.w500),
                     ),
                     position: PopupPosition.top,
-                    arrowColor: AppColors.textGray,
-                    backgroundColor: AppColors.textGray,
+                    arrowColor: AppColors.textGrey,
+                    backgroundColor: AppColors.textGrey,
                     child: Padding(padding: EdgeInsets.all(16), child: Image.asset(AppImages.alert, width: 16, height: 16)),
                   ),
                 ),
@@ -357,7 +357,7 @@ class UpdateOrganizationView extends StatelessWidget {
                   readOnly: !(model.isCorporateAddressEditable ?? false),
                   contentPadding: EdgeInsets.all(12),
                   textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                  suffixIcon: Icon(Icons.keyboard_arrow_down, color: AppColors.textGray, size: 16),
+                  suffixIcon: Icon(Icons.keyboard_arrow_down, color: AppColors.textGrey, size: 16),
                 ),
               ),
               const SizedBox(width: 15),
@@ -411,7 +411,7 @@ class UpdateOrganizationView extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 6,),
-                        Text(LanguageService.get("same_as_corporate_address"), style: const TextStyle(fontSize: 11, color: AppColors.textGray,
+                        Text(LanguageService.get("same_as_corporate_address"), style: const TextStyle(fontSize: 11, color: AppColors.textGrey,
                             fontWeight: FontWeight.w500)),
                       ],
                     ),
@@ -494,7 +494,7 @@ class UpdateOrganizationView extends StatelessWidget {
                   readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
                   contentPadding: EdgeInsets.all(12),
                   textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                  suffixIcon: Icon(Icons.keyboard_arrow_down, color: AppColors.textGray, size: 16),
+                  suffixIcon: Icon(Icons.keyboard_arrow_down, color: AppColors.textGrey, size: 16),
                 ),
               ),
               const SizedBox(width: 15),
@@ -520,7 +520,7 @@ class UpdateOrganizationView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(LanguageService.get("your_designation"), style: const TextStyle(fontSize: 12, color: AppColors.textGray, fontWeight: FontWeight.w500)),
+        Text(LanguageService.get("your_designation"), style: const TextStyle(fontSize: 12, color: AppColors.textGrey, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         SizedBox(
           height: 46,
@@ -539,8 +539,8 @@ class UpdateOrganizationView extends StatelessWidget {
             hintText: LanguageService.get('select_designation'),
             decoration: CustomDropdownDecoration(
               headerStyle: const TextStyle(fontSize: 14, color: AppColors.black, fontWeight: FontWeight.w500),
-              hintStyle: const TextStyle(fontSize: 12, color: AppColors.textGray),
-              closedBorder: Border.all(color: AppColors.lightGray),
+              hintStyle: const TextStyle(fontSize: 12, color: AppColors.textGrey),
+              closedBorder: Border.all(color: AppColors.lightGrey),
               closedFillColor: AppColors.white,
               expandedBorder: Border.all(color: AppColors.primary),
               expandedFillColor: AppColors.white,
@@ -557,7 +557,7 @@ class UpdateOrganizationView extends StatelessWidget {
       children: [
         Text(
           LanguageService.get("primary_phone_number"),
-          style: const TextStyle(fontSize: 12, color: AppColors.textGray, fontWeight: FontWeight.w500),
+          style: const TextStyle(fontSize: 12, color: AppColors.textGrey, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
         PhoneInput(
@@ -565,16 +565,16 @@ class UpdateOrganizationView extends StatelessWidget {
           countrySelectorNavigator: CountrySelectorNavigator.dialog(
             countryCodeStyle: const TextStyle(color: AppColors.black),
             countryNameStyle: const TextStyle(color: AppColors.black),
-            searchInputTextStyle: const TextStyle(color: AppColors.textGray),
+            searchInputTextStyle: const TextStyle(color: AppColors.textGrey),
             searchInputDecoration: InputDecoration(
               hintText: LanguageService.get('search_country'),
               hintStyle: const TextStyle(color: AppColors.textSecondary),
               filled: true,
               fillColor: AppColors.white,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: const BorderSide(color: AppColors.lightGray)),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: const BorderSide(color: AppColors.lightGrey)),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppSizes.v12),
-                borderSide: const BorderSide(color: AppColors.lightGray),
+                borderSide: const BorderSide(color: AppColors.lightGrey),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -593,8 +593,8 @@ class UpdateOrganizationView extends StatelessWidget {
             contentPadding: EdgeInsets.all(12),
             filled: true,
             fillColor: AppColors.white,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: const BorderSide(color: AppColors.lightGray)),
-            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: const BorderSide(color: AppColors.lightGray)),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: const BorderSide(color: AppColors.lightGrey)),
+            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: const BorderSide(color: AppColors.lightGrey)),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(13),
               borderSide: const BorderSide(color: AppColors.primary, width: 2),

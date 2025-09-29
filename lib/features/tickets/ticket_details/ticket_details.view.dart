@@ -83,24 +83,24 @@ class TicketDetailsView extends StatelessWidget {
                   _buildCustomerInfoCard(context, model),
                   Divider(
                     height: 26,
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                   _buildTicketDetailsCard(context, model),
                   Divider(
                     height: 26,
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                   _buildProblemDescriptionCard(context, model),
                   SizedBox(height: 16),
                   _buildMediaCard(context, model),
                   Divider(
                     height: 26,
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                   _buildWarrantyInfoCard(context, model),
                   Divider(
                     height: 26,
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                 ],
               ),
@@ -200,11 +200,11 @@ class TicketDetailsView extends StatelessWidget {
         labelText: label,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -244,24 +244,24 @@ class TicketDetailsView extends StatelessWidget {
                   _buildShimmerCustomerInfoCard(),
                   Divider(
                     height: 26,
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                   _buildShimmerTicketDetailsCard(),
                   Divider(
                     height: 26,
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                   _buildShimmerProblemDescriptionCard(),
                   SizedBox(height: 16),
                   _buildShimmerMediaCard(),
                   Divider(
                     height: 26,
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                   _buildShimmerWarrantyInfoCard(),
                   Divider(
                     height: 26,
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                 ],
               ),
@@ -423,7 +423,7 @@ class TicketDetailsView extends StatelessWidget {
                 ),
                 Divider(
                   height: 24,
-                  color: AppColors.textGray.withValues(alpha: 0.1),
+                  color: AppColors.textGrey.withValues(alpha: 0.1),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -431,7 +431,7 @@ class TicketDetailsView extends StatelessWidget {
                     Text(
                       LanguageService.get('payment_status'),
                       style: TextStyle(
-                        color: AppColors.textGray,
+                        color: AppColors.textGrey,
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                       ),
@@ -451,7 +451,7 @@ class TicketDetailsView extends StatelessWidget {
                 ),
                 Divider(
                   height: 24,
-                  color: AppColors.textGray.withValues(alpha: 0.1),
+                  color: AppColors.textGrey.withValues(alpha: 0.1),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -459,7 +459,7 @@ class TicketDetailsView extends StatelessWidget {
                     Text(
                       LanguageService.get('support_mode'),
                       style: TextStyle(
-                        color: AppColors.textGray,
+                        color: AppColors.textGrey,
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                         fontStyle: FontStyle.italic,
@@ -468,7 +468,7 @@ class TicketDetailsView extends StatelessWidget {
                     Text(
                       supportMode,
                       style: TextStyle(
-                        color: AppColors.textGray,
+                        color: AppColors.textGrey,
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                       ),
@@ -477,7 +477,7 @@ class TicketDetailsView extends StatelessWidget {
                 ),
                 Divider(
                   height: 24,
-                  color: AppColors.textGray.withValues(alpha: 0.1),
+                  color: AppColors.textGrey.withValues(alpha: 0.1),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -485,7 +485,7 @@ class TicketDetailsView extends StatelessWidget {
                     Text(
                       LanguageService.get('ticket_type'),
                       style: TextStyle(
-                        color: AppColors.textGray,
+                        color: AppColors.textGrey,
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                         fontStyle: FontStyle.italic,
@@ -494,7 +494,7 @@ class TicketDetailsView extends StatelessWidget {
                     Text(
                       ticketType,
                       style: TextStyle(
-                        color: AppColors.textGray,
+                        color: AppColors.textGrey,
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                       ),
@@ -504,7 +504,7 @@ class TicketDetailsView extends StatelessWidget {
               ],
             ),
           ),
-          Divider(height: 0, color: AppColors.textGray.withValues(alpha: 0.1)),
+          Divider(height: 0, color: AppColors.textGrey.withValues(alpha: 0.1)),
           Row(
             children: [
               SizedBox(width: 13),
@@ -664,7 +664,7 @@ class TicketDetailsView extends StatelessWidget {
                       (context) => Container(
                         height: 16,
                         width: 16,
-                        color: AppColors.textGray,
+                        color: AppColors.textGrey,
                       ),
                 ),
               ),
@@ -695,7 +695,7 @@ class TicketDetailsView extends StatelessWidget {
         Container(
           height: 50,
           width: 1,
-          color: AppColors.textGray.withValues(alpha: 0.1),
+          color: AppColors.textGrey.withValues(alpha: 0.1),
         ),
         SizedBox(width: AppSizes.v10),
         Column(
@@ -855,7 +855,7 @@ class TicketDetailsView extends StatelessWidget {
               ),
               TextSpan(
                 text: problem,
-                style: TextStyle(fontSize: 11, color: AppColors.textGray),
+                style: TextStyle(fontSize: 11, color: AppColors.textGrey),
               ),
             ],
           ),
@@ -867,7 +867,7 @@ class TicketDetailsView extends StatelessWidget {
             color: AppColors.success.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(9),
             border: Border.all(
-              color: AppColors.textGray.withValues(alpha: 0.1),
+              color: AppColors.textGrey.withValues(alpha: 0.1),
             ),
           ),
           padding: EdgeInsets.all(10),
@@ -885,7 +885,7 @@ class TicketDetailsView extends StatelessWidget {
                 ),
                 TextSpan(
                   text: engineerRemark ?? "N/A",
-                  style: TextStyle(fontSize: 11, color: AppColors.textGray),
+                  style: TextStyle(fontSize: 11, color: AppColors.textGrey),
                 ),
               ],
             ),
@@ -929,7 +929,7 @@ class TicketDetailsView extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(13),
                     border: Border.all(
-                      color: AppColors.textGray.withValues(alpha: 0.1),
+                      color: AppColors.textGrey.withValues(alpha: 0.1),
                     ),
                     color: AppColors.primarySuperLight.withValues(alpha: 0.1),
                   ),
@@ -996,7 +996,7 @@ class TicketDetailsView extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 10),
-        Divider(color: AppColors.lightGray),
+        Divider(color: AppColors.lightGrey),
         const SizedBox(height: 10),
         Row(
           children: [
@@ -1020,7 +1020,7 @@ class TicketDetailsView extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 10),
-        Divider(color: AppColors.lightGray),
+        Divider(color: AppColors.lightGrey),
         const SizedBox(height: 10),
         Row(
           children: [
@@ -1174,7 +1174,7 @@ class TicketDetailsView extends StatelessWidget {
                       color: AppColors.primarySuperLight.withValues(alpha: 0.1),
                       child: Icon(
                         Icons.error_outline,
-                        color: AppColors.textGray,
+                        color: AppColors.textGrey,
                         size: 20,
                       ),
                     ),
@@ -1215,7 +1215,7 @@ class TicketDetailsView extends StatelessWidget {
         if (snapshot.hasError || snapshot.data == null) {
           return Container(
             color: AppColors.primarySuperLight.withValues(alpha: 0.1),
-            child: Icon(Icons.videocam, color: AppColors.textGray, size: 20),
+            child: Icon(Icons.videocam, color: AppColors.textGrey, size: 20),
           );
         }
 
@@ -1227,7 +1227,7 @@ class TicketDetailsView extends StatelessWidget {
                 color: AppColors.primarySuperLight.withValues(alpha: 0.1),
                 child: Icon(
                   Icons.videocam,
-                  color: AppColors.textGray,
+                  color: AppColors.textGrey,
                   size: 20,
                 ),
               ),
@@ -1378,8 +1378,8 @@ class TicketDetailsView extends StatelessWidget {
   // Shimmer loading methods
   Widget _buildShimmerCustomerInfoCard() {
     return Shimmer.fromColors(
-      baseColor: AppColors.textGray.withValues(alpha: 0.1),
-      highlightColor: AppColors.textGray.withValues(alpha: 0.3),
+      baseColor: AppColors.textGrey.withValues(alpha: 0.1),
+      highlightColor: AppColors.textGrey.withValues(alpha: 0.3),
       child: Row(
         children: [
           Container(
@@ -1404,7 +1404,7 @@ class TicketDetailsView extends StatelessWidget {
           Container(
             height: 50,
             width: 1,
-            color: AppColors.textGray.withValues(alpha: 0.1),
+            color: AppColors.textGrey.withValues(alpha: 0.1),
           ),
           SizedBox(width: AppSizes.v10),
           Column(
@@ -1422,8 +1422,8 @@ class TicketDetailsView extends StatelessWidget {
 
   Widget _buildShimmerTicketDetailsCard() {
     return Shimmer.fromColors(
-      baseColor: AppColors.textGray.withValues(alpha: 0.1),
-      highlightColor: AppColors.textGray.withValues(alpha: 0.3),
+      baseColor: AppColors.textGrey.withValues(alpha: 0.1),
+      highlightColor: AppColors.textGrey.withValues(alpha: 0.3),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1466,8 +1466,8 @@ class TicketDetailsView extends StatelessWidget {
 
   Widget _buildShimmerProblemDescriptionCard() {
     return Shimmer.fromColors(
-      baseColor: AppColors.textGray.withValues(alpha: 0.1),
-      highlightColor: AppColors.textGray.withValues(alpha: 0.3),
+      baseColor: AppColors.textGrey.withValues(alpha: 0.1),
+      highlightColor: AppColors.textGrey.withValues(alpha: 0.3),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1483,8 +1483,8 @@ class TicketDetailsView extends StatelessWidget {
 
   Widget _buildShimmerMediaCard() {
     return Shimmer.fromColors(
-      baseColor: AppColors.textGray.withValues(alpha: 0.1),
-      highlightColor: AppColors.textGray.withValues(alpha: 0.3),
+      baseColor: AppColors.textGrey.withValues(alpha: 0.1),
+      highlightColor: AppColors.textGrey.withValues(alpha: 0.3),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1516,8 +1516,8 @@ class TicketDetailsView extends StatelessWidget {
 
   Widget _buildShimmerWarrantyInfoCard() {
     return Shimmer.fromColors(
-      baseColor: AppColors.textGray.withValues(alpha: 0.1),
-      highlightColor: AppColors.textGray.withValues(alpha: 0.3),
+      baseColor: AppColors.textGrey.withValues(alpha: 0.1),
+      highlightColor: AppColors.textGrey.withValues(alpha: 0.3),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1530,7 +1530,7 @@ class TicketDetailsView extends StatelessWidget {
             ],
           ),
           SizedBox(height: 10),
-          Divider(color: AppColors.lightGray),
+          Divider(color: AppColors.lightGrey),
           SizedBox(height: 10),
           Row(
             children: [
@@ -1540,7 +1540,7 @@ class TicketDetailsView extends StatelessWidget {
             ],
           ),
           SizedBox(height: 10),
-          Divider(color: AppColors.lightGray),
+          Divider(color: AppColors.lightGrey),
           SizedBox(height: 10),
           Row(
             children: [
@@ -1582,8 +1582,8 @@ class TicketDetailsView extends StatelessWidget {
 
   Widget _buildShimmerPaymentCard() {
     return Shimmer.fromColors(
-      baseColor: AppColors.textGray.withValues(alpha: 0.1),
-      highlightColor: AppColors.textGray.withValues(alpha: 0.3),
+      baseColor: AppColors.textGrey.withValues(alpha: 0.1),
+      highlightColor: AppColors.textGrey.withValues(alpha: 0.3),
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.white,
@@ -1621,7 +1621,7 @@ class TicketDetailsView extends StatelessWidget {
                   SizedBox(height: 24),
                   Divider(
                     height: 24,
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1633,7 +1633,7 @@ class TicketDetailsView extends StatelessWidget {
                   SizedBox(height: 24),
                   Divider(
                     height: 24,
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1645,7 +1645,7 @@ class TicketDetailsView extends StatelessWidget {
                   SizedBox(height: 24),
                   Divider(
                     height: 24,
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1659,7 +1659,7 @@ class TicketDetailsView extends StatelessWidget {
             ),
             Divider(
               height: 0,
-              color: AppColors.textGray.withValues(alpha: 0.1),
+              color: AppColors.textGrey.withValues(alpha: 0.1),
             ),
             Row(
               children: [

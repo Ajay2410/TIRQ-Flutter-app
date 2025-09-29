@@ -151,7 +151,7 @@ class OtpVerificationView extends StatelessWidget {
             codeLength: 6,
             autoFocus: true,
             decoration: BoxLooseDecoration(
-              strokeColorBuilder: FixedColorBuilder(AppColors.lightGray),
+              strokeColorBuilder: FixedColorBuilder(AppColors.lightGrey),
               bgColorBuilder: FixedColorBuilder(Colors.transparent),
               textStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: AppColors.textPrimary,

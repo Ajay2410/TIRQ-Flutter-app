@@ -248,7 +248,7 @@ class _TicketResolveDialogState extends State<TicketResolveDialog> {
           height: AppSizes.w30,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSizes.v4),
-            border: Border.all(color: AppColors.lightGray),
+            border: Border.all(color: AppColors.lightGrey),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(AppSizes.v4),
@@ -377,7 +377,7 @@ class _TicketResolveDialogState extends State<TicketResolveDialog> {
                         margin: EdgeInsets.only(right: AppSizes.w8),
                         width: AppSizes.h120,
                         decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.lightGray),
+                          border: Border.all(color: AppColors.lightGrey),
                           borderRadius: BorderRadius.circular(AppSizes.v8),
                         ),
                         child: ClipRRect(
@@ -392,7 +392,7 @@ class _TicketResolveDialogState extends State<TicketResolveDialog> {
                               ),
                             ),
                             errorWidget: (context, url, error) => Container(
-                              color: AppColors.lightGray,
+                              color: AppColors.lightGrey,
                               child: Icon(
                                 Icons.attachment,
                                 color: AppColors.gray,

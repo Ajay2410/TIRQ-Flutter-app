@@ -75,7 +75,7 @@ class SelectMaintenanceTypeDialog extends StatelessWidget {
                                 'select_any_one_option_at_a_time',
                               ),
                               style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(color: AppColors.textGray),
+                                  ?.copyWith(color: AppColors.textGrey),
                             ),
                           ],
                         ),
@@ -186,7 +186,7 @@ class SelectMaintenanceTypeDialog extends StatelessWidget {
                                       ).pop(DialogResponse(confirmed: false));
                                     },
                                     style: OutlinedButton.styleFrom(
-                                      side: const BorderSide(color: AppColors.lightGray),
+                                      side: const BorderSide(color: AppColors.lightGrey),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(100),
                                       ),
@@ -232,7 +232,7 @@ class SelectMaintenanceTypeDialog extends StatelessWidget {
                                       backgroundColor:
                                           model.selectedType != null && !model.isLoading
                                               ? AppColors.primary
-                                              : AppColors.lightGray,
+                                              : AppColors.lightGrey,
                                       foregroundColor: AppColors.white,
                                       elevation: 0,
                                       shape: RoundedRectangleBorder(
@@ -297,14 +297,14 @@ class SelectMaintenanceTypeDialog extends StatelessWidget {
                   ? color.withValues(alpha: 0.1)
                   : isEnabled
                   ? AppColors.white
-                  : AppColors.lightGray.withValues(alpha: 0.3),
+                  : AppColors.lightGrey.withValues(alpha: 0.3),
           border: Border.all(
             color:
                 isSelected
                     ? color
                     : isEnabled
-                    ? AppColors.lightGray
-                    : AppColors.lightGray.withValues(alpha: 0.5),
+                    ? AppColors.lightGrey
+                    : AppColors.lightGrey.withValues(alpha: 0.5),
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(12),
@@ -329,7 +329,7 @@ class SelectMaintenanceTypeDialog extends StatelessWidget {
                 if (states.contains(MaterialState.selected)) {
                   return color;
                 }
-                return isEnabled ? AppColors.whisperGray : AppColors.lightGray;
+                return isEnabled ? AppColors.whisperGray : AppColors.lightGrey;
               }),
             ),
             Expanded(
@@ -379,11 +379,11 @@ class SelectMaintenanceTypeDialog extends StatelessWidget {
         labelText: label,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),

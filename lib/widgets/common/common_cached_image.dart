@@ -68,7 +68,7 @@ class CommonCachedImage extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      color: placeholderColor ?? AppColors.lightGray.withValues(alpha: 0.3),
+      color: placeholderColor ?? AppColors.lightGrey.withValues(alpha: 0.3),
       child: Center(
         child: CircularProgressIndicator(
           strokeWidth: 2,
@@ -84,11 +84,11 @@ class CommonCachedImage extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      color: errorColor ?? AppColors.lightGray.withValues(alpha: 0.3),
+      color: errorColor ?? AppColors.lightGrey.withValues(alpha: 0.3),
       child: Center(
         child: Icon(
           Icons.broken_image,
-          color: AppColors.textGray,
+          color: AppColors.textGrey,
           size: errorIconSize ?? 40,
         ),
       ),
@@ -127,8 +127,8 @@ class ChatCachedImage extends StatelessWidget {
       height: height,
       fit: BoxFit.cover,
       borderRadius: borderRadius ?? BorderRadius.circular(AppSizes.v8),
-      placeholderColor: AppColors.lightGray.withValues(alpha: 0.3),
-      errorColor: AppColors.lightGray.withValues(alpha: 0.3),
+      placeholderColor: AppColors.lightGrey.withValues(alpha: 0.3),
+      errorColor: AppColors.lightGrey.withValues(alpha: 0.3),
       errorIconSize: 40,
     );
 
@@ -178,8 +178,8 @@ class ProfileCachedImage extends StatelessWidget {
       height: size,
       fit: BoxFit.cover,
       borderRadius: borderRadius ?? BorderRadius.circular(size / 2),
-      placeholderColor: AppColors.lightGray.withValues(alpha: 0.3),
-      errorColor: AppColors.lightGray.withValues(alpha: 0.3),
+      placeholderColor: AppColors.lightGrey.withValues(alpha: 0.3),
+      errorColor: AppColors.lightGrey.withValues(alpha: 0.3),
       errorIconSize: size * 0.4,
     );
   }

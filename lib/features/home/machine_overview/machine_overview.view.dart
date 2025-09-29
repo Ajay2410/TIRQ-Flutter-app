@@ -155,7 +155,7 @@ class _MachineOverviewViewState extends State<MachineOverviewView> with TickerPr
                     },
                   )
                   : null,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.lightGray)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.lightGrey)),
           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.primary)),
         ),
         onTapOutside: (event) {
@@ -174,11 +174,11 @@ class _MachineOverviewViewState extends State<MachineOverviewView> with TickerPr
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error_outline, size: 64, color: AppColors.textGray),
+              Icon(Icons.error_outline, size: 64, color: AppColors.textGrey),
               const SizedBox(height: 16),
               Text(
                 viewModel.errorMessage,
-                style: TextStyle(color: AppColors.textGray, fontSize: 16, fontWeight: FontWeight.w500),
+                style: TextStyle(color: AppColors.textGrey, fontSize: 16, fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -196,11 +196,11 @@ class _MachineOverviewViewState extends State<MachineOverviewView> with TickerPr
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.precision_manufacturing, size: 64, color: AppColors.textGray),
+              Icon(Icons.precision_manufacturing, size: 64, color: AppColors.textGrey),
               const SizedBox(height: 16),
               Text(
                 _searchController.text.isNotEmpty ? 'no_machines_found_search'.lang : 'no_machines_found'.lang,
-                style: TextStyle(color: AppColors.textGray, fontSize: 16, fontWeight: FontWeight.w500),
+                style: TextStyle(color: AppColors.textGrey, fontSize: 16, fontWeight: FontWeight.w500),
               ),
             ],
           ),
@@ -258,7 +258,7 @@ class _MachineOverviewViewState extends State<MachineOverviewView> with TickerPr
               decoration: BoxDecoration(
                 color: AppColors.softGray,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.textGray.withValues(alpha: 0.1)),
+                border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.1)),
               ),
               child: Image.asset(AppImages.arrowRight, width: 16, height: 16, color: AppColors.darkGray),
             ),

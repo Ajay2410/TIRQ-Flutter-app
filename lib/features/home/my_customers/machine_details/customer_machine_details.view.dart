@@ -290,7 +290,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
                 ],
               ),
               const SizedBox(height: 14),
-              Divider(color: AppColors.lightGray),
+              Divider(color: AppColors.lightGrey),
               const SizedBox(height: 14),
 
               Text('maximum_processing_size'.lang, style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
@@ -317,7 +317,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
                 ],
               ),
               const SizedBox(height: 14),
-              Divider(color: AppColors.lightGray),
+              Divider(color: AppColors.lightGrey),
               const SizedBox(height: 14),
 
               Text('minimum_processing_size'.lang, style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
@@ -351,7 +351,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
                 AppColors.primarySuperLight,
               ),
               const SizedBox(height: 14),
-              Divider(color: AppColors.lightGray),
+              Divider(color: AppColors.lightGrey),
               const SizedBox(height: 14),
 
               Text('machine_ownership'.lang, style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
@@ -378,7 +378,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
                 ],
               ),
               const SizedBox(height: 10),
-              Divider(color: AppColors.lightGray),
+              Divider(color: AppColors.lightGrey),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -403,7 +403,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
                 ],
               ),
               const SizedBox(height: 10),
-              Divider(color: AppColors.lightGray),
+              Divider(color: AppColors.lightGrey),
               const SizedBox(height: 10),
               Row(
                 children: [

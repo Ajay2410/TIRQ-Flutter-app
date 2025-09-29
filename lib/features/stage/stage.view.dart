@@ -91,7 +91,7 @@ class StageView extends StatelessWidget {
         elevation: 10,
         unselectedLabelStyle: TextStyle(
           fontSize: AppSizes.v10,
-          color: AppColors.textGray,
+          color: AppColors.textGrey,
         ),
         selectedLabelStyle: TextStyle(
           fontSize: AppSizes.v10,

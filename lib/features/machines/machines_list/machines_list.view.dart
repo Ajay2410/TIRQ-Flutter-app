@@ -246,7 +246,7 @@ class _MachinesListViewState extends State<MachinesListView> with SingleTickerPr
           hintText: LanguageService.get("search_machines"),
           hintStyle: TextStyle(color: AppColors.gray),
           prefixIcon: Icon(Icons.search, color: AppColors.primary),
-          fillColor: AppColors.lightGray.withValues(alpha: 0.3),
+          fillColor: AppColors.lightGrey.withValues(alpha: 0.3),
           filled: true,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: BorderSide.none),
           contentPadding: EdgeInsets.symmetric(vertical: AppSizes.h12, horizontal: AppSizes.w16),
@@ -283,7 +283,7 @@ class _MachinesListViewState extends State<MachinesListView> with SingleTickerPr
         children: [
           Container(
             padding: EdgeInsets.all(AppSizes.v24),
-            decoration: BoxDecoration(color: AppColors.lightGray.withValues(alpha: 0.3), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: AppColors.lightGrey.withValues(alpha: 0.3), shape: BoxShape.circle),
             child: Icon(Icons.precision_manufacturing_outlined, size: 80, color: AppColors.primary.withValues(alpha: 0.7)),
           ),
           SizedBox(height: AppSizes.h20),
@@ -326,7 +326,7 @@ class _MachinesListViewState extends State<MachinesListView> with SingleTickerPr
         children: [
           Container(
             padding: EdgeInsets.all(AppSizes.v24),
-            decoration: BoxDecoration(color: AppColors.lightGray.withValues(alpha: 0.3), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: AppColors.lightGrey.withValues(alpha: 0.3), shape: BoxShape.circle),
             child: Icon(Icons.precision_manufacturing_outlined, size: 80, color: AppColors.primary.withValues(alpha: 0.7)),
           ),
           SizedBox(height: AppSizes.h20),
@@ -410,7 +410,7 @@ class _MachinesListViewState extends State<MachinesListView> with SingleTickerPr
           style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
         ),
         Container(
-          decoration: BoxDecoration(color: AppColors.lightGray.withValues(alpha: 0.3), shape: BoxShape.circle),
+          decoration: BoxDecoration(color: AppColors.lightGrey.withValues(alpha: 0.3), shape: BoxShape.circle),
           child: IconButton(icon: Icon(Icons.close, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context)),
         ),
       ],
@@ -430,7 +430,7 @@ class _MachinesListViewState extends State<MachinesListView> with SingleTickerPr
         ),
         SizedBox(height: AppSizes.h12),
         Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSizes.v12), border: Border.all(color: AppColors.lightGray)),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSizes.v12), border: Border.all(color: AppColors.lightGrey)),
           child: DropdownButtonFormField<String>(
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h12),
@@ -474,7 +474,7 @@ class _MachinesListViewState extends State<MachinesListView> with SingleTickerPr
         ),
         SizedBox(height: AppSizes.h12),
         Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSizes.v12), border: Border.all(color: AppColors.lightGray)),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSizes.v12), border: Border.all(color: AppColors.lightGrey)),
           child: DropdownButtonFormField<String>(
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h12),
@@ -605,7 +605,7 @@ class _ExpandableOrganizationHeaderState extends State<ExpandableOrganizationHea
           Container(
             width: double.infinity,
             padding: EdgeInsets.all(AppSizes.w12),
-            decoration: BoxDecoration(color: AppColors.lightGray.withOpacity(0.3), borderRadius: BorderRadius.circular(AppSizes.v10)),
+            decoration: BoxDecoration(color: AppColors.lightGrey.withOpacity(0.3), borderRadius: BorderRadius.circular(AppSizes.v10)),
             child: Text(addressText, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary)),
           ),
         ],
@@ -617,7 +617,7 @@ class _ExpandableOrganizationHeaderState extends State<ExpandableOrganizationHea
     return Container(
       width: AppSizes.w60,
       height: AppSizes.w60,
-      decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(AppSizes.v12)),
+      decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(AppSizes.v12)),
       child: Icon(Icons.business, size: AppSizes.w30, color: AppColors.primary),
     );
   }
@@ -708,7 +708,7 @@ class _ExpandableOrganizationHeaderState extends State<ExpandableOrganizationHea
 
           // Expandable Details Section
           if (_isExpanded) ...[
-            Divider(color: AppColors.lightGray),
+            Divider(color: AppColors.lightGrey),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h12),
               child: Column(

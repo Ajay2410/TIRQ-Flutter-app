@@ -201,11 +201,11 @@ class _ChatLanguageState extends State<ChatLanguage> {
           labelStyle: const TextStyle(fontWeight: FontWeight.w600),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.v12),
-            borderSide: BorderSide(color: AppColors.lightGray),
+            borderSide: BorderSide(color: AppColors.lightGrey),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.v12),
-            borderSide: BorderSide(color: AppColors.lightGray),
+            borderSide: BorderSide(color: AppColors.lightGrey),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.v12),

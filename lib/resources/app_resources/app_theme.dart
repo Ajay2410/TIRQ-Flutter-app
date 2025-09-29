@@ -280,7 +280,7 @@ abstract class AppThemes {
         overlayColor: AppColors.primaryDark,
       ),
     ),
-    dividerTheme: DividerThemeData(color: AppColors.lightGray, thickness: 1),
+    dividerTheme: DividerThemeData(color: AppColors.lightGrey, thickness: 1),
     tabBarTheme: TabBarThemeData(
       dividerHeight: 0.0,
       labelStyle: TextStyle(

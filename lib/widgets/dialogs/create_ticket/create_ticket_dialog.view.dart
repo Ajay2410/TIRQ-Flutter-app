@@ -90,7 +90,7 @@ class CreateTicketDialog extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               LanguageService.get('enter_support_request_details'),
-                              style: Theme.of(context1).textTheme.bodyMedium?.copyWith(color: AppColors.textGray),
+                              style: Theme.of(context1).textTheme.bodyMedium?.copyWith(color: AppColors.textGrey),
                             ),
                           ],
                         ),
@@ -190,7 +190,7 @@ class CreateTicketDialog extends StatelessWidget {
                               GestureDetector(
                                 onTap: () => model.pickMedia(),
                                 child: DottedBorder(
-                                  color: model.attachmentsError != null ? AppColors.error : AppColors.lightGray,
+                                  color: model.attachmentsError != null ? AppColors.error : AppColors.lightGrey,
                                   strokeWidth: 1.5,
                                   dashPattern: [8, 4],
                                   borderType: BorderType.RRect,
@@ -301,7 +301,7 @@ class CreateTicketDialog extends StatelessWidget {
                             model.onCancel();
                           },
                           style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: AppColors.lightGray),
+                            side: const BorderSide(color: AppColors.lightGrey),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
                             padding: EdgeInsets.symmetric(vertical: AppSizes.h12),
                           ),
@@ -362,11 +362,11 @@ class CreateTicketDialog extends StatelessWidget {
         labelText: label,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),

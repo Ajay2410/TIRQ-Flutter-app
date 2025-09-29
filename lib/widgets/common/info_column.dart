@@ -55,7 +55,7 @@ class InfoColumn extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: labelFontSize ?? AppSizes.f11,
-            color: AppColors.textGray,
+            color: AppColors.textGrey,
           ),
         ),
         Text(

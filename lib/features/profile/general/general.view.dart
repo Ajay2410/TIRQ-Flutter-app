@@ -8,6 +8,8 @@ import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/services/language.service.dart';
 
+import 'app_currency.dart';
+
 class GeneralSettingView extends StatelessWidget {
   const GeneralSettingView({super.key});
 
@@ -54,7 +56,7 @@ class GeneralSettingView extends StatelessWidget {
                   color: AppColors.primarySuperLight.withValues(alpha: 0.04),
                   borderRadius: BorderRadius.circular(13),
                   border: Border.all(
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                 ),
                 padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
@@ -75,7 +77,7 @@ class GeneralSettingView extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 12,
-                        color: AppColors.textGray,
+                        color: AppColors.textGrey,
                       ),
                     ),
                     SizedBox(width: 10),
@@ -95,7 +97,7 @@ class GeneralSettingView extends StatelessWidget {
                 ),
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
-                  color: AppColors.textGray,
+                  color: AppColors.textGrey,
                   fontSize: 10,
                 ),
               ),
@@ -106,7 +108,7 @@ class GeneralSettingView extends StatelessWidget {
                   color: AppColors.primarySuperLight.withValues(alpha: 0.04),
                   borderRadius: BorderRadius.circular(13),
                   border: Border.all(
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                 ),
                 padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
@@ -150,7 +152,7 @@ class GeneralSettingView extends StatelessWidget {
                 ),
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
-                  color: AppColors.textGray,
+                  color: AppColors.textGrey,
                   fontSize: 10,
                 ),
               ),
@@ -239,7 +241,10 @@ class GeneralSettingView extends StatelessWidget {
               title: LanguageService.get("currency"),
               iconColor: AppColors.violetBlue,
               onTap: () {
-                _showCurrencySelectionDialog(context);
+                Get.to(
+                      () => AppCurrencyView(),
+                );
+                // _showCurrencySelectionDialog(context);
               },
               animationDelay: 400.ms,
             ),
@@ -323,14 +328,14 @@ class GeneralSettingView extends StatelessWidget {
                   color: AppColors.primarySuperLight.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                 ),
                 child: Image.asset(
                   AppImages.arrowRight,
                   width: 16,
                   height: 16,
-                  color: AppColors.textGray,
+                  color: AppColors.textGrey,
                 ),
               ),
           ],
@@ -374,7 +379,7 @@ class GeneralSettingView extends StatelessWidget {
 
             padding: 2.0,
             activeColor: AppColors.violetBlue.withValues(alpha: 0.1),
-            inactiveColor: AppColors.lightGray.withValues(alpha: 0.3),
+            inactiveColor: AppColors.lightGrey.withValues(alpha: 0.3),
             activeIcon: Icon(Icons.dark_mode, color: Colors.black, size: 16),
             inactiveIcon: Icon(Icons.light_mode, color: Colors.black, size: 16),
             onToggle: (value) {},
@@ -469,7 +474,7 @@ class GeneralSettingView extends StatelessWidget {
                       child: Icon(
                         Icons.close,
                         size: 20,
-                        color: AppColors.textGray,
+                        color: AppColors.textGrey,
                       ),
                     ),
                   ],

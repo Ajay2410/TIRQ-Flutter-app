@@ -83,7 +83,7 @@ class RegisterOrganizationView extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppSizes.v10),
             child: LinearProgressIndicator(
               value: 0.5,
-              backgroundColor: AppColors.lightGray,
+              backgroundColor: AppColors.lightGrey,
               valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
               minHeight: AppSizes.h6,
             ),
@@ -216,11 +216,11 @@ class RegisterOrganizationView extends StatelessWidget {
                 labelText: LanguageService.get('phone_number'),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSizes.v12),
-                  borderSide: BorderSide(color: AppColors.lightGray),
+                  borderSide: BorderSide(color: AppColors.lightGrey),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSizes.v12),
-                  borderSide: BorderSide(color: AppColors.lightGray),
+                  borderSide: BorderSide(color: AppColors.lightGrey),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -271,11 +271,11 @@ class RegisterOrganizationView extends StatelessWidget {
         labelText: label,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -300,11 +300,11 @@ class RegisterOrganizationView extends StatelessWidget {
         labelText: label,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -345,11 +345,11 @@ class RegisterOrganizationView extends StatelessWidget {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),

@@ -191,7 +191,7 @@ class LoginView extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: AppColors.lightGray.withValues(alpha: 0.3),
+              color: AppColors.lightGrey.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(AppSizes.v45),
             ),
             child: Row(
@@ -263,14 +263,14 @@ class LoginView extends StatelessWidget {
                       ),
                       decoration: InputDecoration(
                         labelText: LanguageService.get('phone_number'),
-                        labelStyle: TextStyle(color: AppColors.textGray, fontSize: 13),
+                        labelStyle: TextStyle(color: AppColors.textGrey, fontSize: 13),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(AppSizes.v12),
-                          borderSide: BorderSide(color: AppColors.lightGray),
+                          borderSide: BorderSide(color: AppColors.lightGrey),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(AppSizes.v12),
-                          borderSide: BorderSide(color: AppColors.lightGray),
+                          borderSide: BorderSide(color: AppColors.lightGrey),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -494,7 +494,7 @@ class LoginView extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(bottom: AppSizes.h20),
                 decoration: BoxDecoration(
-                  color: AppColors.lightGray.withValues(alpha: 0.3),
+                  color: AppColors.lightGrey.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(AppSizes.v45),
                 ),
                 child: Row(
@@ -568,14 +568,14 @@ class LoginView extends StatelessWidget {
                     ),
                     decoration: InputDecoration(
                       labelText: LanguageService.get('phone_number'),
-                      labelStyle: TextStyle(color: AppColors.textGray, fontSize: 13),
+                      labelStyle: TextStyle(color: AppColors.textGrey, fontSize: 13),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(AppSizes.v12),
-                        borderSide: BorderSide(color: AppColors.lightGray),
+                        borderSide: BorderSide(color: AppColors.lightGrey),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(AppSizes.v12),
-                        borderSide: BorderSide(color: AppColors.lightGray),
+                        borderSide: BorderSide(color: AppColors.lightGrey),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -710,7 +710,7 @@ class LoginView extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(bottom: AppSizes.h20),
                 decoration: BoxDecoration(
-                  color: AppColors.lightGray.withValues(alpha: 0.3),
+                  color: AppColors.lightGrey.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(AppSizes.v45),
                 ),
                 child: Row(
@@ -784,14 +784,14 @@ class LoginView extends StatelessWidget {
                     ),
                     decoration: InputDecoration(
                       labelText: LanguageService.get('phone_number'),
-                      labelStyle: TextStyle(color: AppColors.textGray, fontSize: 13),
+                      labelStyle: TextStyle(color: AppColors.textGrey, fontSize: 13),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(AppSizes.v12),
-                        borderSide: BorderSide(color: AppColors.lightGray),
+                        borderSide: BorderSide(color: AppColors.lightGrey),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(AppSizes.v12),
-                        borderSide: BorderSide(color: AppColors.lightGray),
+                        borderSide: BorderSide(color: AppColors.lightGrey),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -914,7 +914,7 @@ class LoginView extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: AppSizes.h10),
           child: Row(
             children: [
-              Expanded(child: Divider(color: AppColors.lightGray)),
+              Expanded(child: Divider(color: AppColors.lightGrey)),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: AppSizes.w16),
                 child: Text(
@@ -922,7 +922,7 @@ class LoginView extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
                 ),
               ),
-              Expanded(child: Divider(color: AppColors.lightGray)),
+              Expanded(child: Divider(color: AppColors.lightGrey)),
             ],
           ),
         ),
@@ -1067,15 +1067,15 @@ class LoginView extends StatelessWidget {
         enabled: enabled,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: AppColors.textGray, fontSize: 13),
+          labelStyle: TextStyle(color: AppColors.textGrey, fontSize: 13),
           suffixIcon: suffixIcon,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.v12),
-            borderSide: BorderSide(color: AppColors.lightGray),
+            borderSide: BorderSide(color: AppColors.lightGrey),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.v12),
-            borderSide: BorderSide(color: AppColors.lightGray),
+            borderSide: BorderSide(color: AppColors.lightGrey),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -1083,10 +1083,10 @@ class LoginView extends StatelessWidget {
           ),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.v12),
-            borderSide: BorderSide(color: AppColors.lightGray.withValues(alpha: 0.5)),
+            borderSide: BorderSide(color: AppColors.lightGrey.withValues(alpha: 0.5)),
           ),
           filled: !enabled,
-          fillColor: enabled ? null : AppColors.lightGray.withValues(alpha: 0.1),
+          fillColor: enabled ? null : AppColors.lightGrey.withValues(alpha: 0.1),
           contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.w12, vertical: AppSizes.h12),
         ),
         validator: validator,
@@ -1109,7 +1109,7 @@ class LoginView extends StatelessWidget {
         width: 50,
         height: 50,
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.textGray.withValues(alpha: 0.1)),
+          border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.1)),
           borderRadius: BorderRadius.circular(AppSizes.v12),
           color: AppColors.white,
         ),

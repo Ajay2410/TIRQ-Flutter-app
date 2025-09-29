@@ -741,7 +741,7 @@ class HomeCardShimmer extends StatelessWidget {
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
       margin: EdgeInsets.only(bottom: 8),
       child: Shimmer.fromColors(
-        baseColor: AppColors.lightGray.withValues(alpha: 0.4),
+        baseColor: AppColors.lightGrey.withValues(alpha: 0.4),
         highlightColor: AppColors.white,
         period: const Duration(milliseconds: 1500),
         child: Container(

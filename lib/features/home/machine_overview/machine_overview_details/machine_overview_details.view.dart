@@ -413,7 +413,7 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
                 ],
               ),
             ),
-            Container(height: 56, color: AppColors.lightGray, width: 1),
+            Container(height: 56, color: AppColors.lightGrey, width: 1),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
@@ -441,7 +441,7 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
           ],
         ),
         const SizedBox(height: 20),
-        Container(height: 1, color: AppColors.lightGray),
+        Container(height: 1, color: AppColors.lightGrey),
         const SizedBox(height: 20),
 
         Row(
@@ -452,7 +452,7 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
           ],
         ),
         const SizedBox(height: 20),
-        Container(height: 1, color: AppColors.lightGray),
+        Container(height: 1, color: AppColors.lightGrey),
         const SizedBox(height: 20),
 
         _buildShimmerInfoRow(),
@@ -505,12 +505,12 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.error_outline, size: 64, color: AppColors.textGray),
+          Icon(Icons.error_outline, size: 64, color: AppColors.textGrey),
           const SizedBox(height: 16),
           Text(
             viewModel.errorMessage,
             style: TextStyle(
-              color: AppColors.textGray,
+              color: AppColors.textGrey,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -618,8 +618,8 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
                     ],
                   ),
                   position: PopupPosition.top,
-                  arrowColor: AppColors.textGray,
-                  backgroundColor: AppColors.textGray,
+                  arrowColor: AppColors.textGrey,
+                  backgroundColor: AppColors.textGrey,
                   child: Padding(
                     padding: EdgeInsets.all(16),
                     child: Image.asset(AppImages.alert, width: 16, height: 16),
@@ -646,7 +646,7 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
                         Text(
                           'maximum_processing_size'.lang,
                           style: TextStyle(
-                            color: AppColors.textGray,
+                            color: AppColors.textGrey,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -676,7 +676,7 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
                       ],
                     ),
                   ),
-                  Container(height: 56, color: AppColors.lightGray, width: 1),
+                  Container(height: 56, color: AppColors.lightGrey, width: 1),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Column(
@@ -685,7 +685,7 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
                         Text(
                           'minimum_processing_size'.lang,
                           style: TextStyle(
-                            color: AppColors.textGray,
+                            color: AppColors.textGrey,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -720,7 +720,7 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
             ],
           ),
 
-          Divider(height: 40, color: AppColors.lightGray),
+          Divider(height: 40, color: AppColors.lightGrey),
 
           Row(
             children: [
@@ -743,7 +743,7 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
               ),
             ],
           ),
-          Divider(height: 40, color: AppColors.lightGray),
+          Divider(height: 40, color: AppColors.lightGrey),
 
           _buildInfoRow(
             AppImages.powerConsumption,
@@ -755,7 +755,7 @@ class _MachineOverviewDetailsViewState extends State<MachineOverviewDetailsView>
           Text(
             'No processing dimensions available',
             style: TextStyle(
-              color: AppColors.textGray,
+              color: AppColors.textGrey,
               fontSize: 14,
               fontStyle: FontStyle.italic,
             ),

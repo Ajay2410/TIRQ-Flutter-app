@@ -98,7 +98,7 @@ class DuePayView extends StatelessWidget {
             Divider(
               height: 1,
               thickness: 1,
-              color: AppColors.lightGray,
+              color: AppColors.lightGrey,
               indent: AppSizes.w20,
               endIndent: AppSizes.w20,
             ),
@@ -128,7 +128,7 @@ Widget _buildHeaderBackground(BuildContext context, DuePaymentViewModel model) {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.lightGray,
+                          color: AppColors.lightGrey,
                           // blurRadius: 20,
                           spreadRadius: 5,
                         ),
@@ -146,7 +146,7 @@ Widget _buildHeaderBackground(BuildContext context, DuePaymentViewModel model) {
                         fit: BoxFit.cover,
                         placeholder:
                             (context, url) => Container(
-                              color: AppColors.lightGray,
+                              color: AppColors.lightGrey,
                               child: Icon(
                                 Icons.business,
                                 size: 60,
@@ -155,7 +155,7 @@ Widget _buildHeaderBackground(BuildContext context, DuePaymentViewModel model) {
                             ),
                         errorWidget:
                             (context, url, error) => Container(
-                              color: AppColors.lightGray,
+                              color: AppColors.lightGrey,
                               child: Icon(
                                 Icons.business,
                                 size: 60,
@@ -211,7 +211,7 @@ Widget _buildHeaderBackground(BuildContext context, DuePaymentViewModel model) {
                 // model.payment.date ?? 
                 '2025 Jun 20',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textGray,
+                  color: AppColors.textGrey,
                   fontWeight: FontWeight.w500,
                 ),
               ).animate().fadeIn(duration: 500.ms, delay: 200.ms),

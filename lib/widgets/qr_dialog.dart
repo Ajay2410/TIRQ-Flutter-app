@@ -61,7 +61,7 @@ class _QRDialogState extends State<QRDialog> {
                   child: const Icon(
                     Icons.close,
                     size: 20,
-                    color: AppColors.textGray,
+                    color: AppColors.textGrey,
                   ),
                 ),
               ],
@@ -95,7 +95,7 @@ class _QRDialogState extends State<QRDialog> {
                               ),
                           errorWidget:
                               (context, url, error) => Container(
-                                color: AppColors.textGray,
+                                color: AppColors.textGrey,
                                 child: const Icon(
                                   Icons.person,
                                   size: 40,
@@ -130,7 +130,7 @@ class _QRDialogState extends State<QRDialog> {
                       'yourmail@gmail.com',
                   style: const TextStyle(
                     fontSize: 14,
-                    color: AppColors.textGray,
+                    color: AppColors.textGrey,
                   ),
                 ),
               ],
@@ -150,7 +150,7 @@ class _QRDialogState extends State<QRDialog> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: AppColors.textGray.withValues(alpha: 0.2),
+                        color: AppColors.textGrey.withValues(alpha: 0.2),
                         width: 1,
                       ),
                     ),
@@ -222,8 +222,8 @@ class _QRDialogState extends State<QRDialog> {
                     imagePath: AppImages.save,
                     label: LanguageService.get("save"),
                     backgroundColor: Colors.white,
-                    textColor: AppColors.textGray,
-                    borderColor: AppColors.textGray,
+                    textColor: AppColors.textGrey,
+                    borderColor: AppColors.textGrey,
                     onPressed: _onSavePressed,
                     borderRadius: 45,
                     isLoading: _isSaving,

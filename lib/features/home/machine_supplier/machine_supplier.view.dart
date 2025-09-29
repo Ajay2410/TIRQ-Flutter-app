@@ -128,7 +128,7 @@ class _MachineSupplierViewState extends State<MachineSupplierView> with TickerPr
                     },
                   )
                   : null,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.lightGray)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.lightGrey)),
           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.primary)),
         ),
         onChanged: model.onSearchChanged,
@@ -169,12 +169,12 @@ class _MachineSupplierViewState extends State<MachineSupplierView> with TickerPr
   Widget _buildShimmerList() {
     return ListView.separated(
       separatorBuilder: (context, index) {
-        return Divider(color: AppColors.lightGray, thickness: 1);
+        return Divider(color: AppColors.lightGrey, thickness: 1);
       },
       padding: const EdgeInsets.all(13),
       itemCount: 10,
       itemBuilder: (context, index) {
-        return Shimmer.fromColors(baseColor: AppColors.lightGray, highlightColor: AppColors.white, child: _buildMachineCardShimmer());
+        return Shimmer.fromColors(baseColor: AppColors.lightGrey, highlightColor: AppColors.white, child: _buildMachineCardShimmer());
       },
     );
   }
@@ -184,22 +184,22 @@ class _MachineSupplierViewState extends State<MachineSupplierView> with TickerPr
       children: [
         Container(
           padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.lightGray),
-          child: Container(height: 50, width: 50, decoration: BoxDecoration(color: AppColors.lightGray, shape: BoxShape.circle)),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.lightGrey),
+          child: Container(height: 50, width: 50, decoration: BoxDecoration(color: AppColors.lightGrey, shape: BoxShape.circle)),
         ),
         AppGaps.w16,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(height: 16, width: 120, decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4))),
+              Container(height: 16, width: 120, decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4))),
               AppGaps.h5,
-              Container(height: 14, width: 200, decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4))),
+              Container(height: 14, width: 200, decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4))),
             ],
           ),
         ),
         AppGaps.w16,
-        Container(height: 20, width: 60, decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(6))),
+        Container(height: 20, width: 60, decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(6))),
       ],
     );
   }
@@ -303,7 +303,7 @@ class _MachineSupplierViewState extends State<MachineSupplierView> with TickerPr
               decoration: BoxDecoration(
                 color: AppColors.softGray,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.textGray.withValues(alpha: 0.1)),
+                border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.1)),
               ),
               child: Image.asset(AppImages.arrowRight, width: 16, height: 16, color: AppColors.darkGray),
             ),

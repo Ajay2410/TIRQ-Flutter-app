@@ -161,7 +161,7 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
           (context, index) =>
               index == 0
                   ? SizedBox()
-                  : Padding(padding: const EdgeInsets.symmetric(horizontal: 10), child: const Divider(color: AppColors.lightGray, height: 1)),
+                  : Padding(padding: const EdgeInsets.symmetric(horizontal: 10), child: const Divider(color: AppColors.lightGrey, height: 1)),
       itemBuilder: (context, index) {
         if (index == 0) {
           return SizedBox(height: 10);

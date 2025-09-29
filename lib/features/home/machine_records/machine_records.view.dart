@@ -200,7 +200,7 @@ class _MachineRecordsViewState extends State<MachineRecordsView> with TickerProv
           hintText: 'search_machines'.lang,
           prefixIcon: Padding(padding: const EdgeInsets.all(16), child: Image.asset(AppImages.search, width: 20, height: 20, color: AppColors.gray)),
           suffixIcon: _searchController.text.isNotEmpty ? IconButton(icon: Icon(Icons.clear, color: AppColors.gray), onPressed: _clearSearch) : null,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.lightGray)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.lightGrey)),
           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.primary)),
         ),
         onChanged: _onSearchChanged,
@@ -216,11 +216,11 @@ class _MachineRecordsViewState extends State<MachineRecordsView> with TickerProv
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.precision_manufacturing, size: 64, color: AppColors.textGray),
+              Icon(Icons.precision_manufacturing, size: 64, color: AppColors.textGrey),
               const SizedBox(height: 16),
               Text(
                 _searchController.text.isNotEmpty ? 'no_machines_found_search'.lang : 'no_machines_found'.lang,
-                style: TextStyle(color: AppColors.textGray, fontSize: 16, fontWeight: FontWeight.w500),
+                style: TextStyle(color: AppColors.textGrey, fontSize: 16, fontWeight: FontWeight.w500),
               ),
             ],
           ),
@@ -289,7 +289,7 @@ class _MachineRecordsViewState extends State<MachineRecordsView> with TickerProv
               decoration: BoxDecoration(
                 color: AppColors.softGray,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.textGray.withValues(alpha: 0.1)),
+                border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.1)),
               ),
               child: Image.asset(AppImages.arrowRight, width: 16, height: 16, color: AppColors.darkGray),
             ),

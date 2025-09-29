@@ -28,7 +28,7 @@ class ProcessorsSearchView extends StatelessWidget {
                 padding: EdgeInsets.all(AppSizes.h20),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppColors.lightGray,
+                    color: AppColors.lightGrey,
                     borderRadius: BorderRadius.circular(AppSizes.v30),
                   ),
                   child: TextField(
@@ -67,7 +67,7 @@ class ProcessorsSearchView extends StatelessWidget {
             width: AppSizes.w120,
             height: AppSizes.h120,
             decoration: BoxDecoration(
-              color: AppColors.lightGray,
+              color: AppColors.lightGrey,
               shape: BoxShape.circle,
             ),
             child: Icon(

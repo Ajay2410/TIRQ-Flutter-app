@@ -241,7 +241,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
                   listItemStyle: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
                   borderRadius: BorderRadius.circular(12),
                   fillColor: AppColors.white,
-                  borderSide: BorderSide(color: field.hasError ? AppColors.error : AppColors.lightGray, width: field.hasError ? 2.0 : 1.0),
+                  borderSide: BorderSide(color: field.hasError ? AppColors.error : AppColors.lightGrey, width: field.hasError ? 2.0 : 1.0),
                   errorBorderSide: BorderSide(color: AppColors.error, width: 1),
                   fieldSuffixIcon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
                 ),
@@ -286,7 +286,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
                 },
                 suffixIcon: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Image.asset(AppImages.height, width: 20, height: 20, color: AppColors.textGray),
+                  child: Image.asset(AppImages.height, width: 20, height: 20, color: AppColors.textGrey),
                 ),
               ),
             ),
@@ -308,7 +308,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
                 },
                 suffixIcon: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Image.asset(AppImages.width, width: 20, height: 20, color: AppColors.textGray),
+                  child: Image.asset(AppImages.width, width: 20, height: 20, color: AppColors.textGrey),
                 ),
               ),
             ),
@@ -337,7 +337,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
                 },
                 suffixIcon: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Image.asset(AppImages.height, width: 20, height: 20, color: AppColors.textGray),
+                  child: Image.asset(AppImages.height, width: 20, height: 20, color: AppColors.textGrey),
                 ),
               ),
             ),
@@ -359,7 +359,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
                 },
                 suffixIcon: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Image.asset(AppImages.width, width: 20, height: 20, color: AppColors.textGray),
+                  child: Image.asset(AppImages.width, width: 20, height: 20, color: AppColors.textGrey),
                 ),
               ),
             ),
@@ -414,7 +414,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
       },
       prefixIcon: Padding(
         padding: const EdgeInsets.all(16),
-        child: Image.asset(AppImages.powerConsumption, width: 20, height: 20, color: AppColors.textGray),
+        child: Image.asset(AppImages.powerConsumption, width: 20, height: 20, color: AppColors.textGrey),
       ),
     );
   }
