@@ -119,9 +119,28 @@ abstract class AppImages {
   static const String attachment = "assets/icons/attachment.png";
   static const String cameraOutlined = "assets/icons/camera_outlined.png";
 
+  // Invite Contact Sharing Icons
+  static const String linkShare = "assets/icons/link_share.png";
+  static const String message = "assets/icons/message.png";
+  static const String email = "assets/icons/email.png";
+  static const String weChat = "assets/icons/we_chat.png";
+  static const String whatsapp = "assets/icons/whatsapp.png";
+
+  // Security Icons
+  static const String key = "assets/icons/key.png";
+  static const String fingerprint = "assets/icons/fingerprint.png";
+  static const String changePassword = "assets/images/change_password.png";
+  static const String eyeOpen = "assets/icons/eye_open.png";
+  static const String eyeClose = "assets/icons/eye_close.png";
+
   // Search Screen Icons
   static const String earthSearch = "assets/images/earth_search.png";
   static const String flag = "assets/images/flag.png";
+
+  static const String info = "assets/icons/info.png";
+
+  // Translation Icons
+  static const String translate = "assets/images/translate.png";
 
   // Flag URL construction
   static String getFlagUrl(String flagPath) {

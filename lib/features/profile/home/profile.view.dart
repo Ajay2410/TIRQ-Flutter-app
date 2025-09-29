@@ -1,18 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:manager/features/profile/home/profile.vm.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:stacked/stacked.dart';
+import 'package:manager/widgets/common_elevated_button.dart';
 
 import '../../../core/models/hive/user/user.dart';
 import '../../../core/storage/storage.dart';
 import '../../../services/language.service.dart';
 import '../../../routes/routes.dart';
 import '../../../widgets/qr_dialog.dart';
+import '../security/security.view.dart';
+import '../help_support/help_support.view.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -214,69 +219,71 @@ class ProfileView extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 20),
 
-          Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: model.navigateToQRView,
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE3F2FD),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.qr_code, size: 24, color: Color(0xFF2196F3)),
-                        SizedBox(width: 12),
-                        Text(
-                          LanguageService.get("my_QR"),
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ).animate().fadeIn(duration: 500.ms, delay: 300.ms),
-              const SizedBox(width: 16),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE8F5E8),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.account_balance_wallet,
-                          size: 24,
-                          color: Color(0xFF4CAF50),
-                        ),
-                        SizedBox(width: 12),
-                        Text(
-                          LanguageService.get("my_wallet"),
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ).animate().fadeIn(duration: 500.ms, delay: 300.ms),
-            ],
-          ),
+          /// TODO : Don't remove
+          // const SizedBox(height: 20),
+          //
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: GestureDetector(
+          //         onTap: model.navigateToQRView,
+          //         child: Container(
+          //           padding: const EdgeInsets.all(16),
+          //           decoration: BoxDecoration(
+          //             color: const Color(0xFFE3F2FD),
+          //             borderRadius: BorderRadius.circular(12),
+          //           ),
+          //           child: Row(
+          //             children: [
+          //               Icon(Icons.qr_code, size: 24, color: Color(0xFF2196F3)),
+          //               SizedBox(width: 12),
+          //               Text(
+          //                 LanguageService.get("my_QR"),
+          //                 style: TextStyle(
+          //                   fontSize: 16,
+          //                   fontWeight: FontWeight.w600,
+          //                   color: Colors.black,
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ).animate().fadeIn(duration: 500.ms, delay: 300.ms),
+          //     const SizedBox(width: 16),
+          //     Expanded(
+          //       child: GestureDetector(
+          //         onTap: () {},
+          //         child: Container(
+          //           padding: const EdgeInsets.all(16),
+          //           decoration: BoxDecoration(
+          //             color: const Color(0xFFE8F5E8),
+          //             borderRadius: BorderRadius.circular(12),
+          //           ),
+          //           child: Row(
+          //             children: [
+          //               Icon(
+          //                 Icons.account_balance_wallet,
+          //                 size: 24,
+          //                 color: Color(0xFF4CAF50),
+          //               ),
+          //               SizedBox(width: 12),
+          //               Text(
+          //                 LanguageService.get("my_wallet"),
+          //                 style: TextStyle(
+          //                   fontSize: 16,
+          //                   fontWeight: FontWeight.w600,
+          //                   color: Colors.black,
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ).animate().fadeIn(duration: 500.ms, delay: 300.ms),
+          //   ],
+          // ),
         ],
       ),
     );
@@ -323,7 +330,7 @@ class ProfileView extends StatelessWidget {
             imagePath: AppImages.security,
             title: LanguageService.get("security"),
             iconColor: const Color(0xFF607D8B),
-            onTap: () {},
+            onTap: () => Get.to(() => const SecurityView()),
             animationDelay: 700.ms,
           ),
           _buildDivider(),
@@ -331,7 +338,7 @@ class ProfileView extends StatelessWidget {
             imagePath: AppImages.helpSupport,
             title: LanguageService.get("help_and_support"),
             iconColor: const Color(0xFFFF9800),
-            onTap: () {},
+            onTap: () => Get.to(() => const HelpAndSupportView()),
             animationDelay: 800.ms,
           ),
           _buildDivider(),
@@ -347,7 +354,7 @@ class ProfileView extends StatelessWidget {
             imagePath: AppImages.inviteContact,
             title: LanguageService.get("invite_a_contact"),
             iconColor: const Color(0xFF4CAF50),
-            onTap: () {},
+            onTap: () => _showInviteContactDialog(context),
             animationDelay: 1000.ms,
           ),
           _buildDivider(),
@@ -355,7 +362,7 @@ class ProfileView extends StatelessWidget {
             imagePath: AppImages.logout,
             title: LanguageService.get("logout"),
             iconColor: const Color(0xFFE53935),
-            onTap: model.navigateToLoginView,
+            onTap: () => _showLogoutDialog(context, model),
             isLast: true,
             animationDelay: 1100.ms,
           ),
@@ -543,6 +550,265 @@ class ProfileView extends StatelessWidget {
         user: model.user,
         organizationName: model.organization?.name,
         customer: model.customer,
+      ),
+    );
+  }
+
+  void _showInviteContactDialog(BuildContext context) {
+    Get.dialog(
+      Dialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 12),
+        backgroundColor: AppColors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header with title and close button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    LanguageService.get("invite_people"),
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.black,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => Get.back(),
+                    child: Icon(
+                      Icons.close,
+                      size: 24,
+                      color: AppColors.textGray,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
+
+              // Share this link via section
+              Text(
+                LanguageService.get("share_this_link_via"),
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.textGray,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Share options row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildShareOption(
+                    AppImages.whatsapp,
+                    "whatsapp",
+                    color: AppColors.emeraldGreen,
+                  ),
+                  _buildShareOption(
+                    AppImages.weChat,
+                    "wechat",
+                    color: AppColors.leafGreen,
+                  ),
+                  _buildShareOption(
+                    AppImages.email,
+                    "email",
+                    color: AppColors.redbackground,
+                  ),
+                  _buildShareOption(
+                    AppImages.message,
+                    "message",
+                    color: AppColors.turquoiseBlue,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+
+              // Or Copy link section
+              Text(
+                LanguageService.get("or_copy_link"),
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textGray,
+                ),
+              ),
+              const SizedBox(height: 15),
+
+              // Copy link input field
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(13),
+                  border: Border.all(
+                    color: AppColors.textGray.withValues(alpha: 0.1),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      AppImages.linkShare,
+                      width: 24,
+                      height: 24,
+                      color: AppColors.black,
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        'https://yourwebsite.com/',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textGray,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    CommonElevatedButton(
+                      height: 28,
+                      width: 42,
+                      label: LanguageService.get("copy"),
+                      onPressed: () async {
+                        await Clipboard.setData(
+                          const ClipboardData(text: 'https://yourwebsite.com/'),
+                        );
+                        Fluttertoast.showToast(
+                          msg: LanguageService.get("link_copied_to_clipboard"),
+                        );
+                      },
+                      backgroundColor: AppColors.primary,
+                      textColor: AppColors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 8,
+                      ),
+                      borderRadius: 8,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShareOption(
+    String imagePath,
+    String label, {
+    required Color color,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        // TODO: Implement share functionality for each platform
+        print('Share via $label');
+      },
+      child: Container(
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(
+          child: Image.asset(
+            imagePath,
+            width: 25,
+            height: 25,
+            fit: BoxFit.contain,
+            color: color,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context, ProfileViewModel model) {
+    Get.dialog(
+      Dialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 20),
+        backgroundColor: AppColors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Warning icon
+              Container(
+                padding: EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: AppColors.redBack.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Image.asset(AppImages.info, height: 32, width: 32),
+                ),
+              ),
+              const SizedBox(height: 15),
+
+              // Title text
+              Text(
+                LanguageService.get("are_you_sure_you_want_to_logout"),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.black,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+
+              // Buttons row
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50),
+                child: Row(
+                  children: [
+                    // Cancel button
+                    Expanded(
+                      child: CommonElevatedButton(
+                        label: LanguageService.get("cancel"),
+                        onPressed: () => Get.back(),
+                        backgroundColor: AppColors.white,
+                        textColor: AppColors.textGray,
+                        borderColor: AppColors.textGray,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        borderRadius: 45,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+
+                    // Logout button
+                    Expanded(
+                      child: CommonElevatedButton(
+                        label: LanguageService.get("logout"),
+                        onPressed: () {
+                          Get.back(); // Close dialog first
+                          model.navigateToLoginView(); // Then logout
+                        },
+                        backgroundColor: AppColors.redBack,
+                        textColor: AppColors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        borderRadius: 45,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

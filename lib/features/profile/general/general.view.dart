@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:manager/features/profile/general/applang.view.dart';
+import 'package:manager/features/profile/general/system_sounds.view.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/services/language.service.dart';
@@ -13,82 +14,146 @@ class GeneralSettingView extends StatelessWidget {
   void showTranslationDialog(BuildContext context) {
     Get.dialog(
       Dialog(
-        backgroundColor: AppColors.white,insetPadding: EdgeInsets.symmetric(horizontal: 14),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        backgroundColor: AppColors.white,
+        insetPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 18),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Align(alignment: Alignment.topRight, child: IconButton(onPressed: () {}, icon: Icon(Icons.close))),
-              Container(padding: EdgeInsets.all(13),decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.progressBlue.withValues(alpha: 0.1)
-              ), child: Image.asset('assets/images/translate.png')),
+              Align(
+                alignment: Alignment.topRight,
+                child: InkWell(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Icon(Icons.close_rounded),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(13),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.progressBlue.withValues(alpha: 0.1),
+                ),
+                child: Image.asset(AppImages.translate),
+              ),
               SizedBox(height: 10),
-              Text(LanguageService.get("chat_translation"), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,color:AppColors.primaryDark
-              )),
+              Text(
+                LanguageService.get("chat_translation"),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.primaryDark,
+                ),
+              ),
               const SizedBox(height: 20),
               Container(
-                decoration: BoxDecoration(),
-                child: ListTile(
-                  tileColor: AppColors.lightGray.withValues(alpha: 0.3),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  // backgroundColor: AppColors.lightGray.withValues(alpha: 0.1) ,
-                  title: Text(
-                    LanguageService.get('translate_text_to'),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                decoration: BoxDecoration(
+                  color: AppColors.primarySuperLight.withValues(alpha: 0.04),
+                  borderRadius: BorderRadius.circular(13),
+                  border: Border.all(
+                    color: AppColors.textGray.withValues(alpha: 0.1),
                   ),
-                  trailing: TextButton.icon(
-                    icon: Icon(Icons.arrow_forward_ios),
-                    style: TextButton.styleFrom(
-                      iconAlignment: IconAlignment.end,
-                      iconColor: AppColors.darkGray.withValues(alpha: 0.7),
-                      side: BorderSide.none,
+                ),
+                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        LanguageService.get('translate_text_to'),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.black,
+                          fontSize: 12,
+                        ),
+                      ),
                     ),
-                    onPressed: () {
-                      // You can use Get.bottomSheet or another dialog here for language selection
-                    },
-                    label: Text(
+                    Text(
                       LanguageService.get('english'),
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600, color: AppColors.darkGray.withValues(alpha: 0.7)),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                        color: AppColors.textGray,
+                      ),
                     ),
-                  ),
+                    SizedBox(width: 10),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: AppColors.gunmetal,
+                      size: 16,
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 10),
 
               Text(
-                LanguageService.get('after_it_is_enabled_text_in_chats_will_be_translated_into_the_selected_language.'),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600, color: AppColors.darkGray.withValues(alpha: 0.7)),
-              ),
-              const SizedBox(height: 10),
-              // Obx(() =>
-              SwitchListTile(
-                tileColor: AppColors.lightGray.withValues(alpha: 0.3),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                value: true,
-                // ChatSettingsController.to.autoTranslate.value,
-                onChanged: (val) {
-                  //   ChatSettingsController.to.autoTranslate.value = val;
-                },
-                title: Text(
-                  LanguageService.get('auto_translate_messages_received_in_chat'),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                LanguageService.get(
+                  'after_it_is_enabled_text_in_chats_will_be_translated_into_the_selected_language',
                 ),
-                //  const Text("Auto Translate Messages received in chat"),
-                // subtitle: const Text("After it is enabled, text in chats will be translated into the selected language."),
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.textGray,
+                  fontSize: 10,
+                ),
+              ),
+              const SizedBox(height: 25),
+              // Obx(() =>
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.primarySuperLight.withValues(alpha: 0.04),
+                  borderRadius: BorderRadius.circular(13),
+                  border: Border.all(
+                    color: AppColors.textGray.withValues(alpha: 0.1),
+                  ),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        LanguageService.get(
+                          'auto_translate_messages_received_in_chat',
+                        ),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.black,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                    Switch(
+                      value: true,
+                      onChanged: (value) {},
+                      activeColor: AppColors.primary,
+                      inactiveThumbColor: AppColors.gray,
+                      inactiveTrackColor: AppColors.violetBlue.withValues(
+                        alpha: 0.1,
+                      ),
+                      trackOutlineColor: WidgetStateProperty.all(
+                        Colors.transparent,
+                      ),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      splashRadius: 0,
+                    ),
+                  ],
+                ),
               ),
               // ),
               const SizedBox(height: 10),
 
               Text(
-                LanguageService.get('after_it_is_enabled_text_in_chats_will_be_translated_into_the_selected_language'),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600, color: AppColors.darkGray.withValues(alpha: 0.7)),
+                LanguageService.get(
+                  'after_it_is_enabled_text_in_chats_will_be_translated_into_the_selected_language',
+                ),
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.textGray,
+                  fontSize: 10,
+                ),
               ),
-              const SizedBox(height: 10),
             ],
           ),
         ),
@@ -98,7 +163,10 @@ class GeneralSettingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: _buildAppBar(context), body: Container(color: AppColors.white, child: _buildContent(context)));
+    return Scaffold(
+      appBar: _buildAppBar(context),
+      body: Container(color: AppColors.white, child: _buildContent(context)),
+    );
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -116,12 +184,20 @@ class GeneralSettingView extends StatelessWidget {
       ),
       leading: IconButton(
         onPressed: () => Navigator.of(context).pop(),
-        icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
+        icon: Image.asset(
+          AppImages.back,
+          width: 24,
+          height: 24,
+          color: AppColors.white,
+        ),
       ),
 
       title: Text(
         LanguageService.get("general"),
-        style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: AppColors.white, fontWeight: FontWeight.bold),
+        style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+          color: AppColors.white,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       iconTheme: IconThemeData(color: AppColors.white),
     );
@@ -141,7 +217,9 @@ class GeneralSettingView extends StatelessWidget {
               title: LanguageService.get("app_language"),
               iconColor: AppColors.bluebackground,
               onTap: () {
-                Get.to(() => AppLanguageView()); // Navigate to app language settings
+                Get.to(
+                  () => AppLanguageView(),
+                ); // Navigate to app language settings
               },
               animationDelay: 200.ms,
             ),
@@ -159,7 +237,7 @@ class GeneralSettingView extends StatelessWidget {
             _buildMenuItem(
               imagePath: AppImages.currency,
               title: LanguageService.get("currency"),
-              iconColor: AppColors.organizationGreen,
+              iconColor: AppColors.violetBlue,
               onTap: () {
                 _showCurrencySelectionDialog(context);
               },
@@ -171,7 +249,7 @@ class GeneralSettingView extends StatelessWidget {
               title: LanguageService.get("system_sound"),
               iconColor: AppColors.redbackground,
               onTap: () {
-                // Navigate to system sound settings
+                Get.to(() => SystemSoundsView());
               },
               animationDelay: 500.ms,
             ),
@@ -179,7 +257,7 @@ class GeneralSettingView extends StatelessWidget {
             _buildMenuItem(
               imagePath: AppImages.appearance,
               title: LanguageService.get("appearance"),
-              iconColor: AppColors.bluebackground,
+              iconColor: AppColors.backgroundlightgreen,
               onTap: () {
                 // Navigate to appearance settings
               },
@@ -210,14 +288,32 @@ class GeneralSettingView extends StatelessWidget {
             Container(
               width: 40,
               height: 40,
-              decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset(imagePath!, width: 24, height: 24, color: iconColor, fit: BoxFit.contain),
+                child: Image.asset(
+                  imagePath!,
+                  width: 24,
+                  height: 24,
+                  color: iconColor,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
             const SizedBox(width: 16),
-            Expanded(child: Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black))),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
             if (hasToggle)
               _buildThemeToggle()
             else
@@ -226,9 +322,16 @@ class GeneralSettingView extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.primarySuperLight.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColors.textGray.withValues(alpha: 0.1)),
+                  border: Border.all(
+                    color: AppColors.textGray.withValues(alpha: 0.1),
+                  ),
                 ),
-                child: Image.asset(AppImages.arrowRight, width: 16, height: 16, color: AppColors.textGray),
+                child: Image.asset(
+                  AppImages.arrowRight,
+                  width: 16,
+                  height: 16,
+                  color: AppColors.textGray,
+                ),
               ),
           ],
         ),
@@ -237,7 +340,11 @@ class GeneralSettingView extends StatelessWidget {
   }
 
   Widget _buildDivider() {
-    return Container(margin: const EdgeInsets.symmetric(horizontal: 20), height: 1, color: const Color(0xFFEEEEEE));
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      height: 1,
+      color: const Color(0xFFEEEEEE),
+    );
   }
 
   Widget _buildThemeToggle() {
@@ -248,7 +355,14 @@ class GeneralSettingView extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(LanguageService.get('light'), style: TextStyle(fontWeight: FontWeight.w500, color: AppColors.textPrimary, fontSize: 12)),
+          Text(
+            LanguageService.get('light'),
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: AppColors.textPrimary,
+              fontSize: 12,
+            ),
+          ),
           SizedBox(width: 8),
           FlutterSwitch(
             width: 50.0,
@@ -266,7 +380,14 @@ class GeneralSettingView extends StatelessWidget {
             onToggle: (value) {},
           ),
           SizedBox(width: 8),
-          Text(LanguageService.get('dark'), style: TextStyle(fontWeight: FontWeight.w500, color: AppColors.textPrimary, fontSize: 12)),
+          Text(
+            LanguageService.get('dark'),
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: AppColors.textPrimary,
+              fontSize: 12,
+            ),
+          ),
         ],
       ),
     );
@@ -281,14 +402,34 @@ class GeneralSettingView extends StatelessWidget {
       {'code': 'JPY', 'flag': '🇯🇵', 'name': 'Japanese Yen', 'symbol': '¥'},
       {'code': 'SAR', 'flag': '🇸🇦', 'name': 'Saudi Riyal', 'symbol': '﷼'},
       {'code': 'RUB', 'flag': '🇷🇺', 'name': 'Russian Ruble', 'symbol': '₽'},
-      {'code': 'BDT', 'flag': '🇧🇩', 'name': 'Bangladeshi Taka', 'symbol': '৳'},
+      {
+        'code': 'BDT',
+        'flag': '🇧🇩',
+        'name': 'Bangladeshi Taka',
+        'symbol': '৳',
+      },
       {'code': 'TRY', 'flag': '🇹🇷', 'name': 'Turkish Lira', 'symbol': '₺'},
-      {'code': 'KRW', 'flag': '🇰🇷', 'name': 'South Korean Won', 'symbol': '₩'},
+      {
+        'code': 'KRW',
+        'flag': '🇰🇷',
+        'name': 'South Korean Won',
+        'symbol': '₩',
+      },
       {'code': 'VND', 'flag': '🇻🇳', 'name': 'Vietnamese Dong', 'symbol': '₫'},
       {'code': 'THB', 'flag': '🇹🇭', 'name': 'Thai Baht', 'symbol': '฿'},
       {'code': 'PLN', 'flag': '🇵🇱', 'name': 'Polish Zloty', 'symbol': 'zł'},
-      {'code': 'IDR', 'flag': '🇮🇩', 'name': 'Indonesian Rupiah', 'symbol': 'Rp'},
-      {'code': 'UAH', 'flag': '🇺🇦', 'name': 'Ukrainian Hryvnia', 'symbol': '₴'},
+      {
+        'code': 'IDR',
+        'flag': '🇮🇩',
+        'name': 'Indonesian Rupiah',
+        'symbol': 'Rp',
+      },
+      {
+        'code': 'UAH',
+        'flag': '🇺🇦',
+        'name': 'Ukrainian Hryvnia',
+        'symbol': '₴',
+      },
     ];
 
     Get.dialog(
@@ -305,7 +446,10 @@ class GeneralSettingView extends StatelessWidget {
                 padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: AppColors.primaryLight.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -313,10 +457,21 @@ class GeneralSettingView extends StatelessWidget {
                     SizedBox(width: 12),
                     Text(
                       LanguageService.get("select_currency"),
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
                     ),
                     Spacer(),
-                    GestureDetector(onTap: () => Get.back(), child: Icon(Icons.close, size: 20, color: AppColors.textGray)),
+                    GestureDetector(
+                      onTap: () => Get.back(),
+                      child: Icon(
+                        Icons.close,
+                        size: 20,
+                        color: AppColors.textGray,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -326,13 +481,34 @@ class GeneralSettingView extends StatelessWidget {
                   shrinkWrap: true,
                   padding: EdgeInsets.all(16),
                   itemCount: currencies.length,
-                  separatorBuilder: (context, index) => Divider(height: 1, thickness: 1, color: AppColors.gray.withValues(alpha: 0.2)),
+                  separatorBuilder:
+                      (context, index) => Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: AppColors.gray.withValues(alpha: 0.2),
+                      ),
                   itemBuilder: (context, index) {
                     final currency = currencies[index];
                     return ListTile(
-                      leading: Text(currency['flag']!, style: TextStyle(fontSize: 24)),
-                      title: Text(currency['name']!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                      subtitle: Text('${currency['code']!} (${currency['symbol']!})', style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+                      leading: Text(
+                        currency['flag']!,
+                        style: TextStyle(fontSize: 24),
+                      ),
+                      title: Text(
+                        currency['name']!,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '${currency['code']!} (${currency['symbol']!})',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
                       onTap: () {
                         // Handle currency selection
                         _onCurrencySelected(currency['code']!);

@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:intl_phone_field/countries.dart';
-import 'package:intl_phone_field/country_picker_dialog.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:dropdown_flutter/custom_dropdown.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_popup/flutter_popup.dart';
+import 'package:manager/resources/multimedia_resources/resources.dart';
+import 'package:phone_input/phone_input_package.dart';
 import 'package:manager/core/models/organization.dart';
 import 'package:manager/services/language.service.dart';
 import 'package:stacked/stacked.dart';
+import 'package:manager/widgets/common_text_field.dart';
+import 'package:manager/widgets/common_elevated_button.dart';
+import 'package:manager/widgets/common_app_bar.dart';
 
-import '../../../resources/app_resources/app_maps.dart';
 import '../../../resources/app_resources/app_resources.dart';
 import 'create_or_edit_org.vm.dart';
 
 class UpdateOrganizationViewAttributes {
   final Organization? organization;
+
   UpdateOrganizationViewAttributes({this.organization});
 }
 
@@ -24,832 +29,596 @@ class UpdateOrganizationView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<UpdateOrganizationViewModel>.reactive(
       viewModelBuilder: () => UpdateOrganizationViewModel(),
-      onViewModelReady: (UpdateOrganizationViewModel model) =>
-          model.init(attributes.organization),
+      onViewModelReady: (UpdateOrganizationViewModel model) => model.init(attributes.organization),
       disposeViewModel: false,
-      builder: (
-          BuildContext context,
-          UpdateOrganizationViewModel model,
-          Widget? child,
-          ) {
+      builder: (BuildContext context, UpdateOrganizationViewModel model, Widget? child) {
         return WillPopScope(
           onWillPop: () async {
             // if (!model.isDataChanged)
             return true;
             // final shouldLeave = await _showExitConfirmationDialog(context, model);
             // return shouldLeave;
-
           },
           child: Scaffold(
-            appBar: AppBar(
-              title: Text(
-                model.isEditing ? LanguageService.get("update_details") : LanguageService.get("create_organization"),
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppColors.white),
-              ),
-            ),
+            appBar: _buildAppBar(context, model),
+            backgroundColor: AppColors.cultured,
             body:
+                model.isBusy
+                    ? Center(child: CircularProgressIndicator(color: AppColors.primary))
+                    : Form(
+                      key: model.formKey,
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(14),
+                        child: Column(
+                          children: [
+                            // Personal Information Section
+                            _buildPersonalInformationSection(context, model),
+                            const SizedBox(height: 15),
 
-            model.isBusy
-                ?
-            Container(
-              color: AppColors.scaffoldBackground,
-              child: Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.primary,
-                ),
-              ),
-            )
-                :
-            Container(
-              color: AppColors.scaffoldBackground,
-              child: Form(
-                key: model.formKey,
-                child: ListView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSizes.w10,
-                    vertical: AppSizes.h20,
-                  ),
-                  children: [
-                    // Logo Upload Section with Profile Completion Circle
-                    _buildLogoUploadSection(context, model),
+                            // Corporate Address Section
+                            _buildCorporateAddressSection(context, model),
+                            const SizedBox(height: 15),
 
-                    // Personal Information Section
-                    _buildSectionWithEdit(
-                      context,
-                      title: LanguageService.get("personal_information"),
-                      isEditable: model.isPersonalInfoEditable ?? false,
-                      onEditToggle: () => {
-                        model.togglePersonalInfoEdit(),
-                        if(!(model.isPersonalInfoEditable ?? false) )
-                        model.onSave(),
-                      },
-                      children: [
-                        _buildTextField(
-                          context,
-                          controller: model.nameController,
-                          label: LanguageService.get("organization_name"),
-                          onChanged: (_) => model.markDataChanged(),
-                          readOnly: !(model.isPersonalInfoEditable ?? false),
+                            // Factory Address Section
+                            _buildFactoryAddressSection(context, model),
+                          ],
                         ),
-                        _buildTextField(
-                          context,
-                          controller: model.yourNameController,
-                          label: LanguageService.get("your_name"),
-                          onChanged: (_) => model.markDataChanged(),
-                          readOnly: !(model.isPersonalInfoEditable ?? false),
-                        ),
-                        _buildDesignationField(context, model, !(model.isPersonalInfoEditable ?? false)),
-                        if (model.showOtherDesignation)
-                          _buildTextField(
-                            context,
-                            controller: model.otherDesignationController,
-                            label: LanguageService.get("please_specify"),
-                            onChanged: (_) => model.markDataChanged(),
-                            readOnly: !(model.isPersonalInfoEditable ?? false),
-                          ),
-                        _buildTextField(
-                          readOnly: true,
-                          context,
-                          controller: model.organizationType,
-                          label: LanguageService.get("organization_type"),
-                        ),
-                        _buildPhoneField(
-                          context,
-                          model,
-                          controller: model.phoneController,
-                          label: LanguageService.get("primary_phone_no"),
-                          onChanged: (_) => model.markDataChanged(),
-                          isRequired: false,
-                          readOnly: !(model.isPersonalInfoEditable ?? false),
-                        ),
-                        _buildPhoneField(
-                          context,
-                          model,
-                          controller: model.phone2Controller,
-                          label: LanguageService.get("secondary_phone_no"),
-                          onChanged: (_) => model.markDataChanged(),
-                          isRequired: false,
-                          readOnly: !(model.isPersonalInfoEditable ?? false),
-                        ),
-                        _buildTextField(
-                          context,
-                          controller: model.emailController,
-                          label: LanguageService.get("primary_email"),
-                          onChanged: (_) => model.markDataChanged(),
-                          keyboardType: TextInputType.emailAddress,
-                          readOnly: !(model.isPersonalInfoEditable ?? false),
-                          showVerifiedTick: true,
-                        ),
-                        _buildTextField(
-                          context,
-                          controller: model.email2Controller,
-                          label: LanguageService.get("secondary_email"),
-                          onChanged: (_) => model.markDataChanged(),
-                          keyboardType: TextInputType.emailAddress,
-                          readOnly: !(model.isPersonalInfoEditable ?? false),
-                        ),
-                      ],
+                      ),
                     ),
-
-                    SizedBox(height: AppSizes.h20),
-
-                    // Corporate Address Section
-                    _buildSectionWithEdit(
-                      context,
-                      title: LanguageService.get("corporate_address"),
-                      isEditable: model.isCorporateAddressEditable ?? false,
-                      onEditToggle: () => {
-                        model.toggleCorporateAddressEdit(),
-                        if(!(model.isCorporateAddressEditable ?? false) )
-                        model.onSave(),
-                      },
-                      children: [
-                        _buildTextField(
-                          context,
-                          controller: model.addressLine1Controller,
-                          label: LanguageService.get("address_line_1"),
-                          onChanged: (_) => model.markDataChanged(),
-                          readOnly: !(model.isCorporateAddressEditable ?? false),
-                        ),
-                        _buildTextField(
-                          context,
-                          controller: model.addressLine2Controller,
-                          label: LanguageService.get("address_line_2"),
-                          onChanged: (_) => model.markDataChanged(),
-                          readOnly: !(model.isCorporateAddressEditable ?? false),
-                        ),
-                        _buildTextField(
-                          context,
-                          controller: model.cityController,
-                          label: LanguageService.get("city"),
-                          onChanged: (_) => model.markDataChanged(),
-                          readOnly: !(model.isCorporateAddressEditable ?? false),
-                        ),
-                        _buildTextField(
-                          context,
-                          controller: model.stateController,
-                          label: LanguageService.get("state_province"),
-                          onChanged: (_) => model.markDataChanged(),
-                          readOnly: !(model.isCorporateAddressEditable ?? false),
-                        ),
-                        _buildCountryDropdown(context, model, "corporate"),
-                        _buildTextField(
-                          context,
-                          controller: model.pinCodeController,
-                          label: LanguageService.get("pin_code"),
-                          onChanged: (_) => model.markDataChanged(),
-                          keyboardType: TextInputType.number,
-                          readOnly: !(model.isCorporateAddressEditable ?? false),
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(height: AppSizes.h20),
-                    _buildSectionWithEdit(
-                      context,
-                      title: LanguageService.get("factory_address"),
-                      isEditable: model.isFactoryAddressEditable ?? false,
-                      onEditToggle: () => {
-                        model.toggleFactoryAddressEdit(),
-                        if(!(model.isFactoryAddressEditable ?? false))
-                        model.onSave(),
-                      },
-                      showCheckbox: true,
-                      checkboxValue: model.sameAsCorpAddress,
-                      checkboxText: LanguageService.get("same_as_corporate_address"),
-                      onCheckboxChanged: (model.isFactoryAddressEditable ?? false)
-                          ? (value) => model.toggleSameAsCorpAddress(value ?? false)
-                          : null,
-                      children: [
-                        _buildTextField(
-                          context,
-                          controller: model.factoryAddressLine1Controller,
-                          label: LanguageService.get("address_line_1"),
-                          readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
-                          onChanged: (_) => model.markDataChanged(),
-                        ),
-                        _buildTextField(
-                          context,
-                          controller: model.factoryAddressLine2Controller,
-                          label: LanguageService.get("address_line_2"),
-                          readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
-                          onChanged: (_) => model.markDataChanged(),
-                        ),
-                        _buildTextField(
-                          context,
-                          controller: model.factoryCityController,
-                          label: LanguageService.get("city"),
-                          readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
-                          onChanged: (_) => model.markDataChanged(),
-                        ),
-                        _buildTextField(
-                          context,
-                          controller: model.factoryStateController,
-                          label: LanguageService.get("state_province"),
-                          readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
-                          onChanged: (_) => model.markDataChanged(),
-                        ),
-                        _buildCountryDropdown(context, model, "factory"),
-                        _buildTextField(
-                          context,
-                          controller: model.factoryPinCodeController,
-                          label: LanguageService.get("pin_code"),
-                          keyboardType: TextInputType.number,
-                          readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
-                          onChanged: (_) => model.markDataChanged(),
-                        ),
-                      ],
-                    ),
-
-
-                    // _buildUnitsSection(context, model),
-                    // Additional Info Section
-                    // _buildSectionWithEdit(
-                    //   context,
-                    //   title: LanguageService.get("additional_info"),
-                    //   isEditable: model.isAdditionalInfoEditable ?? false,
-                    //   onEditToggle: () => model.toggleAdditionalInfoEdit(),
-                    //   children: [
-                    //     _buildTextField(
-                    //       context,
-                    //       controller: model.establishedYearController,
-                    //       label: LanguageService.get("established_year"),
-                    //       onChanged: (_) => model.markDataChanged(),
-                    //       keyboardType: TextInputType.number,
-                    //       readOnly: !(model.isAdditionalInfoEditable ?? false),
-                    //     ),
-                    //     _buildTextField(
-                    //       context,
-                    //       controller: model.descriptionController,
-                    //       label: LanguageService.get("few_words_about_your_organization"),
-                    //       onChanged: (_) => model.markDataChanged(),
-                    //       readOnly: !(model.isAdditionalInfoEditable ?? false),
-                    //     ),
-                    //   ],
-                    // ),
-                  ],
-                ),
-              ),
-            ),
           ),
         );
       },
     );
   }
 
-  Widget _buildSectionWithEdit(
-      BuildContext context, {
-        required String title,
-        required bool isEditable,
-        required VoidCallback onEditToggle,
-        required List<Widget> children,
-        bool showCheckbox = false,
-        bool? checkboxValue,
-        String? checkboxText,
-        ValueChanged<bool?>? onCheckboxChanged,
-      }) {
-    return
-      Container(
-        padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.w10,
-        vertical: AppSizes.h15,
-       ),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(AppSizes.v12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade100,
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            )
-          ]
-        ),
-        child: Column(
+  PreferredSizeWidget _buildAppBar(BuildContext context, UpdateOrganizationViewModel model) {
+    return GradientAppBar(titleKey: "update_profile");
+  }
+
+  Widget _buildPersonalInformationSection(BuildContext context, UpdateOrganizationViewModel model) {
+    return Container(
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(10)),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Avatar with edit button
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildSectionTitle(context, title),
-              ElevatedButton(
-                onPressed: onEditToggle,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isEditable ? AppColors.success : AppColors.primary,
-                  foregroundColor: AppColors.white,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSizes.w12,
-                    vertical: AppSizes.h8,
+              Column(
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: AppColors.primary, width: 3),
+                          image:
+                              model.logoFile != null
+                                  ? DecorationImage(image: FileImage(model.logoFile!), fit: BoxFit.cover)
+                                  : model.logoUrl.isNotEmpty
+                                  ? DecorationImage(image: NetworkImage(model.logoUrl), fit: BoxFit.cover)
+                                  : null,
+                        ),
+                        child: model.logoFile == null && model.logoUrl.isEmpty ? const Icon(Icons.person, size: 40, color: AppColors.gray) : null,
+                      ).animate().scale(duration: 500.ms, curve: Curves.easeOutBack),
+
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: GestureDetector(
+                          onTap: () {
+                            // model.navigateToCreateOrEditOrgView();
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(3.5),
+                            decoration: BoxDecoration(color: AppColors.primaryDark, borderRadius: BorderRadius.circular(14)),
+                            child: Image.asset(AppImages.edit, width: 20, height: 20, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppSizes.v20),
+                  const SizedBox(height: 15),
+                  // Name and Email
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        model.nameController.text.isNotEmpty ? model.nameController.text : "Leslie Alexander",
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.black),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        model.emailController.text.isNotEmpty ? model.emailController.text : "yourmail@gmail.com",
+                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: AppColors.textGray),
+                      ),
+                    ],
                   ),
-                ),
-                child: Text(isEditable ? LanguageService.get("update") : LanguageService.get("edit_details")),
+                ],
               ),
             ],
           ),
 
-          if (showCheckbox && checkboxText != null)
-            Row(
-              children: [
-                Checkbox(
-                  value: checkboxValue ?? false,
-                  onChanged: onCheckboxChanged,
-                  activeColor: AppColors.primary,
+          SizedBox(height: 25),
+
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  LanguageService.get("personal_information"),
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.black),
                 ),
-                Text(checkboxText),
+              ),
+              // Update Button
+              CommonElevatedButton(
+                onPressed: () => model.onSave(),
+                label: LanguageService.get("update"),
+                backgroundColor: AppColors.success,
+                textColor: AppColors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                borderRadius: 10,
+                fontSize: 10,
+                height: 28,
+                fontWeight: FontWeight.w700,
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+
+          // Organization Name (Read-only)
+          CommonTextField(
+            controller: TextEditingController(text: "Samsung"),
+            label: LanguageService.get("organization_name"),
+            placeholder: "Samsung",
+            readOnly: true,
+            contentPadding: EdgeInsets.all(12),
+            textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: 16),
+
+          // Unit Name with info icon
+          Stack(
+            children: [
+              CommonTextField(
+                controller: TextEditingController(text: "Unit 1"),
+                label: LanguageService.get("unit_name"),
+                placeholder: "Unit 1",
+                contentPadding: EdgeInsets.all(12),
+                textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+              ),
+              Positioned(
+                right: 0,
+                bottom: 2,
+                child: Center(
+                  child: CustomPopup(
+                    content: Text(
+                      '''Use this to create and manage a new factory or unit under your\ncompany — such as a new location, branch, or brand in another country.''',
+                      style: TextStyle(color: AppColors.white, fontSize: 9, fontWeight: FontWeight.w500),
+                    ),
+                    position: PopupPosition.top,
+                    arrowColor: AppColors.textGray,
+                    backgroundColor: AppColors.textGray,
+                    child: Padding(padding: EdgeInsets.all(16), child: Image.asset(AppImages.alert, width: 16, height: 16)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Your Name (Read-only)
+          CommonTextField(
+            controller: TextEditingController(text: "Raj"),
+            label: LanguageService.get("your_name"),
+            placeholder: "Raj",
+            readOnly: true,
+            contentPadding: EdgeInsets.all(12),
+            textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: 16),
+
+          // Your Designation (Dropdown)
+          _buildDesignationDropdown(context, model),
+          const SizedBox(height: 16),
+
+          // Primary Phone Number
+          _buildPhoneFieldWithFlag(context, model),
+          const SizedBox(height: 16),
+
+          // Primary Email with verification
+          CommonTextField(
+            controller: TextEditingController(text: "tt@gamil.com"),
+            label: LanguageService.get("primary_email"),
+            placeholder: "tt@gamil.com",
+            keyboardType: TextInputType.emailAddress,
+            suffixIcon: Icon(Icons.check_circle, color: AppColors.success, size: 16),
+            contentPadding: EdgeInsets.all(12),
+            textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: 12),
+
+          // Verification message
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.success.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.info_outline, color: AppColors.success, size: 16),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    LanguageService.get("verification_sent_message"),
+                    style: TextStyle(fontSize: 12, color: AppColors.success, fontWeight: FontWeight.w500),
+                  ),
+                ),
               ],
             ),
-          ...children,
-        ],
-            ),
-      );
-  }
-
-  Widget _buildSectionTitle(BuildContext context, String title) {
-    return Padding(
-      padding: EdgeInsets.only(top: AppSizes.h4),
-      child: Text(
-          title,
-          style: TextStyle(
-            fontSize: 14,
-            color: AppColors.textPrimary,
-            fontWeight: FontWeight.bold,
           ),
+        ],
       ),
     );
   }
 
-  Widget _buildTextField(
-      BuildContext context, {
-        required TextEditingController controller,
-        required String label,
-        TextInputType? keyboardType,
-        TextInputAction textInputAction = TextInputAction.next,
-        String? Function(String?)? validator,
-        int maxLines = 1,
-        bool readOnly = false,
-        void Function(String)? onChanged,
-        bool showVerifiedTick = false,
-      }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: EdgeInsets.only(
-            left: AppSizes.w4,
-            bottom: AppSizes.h5,
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColors.textGray,
-              fontWeight: FontWeight.normal,
-            ),
-          ),
-        ),
-        // Text field container
-        Container(
-          margin: EdgeInsets.only(bottom: AppSizes.h10),
-          height: 46,
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(AppSizes.v14),
-            border: Border.all(
-              color: Colors.grey.shade300,
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade100,
-                blurRadius: 4,
-                offset: const Offset(0, 2),
+  Widget _buildCorporateAddressSection(BuildContext context, UpdateOrganizationViewModel model) {
+    return Container(
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(10)),
+
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  LanguageService.get("corporate_address"),
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.black),
+                ),
+              ),
+              // Update Button
+              CommonElevatedButton(
+                onPressed: () => model.toggleCorporateAddressEdit(),
+                label: LanguageService.get("edit_details"),
+                backgroundColor: AppColors.primaryDark,
+                textColor: AppColors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                borderRadius: 10,
+                fontSize: 10,
+                height: 28,
+                fontWeight: FontWeight.w700,
               ),
             ],
           ),
-          child: TextFormField(
-            controller: controller,
-            textInputAction: textInputAction,
-            keyboardType: keyboardType,
-            maxLines: maxLines,
-            readOnly: readOnly,
-            onChanged: onChanged,
-            style: TextStyle(
-              fontSize: 16,
-              color: readOnly ? Colors.grey.shade600 : Colors.black,
-              fontWeight: FontWeight.w500,
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: AppSizes.w16,
-                vertical: AppSizes.h16,
+          const SizedBox(height: 15),
+
+          CommonTextField(
+            controller: TextEditingController(text: "Delhi 1"),
+            label: LanguageService.get("address_line_1"),
+            placeholder: "Delhi 1",
+            readOnly: !(model.isCorporateAddressEditable ?? false),
+            contentPadding: EdgeInsets.all(12),
+            textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: 15),
+
+          CommonTextField(
+            controller: TextEditingController(text: "Delhi 2"),
+            label: LanguageService.get("address_line_2"),
+            placeholder: "Delhi 2",
+            readOnly: !(model.isCorporateAddressEditable ?? false),
+            contentPadding: EdgeInsets.all(12),
+            textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: 15),
+
+          Row(
+            children: [
+              Expanded(
+                child: CommonTextField(
+                  controller: TextEditingController(text: "Delhi 2"),
+                  label: LanguageService.get("city"),
+                  placeholder: "Delhi 2",
+                  readOnly: !(model.isCorporateAddressEditable ?? false),
+                  contentPadding: EdgeInsets.all(12),
+                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                ),
               ),
-              suffixIcon: showVerifiedTick
-                  ? Icon(
-                Icons.verified,
-                color: Colors.green,
-                size: AppSizes.w20,
-              )
-                  : null,
+              const SizedBox(width: 15),
+
+              Expanded(
+                child: CommonTextField(
+                  controller: TextEditingController(text: "Delhi 2"),
+                  label: LanguageService.get("state_province"),
+                  placeholder: "Delhi 2",
+                  readOnly: !(model.isCorporateAddressEditable ?? false),
+                  contentPadding: EdgeInsets.all(12),
+                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+
+          Row(
+            children: [
+              Expanded(
+                child: CommonTextField(
+                  controller: TextEditingController(text: "Delhi 2"),
+                  label: LanguageService.get("country"),
+                  placeholder: "Delhi 2",
+                  readOnly: !(model.isCorporateAddressEditable ?? false),
+                  contentPadding: EdgeInsets.all(12),
+                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  suffixIcon: Icon(Icons.keyboard_arrow_down, color: AppColors.textGray, size: 16),
+                ),
+              ),
+              const SizedBox(width: 15),
+
+              Expanded(
+                child: CommonTextField(
+                  controller: TextEditingController(text: "393921"),
+                  label: LanguageService.get("pin_code"),
+                  placeholder: "393921",
+                  readOnly: !(model.isCorporateAddressEditable ?? false),
+                  contentPadding: EdgeInsets.all(12),
+                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFactoryAddressSection(BuildContext context, UpdateOrganizationViewModel model) {
+    return Container(
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(10)),
+
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      LanguageService.get("factory_address"),
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.black),
+                    ),
+                    SizedBox(height: 9),
+                    // Same as Corporate Address checkbox
+                    Row(
+                      children: [
+                        SizedBox(
+                          height: 17,
+                          width: 17,
+                          child: Checkbox(
+                            value: model.sameAsCorpAddress,
+                            onChanged: (model.isFactoryAddressEditable ?? false) ? (value) => model.toggleSameAsCorpAddress(value ?? false) : null,
+                            activeColor: AppColors.primary,
+                          ),
+                        ),
+                        SizedBox(width: 6,),
+                        Text(LanguageService.get("same_as_corporate_address"), style: const TextStyle(fontSize: 11, color: AppColors.textGray,
+                            fontWeight: FontWeight.w500)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              // Update Button
+              CommonElevatedButton(
+                onPressed: () => model.toggleFactoryAddressEdit(),
+                label: LanguageService.get("edit_details"),
+                backgroundColor: AppColors.primaryDark,
+                textColor: AppColors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                borderRadius: 10,
+                fontSize: 10,
+                height: 28,
+                fontWeight: FontWeight.w700,
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+
+
+
+          CommonTextField(
+            controller: TextEditingController(text: "Delhi 1"),
+            label: LanguageService.get("address_line_1"),
+            placeholder: "Delhi 1",
+            readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
+            contentPadding: EdgeInsets.all(12),
+            textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: 15),
+
+          CommonTextField(
+            controller: TextEditingController(text: "Delhi 2"),
+            label: LanguageService.get("address_line_2"),
+            placeholder: "Delhi 2",
+            readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
+            contentPadding: EdgeInsets.all(12),
+            textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: 15),
+
+          Row(
+            children: [
+              Expanded(
+                child: CommonTextField(
+                  controller: TextEditingController(text: "Delhi 2"),
+                  label: LanguageService.get("city"),
+                  placeholder: "Delhi 2",
+                  readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
+                  contentPadding: EdgeInsets.all(12),
+                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                ),
+              ),
+              const SizedBox(width: 15),
+
+              Expanded(
+                child: CommonTextField(
+                  controller: TextEditingController(text: "Delhi 2"),
+                  label: LanguageService.get("state_province"),
+                  placeholder: "Delhi 2",
+                  readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
+                  contentPadding: EdgeInsets.all(12),
+                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+
+          Row(
+            children: [
+              Expanded(
+                child: CommonTextField(
+                  controller: TextEditingController(text: "Delhi 2"),
+                  label: LanguageService.get("country"),
+                  placeholder: "Delhi 2",
+                  readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
+                  contentPadding: EdgeInsets.all(12),
+                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  suffixIcon: Icon(Icons.keyboard_arrow_down, color: AppColors.textGray, size: 16),
+                ),
+              ),
+              const SizedBox(width: 15),
+
+              Expanded(
+                child: CommonTextField(
+                  controller: TextEditingController(text: "393921"),
+                  label: LanguageService.get("pin_code"),
+                  placeholder: "393921",
+                  readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
+                  contentPadding: EdgeInsets.all(12),
+                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDesignationDropdown(BuildContext context, UpdateOrganizationViewModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(LanguageService.get("your_designation"), style: const TextStyle(fontSize: 12, color: AppColors.textGray, fontWeight: FontWeight.w500)),
+        const SizedBox(height: 8),
+        SizedBox(
+          height: 46,
+          child: DropdownFlutter<String>(
+            closedHeaderPadding: EdgeInsets.all(12),
+            items: const ["Managing Director (MD)", "Chief Executive Officer (CEO)", "Managing Partner", "Chairman / Chairperson", "Others"],
+            onChanged: (value) {
+              model.updateDesignationType(value);
+              if (value == 'Others') {
+                model.showOtherDesignation = true;
+              } else {
+                model.showOtherDesignation = false;
+              }
+            },
+            initialItem: _getValidInitialItem(model.designationType),
+            hintText: LanguageService.get('select_designation'),
+            decoration: CustomDropdownDecoration(
+              headerStyle: const TextStyle(fontSize: 14, color: AppColors.black, fontWeight: FontWeight.w500),
+              hintStyle: const TextStyle(fontSize: 12, color: AppColors.textGray),
+              closedBorder: Border.all(color: AppColors.lightGray),
+              closedFillColor: AppColors.white,
+              expandedBorder: Border.all(color: AppColors.primary),
+              expandedFillColor: AppColors.white,
             ),
-            validator: validator,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildPhoneField(
-      BuildContext context,
-      UpdateOrganizationViewModel model, {
-        required TextEditingController controller,
-        required String label,
-        void Function(String)? onChanged,
-        bool isRequired = false,
-        bool readOnly = false,
-      }) {
-    return
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.only(
-              left: AppSizes.w4,
-              bottom: AppSizes.h5,
-            ),
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                color: AppColors.textGray,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-          ),
-          Container(
-          margin: EdgeInsets.only(bottom: AppSizes.h16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppSizes.v14),
-          ),
-          child: IntlPhoneField(
-            readOnly: readOnly,
-            controller: controller,
-            pickerDialogStyle: PickerDialogStyle(
-              backgroundColor: AppColors.white,
-              countryCodeStyle: TextStyle(color: AppColors.black),
-              countryNameStyle: TextStyle(color: AppColors.black),
-            ),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppSizes.v12),
-                borderSide: BorderSide(color: AppColors.lightGray),
-              ),
+  Widget _buildPhoneFieldWithFlag(BuildContext context, UpdateOrganizationViewModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          LanguageService.get("primary_phone_number"),
+          style: const TextStyle(fontSize: 12, color: AppColors.textGray, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 8),
+        PhoneInput(
+          flagShape: BoxShape.rectangle,
+          countrySelectorNavigator: CountrySelectorNavigator.dialog(
+            countryCodeStyle: const TextStyle(color: AppColors.black),
+            countryNameStyle: const TextStyle(color: AppColors.black),
+            searchInputTextStyle: const TextStyle(color: AppColors.textGray),
+            searchInputDecoration: InputDecoration(
+              hintText: LanguageService.get('search_country'),
+              hintStyle: const TextStyle(color: AppColors.textSecondary),
+              filled: true,
+              fillColor: AppColors.white,
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: const BorderSide(color: AppColors.lightGray)),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppSizes.v12),
-                borderSide: BorderSide(color: AppColors.lightGray),
+                borderSide: const BorderSide(color: AppColors.lightGray),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppSizes.v12),
-                borderSide: BorderSide(color: AppColors.primary, width: 2),
+                borderSide: const BorderSide(color: AppColors.primary, width: 2),
               ),
-              fillColor: readOnly ? AppColors.white : null,
-              filled: readOnly,
             ),
-            initialCountryCode: 'IN',
-            onChanged: (phone) {
-              model.updatePhoneNumber(phone);
-              if (onChanged != null) {
-                onChanged(phone.completeNumber);
-              }
-            },
-            validator: isRequired
-                ? (phone) {
-              if (phone == null || phone.number.isEmpty) {
-                return LanguageService.get("please_enter_phone_number");
-              }
-              return null;
+          ),
+          onChanged: (phone) {
+            if (phone != null) {
+              // Convert phone_input PhoneNumber to the format expected by the model
+              model.updatePhoneNumberFromString('${phone.countryCode}${phone.nsn}');
             }
-                : null,
-          ),
-              ),
-        ],
-      );
-  }
+          },
 
-  Widget _buildDesignationField(
-      BuildContext context,
-      UpdateOrganizationViewModel model,
-      bool readOnly,
-      ) {
-    return
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.only(
-              left: AppSizes.w4,
-              bottom: AppSizes.h5,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.all(12),
+            filled: true,
+            fillColor: AppColors.white,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: const BorderSide(color: AppColors.lightGray)),
+            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: const BorderSide(color: AppColors.lightGray)),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(13),
+              borderSide: const BorderSide(color: AppColors.primary, width: 2),
             ),
-            child: Text(
-              LanguageService.get("your_designation"),
-              style: TextStyle(
-                fontSize: 12,
-                color: AppColors.textGray,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-          ),
-          Container(
-          margin: EdgeInsets.only(bottom: AppSizes.h16),
-          height: 46,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppSizes.v14),
-          ),
-          child: DropdownButtonFormField<String>(
-            value: model.designationType,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: AppSizes.w16,
-                vertical: AppSizes.h10,
-              ),
-              fillColor: readOnly ? AppColors.white : null,
-              filled: readOnly,
-            ),
-            dropdownColor: AppColors.white,
-            items: [
-              DropdownMenuItem(value: 'md', child: Text('Managing Director (MD)')),
-              DropdownMenuItem(value: 'ceo', child: Text('Chief Executive Officer (CEO)')),
-              DropdownMenuItem(value: 'partner', child: Text('Managing Partner')),
-              DropdownMenuItem(value: 'chairman', child: Text('Chairman / Chairperson')),
-              DropdownMenuItem(value: 'others', child: Text('Others')),
-            ],
-            onChanged: readOnly ? null : (value) {
-              model.updateDesignationType(value);
-              if (value == 'others') {
-                model.showOtherDesignation = true;
-              } else {
-                model.showOtherDesignation = false;
-              }
-            },
-          ),
-              ),
-        ],
-      );
-  }
-
-  Widget _buildCountryDropdown(
-      BuildContext context,
-      UpdateOrganizationViewModel model,
-      String type, // "corporate" or "factory"
-      ) {
-    final isReadOnly = type == "corporate"
-        ? !(model.isCorporateAddressEditable ?? false)
-        : (type == "factory"
-        ? (model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false))
-        : true);
-
-    final selectedCountry = type == "corporate"
-        ? model.selectedCountry
-        : model.selectedCountryF;
-
-    if (isReadOnly) {
-      return Container(
-        margin: EdgeInsets.only(bottom: AppSizes.h16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppSizes.v14),
-        ),
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(
-            horizontal: AppSizes.w16,
-            vertical: AppSizes.h16,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(AppSizes.v12),
-            border: Border.all(color: AppColors.lightGray),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                LanguageService.get("country"),
-                style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textGray,
-                    fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
+            suffixIcon: const Icon(Icons.check_circle, color: AppColors.success, size: 16),
           ),
         ),
-      );
+      ],
+    );
+  }
+
+  String? _getValidInitialItem(String? designationType) {
+    const List<String> validItems = [
+      "Managing Director (MD)",
+      "Chief Executive Officer (CEO)",
+      "Managing Partner",
+      "Chairman / Chairperson",
+      "Others",
+    ];
+
+    if (designationType != null && validItems.contains(designationType)) {
+      return designationType;
     }
-
-    return GestureDetector(
-      onTap: () => _showSearchableCountryDropdown(context, model, type),
-      child: AbsorbPointer(
-        child:
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: EdgeInsets.only(
-                left: AppSizes.w4,
-                bottom: AppSizes.h5,
-              ),
-              child: Text(
-                LanguageService.get("Country"),
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textGray,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(bottom: AppSizes.h16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppSizes.v14),
-              ),
-              child: TextFormField(
-                controller: TextEditingController(
-                  text: selectedCountry != null
-                      ? '${selectedCountry.flag} ${selectedCountry.name}'
-                      : '',
-                ),
-                decoration: InputDecoration(
-                  labelText: LanguageService.get("Select country"),
-                  suffixIcon: Icon(
-                    Icons.keyboard_arrow_down,
-                    color: AppColors.primary,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppSizes.v12),
-                    borderSide: BorderSide(color: AppColors.lightGray),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppSizes.v12),
-                    borderSide: BorderSide(color: AppColors.lightGray),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppSizes.v12),
-                    borderSide: BorderSide(color: AppColors.primary, width: 2),
-                  ),
-                ),
-                validator: (value) =>
-                selectedCountry == null ? LanguageService.get("please_select_country") : null,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLogoUploadSection(
-      BuildContext context,
-      UpdateOrganizationViewModel model,
-      ) {
-    final completionPercentage = model.calculateProfileCompletion();
-
-    return Container(
-      padding: EdgeInsets.all(AppSizes.w16),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(AppSizes.v14),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              // Outer progress ring
-              SizedBox(
-                height: AppSizes.h130,
-                width: AppSizes.h130,
-                child: CircularProgressIndicator(
-                  value: completionPercentage / 100,
-                  backgroundColor: AppColors.lightGray,
-                  color: AppColors.primary,
-                  strokeWidth: 4,
-                ),
-              ),
-              // Inner circle with logo/placeholder
-              Container(
-                height: AppSizes.h110,
-                width: AppSizes.h110,
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.white, width: 3),
-                  image: model.logoFile != null
-                      ? DecorationImage(
-                    image: FileImage(model.logoFile!),
-                    fit: BoxFit.cover,
-                  )
-                      : model.logoUrl.isNotEmpty
-                      ? DecorationImage(
-                    image: NetworkImage(model.logoUrl),
-                    fit: BoxFit.cover,
-                  )
-                      : null,
-                ),
-                child: model.logoFile == null && model.logoUrl.isEmpty
-                    ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.add_photo_alternate,
-                        size: AppSizes.v36,
-                        color: AppColors.gray,
-                      ),
-                      SizedBox(height: AppSizes.h4),
-                      Text(
-                        LanguageService.get("upload_logo"),
-                        style: TextStyle(
-                          fontSize: AppSizes.v12,
-                          color: AppColors.gray,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-                    : null,
-              ),
-              // Edit button positioned at bottom right
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: GestureDetector(
-                  onTap: model.onLogoUpload,
-                  child: Container(
-                    height: AppSizes.h36,
-                    width: AppSizes.h36,
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.white, width: 2),
-                    ),
-                    child: Icon(
-                      Icons.edit,
-                      color: AppColors.white,
-                      size: AppSizes.v18,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          if (model.isUploading)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: AppSizes.h8),
-              child: Column(
-                children: [
-                  LinearProgressIndicator(
-                    value: model.uploadProgress,
-                    backgroundColor: AppColors.lightGray,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                  ),
-                  SizedBox(height: AppSizes.h4),
-                  Text(
-                    "${(model.uploadProgress * 100).toStringAsFixed(0)}%",
-                    style: TextStyle(
-                      fontSize: AppSizes.v12,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          SizedBox(height: AppSizes.h10),
-          Text(
-            model.name ?? "",
-            style: TextStyle(
-              fontSize: 14,
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-            Text(
-                model.email ?? "",
-                style: TextStyle(
-                fontSize: 12,
-                color: AppColors.textGray,
-              ),
-            ),
-        ],
-      ),
-    );
+    return null;
   }
 
   // Widget _buildUnitsSection(
@@ -910,551 +679,4 @@ class UpdateOrganizationView extends StatelessWidget {
   //     ],
   //   );
   // }
-
-  Widget _buildUnitCard(
-      BuildContext context,
-      UpdateOrganizationViewModel model,
-      int index,
-      ) {
-    return Container(
-      margin: EdgeInsets.only(bottom: AppSizes.h16),
-      padding: EdgeInsets.all(AppSizes.w16),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.lightGray),
-        borderRadius: BorderRadius.circular(AppSizes.v12),
-        color: AppColors.white,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(),
-              IconButton(
-                onPressed: () => model.removeUnit(index),
-                icon: Icon(Icons.delete_outline, color: AppColors.error),
-                constraints: BoxConstraints(),
-                padding: EdgeInsets.all(AppSizes.w8),
-              ),
-            ],
-          ),
-          SizedBox(height: AppSizes.h12),
-          _buildTextField(
-            context,
-            controller: model.unitNameControllers[index]!,
-            label: LanguageService.get("unit_name"),
-          ),
-          _buildCountrySelectionField(context, model, index),
-          _buildTextField(
-            context,
-            controller: model.unitLocalityControllers[index]!,
-            label: LanguageService.get("locality"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCountrySelectionField(
-      BuildContext context,
-      UpdateOrganizationViewModel model,
-      int index,
-      ) {
-    return Container(
-      margin: EdgeInsets.only(bottom: AppSizes.h16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppSizes.v14),
-      ),
-      child: GestureDetector(
-        onTap: () => _showSearchableCountryDropdownForUnit(context, model, index),
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppSizes.w16,
-            vertical: AppSizes.h16,
-          ),
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.lightGray),
-            borderRadius: BorderRadius.circular(AppSizes.v12),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                LanguageService.get("country"),
-                style: TextStyle(fontSize: 12, color: AppColors.gray),
-              ),
-              SizedBox(height: 4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      model.unitCountries[index] ?? LanguageService.get("select_country"),
-                      style: TextStyle(
-                        color: model.unitCountries[index] != null
-                            ? AppColors.black
-                            : AppColors.gray,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Icon(Icons.arrow_drop_down, color: AppColors.gray),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showSearchableCountryDropdown(
-      BuildContext context,
-      UpdateOrganizationViewModel model,
-      String type,
-      ) {
-    List<Country> countriesList = countries.toList();
-    String searchQuery = '';
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            List<Country> filteredCountries = searchQuery.isEmpty
-                ? countriesList
-                : countriesList
-                .where((country) => country.name.toLowerCase().contains(searchQuery.toLowerCase()))
-                .toList();
-
-            return Container(
-              height: MediaQuery.of(context).size.height * 0.7,
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.v24)),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                    offset: Offset(0, -5),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: AppSizes.h12),
-                    height: 4,
-                    width: 40,
-                    decoration: BoxDecoration(
-                      color: AppColors.lightGray,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(AppSizes.w20),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                LanguageService.get("select_country"),
-                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.close, color: AppColors.gray),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: AppSizes.h16),
-                        TextField(
-                          autofocus: true,
-                          onChanged: (value) {
-                            setState(() {
-                              searchQuery = value;
-                            });
-                          },
-                          decoration: InputDecoration(
-                            hintText: LanguageService.get("search_countries"),
-                            prefixIcon: Icon(Icons.search, color: AppColors.primary),
-                            suffixIcon: searchQuery.isNotEmpty
-                                ? IconButton(
-                              icon: Icon(Icons.clear, color: AppColors.gray),
-                              onPressed: () {
-                                setState(() {
-                                  searchQuery = '';
-                                });
-                              },
-                            )
-                                : null,
-                            fillColor: AppColors.lightGray.withOpacity(0.3),
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(AppSizes.v12),
-                              borderSide: BorderSide.none,
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: AppSizes.h12,
-                              horizontal: AppSizes.w16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (searchQuery.isNotEmpty)
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: AppSizes.w20),
-                      child: Row(
-                        children: [
-                          Text(
-                            "${filteredCountries.length} ${LanguageService.get("countries_found")}",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.gray),
-                          ),
-                        ],
-                      ),
-                    ),
-                  SizedBox(height: AppSizes.h8),
-                  Expanded(
-                    child: filteredCountries.isEmpty
-                        ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.search_off,
-                            size: 64,
-                            color: AppColors.gray.withOpacity(0.5),
-                          ),
-                          SizedBox(height: AppSizes.h16),
-                          Text(
-                            LanguageService.get("no_countries_found"),
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.gray),
-                          ),
-                          Text(
-                            LanguageService.get("try_different_search"),
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.gray),
-                          ),
-                        ],
-                      ),
-                    )
-                        : ListView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: AppSizes.w20),
-                      itemCount: filteredCountries.length,
-                      itemBuilder: (context, index) {
-                        final country = filteredCountries[index];
-                        final selectedCountry = type == "corporate"
-                            ? model.selectedCountry
-                            : model.selectedCountryF;
-                        final isSelected = selectedCountry == country;
-
-                        return Container(
-                          margin: EdgeInsets.only(bottom: AppSizes.h4),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? AppColors.primary.withOpacity(0.1)
-                                : AppColors.transparent,
-                            borderRadius: BorderRadius.circular(AppSizes.v8),
-                            border: isSelected
-                                ? Border.all(color: AppColors.primary, width: 1)
-                                : null,
-                          ),
-                          child: ListTile(
-                            leading: Container(
-                              width: 32,
-                              child: Text(
-                                country.flag,
-                                style: TextStyle(fontSize: AppSizes.v20),
-                              ),
-                            ),
-                            title: Text(
-                              country.name,
-                              style: TextStyle(
-                                color: isSelected ? AppColors.primary : AppColors.black,
-                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                              ),
-                            ),
-                            trailing: isSelected
-                                ? Icon(
-                              Icons.check_circle,
-                              color: AppColors.primary,
-                              size: AppSizes.v20,
-                            )
-                                : null,
-                            onTap: () {
-                              if (type == "corporate") {
-                                model.updateSelectedCountry(country);
-                              } else {
-                                model.updateSelectedCountryF(country);
-                              }
-                              Navigator.pop(context);
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(AppSizes.v8),
-                            ),
-                            dense: true,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: AppSizes.w12,
-                              vertical: AppSizes.h4,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  void _showSearchableCountryDropdownForUnit(
-      BuildContext context,
-      UpdateOrganizationViewModel model,
-      int unitIndex,
-      ) {
-    List<Country> countriesList = countries.toList();
-    String searchQuery = '';
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            List<Country> filteredCountries = searchQuery.isEmpty
-                ? countriesList
-                : countriesList
-                .where((country) => country.name.toLowerCase().contains(searchQuery.toLowerCase()))
-                .toList();
-
-            return Container(
-              height: MediaQuery.of(context).size.height * 0.7,
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.v24)),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                    offset: Offset(0, -5),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: AppSizes.h12),
-                    height: 4,
-                    width: 40,
-                    decoration: BoxDecoration(
-                      color: AppColors.lightGray,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(AppSizes.w20),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                '${LanguageService.get("select_country_for_unit")} ${unitIndex + 1}',
-                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.close, color: AppColors.gray),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: AppSizes.h16),
-                        TextField(
-                          autofocus: true,
-                          onChanged: (value) {
-                            setState(() {
-                              searchQuery = value;
-                            });
-                          },
-                          decoration: InputDecoration(
-                            hintText: LanguageService.get("search_countries"),
-                            prefixIcon: Icon(Icons.search, color: AppColors.primary),
-                            suffixIcon: searchQuery.isNotEmpty
-                                ? IconButton(
-                              icon: Icon(Icons.clear, color: AppColors.gray),
-                              onPressed: () {
-                                setState(() {
-                                  searchQuery = '';
-                                });
-                              },
-                            )
-                                : null,
-                            fillColor: AppColors.lightGray.withOpacity(0.3),
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(AppSizes.v12),
-                              borderSide: BorderSide.none,
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: AppSizes.h12,
-                              horizontal: AppSizes.w16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (searchQuery.isNotEmpty)
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: AppSizes.w20),
-                      child: Row(
-                        children: [
-                          Text(
-                            "${filteredCountries.length} ${LanguageService.get("countries_found")}",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.gray),
-                          ),
-                        ],
-                      ),
-                    ),
-                  SizedBox(height: AppSizes.h8),
-                  Expanded(
-                    child: filteredCountries.isEmpty
-                        ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.search_off,
-                            size: 64,
-                            color: AppColors.gray.withOpacity(0.5),
-                          ),
-                          SizedBox(height: AppSizes.h16),
-                          Text(
-                            LanguageService.get("no_countries_found"),
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.gray),
-                          ),
-                          Text(
-                            LanguageService.get("try_different_search"),
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.gray),
-                          ),
-                        ],
-                      ),
-                    )
-                        : ListView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: AppSizes.w20),
-                      itemCount: filteredCountries.length,
-                      itemBuilder: (context, index) {
-                        final country = filteredCountries[index];
-                        final isSelected = model.unitCountries[unitIndex] == country.name;
-
-                        return Container(
-                          margin: EdgeInsets.only(bottom: AppSizes.h4),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? AppColors.primary.withOpacity(0.1)
-                                : AppColors.transparent,
-                            borderRadius: BorderRadius.circular(AppSizes.v8),
-                            border: isSelected
-                                ? Border.all(color: AppColors.primary, width: 1)
-                                : null,
-                          ),
-                          child: ListTile(
-                            leading: Container(
-                              width: 32,
-                              child: Text(
-                                country.flag,
-                                style: TextStyle(fontSize: AppSizes.v20),
-                              ),
-                            ),
-                            title: Text(
-                              country.name,
-                              style: TextStyle(
-                                color: isSelected ? AppColors.primary : AppColors.black,
-                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                              ),
-                            ),
-                            trailing: isSelected
-                                ? Icon(
-                              Icons.check_circle,
-                              color: AppColors.primary,
-                              size: AppSizes.v20,
-                            )
-                                : null,
-                            onTap: () {
-                              model.updateUnitCountry(unitIndex, country.name);
-                              Navigator.pop(context);
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(AppSizes.v8),
-                            ),
-                            dense: true,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: AppSizes.w12,
-                              vertical: AppSizes.h4,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Future<bool> _showExitConfirmationDialog(BuildContext context, UpdateOrganizationViewModel model) async {
-    return await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.white,
-        title: Text(
-          LanguageService.get("discard_changes"),
-          style: TextStyle(color: AppColors.primary),
-        ),
-        content: Text(
-          LanguageService.get("unsaved_changes_warning"),
-          style: TextStyle(color: AppColors.primary),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(
-              LanguageService.get("cancel"),
-              style: TextStyle(color: AppColors.primary),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop(false);
-              model.onSave();
-            },
-            child: Text(LanguageService.get("save_and_leave")),
-          ),
-        ],
-      ),
-    ) ??
-        false;
-  }
 }

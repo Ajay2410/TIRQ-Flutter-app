@@ -21,7 +21,6 @@ import '../../../services/file_picker.service.dart';
 import '../../../services/file_upload.service.dart';
 import '../../../widgets/dialogs/loader/loader_dialog.view.dart';
 
-
 class UpdateOrganizationViewModel extends ReactiveViewModel {
   final _navigationService = locator<NavigationService>();
   final _dialogService = locator<DialogService>();
@@ -50,17 +49,23 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
   final TextEditingController pinCodeController = TextEditingController();
 
   // Factory Address controllers
-  final TextEditingController factoryAddressLine1Controller = TextEditingController();
-  final TextEditingController factoryAddressLine2Controller = TextEditingController();
+  final TextEditingController factoryAddressLine1Controller =
+      TextEditingController();
+  final TextEditingController factoryAddressLine2Controller =
+      TextEditingController();
   final TextEditingController factoryCityController = TextEditingController();
   final TextEditingController factoryStateController = TextEditingController();
-  final TextEditingController factoryCountryController = TextEditingController();
-  final TextEditingController factoryPinCodeController = TextEditingController();
+  final TextEditingController factoryCountryController =
+      TextEditingController();
+  final TextEditingController factoryPinCodeController =
+      TextEditingController();
 
   // Additional info controllers
-  final TextEditingController establishedYearController = TextEditingController();
+  final TextEditingController establishedYearController =
+      TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController otherDesignationController = TextEditingController();
+  final TextEditingController otherDesignationController =
+      TextEditingController();
   final TextEditingController organizationType = TextEditingController();
 
   // Designation type
@@ -74,14 +79,12 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
     }
   }
 
+  bool isDataChanged = false;
 
-bool isDataChanged = false;
-
-void markDataChanged() {
-  isDataChanged = true;
-  notifyListeners(); 
-}
-
+  void markDataChanged() {
+    isDataChanged = true;
+    notifyListeners();
+  }
 
   String _language = 'English';
 
@@ -89,14 +92,16 @@ void markDataChanged() {
     return AppMaps.languageMap.entries
         .firstWhere(
           (e) => e.value == _language,
-      orElse: () => AppMaps.languageMap.entries.first, // fallback to first entry
-    ).key;
+          orElse:
+              () =>
+                  AppMaps.languageMap.entries.first, // fallback to first entry
+        )
+        .key;
   }
 
-
   void updateLanguage(String value) {
-    _language = AppMaps.languageMap.entries
-        .firstWhere((e) => e.key == value).value;
+    _language =
+        AppMaps.languageMap.entries.firstWhere((e) => e.key == value).value;
     _onFormChanged();
     notifyListeners();
   }
@@ -146,7 +151,6 @@ void markDataChanged() {
     }
   }
 
-
   // Factory country dropdown
   final ReactiveValue<String> _factoryCountry = ReactiveValue<String>('India');
   String get factoryCountry => _factoryCountry.value;
@@ -159,19 +163,14 @@ void markDataChanged() {
     }
   }
 
-
-
   String _countrySearchQuery = '';
   String get countrySearchQuery => _countrySearchQuery;
 
   Country? _selectedCountry;
   Country? get selectedCountry => _selectedCountry;
 
-
-    Country? _selectedCountryF;
+  Country? _selectedCountryF;
   Country? get selectedCountryF => _selectedCountryF;
-
-
 
   bool? isPersonalInfoEditable = false;
   bool? isCorporateAddressEditable = false;
@@ -199,11 +198,6 @@ void markDataChanged() {
     notifyListeners();
   }
 
-
-
-
-
-
   // List<Country> get filteredCountries {
   //   if (_countrySearchQuery.isEmpty) {
   //     return countries.toList();
@@ -223,21 +217,28 @@ void markDataChanged() {
     notifyListeners();
   }
 
-   void updateSelectedCountryF(Country? country) {
+  void updateSelectedCountryF(Country? country) {
     _selectedCountryF = country;
     notifyListeners();
   }
-  
 
   // List of countries
   List<String> countries = [
-    'India', 'United States', 'United Kingdom', 'Canada', 'Australia',
-    'Germany', 'France', 'Japan', 'China', 'Brazil', 'Other'
+    'India',
+    'United States',
+    'United Kingdom',
+    'Canada',
+    'Australia',
+    'Germany',
+    'France',
+    'Japan',
+    'China',
+    'Brazil',
+    'Other',
   ];
 
   final ReactiveValue<List<Units>> _units = ReactiveValue<List<Units>>([]);
   List<Units> get units => _units.value;
-
 
   Map<int, TextEditingController> unitNameControllers = {};
   Map<int, TextEditingController> unitLocalityControllers = {};
@@ -247,7 +248,6 @@ void markDataChanged() {
   String logoUrl = '';
   File? _logoFile;
   File? get logoFile => _logoFile;
-
 
   String _email = '';
   String? get email => _email;
@@ -284,10 +284,10 @@ void markDataChanged() {
 
         if (response?.data != null) {
           ((response?.data) as EitherResult<Organization>).fold(
-                (exception) {
+            (exception) {
               Fluttertoast.showToast(msg: exception.toString());
             },
-                (org) {
+            (org) {
               _organization = org;
               _populateFormWithOrgData(org);
               _isEditing = true;
@@ -365,8 +365,6 @@ void markDataChanged() {
     unitCountries = newCountries;
   }
 
-
-
   List<Map<String, dynamic>> _getUnitsData() {
     List<Map<String, dynamic>> unitsData = [];
 
@@ -376,18 +374,12 @@ void markDataChanged() {
       final country = unitCountries[i];
 
       if (name.isNotEmpty || locality.isNotEmpty || country != null) {
-        unitsData.add({
-          'name': name,
-          'country': country,
-          'locality': locality,
-        });
+        unitsData.add({'name': name, 'country': country, 'locality': locality});
       }
     }
 
     return unitsData;
   }
-
-
 
   void _populateFormWithOrgData(Organization org) {
     AppLogger.info('Populating form with org data: ${org.toJson()}');
@@ -401,7 +393,10 @@ void markDataChanged() {
     _email = org.email ?? "";
     _name = org.name ?? "";
     email2Controller.text = org.email2 ?? '';
-    organizationType.text = getUser().organizationType == OrganizationType.manufacturer ? 'Manufacturer' : 'Processor';
+    organizationType.text =
+        getUser().organizationType == OrganizationType.manufacturer
+            ? 'Manufacturer'
+            : 'Processor';
 
     // Set designation
     if (org.designation != null) {
@@ -431,8 +426,10 @@ void markDataChanged() {
 
     // Set factory address fields
     if (org.factoryAddress != null) {
-      factoryAddressLine1Controller.text = org.factoryAddress!.addressLine1 ?? '';
-      factoryAddressLine2Controller.text = org.factoryAddress!.addressLine2 ?? '';
+      factoryAddressLine1Controller.text =
+          org.factoryAddress!.addressLine1 ?? '';
+      factoryAddressLine2Controller.text =
+          org.factoryAddress!.addressLine2 ?? '';
       factoryCityController.text = org.factoryAddress!.city ?? '';
       factoryStateController.text = org.factoryAddress!.state ?? '';
       factoryCountryController.text = org.factoryAddress!.country ?? '';
@@ -451,7 +448,9 @@ void markDataChanged() {
       for (int i = 0; i < _units.value.length; i++) {
         final unit = _units.value[i];
         unitNameControllers[i] = TextEditingController(text: unit.name ?? '');
-        unitLocalityControllers[i] = TextEditingController(text: unit.locality ?? '');
+        unitLocalityControllers[i] = TextEditingController(
+          text: unit.locality ?? '',
+        );
         unitCountries[i] = unit.country;
 
         // Add listeners
@@ -538,7 +537,8 @@ void markDataChanged() {
 
     // Check designation
     if (designationType != null) {
-      if (designationType != 'others' || otherDesignationController.text.isNotEmpty) {
+      if (designationType != 'others' ||
+          otherDesignationController.text.isNotEmpty) {
         filledFields++;
       }
     }
@@ -578,7 +578,7 @@ void markDataChanged() {
     );
 
     pickerResult.fold(
-          (failure) {
+      (failure) {
         // Only show error if it's not "No image selected"
         if (failure.message != 'No image selected') {
           Fluttertoast.showToast(
@@ -587,7 +587,7 @@ void markDataChanged() {
           );
         }
       },
-          (file) {
+      (file) {
         _logoFile = file;
         _onFormChanged();
         notifyListeners();
@@ -603,7 +603,7 @@ void markDataChanged() {
     );
 
     pickerResult.fold(
-          (failure) {
+      (failure) {
         // Only show error if it's not "No photo taken"
         if (failure.message != 'No photo taken') {
           Fluttertoast.showToast(
@@ -612,7 +612,7 @@ void markDataChanged() {
           );
         }
       },
-          (file) {
+      (file) {
         _logoFile = file;
         _onFormChanged();
         notifyListeners();
@@ -627,7 +627,9 @@ void markDataChanged() {
     _uploadProgress.value = 0.0;
     notifyListeners();
 
-    final result = await _fileUploadService.uploadFileWithProgress(_logoFile!, (progress) {
+    final result = await _fileUploadService.uploadFileWithProgress(_logoFile!, (
+      progress,
+    ) {
       _uploadProgress.value = progress;
       notifyListeners();
     });
@@ -676,7 +678,8 @@ void markDataChanged() {
 
         // Get designation value
         String designationValue = designationType;
-        if (designationType == 'others' && otherDesignationController.text.isNotEmpty) {
+        if (designationType == 'others' &&
+            otherDesignationController.text.isNotEmpty) {
           designationValue = otherDesignationController.text;
         }
 
@@ -697,47 +700,53 @@ void markDataChanged() {
             "country": countryController.text,
             "pinCode": pinCodeController.text,
           },
-          "factoryAddress": sameAsCorpAddress ? {
-            // Copy corporate address if checkbox is checked
-            "addressLine1": addressLine1Controller.text,
-            "addressLine2": addressLine2Controller.text,
-            "city": cityController.text,
-            "state": stateController.text,
-            "country": countryController.text,
-            "pinCode": pinCodeController.text,
-          } : {
-            // Use factory address fields
-            "addressLine1": factoryAddressLine1Controller.text,
-            "addressLine2": factoryAddressLine2Controller.text,
-            "city": factoryCityController.text,
-            "state": factoryStateController.text,
-            "country": factoryCountryController.text,
-            "pinCode": factoryPinCodeController.text,
-          },
-          "logo": uploadedLogoUrl ?? logoUrl, // Use newly uploaded URL or existing one
+          "factoryAddress":
+              sameAsCorpAddress
+                  ? {
+                    // Copy corporate address if checkbox is checked
+                    "addressLine1": addressLine1Controller.text,
+                    "addressLine2": addressLine2Controller.text,
+                    "city": cityController.text,
+                    "state": stateController.text,
+                    "country": countryController.text,
+                    "pinCode": pinCodeController.text,
+                  }
+                  : {
+                    // Use factory address fields
+                    "addressLine1": factoryAddressLine1Controller.text,
+                    "addressLine2": factoryAddressLine2Controller.text,
+                    "city": factoryCityController.text,
+                    "state": factoryStateController.text,
+                    "country": factoryCountryController.text,
+                    "pinCode": factoryPinCodeController.text,
+                  },
+          "logo":
+              uploadedLogoUrl ??
+              logoUrl, // Use newly uploaded URL or existing one
           "establishedYear": int.tryParse(establishedYearController.text),
           "description": descriptionController.text,
           "units": _getUnitsData(),
-
         };
 
         final response = await _dialogService.showCustomDialog(
           variant: DialogType.loader,
           data: LoaderDialogAttributes(
-            task: () => _organizationService.updateOrganization(organizationData),
+            task:
+                () => _organizationService.updateOrganization(organizationData),
           ),
         );
 
         if (response?.data != null) {
           ((response?.data) as EitherResult<bool>).fold(
-                (exception) {
+            (exception) {
               Fluttertoast.showToast(msg: exception.toString());
             },
-                (success) {
+            (success) {
               Fluttertoast.showToast(
-                msg: _isEditing
-                    ? "Organization updated successfully!"
-                    : "Organization created successfully!",
+                msg:
+                    _isEditing
+                        ? "Organization updated successfully!"
+                        : "Organization created successfully!",
               );
               // _navigationService.back(result: true); // Return true to indicate success
             },
@@ -799,6 +808,11 @@ void markDataChanged() {
 
   void updatePhoneNumber(PhoneNumber phoneNumber) {
     _fullPhoneNumber = '${phoneNumber.countryCode}${phoneNumber.number}';
+    _onFormChanged();
+  }
+
+  void updatePhoneNumberFromString(String phoneNumber) {
+    _fullPhoneNumber = phoneNumber;
     _onFormChanged();
   }
 

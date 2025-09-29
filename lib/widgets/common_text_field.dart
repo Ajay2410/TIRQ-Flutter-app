@@ -60,7 +60,7 @@ class CommonTextField extends StatelessWidget {
             label!,
             style: const TextStyle(
               color: AppColors.textPrimary,
-              fontSize: 14,
+              fontSize: 10,
               fontWeight: FontWeight.w500,
             ),
           ),

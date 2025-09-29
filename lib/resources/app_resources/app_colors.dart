@@ -129,4 +129,9 @@ abstract class AppColors {
   static const Color progressGreen = Color(0xFF41C293); // 100% Completed
 
   static const Color periwinkleBlue = Color(0xFF687FE5);
+  static const Color emeraldGreen = Color(0xFF38AE41);
+  static const Color leafGreen = Color(0xFF3DAF41);
+  static const Color turquoiseBlue = Color(0xFF4FD6F0);
+  static const Color cultured = Color(0xFFF7F7F6);
+  static const Color gunmetal = Color(0xFF292D32);
 }
