@@ -248,7 +248,7 @@ class _TicketDetailsDialogState extends State<TicketDetailsDialog> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppSizes.v8),
         border: Border.all(
-          color: AppColors.lightGray,
+          color: AppColors.lightGrey,
           width: 1,
         ),
       ),
@@ -278,7 +278,7 @@ class _TicketDetailsDialogState extends State<TicketDetailsDialog> {
           height: AppSizes.w30,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSizes.v4),
-            border: Border.all(color: AppColors.lightGray),
+            border: Border.all(color: AppColors.lightGrey),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(AppSizes.v4),
@@ -407,7 +407,7 @@ class _TicketDetailsDialogState extends State<TicketDetailsDialog> {
                         margin: EdgeInsets.only(right: AppSizes.w8),
                         width: AppSizes.h120,
                         decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.lightGray),
+                          border: Border.all(color: AppColors.lightGrey),
                           borderRadius: BorderRadius.circular(AppSizes.v8),
                         ),
                         child: ClipRRect(
@@ -424,7 +424,7 @@ class _TicketDetailsDialogState extends State<TicketDetailsDialog> {
                                 ),
                             errorWidget:
                                 (context, url, error) => Container(
-                                  color: AppColors.lightGray,
+                                  color: AppColors.lightGrey,
                                   child: Icon(
                                     Icons.attachment,
                                     color: AppColors.gray,
@@ -725,7 +725,7 @@ class _TicketDetailsDialogState extends State<TicketDetailsDialog> {
                                 horizontal: 16,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.lightGray.withOpacity(0.3),
+                                color: AppColors.lightGrey.withOpacity(0.3),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
                                   color: AppColors.primary.withOpacity(0.3),

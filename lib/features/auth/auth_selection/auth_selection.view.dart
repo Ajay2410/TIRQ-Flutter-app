@@ -342,7 +342,7 @@ class _AuthSelectionViewState extends State<AuthSelectionView>
                 onPressed: onPressed,
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(
-                    color: AppColors.lightGray.withValues(alpha: 0.8),
+                    color: AppColors.lightGrey.withValues(alpha: 0.8),
                     width: 1.5,
                   ),
                   shape: RoundedRectangleBorder(

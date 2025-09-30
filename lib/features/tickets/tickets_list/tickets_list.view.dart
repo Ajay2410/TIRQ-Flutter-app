@@ -208,7 +208,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                       height: 40,
                       innerPadding: EdgeInsets.zero,
                       initialValue: model.selectedTabIndex,
-                      decoration: BoxDecoration(color: AppColors.lightGray.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(AppSizes.v45)),
+                      decoration: BoxDecoration(color: AppColors.lightGrey.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(AppSizes.v45)),
                       padding: AppSizes.v4,
 
                       isStretch: true,
@@ -342,7 +342,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
           hintText: LanguageService.get("search_tickets"),
           hintStyle: TextStyle(color: AppColors.gray),
           prefixIcon: Padding(padding: EdgeInsets.all(12), child: Image.asset(AppImages.search, width: 20, height: 20, color: AppColors.primary)),
-          fillColor: AppColors.lightGray.withValues(alpha: 0.3),
+          fillColor: AppColors.lightGrey.withValues(alpha: 0.3),
           filled: true,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: BorderSide.none),
           contentPadding: EdgeInsets.symmetric(vertical: AppSizes.h12, horizontal: AppSizes.w16),
@@ -382,7 +382,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
         children: [
           Container(
             padding: EdgeInsets.all(AppSizes.v24),
-            decoration: BoxDecoration(color: AppColors.lightGray.withValues(alpha: 0.3), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: AppColors.lightGrey.withValues(alpha: 0.3), shape: BoxShape.circle),
             child: Icon(
               isActive ? Icons.support_agent_outlined : Icons.check_circle_outline,
               size: 80,
@@ -493,7 +493,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                               Expanded(
                                 child: Row(
                                   children: [
-                                    Text('${LanguageService.get("pending_since")} : ', style: TextStyle(fontSize: 11, color: AppColors.textGray)),
+                                    Text('${LanguageService.get("pending_since")} : ', style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
                                     Text(pendingDuration, style: TextStyle(fontSize: 11, color: AppColors.black)),
                                   ],
                                 ),
@@ -549,7 +549,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                             text: "${LanguageService.get("problem_description")}: ",
                             style: TextStyle(fontSize: 11, color: AppColors.black, fontWeight: FontWeight.bold),
                           ),
-                          TextSpan(text: ticket.problem ?? ticket.notes ?? "N/A", style: TextStyle(fontSize: 11, color: AppColors.textGray)),
+                          TextSpan(text: ticket.problem ?? ticket.notes ?? "N/A", style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
                         ],
                       ),
                     ),
@@ -591,7 +591,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                         decoration: BoxDecoration(
                           color: AppColors.success.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(9),
-                          border: Border.all(color: AppColors.textGray.withValues(alpha: 0.1)),
+                          border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.1)),
                         ),
                         padding: EdgeInsets.all(10),
                         child: RichText(
@@ -602,7 +602,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                                 text: "${LanguageService.get("engineer_remarks")}: ",
                                 style: TextStyle(fontSize: 11, color: AppColors.black, fontWeight: FontWeight.bold),
                               ),
-                              TextSpan(text: ticket.problem ?? ticket.notes ?? "N/A", style: TextStyle(fontSize: 11, color: AppColors.textGray)),
+                              TextSpan(text: ticket.problem ?? ticket.notes ?? "N/A", style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
                             ],
                           ),
                         ),
@@ -616,7 +616,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                     decoration: BoxDecoration(
                       color: AppColors.softGray,
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColors.textGray.withValues(alpha: 0.1)),
+                      border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.1)),
                     ),
                     child: Image.asset(AppImages.arrowRight, width: 16, height: 16, color: AppColors.darkGray),
                   ),
@@ -875,8 +875,8 @@ class TicketCardShimmer extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(AppSizes.v10),
         child: Shimmer.fromColors(
-          baseColor: AppColors.lightGray.withValues(alpha: 0.3),
-          highlightColor: AppColors.lightGray.withValues(alpha: 0.1),
+          baseColor: AppColors.lightGrey.withValues(alpha: 0.3),
+          highlightColor: AppColors.lightGrey.withValues(alpha: 0.1),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -892,7 +892,7 @@ class TicketCardShimmer extends StatelessWidget {
                       Container(
                         width: 50,
                         height: 50,
-                        decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(AppSizes.v16)),
+                        decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(AppSizes.v16)),
                       ),
                       Positioned(
                         bottom: -4,
@@ -900,7 +900,7 @@ class TicketCardShimmer extends StatelessWidget {
                         child: Container(
                           width: 17,
                           height: 17,
-                          decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(2)),
+                          decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(2)),
                         ),
                       ),
                     ],
@@ -916,16 +916,16 @@ class TicketCardShimmer extends StatelessWidget {
                               child: Container(
                                 height: 16,
                                 width: 120,
-                                decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4)),
+                                decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4)),
                               ),
                             ),
                             Container(
                               padding: EdgeInsets.symmetric(horizontal: AppSizes.w8, vertical: AppSizes.h2),
-                              decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(AppSizes.v8)),
+                              decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(AppSizes.v8)),
                               child: Container(
                                 height: 12,
                                 width: 60,
-                                decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4)),
+                                decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4)),
                               ),
                             ),
                           ],
@@ -939,13 +939,13 @@ class TicketCardShimmer extends StatelessWidget {
                                   Container(
                                     height: 12,
                                     width: 80,
-                                    decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4)),
+                                    decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4)),
                                   ),
                                   SizedBox(width: 4),
                                   Container(
                                     height: 12,
                                     width: 60,
-                                    decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4)),
+                                    decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4)),
                                   ),
                                 ],
                               ),
@@ -953,7 +953,7 @@ class TicketCardShimmer extends StatelessWidget {
                             Container(
                               height: 12,
                               width: 80,
-                              decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4)),
+                              decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4)),
                             ),
                           ],
                         ),
@@ -966,7 +966,7 @@ class TicketCardShimmer extends StatelessWidget {
               AppGaps.h8,
 
               // Divider
-              Container(height: 1, color: AppColors.lightGray),
+              Container(height: 1, color: AppColors.lightGrey),
               AppGaps.h8,
 
               // Info columns section
@@ -977,7 +977,7 @@ class TicketCardShimmer extends StatelessWidget {
               AppGaps.h8,
 
               // Divider
-              Container(height: 1, color: AppColors.lightGray),
+              Container(height: 1, color: AppColors.lightGrey),
               AppGaps.h8,
 
               // Problem description section
@@ -990,19 +990,19 @@ class TicketCardShimmer extends StatelessWidget {
                         Container(
                           height: 12,
                           width: 100,
-                          decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4)),
+                          decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4)),
                         ),
                         SizedBox(height: 4),
                         Container(
                           height: 12,
                           width: double.infinity,
-                          decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4)),
+                          decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4)),
                         ),
                         SizedBox(height: 2),
                         Container(
                           height: 12,
                           width: 200,
-                          decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4)),
+                          decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4)),
                         ),
                       ],
                     ),
@@ -1013,21 +1013,21 @@ class TicketCardShimmer extends StatelessWidget {
               AppGaps.h8,
 
               // Divider
-              Container(height: 1, color: AppColors.lightGray),
+              Container(height: 1, color: AppColors.lightGrey),
 
               // Action buttons section
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(height: 30, width: 80, decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(6))),
+                  Container(height: 30, width: 80, decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(6))),
                   Spacer(),
                   Container(
                     padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(10)),
                     child: Container(
                       width: 16,
                       height: 16,
-                      decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(2)),
+                      decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(2)),
                     ),
                   ),
                 ],
@@ -1043,9 +1043,9 @@ class TicketCardShimmer extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(height: 10, width: 60, decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4))),
+        Container(height: 10, width: 60, decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4))),
         SizedBox(height: 4),
-        Container(height: 10, width: 40, decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4))),
+        Container(height: 10, width: 40, decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4))),
       ],
     );
   }

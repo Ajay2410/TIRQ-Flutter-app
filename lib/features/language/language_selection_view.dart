@@ -322,7 +322,7 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView>
             LanguageService.get('choose_language_description'),
             style: TextStyle(
               fontSize: 12,
-              color: AppColors.textGray,
+              color: AppColors.textGrey,
               fontWeight: FontWeight.w400,
             ),
           ),

@@ -214,7 +214,7 @@ class _MyCustomersViewState extends State<MyCustomersView> with TickerProviderSt
                     },
                   )
                   : null,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.lightGray)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.lightGrey)),
           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.primary)),
         ),
         onChanged: model.onSearchChanged,
@@ -240,7 +240,7 @@ class _MyCustomersViewState extends State<MyCustomersView> with TickerProviderSt
       backgroundColor: AppColors.white,
       child: ListView.separated(
         separatorBuilder: (context, index) {
-          return Divider(color: AppColors.lightGray, thickness: 1);
+          return Divider(color: AppColors.lightGrey, thickness: 1);
         },
         padding: const EdgeInsets.all(13),
         itemCount: model.filteredCustomers.length,
@@ -255,12 +255,12 @@ class _MyCustomersViewState extends State<MyCustomersView> with TickerProviderSt
   Widget _buildShimmerList() {
     return ListView.separated(
       separatorBuilder: (context, index) {
-        return Divider(color: AppColors.lightGray, thickness: 1);
+        return Divider(color: AppColors.lightGrey, thickness: 1);
       },
       padding: const EdgeInsets.all(13),
       itemCount: 10,
       itemBuilder: (context, index) {
-        return Shimmer.fromColors(baseColor: AppColors.lightGray, highlightColor: AppColors.white, child: _buildCustomerCardShimmer());
+        return Shimmer.fromColors(baseColor: AppColors.lightGrey, highlightColor: AppColors.white, child: _buildCustomerCardShimmer());
       },
     );
   }
@@ -270,22 +270,22 @@ class _MyCustomersViewState extends State<MyCustomersView> with TickerProviderSt
       children: [
         Container(
           padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.lightGray),
-          child: Container(height: 50, width: 50, decoration: BoxDecoration(color: AppColors.lightGray, shape: BoxShape.circle)),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.lightGrey),
+          child: Container(height: 50, width: 50, decoration: BoxDecoration(color: AppColors.lightGrey, shape: BoxShape.circle)),
         ),
         AppGaps.w16,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(height: 16, width: 120, decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4))),
+              Container(height: 16, width: 120, decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4))),
               AppGaps.h5,
-              Container(height: 14, width: 200, decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(4))),
+              Container(height: 14, width: 200, decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4))),
             ],
           ),
         ),
         AppGaps.w16,
-        Container(height: 20, width: 60, decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(6))),
+        Container(height: 20, width: 60, decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(6))),
       ],
     );
   }
@@ -482,7 +482,7 @@ class _MyCustomersViewState extends State<MyCustomersView> with TickerProviderSt
                             },
                             iconColor: AppColors.colorFFB141,
                           ),
-                          Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Divider(height: 1, color: AppColors.lightGray)),
+                          Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Divider(height: 1, color: AppColors.lightGrey)),
                           _buildMenuOption(
                             icon: AppImages.phone,
                             title: LanguageService.get('search_by_phone_number_email'),
@@ -492,7 +492,7 @@ class _MyCustomersViewState extends State<MyCustomersView> with TickerProviderSt
                             },
                             iconColor: AppColors.color41C293,
                           ),
-                          Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Divider(height: 1, color: AppColors.lightGray)),
+                          Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Divider(height: 1, color: AppColors.lightGrey)),
                           _buildMenuOption(
                             icon: AppImages.addCircle,
                             title: LanguageService.get('create_new_customer'),

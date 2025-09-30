@@ -125,7 +125,7 @@ class ReviewTicketView extends StatelessWidget {
                 ),
               ),
 
-              Container(height: 50, width: 1, color: AppColors.textGray.withValues(alpha: 0.1)),
+              Container(height: 50, width: 1, color: AppColors.textGrey.withValues(alpha: 0.1)),
               SizedBox(width: AppSizes.v10),
 
               Column(
@@ -142,7 +142,7 @@ class ReviewTicketView extends StatelessWidget {
             ],
           ),
 
-          Divider(height: 26, color: AppColors.textGray.withValues(alpha: 0.1)),
+          Divider(height: 26, color: AppColors.textGrey.withValues(alpha: 0.1)),
 
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +173,7 @@ class ReviewTicketView extends StatelessWidget {
             ],
           ),
 
-          Divider(height: 26, color: AppColors.textGray.withValues(alpha: 0.1)),
+          Divider(height: 26, color: AppColors.textGrey.withValues(alpha: 0.1)),
 
           RichText(
             text: TextSpan(
@@ -185,7 +185,7 @@ class ReviewTicketView extends StatelessWidget {
                 ),
                 TextSpan(
                   text: ticketData.ticketDetails?.problem ?? LanguageService.get('no_problem_description_available'),
-                  style: TextStyle(fontSize: 11, color: AppColors.textGray),
+                  style: TextStyle(fontSize: 11, color: AppColors.textGrey),
                 ),
               ],
             ),
@@ -212,7 +212,7 @@ class ReviewTicketView extends StatelessWidget {
                     margin: EdgeInsets.only(right: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(13),
-                      border: Border.all(color: AppColors.textGray.withValues(alpha: 0.1)),
+                      border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.1)),
                       color: AppColors.primarySuperLight.withValues(alpha: 0.1),
                     ),
                     padding: EdgeInsets.all(10),
@@ -252,10 +252,10 @@ class ReviewTicketView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildFeeDetailRow("✅ ${LanguageService.get('support_type_onsite')}", AppColors.success),
-                Divider(height: 26, color: AppColors.textGray.withValues(alpha: 0.1)),
+                Divider(height: 26, color: AppColors.textGrey.withValues(alpha: 0.1)),
 
                 _buildFeeDetailRow("💲 ${LanguageService.get('fee_per_day')}", AppColors.black),
-                Divider(height: 26, color: AppColors.textGray.withValues(alpha: 0.1)),
+                Divider(height: 26, color: AppColors.textGrey.withValues(alpha: 0.1)),
 
                 _buildFeeDetailRow("📌 ${LanguageService.get('travel_note')}", AppColors.crimsonRed),
               ],
@@ -469,7 +469,7 @@ class ReviewTicketView extends StatelessWidget {
                 errorWidget:
                     (context, url, error) => Container(
                       color: AppColors.primarySuperLight.withValues(alpha: 0.1),
-                      child: Icon(Icons.error_outline, color: AppColors.textGray, size: 20),
+                      child: Icon(Icons.error_outline, color: AppColors.textGrey, size: 20),
                     ),
               ),
             if (isVideo)
@@ -497,7 +497,7 @@ class ReviewTicketView extends StatelessWidget {
         if (snapshot.hasError || snapshot.data == null) {
           return Container(
             color: AppColors.primarySuperLight.withValues(alpha: 0.1),
-            child: Icon(Icons.videocam, color: AppColors.textGray, size: 20),
+            child: Icon(Icons.videocam, color: AppColors.textGrey, size: 20),
           );
         }
 
@@ -507,7 +507,7 @@ class ReviewTicketView extends StatelessWidget {
           errorBuilder:
               (context, error, stackTrace) => Container(
                 color: AppColors.primarySuperLight.withValues(alpha: 0.1),
-                child: Icon(Icons.videocam, color: AppColors.textGray, size: 20),
+                child: Icon(Icons.videocam, color: AppColors.textGrey, size: 20),
               ),
         );
       },
@@ -626,7 +626,7 @@ class ReviewTicketView extends StatelessWidget {
                 ),
               ),
 
-              Container(height: 50, width: 1, color: AppColors.textGray.withValues(alpha: 0.1)),
+              Container(height: 50, width: 1, color: AppColors.textGrey.withValues(alpha: 0.1)),
               SizedBox(width: AppSizes.v10),
 
               Column(
@@ -648,7 +648,7 @@ class ReviewTicketView extends StatelessWidget {
             ],
           ),
 
-          Divider(height: 26, color: AppColors.textGray.withValues(alpha: 0.1)),
+          Divider(height: 26, color: AppColors.textGrey.withValues(alpha: 0.1)),
 
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -737,7 +737,7 @@ class ReviewTicketView extends StatelessWidget {
             ],
           ),
 
-          Divider(height: 26, color: AppColors.textGray.withValues(alpha: 0.1)),
+          Divider(height: 26, color: AppColors.textGrey.withValues(alpha: 0.1)),
 
           RichText(
             text: TextSpan(
@@ -774,7 +774,7 @@ class ReviewTicketView extends StatelessWidget {
                   margin: EdgeInsets.only(right: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(13),
-                    border: Border.all(color: AppColors.textGray.withValues(alpha: 0.1)),
+                    border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.1)),
                     color: AppColors.primarySuperLight.withValues(alpha: 0.1),
                   ),
                   padding: EdgeInsets.all(10),
@@ -832,14 +832,14 @@ class ReviewTicketView extends StatelessWidget {
                   child: Container(height: 16, width: 200, color: Colors.white),
                 ),
                 SizedBox(height: 16),
-                Divider(height: 26, color: AppColors.textGray.withValues(alpha: 0.1)),
+                Divider(height: 26, color: AppColors.textGrey.withValues(alpha: 0.1)),
                 Shimmer.fromColors(
                   baseColor: Colors.grey[300]!,
                   highlightColor: Colors.grey[100]!,
                   child: Container(height: 16, width: 150, color: Colors.white),
                 ),
                 SizedBox(height: 16),
-                Divider(height: 26, color: AppColors.textGray.withValues(alpha: 0.1)),
+                Divider(height: 26, color: AppColors.textGrey.withValues(alpha: 0.1)),
                 Shimmer.fromColors(
                   baseColor: Colors.grey[300]!,
                   highlightColor: Colors.grey[100]!,

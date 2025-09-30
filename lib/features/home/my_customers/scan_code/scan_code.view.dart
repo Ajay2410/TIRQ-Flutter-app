@@ -255,7 +255,7 @@ class _ScanCodeViewContentState extends State<_ScanCodeViewContent> {
             child: Center(
               child:
                   image != null
-                      ? Image.asset(image, width: 22, height: 22, color: isDisabled ? AppColors.textGray.withOpacity(0.5) : AppColors.textGray)
+                      ? Image.asset(image, width: 22, height: 22, color: isDisabled ? AppColors.textGrey.withOpacity(0.5) : AppColors.textGrey)
                       : Icon(icon, size: 22, color: isDisabled ? AppColors.black.withOpacity(0.5) : AppColors.black),
             ),
           ),

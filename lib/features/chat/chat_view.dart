@@ -579,11 +579,11 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
         labelText: label,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -636,7 +636,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
           hintText: 'Search messages...',
           hintStyle: TextStyle(color: AppColors.gray),
           prefixIcon: Icon(Icons.search, color: AppColors.primary),
-          fillColor: AppColors.lightGray.withValues(alpha: 0.3),
+          fillColor: AppColors.lightGrey.withValues(alpha: 0.3),
           filled: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -987,7 +987,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                               Text(
                                 "${_formatTimestamp(message.createdAt)} •",
                                 style: TextStyle(
-                                  color: AppColors.textGray,
+                                  color: AppColors.textGrey,
                                   fontSize: AppSizes.f10,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -1016,7 +1016,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
 
     switch (message.status) {
       case MessageStatus.sent:
-        statusColor = AppColors.textGray;
+        statusColor = AppColors.textGrey;
         break;
       case MessageStatus.delivered:
       case MessageStatus.read:
@@ -1026,7 +1026,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
         statusColor = AppColors.error;
         break;
       case MessageStatus.unknown:
-        statusColor = AppColors.textGray;
+        statusColor = AppColors.textGrey;
         break;
     }
 
@@ -1146,12 +1146,12 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                                         stackTrace,
                                       ) {
                                         return Container(
-                                          color: AppColors.lightGray.withValues(
+                                          color: AppColors.lightGrey.withValues(
                                             alpha: 0.3,
                                           ),
                                           child: Icon(
                                             Icons.broken_image,
-                                            color: AppColors.textGray,
+                                            color: AppColors.textGrey,
                                             size: 30,
                                           ),
                                         );
@@ -1227,7 +1227,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
         height: 200,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppSizes.v8),
-          color: AppColors.lightGray.withValues(alpha: 0.3),
+          color: AppColors.lightGrey.withValues(alpha: 0.3),
         ),
         child: Stack(
           children: [
@@ -1335,7 +1335,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
         if (snapshot.hasError || snapshot.data == null) {
           return Container(
             color: AppColors.primarySuperLight.withValues(alpha: 0.1),
-            child: Icon(Icons.videocam, color: AppColors.textGray, size: 20),
+            child: Icon(Icons.videocam, color: AppColors.textGrey, size: 20),
           );
         }
 
@@ -1351,7 +1351,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                 color: AppColors.primarySuperLight.withValues(alpha: 0.1),
                 child: Icon(
                   Icons.videocam,
-                  color: AppColors.textGray,
+                  color: AppColors.textGrey,
                   size: 20,
                 ),
               ),
@@ -1385,7 +1385,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
       child: SafeArea(
         child: Container(
           decoration: BoxDecoration(
-            color: AppColors.lightGray.withValues(alpha: 0.2),
+            color: AppColors.lightGrey.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(AppSizes.v24),
             border: Border.all(
               color:
@@ -1405,7 +1405,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppSizes.v23),
                 side: BorderSide(
-                  color: AppColors.textGray.withValues(alpha: 0.1),
+                  color: AppColors.textGrey.withValues(alpha: 0.1),
                 ),
               ),
               elevation: 0,
@@ -1485,7 +1485,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                 margin: EdgeInsets.all(8),
                 padding: EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  color: AppColors.lightGray.withValues(alpha: 0.2),
+                  color: AppColors.lightGrey.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Image.asset(
@@ -1508,7 +1508,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                     AppImages.cameraOutlined,
                     width: 20,
                     height: 20,
-                    color: AppColors.textGray,
+                    color: AppColors.textGrey,
                   ),
                 ),
                 SizedBox(width: AppSizes.w12),
@@ -1520,7 +1520,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                     AppImages.microphone,
                     width: 20,
                     height: 20,
-                    color: AppColors.textGray,
+                    color: AppColors.textGrey,
                   ),
                 ),
                 SizedBox(width: AppSizes.w12),
@@ -1561,7 +1561,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                                         !model.isSendingMessage &&
                                         !model.isUploadingImage
                                     ? AppColors.primaryDark
-                                    : AppColors.textGray.withValues(alpha: 0.5),
+                                    : AppColors.textGrey.withValues(alpha: 0.5),
                           ),
                 ),
                 SizedBox(width: AppSizes.w12),

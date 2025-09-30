@@ -290,10 +290,10 @@ class DepartmentHierarchyView extends StatelessWidget {
                 vertical: AppSizes.h12,
               ),
               decoration: BoxDecoration(
-                color: AppColors.lightGray.withValues(alpha: 0.3),
+                color: AppColors.lightGrey.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(AppSizes.v8),
                 border: Border.all(
-                  color: AppColors.lightGray.withValues(alpha: 0.5),
+                  color: AppColors.lightGrey.withValues(alpha: 0.5),
                 ),
               ),
               child: Row(
@@ -563,7 +563,7 @@ class DepartmentHierarchyView extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(AppSizes.w24),
             decoration: BoxDecoration(
-              color: AppColors.lightGray.withValues(alpha: 0.3),
+              color: AppColors.lightGrey.withValues(alpha: 0.3),
               shape: BoxShape.circle,
             ),
             child: Icon(

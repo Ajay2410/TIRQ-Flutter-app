@@ -89,7 +89,7 @@ class RegisterView extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: AppSizes.h15, top : AppSizes.h10),
       decoration: BoxDecoration(
-        color: AppColors.lightGray.withOpacity(0.3),
+        color: AppColors.lightGrey.withOpacity(0.3),
         borderRadius: BorderRadius.circular(AppSizes.v45),
       ),
       child: Row(
@@ -227,16 +227,16 @@ class RegisterView extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: LanguageService.get('phone_number'),
                   labelStyle: TextStyle(
-                    color: AppColors.textGray,
+                    color: AppColors.textGrey,
                     fontSize: 13,
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSizes.v13),
-                    borderSide: BorderSide(color: AppColors.lightGray),
+                    borderSide: BorderSide(color: AppColors.lightGrey),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSizes.v13),
-                    borderSide: BorderSide(color: AppColors.lightGray),
+                    borderSide: BorderSide(color: AppColors.lightGrey),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSizes.v13),
@@ -289,11 +289,11 @@ class RegisterView extends StatelessWidget {
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(
-            color: AppColors.textGray,
+            color: AppColors.textGrey,
             fontSize: 13,
           ),
           floatingLabelStyle: TextStyle(
-            color: AppColors.textGray,
+            color: AppColors.textGrey,
             fontSize: 13,
           ),
           contentPadding: EdgeInsets.symmetric(
@@ -302,11 +302,11 @@ class RegisterView extends StatelessWidget {
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: AppColors.lightGray),
+            borderSide: BorderSide(color: AppColors.lightGrey),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: AppColors.lightGray),
+            borderSide: BorderSide(color: AppColors.lightGrey),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(13),
@@ -341,11 +341,11 @@ class RegisterView extends StatelessWidget {
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(
-            color: AppColors.textGray,
+            color: AppColors.textGrey,
             fontSize: 13,
           ),
           floatingLabelStyle: TextStyle(
-            color: AppColors.textGray,
+            color: AppColors.textGrey,
             fontSize: 14,
           ),
           contentPadding: EdgeInsets.symmetric(
@@ -354,11 +354,11 @@ class RegisterView extends StatelessWidget {
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: AppColors.lightGray),
+            borderSide: BorderSide(color: AppColors.lightGrey),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: AppColors.lightGray),
+            borderSide: BorderSide(color: AppColors.lightGrey),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(13),
@@ -403,11 +403,11 @@ class RegisterView extends StatelessWidget {
         decoration: InputDecoration(
           labelText: LanguageService.get('password'),
           labelStyle: TextStyle(
-            color: AppColors.textGray,
+            color: AppColors.textGrey,
             fontSize: 13,
           ),
           floatingLabelStyle: TextStyle(
-            color: AppColors.textGray,
+            color: AppColors.textGrey,
             fontSize: 14,
           ),
           contentPadding: EdgeInsets.symmetric(
@@ -423,11 +423,11 @@ class RegisterView extends StatelessWidget {
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: AppColors.lightGray),
+            borderSide: BorderSide(color: AppColors.lightGrey),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: AppColors.lightGray),
+            borderSide: BorderSide(color: AppColors.lightGrey),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(13),

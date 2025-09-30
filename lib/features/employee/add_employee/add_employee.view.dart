@@ -166,11 +166,11 @@ class AddEmployeeView extends StatelessWidget {
             labelText: LanguageService.get('phone_number'),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.v12),
-              borderSide: BorderSide(color: AppColors.lightGray),
+              borderSide: BorderSide(color: AppColors.lightGrey),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.v12),
-              borderSide: BorderSide(color: AppColors.lightGray),
+              borderSide: BorderSide(color: AppColors.lightGrey),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -273,11 +273,11 @@ class AddEmployeeView extends StatelessWidget {
         labelText: LanguageService.get('employment_type'),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -324,11 +324,11 @@ class AddEmployeeView extends StatelessWidget {
         labelText: LanguageService.get('employee_role'),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -365,7 +365,7 @@ class AddEmployeeView extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSizes.v12),
-            border: Border.all(color: AppColors.lightGray),
+            border: Border.all(color: AppColors.lightGrey),
           ),
           child: TextFormField(
             controller: TextEditingController(
@@ -453,7 +453,7 @@ class AddEmployeeView extends StatelessWidget {
                     height: 4,
                     width: 40,
                     decoration: BoxDecoration(
-                      color: AppColors.lightGray,
+                      color: AppColors.lightGrey,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -510,7 +510,7 @@ class AddEmployeeView extends StatelessWidget {
                               },
                             )
                                 : null,
-                            fillColor: AppColors.lightGray.withValues(
+                            fillColor: AppColors.lightGrey.withValues(
                               alpha: 0.3,
                             ),
                             filled: true,
@@ -747,7 +747,7 @@ class AddEmployeeView extends StatelessWidget {
         SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            border: Border.all(color: AppColors.lightGray),
+            border: Border.all(color: AppColors.lightGrey),
             borderRadius: BorderRadius.circular(AppSizes.v12),
           ),
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -843,11 +843,11 @@ class AddEmployeeView extends StatelessWidget {
               labelText: LanguageService.get('factory_location'),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppSizes.v12),
-                borderSide: BorderSide(color: AppColors.lightGray),
+                borderSide: BorderSide(color: AppColors.lightGrey),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppSizes.v12),
-                borderSide: BorderSide(color: AppColors.lightGray),
+                borderSide: BorderSide(color: AppColors.lightGrey),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -900,11 +900,11 @@ class AddEmployeeView extends StatelessWidget {
               hintText: LanguageService.get('specify_factory_location'),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppSizes.v12),
-                borderSide: BorderSide(color: AppColors.lightGray),
+                borderSide: BorderSide(color: AppColors.lightGrey),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppSizes.v12),
-                borderSide: BorderSide(color: AppColors.lightGray),
+                borderSide: BorderSide(color: AppColors.lightGrey),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -1017,7 +1017,7 @@ class AddEmployeeView extends StatelessWidget {
       keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
-        fillColor: AppColors.lightGray.withValues(alpha: 0.3),
+        fillColor: AppColors.lightGrey.withValues(alpha: 0.3),
         filled: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -1044,11 +1044,11 @@ class AddEmployeeView extends StatelessWidget {
         labelText: label,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -1075,11 +1075,11 @@ class AddEmployeeView extends StatelessWidget {
             suffixIcon: Icon(Icons.calendar_today, color: AppColors.primary),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.v12),
-              borderSide: BorderSide(color: AppColors.lightGray),
+              borderSide: BorderSide(color: AppColors.lightGrey),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.v12),
-              borderSide: BorderSide(color: AppColors.lightGray),
+              borderSide: BorderSide(color: AppColors.lightGrey),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSizes.v12),

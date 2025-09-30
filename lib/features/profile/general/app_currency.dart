@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
-import 'package:manager/services/language.service.dart';
 import 'package:manager/widgets/common_app_bar.dart';
 import 'package:manager/widgets/common_elevated_button.dart';
 import 'package:manager/widgets/common_text_field.dart';
 
-import '../my_wallet/controller/languageController.dart';
+import '../../../services/language.service.dart';
+import '../my_wallet/controller/currencyController.dart';
 
-class AppLanguageView extends StatefulWidget {
-  const AppLanguageView({super.key});
+class AppCurrencyView extends StatefulWidget {
+  const AppCurrencyView({super.key});
 
   @override
-  State<AppLanguageView> createState() => _AppLanguageViewState();
+  State<AppCurrencyView> createState() => _AppCurrencyViewState();
 }
 
-class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProviderStateMixin {
-  final controller = Get.put(LanguageController());
+class _AppCurrencyViewState extends State<AppCurrencyView> with SingleTickerProviderStateMixin {
+  final controller = Get.put(CurrencyController());
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
 
@@ -40,7 +39,7 @@ class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProv
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return GradientAppBar(titleKey: "app_language");
+    return GradientAppBar(titleKey: "app_currency");
   }
 
   Widget _buildSearchBar(BuildContext context) {
@@ -52,21 +51,21 @@ class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProv
       ),
       child: CommonTextField(
         controller: _searchController,
-        placeholder: LanguageService.get('search_language'),
+        placeholder: LanguageService.get('search_currency'),
         onChanged: (value) {
           controller.updateSearch(value);
         },
         prefixIcon: Padding(padding: const EdgeInsets.all(12), child: Image.asset(AppImages.search, height: 17, width: 17, color: AppColors.black)),
         suffixIcon:
-            _searchController.text.isNotEmpty
-                ? IconButton(
-                  icon: Icon(Icons.clear, color: AppColors.gray),
-                  onPressed: () {
-                    _searchController.clear();
-                    controller.updateSearch('');
-                  },
-                )
-                : null,
+        _searchController.text.isNotEmpty
+            ? IconButton(
+          icon: Icon(Icons.clear, color: AppColors.gray),
+          onPressed: () {
+            _searchController.clear();
+            controller.updateSearch('');
+          },
+        )
+            : null,
         contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       ),
     );
@@ -138,16 +137,16 @@ class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProv
         boxShadow: [BoxShadow(color: AppColors.black.withOpacity(0.1), offset: const Offset(0, 2), blurRadius: 8)],
       ),
       child: Obx(
-        () => CommonElevatedButton(
+            () => CommonElevatedButton(
           height: 48,
           label: controller.isLoading.value ? 'Saving...' : LanguageService.get('save_changes'),
           onPressed:
-              controller.isLoading.value
-                  ? null
-                  : () async {
-                    await controller.saveLanguage();
-                    // App will restart automatically, no need to navigate back
-                  },
+          controller.isLoading.value
+              ? null
+              : () async {
+            await controller.saveLanguage();
+            // App will restart automatically, no need to navigate back
+          },
           backgroundColor: AppColors.primaryDark,
           textColor: AppColors.white,
           borderRadius: 45,

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:manager/features/profile/feedback/feedback_view.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:manager/features/profile/home/profile.vm.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
@@ -136,7 +137,7 @@ class ProfileView extends StatelessWidget {
                             ),
                         errorWidget:
                             (context, url, error) => Container(
-                              color: AppColors.textGray,
+                              color: AppColors.textGrey,
                               child: const Icon(
                                 Icons.person,
                                 size: 40,
@@ -197,7 +198,7 @@ class ProfileView extends StatelessWidget {
                           'yourmail@email.com',
                       style: const TextStyle(
                         fontSize: 11,
-                        color: AppColors.textGray,
+                        color: AppColors.textGrey,
                       ),
                     ).animate().fadeIn(duration: 500.ms, delay: 200.ms),
                   ],
@@ -209,7 +210,7 @@ class ProfileView extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: AppColors.textGray.withValues(alpha: 0.1),
+                      color: AppColors.textGrey.withValues(alpha: 0.1),
                     ),
                   ),
                   padding: EdgeInsets.all(8),
@@ -346,7 +347,7 @@ class ProfileView extends StatelessWidget {
             imagePath: AppImages.feedback,
             title: LanguageService.get("feedback"),
             iconColor: const Color(0xFF673AB7),
-            onTap: () {},
+            onTap: () => Get.to(() => FeedbackView()),
             animationDelay: 900.ms,
           ),
           _buildDivider(),
@@ -425,14 +426,14 @@ class ProfileView extends StatelessWidget {
                 color: AppColors.primarySuperLight.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: AppColors.textGray.withValues(alpha: 0.1),
+                  color: AppColors.textGrey.withValues(alpha: 0.1),
                 ),
               ),
               child: Image.asset(
                 AppImages.arrowRight,
                 width: 16,
                 height: 16,
-                color: AppColors.textGray,
+                color: AppColors.textGrey,
               ),
             ),
           ],
@@ -478,7 +479,7 @@ class ProfileView extends StatelessWidget {
                   LanguageService.get("verify_email_phone_description"),
                   style: const TextStyle(
                     fontSize: 10,
-                    color: AppColors.textGray,
+                    color: AppColors.textGrey,
                   ),
                 ).animate().fadeIn(duration: 500.ms, delay: 200.ms),
               ],
@@ -515,7 +516,7 @@ class ProfileView extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             LanguageService.get("complete"),
-            style: const TextStyle(fontSize: 8, color: AppColors.textGray),
+            style: const TextStyle(fontSize: 8, color: AppColors.textGrey),
           ),
         ],
       ),
@@ -583,7 +584,7 @@ class ProfileView extends StatelessWidget {
                     child: Icon(
                       Icons.close,
                       size: 24,
-                      color: AppColors.textGray,
+                      color: AppColors.textGrey,
                     ),
                   ),
                 ],
@@ -596,7 +597,7 @@ class ProfileView extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w400,
-                  color: AppColors.textGray,
+                  color: AppColors.textGrey,
                 ),
               ),
               const SizedBox(height: 20),
@@ -635,7 +636,7 @@ class ProfileView extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textGray,
+                  color: AppColors.textGrey,
                 ),
               ),
               const SizedBox(height: 15),
@@ -646,7 +647,7 @@ class ProfileView extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(13),
                   border: Border.all(
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                 ),
                 child: Row(
@@ -664,7 +665,7 @@ class ProfileView extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.textGray,
+                          color: AppColors.textGrey,
                         ),
                       ),
                     ),
@@ -777,8 +778,8 @@ class ProfileView extends StatelessWidget {
                         label: LanguageService.get("cancel"),
                         onPressed: () => Get.back(),
                         backgroundColor: AppColors.white,
-                        textColor: AppColors.textGray,
-                        borderColor: AppColors.textGray,
+                        textColor: AppColors.textGrey,
+                        borderColor: AppColors.textGrey,
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         borderRadius: 45,
                         fontSize: 13,

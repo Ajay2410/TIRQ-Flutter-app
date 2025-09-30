@@ -105,7 +105,7 @@ class EmployeeCard extends StatelessWidget {
                           height: AppSizes.w36,
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: AppColors.lightGray,
+                              color: AppColors.lightGrey,
                               width: 1,
                             ),
                             borderRadius: BorderRadius.circular(AppSizes.v6),
@@ -116,7 +116,7 @@ class EmployeeCard extends StatelessWidget {
                             fit: BoxFit.cover,
                             placeholder:
                                 (context, url) => Container(
-                                  color: AppColors.lightGray.withValues(
+                                  color: AppColors.lightGrey.withValues(
                                     alpha: 0.3,
                                   ),
                                 ),
@@ -179,7 +179,7 @@ class EmployeeCard extends StatelessWidget {
           fit: BoxFit.cover,
           placeholder:
               (context, url) => Container(
-                color: AppColors.lightGray.withValues(alpha: 0.3),
+                color: AppColors.lightGrey.withValues(alpha: 0.3),
                 child: Icon(Icons.person, color: AppColors.gray, size: 30),
               ),
           errorWidget:

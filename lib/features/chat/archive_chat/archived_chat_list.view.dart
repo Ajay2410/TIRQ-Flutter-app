@@ -236,7 +236,7 @@ class _ArchivedChatListState extends State<ArchivedChatList> with SingleTickerPr
           hintText: LanguageService.get("search_archived_conversations"),
           hintStyle: TextStyle(color: AppColors.gray),
           prefixIcon: Icon(Icons.search, color: AppColors.primary),
-          fillColor: AppColors.lightGray.withValues(alpha: 0.3),
+          fillColor: AppColors.lightGrey.withValues(alpha: 0.3),
           filled: true,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: BorderSide.none),
           contentPadding: EdgeInsets.symmetric(vertical: AppSizes.h12, horizontal: AppSizes.w16),
@@ -263,7 +263,7 @@ class _ArchivedChatListState extends State<ArchivedChatList> with SingleTickerPr
           children: [
             Container(
               padding: EdgeInsets.all(AppSizes.v24),
-              decoration: BoxDecoration(color: AppColors.lightGray.withValues(alpha: 0.3), shape: BoxShape.circle),
+              decoration: BoxDecoration(color: AppColors.lightGrey.withValues(alpha: 0.3), shape: BoxShape.circle),
               child: Icon(Icons.archive_outlined, size: 80, color: AppColors.primary.withValues(alpha: 0.7)),
             ),
             SizedBox(height: AppSizes.h16),
@@ -324,7 +324,7 @@ class _ArchivedChatListState extends State<ArchivedChatList> with SingleTickerPr
                       Expanded(
                         child: Row(
                           children: [
-                            Text('${LanguageService.get("pending_since")} : ', style: TextStyle(fontSize: 11, color: AppColors.textGray)),
+                            Text('${LanguageService.get("pending_since")} : ', style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
                             Text(chatRoom.archivedDate, style: TextStyle(fontSize: 11, color: AppColors.black)),
                           ],
                         ),

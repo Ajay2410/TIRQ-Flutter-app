@@ -252,11 +252,11 @@ class CustomerEditDetailsView extends StatelessWidget {
               fillColor: AppColors.colorF8FBFE,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.lightGray),
+                borderSide: const BorderSide(color: AppColors.lightGrey),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.lightGray),
+                borderSide: const BorderSide(color: AppColors.lightGrey),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -347,7 +347,7 @@ class CustomerEditDetailsView extends StatelessWidget {
                         color:
                             field.hasError
                                 ? AppColors.error
-                                : AppColors.lightGray,
+                                : AppColors.lightGrey,
                       ),
                       closedBorderRadius: BorderRadius.circular(12),
                       closedErrorBorder: Border.all(
@@ -415,7 +415,7 @@ class CustomerEditDetailsView extends StatelessWidget {
                           ? Container(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.lightGray),
+                              border: Border.all(color: AppColors.lightGrey),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Row(
@@ -472,7 +472,7 @@ class CustomerEditDetailsView extends StatelessWidget {
                                 color:
                                     field.hasError
                                         ? AppColors.redBack
-                                        : AppColors.lightGray,
+                                        : AppColors.lightGrey,
                               ),
                               closedBorderRadius: BorderRadius.circular(12),
                               closedErrorBorder: Border.all(
@@ -545,7 +545,7 @@ class CustomerEditDetailsView extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 10),
-        Divider(color: AppColors.lightGray),
+        Divider(color: AppColors.lightGrey),
         const SizedBox(height: 10),
         Row(
           children: [
@@ -571,7 +571,7 @@ class CustomerEditDetailsView extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 10),
-        Divider(color: AppColors.lightGray),
+        Divider(color: AppColors.lightGrey),
         const SizedBox(height: 10),
         Row(
           children: [

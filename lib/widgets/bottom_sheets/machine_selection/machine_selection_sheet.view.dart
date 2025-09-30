@@ -81,9 +81,9 @@ class _MachineSelectionBottomSheetState extends State<MachineSelectionBottomShee
               width: double.infinity,
               padding: EdgeInsets.all(AppSizes.w16),
               decoration: BoxDecoration(
-                color: AppColors.lightGray.withValues(alpha: 0.1),
+                color: AppColors.lightGrey.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(AppSizes.v12),
-                border: Border.all(color: AppColors.lightGray),
+                border: Border.all(color: AppColors.lightGrey),
               ),
               child: Text(
                 LanguageService.get("all_machines_assigned_unavailable"),

@@ -138,14 +138,14 @@ class SecurityView extends StatelessWidget {
                   color: AppColors.primarySuperLight.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: AppColors.textGray.withValues(alpha: 0.1),
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
                   ),
                 ),
                 child: Image.asset(
                   AppImages.arrowRight,
                   width: 16,
                   height: 16,
-                  color: AppColors.textGray,
+                  color: AppColors.textGrey,
                 ),
               ),
           ],

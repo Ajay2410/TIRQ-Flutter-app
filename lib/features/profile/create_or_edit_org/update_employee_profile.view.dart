@@ -269,7 +269,7 @@ class EmployeeProfileView extends StatelessWidget {
       margin: EdgeInsets.only(bottom: AppSizes.h16),
       padding: EdgeInsets.all(AppSizes.w16),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.lightGray),
+        border: Border.all(color: AppColors.lightGrey),
         borderRadius: BorderRadius.circular(AppSizes.v12),
       ),
       child: Column(
@@ -295,7 +295,7 @@ class EmployeeProfileView extends StatelessWidget {
                 margin: EdgeInsets.only(bottom: AppSizes.h4),
                 padding: EdgeInsets.all(AppSizes.w8),
                 decoration: BoxDecoration(
-                  color: AppColors.lightGray.withOpacity(0.3),
+                  color: AppColors.lightGrey.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(AppSizes.v8),
                 ),
                 child: Row(
@@ -392,7 +392,7 @@ class EmployeeProfileView extends StatelessWidget {
                   width: AppSizes.h130,
                   child: CircularProgressIndicator(
                     value: completionPercentage / 100,
-                    backgroundColor: AppColors.lightGray,
+                    backgroundColor: AppColors.lightGrey,
                     color: AppColors.primary,
                     strokeWidth: 4,
                   ),
@@ -550,11 +550,11 @@ class EmployeeProfileView extends StatelessWidget {
           labelText: label,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.v12),
-            borderSide: BorderSide(color: AppColors.lightGray),
+            borderSide: BorderSide(color: AppColors.lightGrey),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.v12),
-            borderSide: BorderSide(color: AppColors.lightGray),
+            borderSide: BorderSide(color: AppColors.lightGrey),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -704,7 +704,7 @@ class EmployeeProfileView extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSizes.v12),
-            border: Border.all(color: AppColors.lightGray),
+            border: Border.all(color: AppColors.lightGrey),
           ),
           child: TextFormField(
             controller: TextEditingController(
@@ -1020,7 +1020,7 @@ class EmployeeProfileView extends StatelessWidget {
                     height: 4,
                     width: 40,
                     decoration: BoxDecoration(
-                      color: AppColors.lightGray,
+                      color: AppColors.lightGrey,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -1079,7 +1079,7 @@ class EmployeeProfileView extends StatelessWidget {
                               },
                             )
                                 : null,
-                            fillColor: AppColors.lightGray.withValues(
+                            fillColor: AppColors.lightGrey.withValues(
                               alpha: 0.3,
                             ),
                             filled: true,

@@ -35,7 +35,7 @@ abstract class AppColors {
 
   // Neutral Colors
   static const Color gray = Color(0xFF9E9E9E);
-  static const Color lightGray = Color(0xFFE0E0E0);
+  static const Color lightGrey = Color(0xFFE0E0E0);
   static const Color darkGray = Color(0xFF616161);
   static const Color softGray = Color(0xFFF5F5F5);
   static const Color mediumGray = Color(0xFFBDBDBD);
@@ -51,7 +51,7 @@ abstract class AppColors {
   static const Color textOnPrimary = Colors.white;
   static const Color textOnSecondary = Colors.white;
   static const Color textOnAccent = Colors.white;
-  static const Color textGray = Color(0xFF595959);
+  static const Color textGrey = Color(0xFF595959);
   static const Color textOnSurface = Colors.white;
 
   // Background Colors

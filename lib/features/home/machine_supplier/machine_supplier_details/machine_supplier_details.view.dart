@@ -210,7 +210,7 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
                   decoration: BoxDecoration(
                     color: AppColors.softGray,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColors.textGray.withValues(alpha: 0.1)),
+                    border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.1)),
                   ),
                   child: Image.asset(AppImages.arrowRight, width: 16, height: 16, color: AppColors.darkGray),
                 ),
@@ -218,7 +218,7 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
             ],
           ),
           const SizedBox(height: 12),
-          Container(height: 1, color: AppColors.lightGray),
+          Container(height: 1, color: AppColors.lightGrey),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -245,7 +245,7 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
 
   Widget _buildShimmerContactCard() {
     return Shimmer.fromColors(
-      baseColor: AppColors.lightGray,
+      baseColor: AppColors.lightGrey,
       highlightColor: AppColors.white,
       child: Container(
         width: double.infinity,
@@ -262,13 +262,13 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(height: 12, width: 80, color: AppColors.lightGray),
+                  Container(height: 12, width: 80, color: AppColors.lightGrey),
                   const SizedBox(height: 4),
-                  Container(height: 14, width: 120, color: AppColors.lightGray),
+                  Container(height: 14, width: 120, color: AppColors.lightGrey),
                   const SizedBox(height: 12),
-                  Container(height: 12, width: 40, color: AppColors.lightGray),
+                  Container(height: 12, width: 40, color: AppColors.lightGrey),
                   const SizedBox(height: 4),
-                  Container(height: 14, width: 150, color: AppColors.lightGray),
+                  Container(height: 14, width: 150, color: AppColors.lightGrey),
                 ],
               ),
             ),
@@ -277,13 +277,13 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(height: 12, width: 70, color: AppColors.lightGray),
+                  Container(height: 12, width: 70, color: AppColors.lightGrey),
                   const SizedBox(height: 4),
-                  Container(height: 14, width: 100, color: AppColors.lightGray),
+                  Container(height: 14, width: 100, color: AppColors.lightGrey),
                   const SizedBox(height: 12),
-                  Container(height: 12, width: 35, color: AppColors.lightGray),
+                  Container(height: 12, width: 35, color: AppColors.lightGrey),
                   const SizedBox(height: 4),
-                  Container(height: 14, width: 130, color: AppColors.lightGray),
+                  Container(height: 14, width: 130, color: AppColors.lightGrey),
                 ],
               ),
             ),
@@ -299,7 +299,7 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
 
   Widget _buildShimmerMachineCard() {
     return Shimmer.fromColors(
-      baseColor: AppColors.lightGray,
+      baseColor: AppColors.lightGrey,
       highlightColor: AppColors.white,
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
@@ -315,26 +315,26 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(16)),
-                  child: Container(height: 14, width: 20, color: AppColors.lightGray),
+                  decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(16)),
+                  child: Container(height: 14, width: 20, color: AppColors.lightGrey),
                 ),
                 const SizedBox(width: 12),
-                Expanded(child: Container(height: 16, color: AppColors.lightGray)),
+                Expanded(child: Container(height: 16, color: AppColors.lightGrey)),
                 Container(
                   padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(6)),
-                  child: Container(height: 12, width: 50, color: AppColors.lightGray),
+                  decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(6)),
+                  child: Container(height: 12, width: 50, color: AppColors.lightGrey),
                 ),
                 const SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(color: AppColors.lightGray, borderRadius: BorderRadius.circular(10)),
-                  child: Container(height: 16, width: 16, color: AppColors.lightGray),
+                  decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(10)),
+                  child: Container(height: 16, width: 16, color: AppColors.lightGrey),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            Container(height: 1, color: AppColors.lightGray),
+            Container(height: 1, color: AppColors.lightGrey),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -342,9 +342,9 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(height: 12, width: 80, color: AppColors.lightGray),
+                      Container(height: 12, width: 80, color: AppColors.lightGrey),
                       const SizedBox(height: 4),
-                      Container(height: 12, width: 100, color: AppColors.lightGray),
+                      Container(height: 12, width: 100, color: AppColors.lightGrey),
                     ],
                   ),
                 ),
@@ -353,9 +353,9 @@ class _MachineSupplierDetailsViewState extends State<MachineSupplierDetailsView>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(height: 12, width: 70, color: AppColors.lightGray),
+                      Container(height: 12, width: 70, color: AppColors.lightGrey),
                       const SizedBox(height: 4),
-                      Container(height: 12, width: 120, color: AppColors.lightGray),
+                      Container(height: 12, width: 120, color: AppColors.lightGrey),
                     ],
                   ),
                 ),

@@ -262,7 +262,7 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                         innerPadding: EdgeInsets.zero,
                         initialValue: selectedTabIndex,
                         decoration: BoxDecoration(
-                          color: AppColors.lightGray.withValues(alpha: 0.3),
+                          color: AppColors.lightGrey.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(AppSizes.v45),
                         ),
                         padding: AppSizes.v4,
@@ -429,7 +429,7 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
           hintText: LanguageService.get("search_conversations"),
           hintStyle: TextStyle(color: AppColors.gray),
           prefixIcon: Icon(Icons.search, color: AppColors.primary),
-          fillColor: AppColors.lightGray.withValues(alpha: 0.3),
+          fillColor: AppColors.lightGrey.withValues(alpha: 0.3),
           filled: true,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: BorderSide.none),
           contentPadding: EdgeInsets.symmetric(vertical: AppSizes.h12, horizontal: AppSizes.w16),
@@ -455,7 +455,7 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
         children: [
           Container(
             padding: EdgeInsets.all(AppSizes.v24),
-            decoration: BoxDecoration(color: AppColors.lightGray.withValues(alpha: 0.3), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: AppColors.lightGrey.withValues(alpha: 0.3), shape: BoxShape.circle),
             child: Icon(icon, size: 80, color: AppColors.primary.withValues(alpha: 0.7)),
           ),
           SizedBox(height: AppSizes.h16),
@@ -548,7 +548,7 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                   SizedBox(height: 2),
                   Row(
                     children: [
-                      Expanded(child: Text(lastMessage, style: TextStyle(fontSize: 11, color: AppColors.textGray), overflow: TextOverflow.ellipsis)),
+                      Expanded(child: Text(lastMessage, style: TextStyle(fontSize: 11, color: AppColors.textGrey), overflow: TextOverflow.ellipsis)),
                       Text(ticketNumber, style: TextStyle(fontSize: 10, color: AppColors.black, fontWeight: FontWeight.bold)),
                     ],
                   ),

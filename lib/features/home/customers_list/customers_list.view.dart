@@ -203,7 +203,7 @@ class _CustomersListViewState extends State<CustomersListView>
           hintText: 'Search by name or ID...',
           hintStyle: TextStyle(color: AppColors.gray),
           prefixIcon: Icon(Icons.search, color: AppColors.primary),
-          fillColor: AppColors.lightGray.withValues(alpha: 0.3),
+          fillColor: AppColors.lightGrey.withValues(alpha: 0.3),
           filled: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -297,7 +297,7 @@ class _CustomersListViewState extends State<CustomersListView>
               Container(
                 padding: EdgeInsets.all(AppSizes.v32),
                 decoration: BoxDecoration(
-                  color: AppColors.lightGray.withValues(alpha: 0.3),
+                  color: AppColors.lightGrey.withValues(alpha: 0.3),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(

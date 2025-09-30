@@ -158,14 +158,14 @@ class RoleEmployeeListView extends StatelessWidget {
                             return Text(
                               '${snapshot.data} ${snapshot.data == 1 ? LanguageService.get('employee') : LanguageService.get('employees')}',
                               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: AppColors.textGray.withValues(alpha: 0.8),
+                                color: AppColors.textGrey.withValues(alpha: 0.8),
                               ),
                             );
                           }
                           return Text(
                             LanguageService.get('loading'),
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColors.textGray.withValues(alpha: 0.8),
+                              color: AppColors.textGrey.withValues(alpha: 0.8),
                             ),
                           );
                         },
@@ -174,7 +174,7 @@ class RoleEmployeeListView extends StatelessWidget {
                       Text(
                         LanguageService.get('coming_soon'),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.textGray.withValues(alpha: 0.8),
+                          color: AppColors.textGrey.withValues(alpha: 0.8),
                           fontStyle: FontStyle.italic,
                         ),
                       ),

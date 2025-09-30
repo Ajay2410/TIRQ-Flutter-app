@@ -329,10 +329,10 @@ class AddTicketView extends StatelessWidget {
                                               ? Container(
                                             padding: EdgeInsets.all(AppSizes.h16),
                                             decoration: BoxDecoration(
-                                              color: AppColors.lightGray.withOpacity(0.2),
+                                              color: AppColors.lightGrey.withOpacity(0.2),
                                               borderRadius: BorderRadius.circular(AppSizes.v8),
                                               border: Border.all(
-                                                color: AppColors.lightGray,
+                                                color: AppColors.lightGrey,
                                               ),
                                             ),
                                             child: Row(
@@ -526,7 +526,7 @@ class AddTicketView extends StatelessWidget {
                                     end: Alignment.bottomRight,
                                     colors: [
                                       Colors.white,
-                                      AppColors.lightGray.withValues(alpha: 0.1),
+                                      AppColors.lightGrey.withValues(alpha: 0.1),
                                     ],
                                   ),
                                   borderRadius: BorderRadius.circular(AppSizes.v14),
@@ -1038,7 +1038,7 @@ class AddTicketView extends StatelessWidget {
                                     SizedBox(height: AppSizes.h10),
                                     LinearProgressIndicator(
                                       value: model.uploadProgress,
-                                      backgroundColor: AppColors.lightGray,
+                                      backgroundColor: AppColors.lightGrey,
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                         AppColors.primary,
                                       ),
@@ -1094,7 +1094,7 @@ class AddTicketView extends StatelessWidget {
                                               height: AppSizes.h80,
                                               width: AppSizes.w80,
                                               decoration: BoxDecoration(
-                                                color: AppColors.lightGray,
+                                                color: AppColors.lightGrey,
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                       AppSizes.v8,
@@ -1224,7 +1224,7 @@ class AddTicketView extends StatelessWidget {
                                                   height: AppSizes.h80,
                                                   width: AppSizes.w80,
                                                   decoration: BoxDecoration(
-                                                    color: AppColors.lightGray,
+                                                    color: AppColors.lightGrey,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           AppSizes.v8,
@@ -1440,7 +1440,7 @@ class AddTicketView extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(AppSizes.v24),
             decoration: BoxDecoration(
-              color: AppColors.lightGray.withValues(alpha: 0.3),
+              color: AppColors.lightGrey.withValues(alpha: 0.3),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -1505,7 +1505,7 @@ class AddTicketView extends StatelessWidget {
           color:
               isSelected
                   ? AppColors.primary
-                  : AppColors.lightGray.withValues(alpha: 0.3),
+                  : AppColors.lightGrey.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(AppSizes.v20),
         ),
         child: Text(

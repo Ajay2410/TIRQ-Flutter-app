@@ -88,7 +88,7 @@ class SearchView extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          border: Border.all(color: AppColors.lightGray),
+          border: Border.all(color: AppColors.lightGrey),
           boxShadow: [
             BoxShadow(
               color: AppColors.black.withOpacity(0.05),
@@ -185,7 +185,7 @@ class SearchView extends StatelessWidget {
             width: AppSizes.w120,
             height: AppSizes.h120,
             decoration: BoxDecoration(
-              color: AppColors.lightGray,
+              color: AppColors.lightGrey,
               shape: BoxShape.circle,
             ),
             child: Icon(

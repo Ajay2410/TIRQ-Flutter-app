@@ -376,7 +376,7 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
 
               Text(
                 page.description,
-                style: TextStyle(fontSize: 14, color: AppColors.textGray, fontWeight: FontWeight.w400),
+                style: TextStyle(fontSize: 14, color: AppColors.textGrey, fontWeight: FontWeight.w400),
                 textAlign: TextAlign.center,
               ),
             ],

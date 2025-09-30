@@ -125,7 +125,7 @@ class HelpAndSupportView extends StatelessWidget {
               children: [
                 Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.black)),
                 SizedBox(height: 4),
-                Text(subtitle, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: AppColors.textGray)),
+                Text(subtitle, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: AppColors.textGrey)),
               ],
             ),
           ),
@@ -154,7 +154,7 @@ class HelpAndSupportView extends StatelessWidget {
       children: [
         Text(LanguageService.get("faqs"), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
         SizedBox(height: 20),
-        Center(child: Text(LanguageService.get("coming_soon"), style: TextStyle(fontSize: 16, color: AppColors.textGray))),
+        Center(child: Text(LanguageService.get("coming_soon"), style: TextStyle(fontSize: 16, color: AppColors.textGrey))),
       ],
     );
   }

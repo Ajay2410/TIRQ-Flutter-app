@@ -149,8 +149,8 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
               ],
             ),
             position: PopupPosition.top,
-            arrowColor: AppColors.textGray,
-            backgroundColor: AppColors.textGray,
+            arrowColor: AppColors.textGrey,
+            backgroundColor: AppColors.textGrey,
             child: Padding(padding: EdgeInsets.all(16), child: Image.asset(AppImages.alert, width: 16, height: 16)),
           ),
         ),
@@ -167,7 +167,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('maximum_processing_size'.lang, style: TextStyle(color: AppColors.textGray, fontSize: 12, fontWeight: FontWeight.w500)),
+                      Text('maximum_processing_size'.lang, style: TextStyle(color: AppColors.textGrey, fontSize: 12, fontWeight: FontWeight.w500)),
                       SizedBox(height: 10),
 
                       Row(
@@ -194,13 +194,13 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                     ],
                   ),
                 ),
-                Container(height: 56, color: AppColors.lightGray, width: 1),
+                Container(height: 56, color: AppColors.lightGrey, width: 1),
                 const SizedBox(width: 14),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('minimum_processing_size'.lang, style: TextStyle(color: AppColors.textGray, fontSize: 12, fontWeight: FontWeight.w500)),
+                      Text('minimum_processing_size'.lang, style: TextStyle(color: AppColors.textGrey, fontSize: 12, fontWeight: FontWeight.w500)),
                       SizedBox(height: 10),
                       Row(
                         children: [
@@ -232,7 +232,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
         ),
 
         const SizedBox(height: 20),
-        Divider(color: AppColors.lightGray),
+        Divider(color: AppColors.lightGrey),
         const SizedBox(height: 20),
 
         Row(
@@ -258,7 +258,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
         ),
 
         const SizedBox(height: 20),
-        Divider(color: AppColors.lightGray),
+        Divider(color: AppColors.lightGrey),
         const SizedBox(height: 20),
 
         _buildInfoRow(AppImages.powerConsumption, "${'total_power'.lang} (kw)", '${widget.machine.totalPower ?? 'N/A'}', AppColors.primarySuperLight),
@@ -332,7 +332,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                         }
                       },
               style: ElevatedButton.styleFrom(
-                backgroundColor: _isDeleting ? AppColors.lightGray : AppColors.primaryLight,
+                backgroundColor: _isDeleting ? AppColors.lightGrey : AppColors.primaryLight,
                 elevation: _isDeleting ? 0 : 5,
                 foregroundColor: AppColors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -351,7 +351,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
                         _showDeleteConfirmation(context);
                       },
               style: ElevatedButton.styleFrom(
-                backgroundColor: _isDeleting ? AppColors.lightGray : AppColors.redBack,
+                backgroundColor: _isDeleting ? AppColors.lightGrey : AppColors.redBack,
                 elevation: _isDeleting ? 0 : 5,
                 foregroundColor: AppColors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),

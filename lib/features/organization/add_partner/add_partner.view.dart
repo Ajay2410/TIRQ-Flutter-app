@@ -156,11 +156,11 @@ class AddPartnerView extends StatelessWidget {
                 labelText: LanguageService.get("phone_number"),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSizes.v12),
-                  borderSide: BorderSide(color: AppColors.lightGray),
+                  borderSide: BorderSide(color: AppColors.lightGrey),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSizes.v12),
-                  borderSide: BorderSide(color: AppColors.lightGray),
+                  borderSide: BorderSide(color: AppColors.lightGrey),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -282,11 +282,11 @@ class AddPartnerView extends StatelessWidget {
         labelText: label,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -328,7 +328,7 @@ class AddPartnerView extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.white,
               borderRadius: BorderRadius.circular(AppSizes.v8),
-              border: Border.all(color: AppColors.lightGray),
+              border: Border.all(color: AppColors.lightGrey),
             ),
             child: Row(
               children: [
@@ -428,7 +428,7 @@ class AddPartnerView extends StatelessWidget {
                 Container(
                   height: 4,
                   width: double.infinity,
-                  color: AppColors.lightGray.withOpacity(0.3),
+                  color: AppColors.lightGrey.withOpacity(0.3),
                   child: Row(
                     children: [
                       Expanded(
@@ -438,7 +438,7 @@ class AddPartnerView extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Container(
-                          color: AppColors.lightGray.withOpacity(0.3),
+                          color: AppColors.lightGrey.withOpacity(0.3),
                         ),
                       ),
                     ],
@@ -455,11 +455,11 @@ class AddPartnerView extends StatelessWidget {
                       prefixIcon: Icon(Icons.search, color: AppColors.gray),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(AppSizes.v8),
-                        borderSide: BorderSide(color: AppColors.lightGray),
+                        borderSide: BorderSide(color: AppColors.lightGrey),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(AppSizes.v8),
-                        borderSide: BorderSide(color: AppColors.lightGray),
+                        borderSide: BorderSide(color: AppColors.lightGrey),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(AppSizes.v8),
@@ -500,7 +500,7 @@ class AddPartnerView extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   border: Border(
                                     bottom: BorderSide(
-                                      color: AppColors.lightGray.withOpacity(
+                                      color: AppColors.lightGrey.withOpacity(
                                         0.3,
                                       ),
                                       width: 1,
@@ -552,7 +552,7 @@ class AddPartnerView extends StatelessWidget {
                               decoration: BoxDecoration(
                                 border: Border(
                                   bottom: BorderSide(
-                                    color: AppColors.lightGray.withOpacity(0.3),
+                                    color: AppColors.lightGrey.withOpacity(0.3),
                                     width: 1,
                                   ),
                                 ),
@@ -615,7 +615,7 @@ class AddPartnerView extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border(
                       top: BorderSide(
-                        color: AppColors.lightGray.withOpacity(0.3),
+                        color: AppColors.lightGrey.withOpacity(0.3),
                         width: 1,
                       ),
                     ),
@@ -780,11 +780,11 @@ class AddPartnerView extends StatelessWidget {
         labelText: LanguageService.get("machine_invoice_no"),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
-          borderSide: BorderSide(color: AppColors.lightGray),
+          borderSide: BorderSide(color: AppColors.lightGrey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
@@ -843,9 +843,9 @@ class AddPartnerView extends StatelessWidget {
       padding: EdgeInsets.all(AppSizes.w16),
       margin: EdgeInsets.only(bottom: AppSizes.h16),
       decoration: BoxDecoration(
-        color: AppColors.lightGray.withOpacity(0.1),
+        color: AppColors.lightGrey.withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppSizes.v12),
-        border: Border.all(color: AppColors.lightGray),
+        border: Border.all(color: AppColors.lightGrey),
       ),
       child: Column(
         children: [
@@ -886,7 +886,7 @@ class AddPartnerView extends StatelessWidget {
       keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
-        fillColor: AppColors.lightGray.withOpacity(0.3),
+        fillColor: AppColors.lightGrey.withOpacity(0.3),
         filled: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),

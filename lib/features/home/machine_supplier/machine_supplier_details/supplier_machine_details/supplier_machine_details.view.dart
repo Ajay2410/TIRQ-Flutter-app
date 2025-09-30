@@ -274,7 +274,7 @@ class _SupplierMachineDetailsViewState extends State<SupplierMachineDetailsView>
                 ],
               ),
               const SizedBox(height: 14),
-              Divider(color: AppColors.lightGray),
+              Divider(color: AppColors.lightGrey),
               const SizedBox(height: 14),
 
               Text(
@@ -308,7 +308,7 @@ class _SupplierMachineDetailsViewState extends State<SupplierMachineDetailsView>
                 ],
               ),
               const SizedBox(height: 14),
-              Divider(color: AppColors.lightGray),
+              Divider(color: AppColors.lightGrey),
               const SizedBox(height: 14),
 
               Text(
@@ -343,7 +343,7 @@ class _SupplierMachineDetailsViewState extends State<SupplierMachineDetailsView>
               ),
 
               const SizedBox(height: 14),
-              Divider(color: AppColors.lightGray),
+              Divider(color: AppColors.lightGrey),
               const SizedBox(height: 14),
               Text(
                 'power_information'.lang,
@@ -361,7 +361,7 @@ class _SupplierMachineDetailsViewState extends State<SupplierMachineDetailsView>
                 AppColors.primarySuperLight,
               ),
               const SizedBox(height: 14),
-              Divider(color: AppColors.lightGray),
+              Divider(color: AppColors.lightGrey),
               const SizedBox(height: 14),
 
               Text(
@@ -395,7 +395,7 @@ class _SupplierMachineDetailsViewState extends State<SupplierMachineDetailsView>
                 ],
               ),
               const SizedBox(height: 10),
-              Divider(color: AppColors.lightGray),
+              Divider(color: AppColors.lightGrey),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -420,7 +420,7 @@ class _SupplierMachineDetailsViewState extends State<SupplierMachineDetailsView>
                 ],
               ),
               const SizedBox(height: 10),
-              Divider(color: AppColors.lightGray),
+              Divider(color: AppColors.lightGrey),
               const SizedBox(height: 10),
               Row(
                 children: [
