@@ -51,6 +51,10 @@ class ProfileViewModel extends ReactiveViewModel {
     _user.value = getUser();
     notifyListeners();
 
+    // Clear customer data first to ensure fresh data
+    _customer.value = null;
+    notifyListeners();
+
     // Load customer data from local storage first
     _customer.value = _customerStorageService.getStoredCustomer();
     notifyListeners();
@@ -151,6 +155,13 @@ class ProfileViewModel extends ReactiveViewModel {
     if (currentUser.email != null) {
       await AccountManagerService.instance.saveCurrentUser(currentUser);
     }
+
+    // Clear customer data from memory
+    _customer.value = null;
+    notifyListeners();
+
+    // Clear customer data from storage
+    await _customerStorageService.clearCustomerData();
 
     String? fcmToken = getUser().fcmToken;
     _authService.logout(fcmToken);

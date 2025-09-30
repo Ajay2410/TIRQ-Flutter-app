@@ -58,8 +58,14 @@ Future<void> clearHive() async {
   final languageSelected = box.get('language_selected', defaultValue: false);
   final selectedLanguage = box.get('selected_language', defaultValue: 'en');
 
+  // Clear user data
   await Hive.box(AppStrings.triqBox).put(AppStrings.triqUser, User());
 
+  // Clear customer data
+  await box.delete('customer_data');
+  await box.delete('customer_id');
+
+  // Preserve language settings
   await box.put('language_selected', languageSelected);
   await box.put('selected_language', selectedLanguage);
 }

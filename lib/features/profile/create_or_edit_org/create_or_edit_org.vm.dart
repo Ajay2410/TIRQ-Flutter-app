@@ -1,33 +1,30 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl_phone_field/countries.dart';
-import 'package:intl_phone_field/phone_number.dart';
+import 'package:intl_phone_field/countries.dart' as intl;
+import 'package:intl_phone_field/phone_number.dart' as intl;
+import 'package:manager/api_endpoints.dart';
 import 'package:manager/core/models/organization.dart';
-import 'package:manager/core/storage/storage.dart';
+import 'package:manager/core/models/profile_model.dart';
 import 'package:manager/resources/app_resources/app_maps.dart';
-import 'package:manager/services/organization.service.dart';
 import 'package:manager/widgets/bottom_sheets/file_picker_options/file_picker_options_sheet.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../../../core/locator.dart';
-import '../../../core/models/hive/user/user.dart';
 import '../../../core/utils/app_logger.dart';
-import '../../../core/utils/type_def.dart';
+import '../../../services/api.service.dart';
 import '../../../services/bottom_sheets.service.dart';
 import '../../../services/dialogs.service.dart';
 import '../../../services/file_picker.service.dart';
-import '../../../services/file_upload.service.dart';
 import '../../../widgets/dialogs/loader/loader_dialog.view.dart';
 
 class UpdateOrganizationViewModel extends ReactiveViewModel {
-  final _navigationService = locator<NavigationService>();
   final _dialogService = locator<DialogService>();
-  final _organizationService = locator<OrganizationService>();
+  final _apiService = locator<ApiService>();
   final _bottomSheetService = locator<BottomSheetService>();
   final _filePickerService = FilePickerService();
-  final _fileUploadService = FileUploadService();
 
   // Form key for validation
   final formKey = GlobalKey<FormState>();
@@ -35,6 +32,7 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
   // Organization basic info controllers
   final TextEditingController nameController = TextEditingController();
   final TextEditingController yourNameController = TextEditingController();
+  final TextEditingController unitNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController phone2Controller = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -121,13 +119,32 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
     _sameAsCorpAddress.value = value;
     if (value) {
       // Copy corporate address to factory address
-      factoryAddressLine1Controller.text = addressLine1Controller.text;
-      factoryAddressLine2Controller.text = addressLine2Controller.text;
-      factoryCityController.text = cityController.text;
-      factoryStateController.text = stateController.text;
-      factoryCountryController.text = countryController.text;
-      factoryPinCodeController.text = pinCodeController.text;
-      _factoryCountry.value = _country.value;
+      if (profileModel?.corporateAddress != null) {
+        // Copy from profile model data
+        factoryAddressLine1Controller.text =
+            profileModel!.corporateAddress!.addressLine1 ?? '';
+        factoryAddressLine2Controller.text =
+            profileModel!.corporateAddress!.addressLine2 ?? '';
+        factoryCityController.text = profileModel!.corporateAddress!.city ?? '';
+        factoryStateController.text =
+            profileModel!.corporateAddress!.state ?? '';
+        factoryCountryController.text =
+            profileModel!.corporateAddress!.country ?? '';
+        factoryPinCodeController.text =
+            profileModel!.corporateAddress!.pincode ?? '';
+        _factoryCountry.value = _getValidCountry(
+          profileModel!.corporateAddress!.country,
+        );
+      } else {
+        // Fallback to controller values
+        factoryAddressLine1Controller.text = addressLine1Controller.text;
+        factoryAddressLine2Controller.text = addressLine2Controller.text;
+        factoryCityController.text = cityController.text;
+        factoryStateController.text = stateController.text;
+        factoryCountryController.text = countryController.text;
+        factoryPinCodeController.text = pinCodeController.text;
+        _factoryCountry.value = _country.value;
+      }
     }
     _onFormChanged();
     notifyListeners();
@@ -163,14 +180,45 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
     }
   }
 
+  // Helper method to validate and get a valid country value
+  String _getValidCountry(String? country) {
+    if (country == null || country.isEmpty) return 'India';
+
+    // Check if the country is already in our list
+    if (countries.contains(country)) return country;
+
+    // Handle regional variants like "India (Assam)" -> "India"
+    if (country.contains('(')) {
+      String mainCountry = country.split('(')[0].trim();
+      if (countries.contains(mainCountry)) return mainCountry;
+    }
+
+    // Handle specific mappings for common variations
+    switch (country.toLowerCase()) {
+      case 'uae':
+        return 'United Arab Emirates';
+      case 'usa':
+      case 'us':
+        return 'United States';
+      case 'uk':
+        return 'United Kingdom';
+      case 'south korea':
+        return 'South Korea';
+      case 'north korea':
+        return 'North Korea';
+    }
+
+    return 'India'; // Default fallback
+  }
+
   String _countrySearchQuery = '';
   String get countrySearchQuery => _countrySearchQuery;
 
-  Country? _selectedCountry;
-  Country? get selectedCountry => _selectedCountry;
+  intl.Country? _selectedCountry;
+  intl.Country? get selectedCountry => _selectedCountry;
 
-  Country? _selectedCountryF;
-  Country? get selectedCountryF => _selectedCountryF;
+  intl.Country? _selectedCountryF;
+  intl.Country? get selectedCountryF => _selectedCountryF;
 
   bool? isPersonalInfoEditable = false;
   bool? isCorporateAddressEditable = false;
@@ -198,6 +246,81 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
+  // Method to save personal information section
+  Future<void> savePersonalInfo() async {
+    // Prepare profile data for personal info update
+    final profileData = {
+      "unitName": unitNameController.text,
+      "designation":
+          _designationType.value == 'Other'
+              ? otherDesignationController.text
+              : _designationType.value,
+    };
+
+    // Show loader dialog
+    final response = await _dialogService.showCustomDialog(
+      variant: DialogType.loader,
+      data: LoaderDialogAttributes(task: () => updateProfileData(profileData)),
+    );
+
+    if (response?.confirmed == true) {
+      isPersonalInfoEditable = false;
+      notifyListeners();
+    }
+  }
+
+  // Method to save corporate address section
+  Future<void> saveCorporateAddress() async {
+    // Prepare profile data for corporate address update
+    final profileData = {
+      "corporateAddress": {
+        "addressLine1": addressLine1Controller.text,
+        "addressLine2": addressLine2Controller.text,
+        "city": cityController.text,
+        "state": stateController.text,
+        "country": countryController.text,
+        "pincode": pinCodeController.text,
+      },
+    };
+
+    // Show loader dialog
+    final response = await _dialogService.showCustomDialog(
+      variant: DialogType.loader,
+      data: LoaderDialogAttributes(task: () => updateProfileData(profileData)),
+    );
+
+    if (response?.confirmed == true) {
+      isCorporateAddressEditable = false;
+      notifyListeners();
+    }
+  }
+
+  // Method to save factory address section
+  Future<void> saveFactoryAddress() async {
+    // Prepare profile data for factory address update
+    final profileData = {
+      "factoryAddress": {
+        "addressLine1": factoryAddressLine1Controller.text,
+        "addressLine2": factoryAddressLine2Controller.text,
+        "city": factoryCityController.text,
+        "state": factoryStateController.text,
+        "country": factoryCountryController.text,
+        "pincode": factoryPinCodeController.text,
+      },
+    };
+
+    // Show loader dialog
+    final response = await _dialogService.showCustomDialog(
+      variant: DialogType.loader,
+      data: LoaderDialogAttributes(task: () => updateProfileData(profileData)),
+    );
+
+    if (response?.confirmed == true) {
+      isFactoryAddressEditable = false;
+      notifyListeners();
+    }
+  }
+
   // List<Country> get filteredCountries {
   //   if (_countrySearchQuery.isEmpty) {
   //     return countries.toList();
@@ -212,29 +335,100 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
-  void updateSelectedCountry(Country? country) {
+  void updateSelectedCountry(intl.Country? country) {
     _selectedCountry = country;
     notifyListeners();
   }
 
-  void updateSelectedCountryF(Country? country) {
+  void updateSelectedCountryF(intl.Country? country) {
     _selectedCountryF = country;
     notifyListeners();
   }
 
   // List of countries
   List<String> countries = [
-    'India',
-    'United States',
-    'United Kingdom',
-    'Canada',
-    'Australia',
-    'Germany',
-    'France',
-    'Japan',
-    'China',
-    'Brazil',
-    'Other',
+    "Afghanistan",
+    "Albania",
+    "Algeria",
+    "Argentina",
+    "Armenia",
+    "Australia",
+    "Austria",
+    "Azerbaijan",
+    "Bahrain",
+    "Bangladesh",
+    "Belarus",
+    "Belgium",
+    "Brazil",
+    "Brunei",
+    "Bulgaria",
+    "Cambodia",
+    "Canada",
+    "Chile",
+    "China",
+    "Colombia",
+    "Croatia",
+    "Cyprus",
+    "Czech Republic",
+    "Denmark",
+    "Egypt",
+    "Estonia",
+    "Finland",
+    "France",
+    "Georgia",
+    "Germany",
+    "Greece",
+    "Hungary",
+    "Iceland",
+    "India",
+    "Indonesia",
+    "Iran",
+    "Iraq",
+    "Ireland",
+    "Israel",
+    "Italy",
+    "Japan",
+    "Jordan",
+    "Kazakhstan",
+    "Kuwait",
+    "Kyrgyzstan",
+    "Latvia",
+    "Lebanon",
+    "Lithuania",
+    "Luxembourg",
+    "Malaysia",
+    "Mexico",
+    "Morocco",
+    "Netherlands",
+    "New Zealand",
+    "Norway",
+    "Oman",
+    "Pakistan",
+    "Peru",
+    "Philippines",
+    "Poland",
+    "Portugal",
+    "Qatar",
+    "Romania",
+    "Russia",
+    "Saudi Arabia",
+    "Singapore",
+    "Slovakia",
+    "Slovenia",
+    "South Africa",
+    "South Korea",
+    "Spain",
+    "Sri Lanka",
+    "Sweden",
+    "Switzerland",
+    "Thailand",
+    "Turkey",
+    "Ukraine",
+    "United Arab Emirates",
+    "United Kingdom",
+    "United States",
+    "Uzbekistan",
+    "Vietnam",
   ];
 
   final ReactiveValue<List<Units>> _units = ReactiveValue<List<Units>>([]);
@@ -268,41 +462,130 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
   bool _didChange = false;
   bool get didChange => _didChange;
 
-  Organization? _organization;
+  final _profileModel = ReactiveValue<ProfileModel?>(null);
+  ProfileModel? get profileModel => _profileModel.value;
 
   void init(Organization? organization) async {
     setBusy(true);
 
-    if (organization == null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        final response = await _dialogService.showCustomDialog(
-          variant: DialogType.loader,
-          data: LoaderDialogAttributes(
-            task: () => _organizationService.getProfile(),
-          ),
-        );
-
-        if (response?.data != null) {
-          ((response?.data) as EitherResult<Organization>).fold(
-            (exception) {
-              Fluttertoast.showToast(msg: exception.toString());
-            },
-            (org) {
-              _organization = org;
-              _populateFormWithOrgData(org);
-              _isEditing = true;
-            },
-          );
-        }
-      });
-    } else {
-      _organization = organization;
-      _populateFormWithOrgData(organization);
-      _isEditing = true;
-    }
+    // Fetch profile data
+    await fetchProfileData();
 
     _addTextChangedListeners();
     setBusy(false);
+  }
+
+  Future<void> fetchProfileData() async {
+    try {
+      final response = await _apiService.get(url: ApiEndpoints.getProfile);
+
+      if (response.statusCode == 200) {
+        // Handle different response data types
+        Map<String, dynamic> responseData;
+        if (response.data is String) {
+          responseData = jsonDecode(response.data);
+        } else if (response.data is Map<String, dynamic>) {
+          responseData = response.data;
+        } else {
+          AppLogger.error('Invalid response format');
+          return;
+        }
+
+        // Check if response has nested data structure
+        ProfileModel profile;
+        if (responseData['success'] == true && responseData['data'] != null) {
+          profile = ProfileModel.fromJson(responseData['data']);
+        } else {
+          // Direct profile data parsing - handle user field as string ID
+          Map<String, dynamic> profileData = Map<String, dynamic>.from(
+            responseData,
+          );
+          if (profileData['user'] is String) {
+            // If user is a string ID, create a minimal User object
+            profileData['user'] = {
+              '_id': profileData['user'],
+              'fullName': '',
+              'email': '',
+            };
+          }
+          profile = ProfileModel.fromJson(profileData);
+        }
+
+        _profileModel.value = profile;
+        _populateFormWithProfileData(profile);
+        notifyListeners();
+      } else {
+        AppLogger.error('Failed to fetch profile: ${response.statusMessage}');
+      }
+    } catch (e) {
+      AppLogger.error('Error fetching profile data: $e');
+    }
+  }
+
+  Future<void> updateProfileData(Map<String, dynamic> profileData) async {
+    try {
+      final response = await _apiService.put(
+        url: ApiEndpoints.updateProfile,
+        data: profileData,
+      );
+
+      if (response.statusCode == 200) {
+        // Handle different response data types
+        Map<String, dynamic> responseData;
+        if (response.data is String) {
+          responseData = jsonDecode(response.data);
+        } else if (response.data is Map<String, dynamic>) {
+          responseData = response.data;
+        } else {
+          AppLogger.error('Invalid response format');
+          Fluttertoast.showToast(
+            msg: 'Invalid response format',
+            backgroundColor: Colors.red,
+          );
+          return;
+        }
+
+        // Check if response has nested data structure
+        ProfileModel profile;
+        if (responseData['success'] == true && responseData['data'] != null) {
+          profile = ProfileModel.fromJson(responseData['data']);
+        } else {
+          // Direct profile data parsing - handle user field as string ID
+          Map<String, dynamic> profileData = Map<String, dynamic>.from(
+            responseData,
+          );
+          if (profileData['user'] is String) {
+            // If user is a string ID, create a minimal User object
+            profileData['user'] = {
+              '_id': profileData['user'],
+              'fullName': _profileModel.value?.user?.fullName ?? '',
+              'email': _profileModel.value?.user?.email ?? '',
+            };
+          }
+          profile = ProfileModel.fromJson(profileData);
+        }
+
+        _profileModel.value = profile;
+        _populateFormWithProfileData(profile);
+        notifyListeners();
+        Fluttertoast.showToast(
+          msg: 'Profile updated successfully',
+          backgroundColor: Colors.green,
+        );
+      } else {
+        AppLogger.error('Failed to update profile: ${response.statusMessage}');
+        Fluttertoast.showToast(
+          msg: 'Failed to update profile: ${response.statusMessage}',
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (e) {
+      AppLogger.error('Error updating profile data: $e');
+      Fluttertoast.showToast(
+        msg: 'Error updating profile: $e',
+        backgroundColor: Colors.red,
+      );
+    }
   }
 
   void addUnit() {
@@ -365,114 +648,91 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
     unitCountries = newCountries;
   }
 
-  List<Map<String, dynamic>> _getUnitsData() {
-    List<Map<String, dynamic>> unitsData = [];
+  void _populateFormWithProfileData(ProfileModel profile) {
+    AppLogger.info('Populating form with profile data: ${profile.toJson()}');
 
-    for (int i = 0; i < _units.value.length; i++) {
-      final name = unitNameControllers[i]?.text ?? '';
-      final locality = unitLocalityControllers[i]?.text ?? '';
-      final country = unitCountries[i];
-
-      if (name.isNotEmpty || locality.isNotEmpty || country != null) {
-        unitsData.add({'name': name, 'country': country, 'locality': locality});
-      }
+    // Set basic organization fields from profile
+    if (profile.user != null) {
+      nameController.text = profile.user!.fullName ?? '';
+      yourNameController.text = profile.user!.fullName ?? '';
+      phoneController.text = profile.user!.phone ?? '';
+      emailController.text = profile.user!.email ?? '';
+      _email = profile.user!.email ?? "";
+      _name = profile.user!.fullName ?? "";
     }
 
-    return unitsData;
-  }
+    // Set organization name
+    organizationType.text = profile.organizationName ?? '';
 
-  void _populateFormWithOrgData(Organization org) {
-    AppLogger.info('Populating form with org data: ${org.toJson()}');
-
-    // Set basic organization fields
-    nameController.text = org.name ?? '';
-    yourNameController.text = org.yourName ?? '';
-    phoneController.text = org.phone ?? '';
-    phone2Controller.text = org.phone2 ?? '';
-    emailController.text = org.email ?? '';
-    _email = org.email ?? "";
-    _name = org.name ?? "";
-    email2Controller.text = org.email2 ?? '';
-    organizationType.text =
-        getUser().organizationType == OrganizationType.manufacturer
-            ? 'Manufacturer'
-            : 'Processor';
+    // Set unit name
+    unitNameController.text = profile.unitName ?? '';
 
     // Set designation
-    if (org.designation != null) {
-      if (['md', 'ceo', 'partner', 'chairman'].contains(org.designation)) {
-        _designationType.value = org.designation!;
+    if (profile.designation != null && profile.designation!.isNotEmpty) {
+      // Map API designation values to dropdown values
+      String apiDesignation = profile.designation!.toLowerCase();
+      if (apiDesignation.contains('managing director') ||
+          apiDesignation.contains('md')) {
+        _designationType.value = 'MD';
+      } else if (apiDesignation.contains('chief executive officer') ||
+          apiDesignation.contains('ceo')) {
+        _designationType.value = 'CEO';
+      } else if (apiDesignation.contains('chairman') ||
+          apiDesignation.contains('chairperson')) {
+        _designationType.value = 'Chairman';
       } else {
-        _designationType.value = 'others';
-        otherDesignationController.text = org.designation ?? '';
+        _designationType.value = 'Other';
+        otherDesignationController.text = profile.designation ?? '';
         _showOtherDesignation.value = true;
       }
     }
 
-    // Set logo URL
-    logoUrl = org.logo ?? '';
-    _language = org.preferredLanguage ?? 'English';
-
     // Set corporate address fields
-    if (org.address != null) {
-      addressLine1Controller.text = org.address!.addressLine1 ?? '';
-      addressLine2Controller.text = org.address!.addressLine2 ?? '';
-      cityController.text = org.address!.city ?? '';
-      stateController.text = org.address!.state ?? '';
-      countryController.text = org.address!.country ?? '';
-      _country.value = org.address!.country ?? 'India';
-      pinCodeController.text = org.address!.pinCode ?? '';
+    if (profile.corporateAddress != null) {
+      addressLine1Controller.text =
+          profile.corporateAddress!.addressLine1 ?? '';
+      addressLine2Controller.text =
+          profile.corporateAddress!.addressLine2 ?? '';
+      cityController.text = profile.corporateAddress!.city ?? '';
+      stateController.text = profile.corporateAddress!.state ?? '';
+      String corporateCountry = _getValidCountry(
+        profile.corporateAddress!.country,
+      );
+      countryController.text = corporateCountry;
+      _country.value = corporateCountry;
+      pinCodeController.text = profile.corporateAddress!.pincode ?? '';
     }
 
     // Set factory address fields
-    if (org.factoryAddress != null) {
+    if (profile.factoryAddress != null) {
       factoryAddressLine1Controller.text =
-          org.factoryAddress!.addressLine1 ?? '';
+          profile.factoryAddress!.addressLine1 ?? '';
       factoryAddressLine2Controller.text =
-          org.factoryAddress!.addressLine2 ?? '';
-      factoryCityController.text = org.factoryAddress!.city ?? '';
-      factoryStateController.text = org.factoryAddress!.state ?? '';
-      factoryCountryController.text = org.factoryAddress!.country ?? '';
-      _factoryCountry.value = org.factoryAddress!.country ?? 'India';
-      factoryPinCodeController.text = org.factoryAddress!.pinCode ?? '';
+          profile.factoryAddress!.addressLine2 ?? '';
+      factoryCityController.text = profile.factoryAddress!.city ?? '';
+      factoryStateController.text = profile.factoryAddress!.state ?? '';
+      String factoryCountry = _getValidCountry(profile.factoryAddress!.country);
+      factoryCountryController.text = factoryCountry;
+      _factoryCountry.value = factoryCountry;
+      factoryPinCodeController.text = profile.factoryAddress!.pincode ?? '';
 
       // Check if addresses are the same
-      _sameAsCorpAddress.value = _checkIfAddressesAreSame(org);
+      _sameAsCorpAddress.value = _checkIfAddressesAreSameFromProfile(profile);
     }
-
-    // Handle units - Fixed this part
-    if (org.units != null && org.units!.isNotEmpty) {
-      _units.value = List.from(org.units!);
-
-      // Initialize controllers for existing units
-      for (int i = 0; i < _units.value.length; i++) {
-        final unit = _units.value[i];
-        unitNameControllers[i] = TextEditingController(text: unit.name ?? '');
-        unitLocalityControllers[i] = TextEditingController(
-          text: unit.locality ?? '',
-        );
-        unitCountries[i] = unit.country;
-
-        // Add listeners
-        unitNameControllers[i]?.addListener(_onFormChanged);
-        unitLocalityControllers[i]?.addListener(_onFormChanged);
-      }
-    }
-
-    // Set additional fields
-    establishedYearController.text = org.establishedYear?.toString() ?? '';
-    descriptionController.text = org.description ?? '';
   }
 
-  bool _checkIfAddressesAreSame(Organization org) {
-    if (org.address == null || org.factoryAddress == null) return false;
+  bool _checkIfAddressesAreSameFromProfile(ProfileModel profile) {
+    if (profile.corporateAddress == null || profile.factoryAddress == null)
+      return false;
 
-    return org.address!.addressLine1 == org.factoryAddress!.addressLine1 &&
-        org.address!.addressLine2 == org.factoryAddress!.addressLine2 &&
-        org.address!.city == org.factoryAddress!.city &&
-        org.address!.state == org.factoryAddress!.state &&
-        org.address!.country == org.factoryAddress!.country &&
-        org.address!.pinCode == org.factoryAddress!.pinCode;
+    return profile.corporateAddress!.addressLine1 ==
+            profile.factoryAddress!.addressLine1 &&
+        profile.corporateAddress!.addressLine2 ==
+            profile.factoryAddress!.addressLine2 &&
+        profile.corporateAddress!.city == profile.factoryAddress!.city &&
+        profile.corporateAddress!.state == profile.factoryAddress!.state &&
+        profile.corporateAddress!.country == profile.factoryAddress!.country &&
+        profile.corporateAddress!.pincode == profile.factoryAddress!.pincode;
   }
 
   void _addTextChangedListeners() {
@@ -536,8 +796,8 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
     if (logoFile != null || logoUrl.isNotEmpty) filledFields++;
 
     // Check designation
-    if (designationType != null) {
-      if (designationType != 'others' ||
+    if (designationType.isNotEmpty) {
+      if (designationType != 'Other' ||
           otherDesignationController.text.isNotEmpty) {
         filledFields++;
       }
@@ -620,146 +880,11 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
     );
   }
 
-  Future<String?> _uploadLogo() async {
-    if (_logoFile == null) return logoUrl; // Return existing URL if no new file
-
-    _isUploading.value = true;
-    _uploadProgress.value = 0.0;
-    notifyListeners();
-
-    final result = await _fileUploadService.uploadFileWithProgress(_logoFile!, (
-      progress,
-    ) {
-      _uploadProgress.value = progress;
-      notifyListeners();
-    });
-
-    _isUploading.value = false;
-    _uploadProgress.value = 1.0;
-    notifyListeners();
-
-    // Return the new URL if successful, otherwise return null
-    return result.fold((failure) {
-      AppLogger.error('Failed to upload logo: ${failure.message}');
-      Fluttertoast.showToast(
-        msg: 'Failed to upload logo: ${failure.message}',
-        backgroundColor: Colors.red,
-      );
-      return null;
-    }, (url) => url);
-  }
-
   void onLogoRemove() {
     logoUrl = '';
     _logoFile = null;
     _onFormChanged();
     notifyListeners();
-  }
-
-  // Save organization data
-  Future<void> onSave() async {
-    // Allow saving with partial information
-    if (formKey.currentState?.validate() ?? true) {
-      setBusy(true);
-
-      try {
-        // Upload logo if we have a new one
-        String? uploadedLogoUrl;
-        if (_logoFile != null) {
-          uploadedLogoUrl = await _uploadLogo();
-          if (uploadedLogoUrl == null) {
-            // Logo upload failed, but we'll continue with other changes
-            Fluttertoast.showToast(
-              msg: "Logo upload failed, continuing with other changes",
-              backgroundColor: Colors.orange,
-            );
-          }
-        }
-
-        // Get designation value
-        String designationValue = designationType;
-        if (designationType == 'others' &&
-            otherDesignationController.text.isNotEmpty) {
-          designationValue = otherDesignationController.text;
-        }
-
-        final organizationData = {
-          "name": nameController.text,
-          "yourName": yourNameController.text,
-          "designation": designationValue,
-          "phone": phoneController.text,
-          "phone2": phone2Controller.text,
-          "email": emailController.text,
-          "email2": email2Controller.text,
-          "preferredLanguage": _language,
-          "address": {
-            "addressLine1": addressLine1Controller.text,
-            "addressLine2": addressLine2Controller.text,
-            "city": cityController.text,
-            "state": stateController.text,
-            "country": countryController.text,
-            "pinCode": pinCodeController.text,
-          },
-          "factoryAddress":
-              sameAsCorpAddress
-                  ? {
-                    // Copy corporate address if checkbox is checked
-                    "addressLine1": addressLine1Controller.text,
-                    "addressLine2": addressLine2Controller.text,
-                    "city": cityController.text,
-                    "state": stateController.text,
-                    "country": countryController.text,
-                    "pinCode": pinCodeController.text,
-                  }
-                  : {
-                    // Use factory address fields
-                    "addressLine1": factoryAddressLine1Controller.text,
-                    "addressLine2": factoryAddressLine2Controller.text,
-                    "city": factoryCityController.text,
-                    "state": factoryStateController.text,
-                    "country": factoryCountryController.text,
-                    "pinCode": factoryPinCodeController.text,
-                  },
-          "logo":
-              uploadedLogoUrl ??
-              logoUrl, // Use newly uploaded URL or existing one
-          "establishedYear": int.tryParse(establishedYearController.text),
-          "description": descriptionController.text,
-          "units": _getUnitsData(),
-        };
-
-        final response = await _dialogService.showCustomDialog(
-          variant: DialogType.loader,
-          data: LoaderDialogAttributes(
-            task:
-                () => _organizationService.updateOrganization(organizationData),
-          ),
-        );
-
-        if (response?.data != null) {
-          ((response?.data) as EitherResult<bool>).fold(
-            (exception) {
-              Fluttertoast.showToast(msg: exception.toString());
-            },
-            (success) {
-              Fluttertoast.showToast(
-                msg:
-                    _isEditing
-                        ? "Organization updated successfully!"
-                        : "Organization created successfully!",
-              );
-              // _navigationService.back(result: true); // Return true to indicate success
-            },
-          );
-        }
-      } catch (e) {
-        Fluttertoast.showToast(msg: "Error: $e");
-      } finally {
-        setBusy(false);
-      }
-    } else {
-      Fluttertoast.showToast(msg: "Please check the form for errors");
-    }
   }
 
   @override
@@ -806,7 +931,7 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
   String _fullPhoneNumber = '';
   String get fullPhoneNumber => _fullPhoneNumber;
 
-  void updatePhoneNumber(PhoneNumber phoneNumber) {
+  void updatePhoneNumber(intl.PhoneNumber phoneNumber) {
     _fullPhoneNumber = '${phoneNumber.countryCode}${phoneNumber.number}';
     _onFormChanged();
   }

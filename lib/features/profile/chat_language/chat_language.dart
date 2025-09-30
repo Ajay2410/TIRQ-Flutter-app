@@ -35,11 +35,7 @@ class _ChatLanguageState extends State<ChatLanguage> {
         viewModelBuilder: () => UpdateOrganizationViewModel(),
         onViewModelReady: (UpdateOrganizationViewModel model) => model.init(null),
         disposeViewModel: false,
-        builder: (
-            BuildContext context,
-            UpdateOrganizationViewModel model,
-            Widget? child,
-            ) {
+        builder: (BuildContext context, UpdateOrganizationViewModel model, Widget? child) {
           return _buildScaffold(
             context: context,
             preferredLanguage: model.preferredLanguage(),
@@ -59,11 +55,7 @@ class _ChatLanguageState extends State<ChatLanguage> {
         viewModelBuilder: () => EmployeeProfileViewModel(),
         onViewModelReady: (EmployeeProfileViewModel model) => model.init(null),
         disposeViewModel: false,
-        builder: (
-            BuildContext context,
-            EmployeeProfileViewModel model,
-            Widget? child,
-            ) {
+        builder: (BuildContext context, EmployeeProfileViewModel model, Widget? child) {
           return _buildScaffold(
             context: context,
             preferredLanguage: model.preferredLanguages(),
@@ -98,9 +90,7 @@ class _ChatLanguageState extends State<ChatLanguage> {
             const SizedBox(height: 12),
             Text(
               LanguageService.get("choose_preferred_chat_language"),
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 16),
             _buildDropdownFormField(
@@ -109,8 +99,7 @@ class _ChatLanguageState extends State<ChatLanguage> {
               label: LanguageService.get("chat_language"),
               items: AppMaps.languageMap.keys.toList(),
               onChanged: onLanguageChanged,
-              validator: (value) =>
-              value == null ? LanguageService.get("please_select_language") : null,
+              validator: (value) => value == null ? LanguageService.get("please_select_language") : null,
             ),
             const SizedBox(height: 24),
             ElevatedButton(
@@ -118,27 +107,16 @@ class _ChatLanguageState extends State<ChatLanguage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              child: isBusy
-                  ? SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-                ),
-              )
-                  : Text(
-                LanguageService.get("save"),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
+              child:
+                  isBusy
+                      ? SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.white)),
+                      )
+                      : Text(LanguageService.get("save"), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
             ),
           ],
         ),
@@ -146,20 +124,16 @@ class _ChatLanguageState extends State<ChatLanguage> {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(
-      BuildContext context,
-      ScrollController scrollController,
-      ) {
+  PreferredSizeWidget _buildAppBar(BuildContext context, ScrollController scrollController) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(kToolbarHeight),
       child: AnimatedBuilder(
         animation: scrollController,
         builder: (context, child) {
-          double opacity = (scrollController.hasClients
-              ? (scrollController.offset /
-              (MediaQuery.of(context).size.height / 5))
-              : 0.0)
-              .clamp(0.05, 1.0); // Always visible AppBar
+          double opacity = (scrollController.hasClients ? (scrollController.offset / (MediaQuery.of(context).size.height / 5)) : 0.0).clamp(
+            0.05,
+            1.0,
+          ); // Always visible AppBar
 
           return AppBar(
             elevation: opacity * 2,
@@ -167,10 +141,7 @@ class _ChatLanguageState extends State<ChatLanguage> {
             surfaceTintColor: Colors.transparent,
             title: Text(
               LanguageService.get("chat_language"),
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: AppColors.white,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.white, fontWeight: FontWeight.bold),
             ),
             iconTheme: const IconThemeData(color: Colors.white),
           );
@@ -190,23 +161,15 @@ class _ChatLanguageState extends State<ChatLanguage> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppSizes.v14),
-        border: Border(
-          left: BorderSide(color: AppColors.primary, width: AppSizes.w4),
-        ),
+        border: Border(left: BorderSide(color: AppColors.primary, width: AppSizes.w4)),
       ),
       child: DropdownButtonFormField<String>(
         value: value,
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(fontWeight: FontWeight.w600),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppSizes.v12),
-            borderSide: BorderSide(color: AppColors.lightGray),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppSizes.v12),
-            borderSide: BorderSide(color: AppColors.lightGray),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: BorderSide(color: AppColors.lightGray)),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: BorderSide(color: AppColors.lightGray)),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.v12),
             borderSide: BorderSide(color: AppColors.primary, width: 2),
@@ -215,14 +178,7 @@ class _ChatLanguageState extends State<ChatLanguage> {
         ),
         dropdownColor: AppColors.white,
         style: Theme.of(context).textTheme.bodyLarge,
-        items: items
-            .map(
-              (e) => DropdownMenuItem<String>(
-            value: e,
-            child: Text(e),
-          ),
-        )
-            .toList(),
+        items: items.map((e) => DropdownMenuItem<String>(value: e, child: Text(e))).toList(),
         onChanged: onChanged,
         validator: validator,
       ),

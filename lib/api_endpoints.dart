@@ -88,4 +88,8 @@ abstract class ApiEndpoints {
 
   // Report endpoints
   static const String reportProblem = 'report/report-problem';
+
+  // Profile endpoints
+  static const String getProfile = 'profile/get-profile';
+  static const String updateProfile = 'profile/update-profile';
 }

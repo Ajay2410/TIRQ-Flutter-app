@@ -68,6 +68,7 @@ abstract class AppImages {
   static const String edit = "assets/icons/edit.png";
   static const String qr = "assets/icons/qr.png";
   static const String archive = "assets/icons/archive.png";
+  static const String verified = "assets/icons/verified.png";
 
   // Profile Menu Icons
   static const String general = "assets/icons/general.png";

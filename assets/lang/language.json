@@ -4949,6 +4949,28 @@
     "Malay/Indonesian": "Kami telah mengirim kode verifikasi",
     "Ukrainian": "Ми надіслали код підтвердження"
   },
+  "verification_sent_message": {
+    "English": "We've sent you a verification link — click on it to confirm your email address and complete the process.",
+    "Hindi": "हमने आपको एक सत्यापन लिंक भेजा है — अपना ईमेल पता पुष्टि करने और प्रक्रिया पूरी करने के लिए उस पर क्लिक करें।",
+    "Chinese (Simplified)": "我们已向您发送验证链接 — 点击它以确认您的电子邮件地址并完成流程。",
+    "Spanish": "Te hemos enviado un enlace de verificación — haz clic en él para confirmar tu dirección de correo electrónico y completar el proceso.",
+    "Japanese": "確認リンクをお送りしました — クリックしてメールアドレスを確認し、プロセスを完了してください。",
+    "German": "Wir haben Ihnen einen Bestätigungslink gesendet — klicken Sie darauf, um Ihre E-Mail-Adresse zu bestätigen und den Vorgang abzuschließen.",
+    "French": "Nous vous avons envoyé un lien de vérification — cliquez dessus pour confirmer votre adresse e-mail et terminer le processus.",
+    "Arabic": "لقد أرسلنا لك رابط تحقق — انقر عليه لتأكيد عنوان بريدك الإلكتروني وإكمال العملية.",
+    "Portuguese": "Enviamos um link de verificação — clique nele para confirmar seu endereço de e-mail e concluir o processo.",
+    "Russian": "Мы отправили вам ссылку для подтверждения — нажмите на неё, чтобы подтвердить ваш адрес электронной почты и завершить процесс.",
+    "Bengali": "আমরা আপনাকে একটি যাচাইকরণ লিঙ্ক পাঠিয়েছি — আপনার ইমেইল ঠিকানা নিশ্চিত করতে এবং প্রক্রিয়াটি সম্পূর্ণ করতে এটিতে ক্লিক করুন।",
+    "Turkish": "Size bir doğrulama bağlantısı gönderdik — e-posta adresinizi onaylamak ve işlemi tamamlamak için üzerine tıklayın.",
+    "Italian": "Ti abbiamo inviato un link di verifica — clicca su di esso per confermare il tuo indirizzo email e completare il processo.",
+    "Korean": "확인 링크를 보냈습니다 — 클릭하여 이메일 주소를 확인하고 프로세스를 완료하세요.",
+    "Vietnamese": "Chúng tôi đã gửi cho bạn một liên kết xác minh — nhấp vào đó để xác nhận địa chỉ email của bạn và hoàn tất quá trình.",
+    "Thai": "เราได้ส่งลิงก์ยืนยันให้คุณแล้ว — คลิกเพื่อยืนยันที่อยู่อีเมลของคุณและทำกระบวนการให้เสร็จสิ้น",
+    "Dutch": "We hebben je een verificatielink gestuurd — klik erop om je e-mailadres te bevestigen en het proces te voltooien.",
+    "Polish": "Wysłaliśmy Ci link weryfikacyjny — kliknij na niego, aby potwierdzić swój adres e-mail i zakończyć proces.",
+    "Malay/Indonesian": "Kami telah mengirimkan tautan verifikasi — klik untuk mengonfirmasi alamat email Anda dan menyelesaikan proses.",
+    "Ukrainian": "Ми надіслали вам посилання для підтвердження — натисніть на нього, щоб підтвердити вашу адресу електронної пошти та завершити процес."
+  },
   "please_enter_otp": {
     "English": "Please enter OTP",
     "Hindi": "कृपया OTP दर्ज करें",
