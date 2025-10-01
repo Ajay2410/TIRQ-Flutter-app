@@ -53,14 +53,10 @@ class OtpVerificationViewModel extends ReactiveViewModel {
       otp: otpValue, // Use the stored value instead of reading from controller
     );
 
-    response.fold(
-      (exception) {
-      },
-      (user) async {
-        // User is already saved in auth service, just navigate
-        await _navigationService.clearStackAndShow(Routes.stage, arguments: StageViewAttributes(selectedBottomNavIndex: 0));
-      },
-    );
+    response.fold((exception) {}, (user) async {
+      // User is already saved in auth service, just navigate
+      await _navigationService.clearStackAndShow(Routes.stage, arguments: StageViewAttributes(selectedBottomNavIndex: 0));
+    });
     setBusy(false);
   }
 

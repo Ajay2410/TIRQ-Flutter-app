@@ -4,8 +4,6 @@ import 'package:manager/features/chat/chat_view.dart';
 import 'package:manager/features/auth/login/login.view.dart';
 import 'package:manager/features/auth/otp_verification/otp_verification.view.dart';
 import 'package:manager/features/auth/register/register.view.dart';
-import 'package:manager/features/auth/register_employee/register_employee.view.dart';
-import 'package:manager/features/auth/register_organization/register_organization.view.dart';
 import 'package:manager/features/employee/detail_employee/employee_details.dart';
 import 'package:manager/features/home/analytics/analytics_view.dart';
 import 'package:manager/features/home/feedback/feedback_view.dart';
@@ -115,18 +113,6 @@ class AppRouter extends RouterBase {
     RegisterView: (data) {
       return MaterialPageRoute(
         builder: (BuildContext _) => RegisterView(),
-        settings: data,
-      );
-    },
-    RegisterOrganizationView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => RegisterOrganizationView(),
-        settings: data,
-      );
-    },
-    RegisterEmployeeView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => RegisterEmployeeView(),
         settings: data,
       );
     },
@@ -670,8 +656,6 @@ class AppRouter extends RouterBase {
   final _routes = <RouteDef>[
     RouteDef(Routes.login, page: LoginView),
     RouteDef(Routes.register, page: RegisterView),
-    RouteDef(Routes.registerOrganization, page: RegisterOrganizationView),
-    RouteDef(Routes.registerEmployee, page: RegisterEmployeeView),
     RouteDef(Routes.otpVerification, page: OtpVerificationView),
     RouteDef(Routes.organizationHome, page: OrganizationHomeView),
     RouteDef(Routes.employeeHome, page: EmployeeHomeView),

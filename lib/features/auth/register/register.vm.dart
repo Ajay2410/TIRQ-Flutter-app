@@ -23,9 +23,8 @@ class RegisterViewModel extends ReactiveViewModel {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  bool _isOrganization = true;
-
-  bool get isOrganization => _isOrganization;
+  // Organization app only handles organization registration
+  bool get isOrganization => true;
 
   String? _organizationType;
 
@@ -63,14 +62,7 @@ class RegisterViewModel extends ReactiveViewModel {
     passwordController.addListener(_updateFormValidity);
   }
 
-  void setRegistrationType(bool isOrg) {
-    if (_isOrganization != isOrg) {
-      _isOrganization = isOrg;
-      // Clear form when switching types
-      _clearForm();
-      notifyListeners();
-    }
-  }
+  // Removed setRegistrationType - organization app only handles organization registration
 
   void _clearForm() {
     nameController.clear();
@@ -85,13 +77,8 @@ class RegisterViewModel extends ReactiveViewModel {
   }
 
   void updatePhoneNumber(PhoneNumber phoneNumber) {
-    if (_isOrganization) {
-      _fullPhoneNumber = phoneNumber.number;
-      _countryCode = phoneNumber.countryCode;
-    } else {
-      _fullPhoneNumber = '${phoneNumber.countryCode}${phoneNumber.number}';
-      _countryCode = phoneNumber.countryCode;
-    }
+    _fullPhoneNumber = phoneNumber.number;
+    _countryCode = phoneNumber.countryCode;
     _updateFormValidity();
   }
 
@@ -122,29 +109,17 @@ class RegisterViewModel extends ReactiveViewModel {
   }
 
   void _updateFormValidity() {
-    bool isValid = false;
+    // Organization validation only
+    bool isOtherValid = _organizationType != "Others" || (_organizationType == "Others" && otherDescriptionController.text.isNotEmpty);
 
-    if (_isOrganization) {
-      // Organization validation
-      bool isOtherValid = _organizationType != "Others" || (_organizationType == "Others" && otherDescriptionController.text.isNotEmpty);
-
-      isValid =
-          nameController.text.isNotEmpty &&
-          emailController.text.isNotEmpty &&
-          phoneController.text.isNotEmpty &&
-          passwordController.text.isNotEmpty &&
-          _organizationType != null &&
-          _language != null &&
-          isOtherValid;
-    } else {
-      // Employee validation
-      isValid =
-          nameController.text.isNotEmpty &&
-          emailController.text.isNotEmpty &&
-          phoneController.text.isNotEmpty &&
-          passwordController.text.isNotEmpty &&
-          didAgree;
-    }
+    bool isValid =
+        nameController.text.isNotEmpty &&
+        emailController.text.isNotEmpty &&
+        phoneController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty &&
+        _organizationType != null &&
+        _language != null &&
+        isOtherValid;
 
     if (_isFormValid != isValid) {
       _isFormValid = isValid;
@@ -157,19 +132,14 @@ class RegisterViewModel extends ReactiveViewModel {
       AppLogger.info("Form is valid! Submitting...");
       setBusy(true);
 
-      final response = _isOrganization ? await registerOrganization() : await registerEmployee();
+      final response = await registerOrganization();
 
-      response.fold(
-        (exception) {
-
-        },
-        (success) {
-          _navigationService.navigateTo(
-            Routes.otpVerification,
-            arguments: OtpVerificationViewAttributes(isOrganization: _isOrganization, email: emailController.text),
-          );
-        },
-      );
+      response.fold((exception) {}, (success) {
+        _navigationService.navigateTo(
+          Routes.otpVerification,
+          arguments: OtpVerificationViewAttributes(isOrganization: true, email: emailController.text),
+        );
+      });
     } else {
       AppLogger.error("Form is invalid!");
       Fluttertoast.showToast(msg: 'Form is invalid');
@@ -197,16 +167,7 @@ class RegisterViewModel extends ReactiveViewModel {
     );
   }
 
-  ResultFuture<String> registerEmployee() async {
-    return await authService.register(
-      fullName: nameController.text,
-      email: emailController.text,
-      password: passwordController.text,
-      phone: _fullPhoneNumber,
-      countryCode: _countryCode,
-      role: 'employee',
-    );
-  }
+  // Removed registerEmployee - organization app only handles organization registration
 
   @override
   void dispose() {

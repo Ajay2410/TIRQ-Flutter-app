@@ -18,9 +18,26 @@ class AccountManagerService {
   AccountManagerService._internal();
   List<SavedAccount> getSavedAccounts() {
     try {
-      final List<SavedAccount> accounts = Hive.box(
+      final dynamic rawData = Hive.box(
         AppStrings.triqBox,
-      ).get(_savedAccountsBoxName, defaultValue: <SavedAccount>[]);
+      ).get(_savedAccountsBoxName);
+
+      if (rawData == null) {
+        AppLogger.info('No saved accounts found in Hive');
+        return [];
+      }
+
+      // Handle the case where rawData might be List<dynamic>
+      List<SavedAccount> accounts;
+      if (rawData is List) {
+        accounts = rawData.cast<SavedAccount>();
+      } else {
+        AppLogger.warning(
+          'Unexpected data type in saved accounts: ${rawData.runtimeType}',
+        );
+        return [];
+      }
+
       AppLogger.info('Retrieved ${accounts.length} accounts from Hive');
 
       for (var account in accounts) {
@@ -83,7 +100,7 @@ class AccountManagerService {
       );
 
       final List<SavedAccount> retrievedAccounts = getSavedAccounts().toList();
-      if(retrievedAccounts.where((e)=>e.email==user.email).isNotEmpty){
+      if (retrievedAccounts.where((e) => e.email == user.email).isNotEmpty) {
         AppLogger.highlight("Already Saved");
         return;
       }
@@ -115,7 +132,7 @@ class AccountManagerService {
 
     if (getSavedAccounts().isNotEmpty) {
       AppLogger.info('SavedAccountsBox length: ${getSavedAccounts().length}');
-      AppLogger.info('SavedAccountsBox keys: ${getSavedAccounts().toList()}');
+      AppLogger.info('SavedAccountsBox keys: ${getSavedAccounts()}');
     }
     AppLogger.info('=== End Debug ===');
   }
