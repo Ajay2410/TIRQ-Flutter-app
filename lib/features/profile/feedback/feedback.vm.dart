@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:manager/api_endpoints.dart';
 import 'package:manager/core/locator.dart';
 import 'package:manager/core/storage/storage.dart';
@@ -47,8 +48,8 @@ class FeedbackViewModel extends ReactiveViewModel {
 
             if (apiResponse.statusCode == 200) {
               AppLogger.info('Feedback sent successfully');
-              Fluttertoast.showToast(msg: 'Feedback sent successfully', backgroundColor: Colors.green);
-
+              Fluttertoast.showToast(msg: apiResponse.data['msg'] ?? "Feedback sent successfully", backgroundColor: Colors.green);
+              Get.back();
               // Clear the form after successful submission
               descriptionController.clear();
               _includeSystemLogs.value = false;

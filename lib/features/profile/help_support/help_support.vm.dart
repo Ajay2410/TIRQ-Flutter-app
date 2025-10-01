@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:manager/api_endpoints.dart';
 import 'package:manager/core/locator.dart';
+import 'package:manager/core/utils/app_logger.dart';
 import 'package:manager/services/api.service.dart';
 import 'package:manager/services/dialogs.service.dart';
 import 'package:manager/services/language.service.dart';
@@ -23,30 +26,13 @@ class HelpAndSupportViewModel extends BaseViewModel {
           final apiResponse = await _apiService.post(url: ApiEndpoints.reportProblem, data: {"title": title, "description": description});
 
           if (apiResponse.statusCode == 200 || apiResponse.statusCode == 201) {
+            AppLogger.info('Problem report sent successfully');
+            Fluttertoast.showToast(msg: apiResponse.data['msg'] ?? "Problem report sent successfully", backgroundColor: Colors.green);
             return {'success': true, 'message': LanguageService.get("problem_report_sent_successfully")};
           }
         },
       ),
     );
-
-    if (response?.confirmed == true) {
-      Get.snackbar(
-        LanguageService.get("report_submitted"),
-        LanguageService.get("problem_report_sent_successfully"),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.emeraldGreen,
-        colorText: AppColors.white,
-      );
-    } else if (response?.confirmed == false) {
-      // Show error message
-      Get.snackbar(
-        LanguageService.get("error"),
-        response?.data?.toString() ?? LanguageService.get("could_not_submit_report"),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.redBack,
-        colorText: AppColors.white,
-      );
-    }
   }
 
   Future<void> launchEmail() async {
