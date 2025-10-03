@@ -6,7 +6,6 @@ import 'package:stacked_services/stacked_services.dart';
 
 import '../core/locator.dart';
 import '../widgets/dialogs/confirmation/confirmation_dialog.view.dart';
-import '../widgets/dialogs/create_ticket/create_ticket_dialog.view.dart';
 import '../widgets/dialogs/machine_details/machine_details_dialog.view.dart';
 import '../widgets/dialogs/resolve_request_confirmation/resolve_request_dialog.view.dart';
 import '../widgets/dialogs/ticket_details/ticket_details_dialog.view.dart';

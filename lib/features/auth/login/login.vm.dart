@@ -841,7 +841,7 @@ class LoginViewModel extends ReactiveViewModel {
   }
 
   ResultFuture<User> login() async {
-    return await authService.login(email: emailController.text, password: passwordController.text);
+    return await authService.login(email: emailController.text, password: passwordController.text, role: "organization");
   }
 
   ResultFuture<User> googleLogin() async {

@@ -1,13 +1,11 @@
 part of 'resources.dart';
 
 abstract class AppImages {
-  static const String apple = "assets/images/apple.svg";
   static const String linkedin = "assets/images/linkedin.svg";
   static const String google = "assets/images/google.svg";
   static const String facebook = "assets/images/facebook.svg";
   static const String wechat = "assets/images/wechat.svg";
   static const String microsoft = "assets/images/microsoft.svg";
-  static const String cornerCircle = "assets/images/corner-circle.svg";
   static const String back = "assets/images/back.png";
   static const String scannerBody = "assets/images/scanner_body.png";
 

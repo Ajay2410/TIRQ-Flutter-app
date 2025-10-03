@@ -1,29 +1,19 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:manager/features/chat/chat_view.dart';
 import 'package:manager/services/language.service.dart';
-import 'package:manager/widgets/dialogs/create_ticket/create_ticket_dialog.view.dart';
-import 'package:manager/widgets/dialogs/select_maintenance_type/select_maintenance_type_dialog.view.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
-import 'package:manager/core/storage/storage.dart';
-import 'package:manager/core/models/hive/user/user.dart';
-import 'package:stacked_services/stacked_services.dart';
 
-import '../../../core/locator.dart';
 import '../../../core/models/ticket_model.dart';
 import '../../../resources/app_resources/app_resources.dart';
 import '../../../resources/multimedia_resources/resources.dart';
-import '../../../services/dialogs.service.dart';
 import '../../../widgets/common/info_column.dart';
-import '../../../widgets/dialogs/loader/loader_dialog.view.dart';
 import 'tickets_list.vm.dart';
 
 class TicketsListView extends StatefulWidget {
@@ -39,9 +29,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
   AnimationController? _fabAnimationController;
-  Animation<double>? _expandAnimation;
   bool _isSearchVisible = false;
-  bool _fabOpen = false;
 
   // Dynamic border radius for segmented control
   BorderRadius _dynamicBorder = BorderRadius.only(topLeft: Radius.circular(AppSizes.v45), bottomLeft: Radius.circular(AppSizes.v45));
@@ -58,13 +46,6 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
     ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
     // FAB animation controller will be initialized lazily when needed
-  }
-
-  void _initializeFabAnimation() {
-    if (_fabAnimationController == null) {
-      _fabAnimationController = AnimationController(value: _fabOpen ? 1.0 : 0.0, duration: const Duration(milliseconds: 250), vsync: this);
-      _expandAnimation = CurvedAnimation(curve: Curves.fastOutSlowIn, reverseCurve: Curves.easeOutQuad, parent: _fabAnimationController!);
-    }
   }
 
   @override
@@ -100,87 +81,6 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
         _searchFocusNode.unfocus();
       }
     }
-  }
-
-  void _toggleFab() {
-    if (mounted) {
-      _initializeFabAnimation();
-      if (_fabAnimationController!.isAnimating == false) {
-        setState(() {
-          _fabOpen = !_fabOpen;
-        });
-        if (_fabOpen) {
-          _fabAnimationController!.forward();
-        } else {
-          _fabAnimationController!.reverse();
-        }
-      }
-    }
-  }
-
-  Future<void> _onOnlineSupportPressed(TicketsListViewModel model) async {
-    _toggleFab();
-    if (model.machineSupplierData.isEmpty) {
-      final _dialogService = locator<DialogService>();
-      await _dialogService.showCustomDialog(variant: DialogType.loader, data: LoaderDialogAttributes(task: () => model.loadMachines()));
-    }
-
-    if (model.machineSupplierData.isEmpty) {
-      return;
-    }
-
-    Get.dialog(
-      CreateTicketDialogWidget(
-        machineSupplierData: model.machineSupplierData,
-        attributes: CreateTicketDialogAttributes(
-          onSubmit: (problem, errorCode, additionalNotes, attachments, machineId, organizationId) async {
-            print('Problem: $problem');
-            print('Error Code: $errorCode');
-            print('Additional Notes: $additionalNotes');
-            print('Attachments: ${attachments.length} files');
-            await model.createTicket(
-              problem: problem,
-              errorCode: errorCode,
-              additionalNotes: additionalNotes,
-              attachments: attachments,
-              machineId: machineId,
-              organizationId: organizationId,
-            );
-          },
-          onCancel: () {
-            print('Ticket creation cancelled');
-          },
-        ),
-      ),
-    );
-  }
-
-  Future<void> _onSiteVisitPressed(TicketsListViewModel model) async {
-    _toggleFab();
-
-    if (model.machineSupplierData.isEmpty) {
-      final _dialogService = locator<DialogService>();
-      await _dialogService.showCustomDialog(variant: DialogType.loader, data: LoaderDialogAttributes(task: () => model.loadMachines()));
-    }
-
-    if (model.machineSupplierData.isEmpty) {
-      return;
-    }
-
-    Get.dialog(
-      SelectMaintenanceTypeDialog(
-        machineSupplierData: model.machineSupplierData,
-        isWarrantyActive: true, // You can modify this based on your logic
-        attributes: SelectMaintenanceTypeDialogAttributes(
-          onSubmit: (String maintenanceType, String organizationId, String machineId) async {
-            await model.createTicket(maintenanceType: maintenanceType, isFromSiteVisit: true, organizationId: organizationId, machineId: machineId);
-          },
-          onCancel: () {
-            // Handle cancel action if needed
-          },
-        ),
-      ),
-    );
   }
 
   @override
@@ -290,9 +190,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
               ),
             ),
           ),
-          floatingActionButton:
-              model.selectedTabIndex == 0 && getUser().userRole == UserRole.processor ? _buildExpandableFloatingActionButton(model) : null,
-        );
+          );
       },
     );
   }
@@ -703,84 +601,6 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
     }
   }
 
-  Widget _buildExpandableFloatingActionButton(TicketsListViewModel model) {
-    return SizedBox.expand(
-      child: Stack(
-        alignment: Alignment.bottomRight,
-        clipBehavior: Clip.none,
-        children: [_buildTapToCloseFab(), ..._buildExpandingActionButtons(model), _buildTapToOpenFab()],
-      ),
-    );
-  }
-
-  Widget _buildTapToCloseFab() {
-    return IgnorePointer(
-      ignoring: !_fabOpen,
-      child: AnimatedContainer(
-        transformAlignment: Alignment.center,
-        transform: Matrix4.diagonal3Values(!_fabOpen ? 0.7 : 1.0, !_fabOpen ? 0.7 : 1.0, 1.0),
-        duration: const Duration(milliseconds: 250),
-        curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
-        child: AnimatedOpacity(
-          opacity: !_fabOpen ? 0.0 : 1.0,
-          curve: const Interval(0.25, 1.0, curve: Curves.easeInOut),
-          duration: const Duration(milliseconds: 250),
-          child: FloatingActionButton(
-            heroTag: "tickets_close_fab",
-            onPressed: _toggleFab,
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            child: const Icon(Icons.close_rounded),
-          ),
-        ),
-      ),
-    );
-  }
-
-  List<Widget> _buildExpandingActionButtons(TicketsListViewModel model) {
-    final children = <Widget>[];
-    final count = 2; // Online Support and Site Visit
-    final step = 40.0 / (count - 1);
-    final buttons = [
-      _ActionButton(onPressed: () => _onSiteVisitPressed(model), label: 'site_visit'.lang, backgroundColor: AppColors.primaryLight),
-      _ActionButton(onPressed: () => _onOnlineSupportPressed(model), label: 'online_support'.lang, backgroundColor: AppColors.primary),
-    ];
-
-    // Initialize FAB animation if not already done
-    _initializeFabAnimation();
-
-    for (var i = 0, angleInDegrees = 0.0; i < count; i++, angleInDegrees += step) {
-      children.add(_ExpandingActionButton(directionInDegrees: angleInDegrees, maxDistance: 90, progress: _expandAnimation!, child: buttons[i]));
-    }
-    return children;
-  }
-
-  Widget _buildTapToOpenFab() {
-    return IgnorePointer(
-      ignoring: _fabOpen,
-      child: AnimatedContainer(
-        transformAlignment: Alignment.center,
-        transform: Matrix4.diagonal3Values(_fabOpen ? 0.7 : 1.0, _fabOpen ? 0.7 : 1.0, 1.0),
-        duration: const Duration(milliseconds: 250),
-        curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
-        child: AnimatedOpacity(
-          opacity: _fabOpen ? 0.0 : 1.0,
-          curve: const Interval(0.25, 1.0, curve: Curves.easeInOut),
-          duration: const Duration(milliseconds: 250),
-          child: FloatingActionButton(
-            heroTag: "tickets_open_fab",
-            onPressed: _toggleFab,
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            child: const Icon(Icons.add),
-          ),
-        ),
-      ),
-    );
-  }
-
   _openChat(TicketList ticket, TicketsListViewModel model) async {
     if (ticket.chatRoom?.id == null) {
       Fluttertoast.showToast(msg: "Chat room not found");
@@ -809,56 +629,6 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
     if (result == true) {
       await model.loadTickets(forceRefresh: true);
     }
-  }
-}
-
-class _ExpandingActionButton extends StatelessWidget {
-  const _ExpandingActionButton({required this.directionInDegrees, required this.maxDistance, required this.progress, required this.child});
-
-  final double directionInDegrees;
-  final double maxDistance;
-  final Animation<double> progress;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: progress,
-      builder: (context, child) {
-        final offset = Offset.fromDirection(directionInDegrees * (math.pi / 180.0), progress.value * maxDistance);
-        return Positioned(
-          right: -10 + offset.dx,
-          bottom: 6 + offset.dy,
-          child: Transform.rotate(angle: (1.0 - progress.value) * math.pi / 2, child: child!),
-        );
-      },
-      child: FadeTransition(opacity: progress, child: child),
-    );
-  }
-}
-
-class _ActionButton extends StatelessWidget {
-  const _ActionButton({this.onPressed, required this.label, required this.backgroundColor});
-
-  final VoidCallback? onPressed;
-  final String label;
-  final Color backgroundColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      clipBehavior: Clip.antiAlias,
-      color: backgroundColor,
-      elevation: 4,
-      child: InkWell(
-        onTap: onPressed,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
-          child: Text(label, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
-        ),
-      ),
-    );
   }
 }
 

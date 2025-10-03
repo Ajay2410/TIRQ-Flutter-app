@@ -3,18 +3,15 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:manager/features/tickets/add_ticket/add_ticket.view.dart';
 import 'package:manager/routes/routes.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../../../api_endpoints.dart';
 import '../../../core/locator.dart';
-import '../../../core/models/machine_supplier_model.dart';
 import '../../../core/models/ticket_model.dart';
 import '../../../core/utils/app_logger.dart';
 import '../../../services/api.service.dart';
-import '../../../services/machine_supplier.service.dart';
 import '../../../services/ticket.service.dart';
 import '../../../services/stage.service.dart';
 
@@ -264,10 +261,6 @@ class TicketsListViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
-  void navigateToCreateOrEditTicketView() async {
-    await _navigationService.navigateTo(Routes.addTicket, arguments: AddTicketViewAttributes());
-  }
-
   void navigateToTicketDetails({required String ticketId}) async {
     await _navigationService.navigateTo(Routes.ticketDetails, arguments: ticketId);
   }
@@ -288,27 +281,6 @@ class TicketsListViewModel extends ReactiveViewModel {
   // Getter for has more tickets based on selected tab
   bool get hasMoreTickets {
     return selectedTabIndex == 0 ? hasMoreActive : hasMoreResolved;
-  }
-
-  List<MachineSupplier> machineSupplierData = [];
-
-  Future<void> loadMachines() async {
-    try {
-      final MachineSupplierService _machineSupplierService = locator<MachineSupplierService>();
-
-      final result = await _machineSupplierService.getMachineSupplier();
-
-      result.fold(
-        (failure) {
-          Fluttertoast.showToast(msg: "Failed to load machines. Please try again", backgroundColor: Colors.red);
-        },
-        (machineSupplierModel) {
-          machineSupplierData = machineSupplierModel.data ?? [];
-        },
-      );
-    } catch (e) {
-      Fluttertoast.showToast(msg: "Failed to load machines. Please try again", backgroundColor: Colors.red);
-    }
   }
 
   Future<void> createTicket({

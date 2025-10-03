@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manager/core/models/hive/user/user.dart';
 import 'package:manager/core/storage/storage.dart';
-import 'package:manager/features/home/customers_list/customers_list.vm.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 
 class AnalyticsView extends StatelessWidget {

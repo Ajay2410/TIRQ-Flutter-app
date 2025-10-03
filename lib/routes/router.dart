@@ -22,7 +22,6 @@ import 'package:manager/features/requests/approvals/approval.view.dart';
 import 'package:manager/features/search/search_view.dart';
 import 'package:manager/features/home/my_customers/search_organization/search_organization.view.dart';
 import 'package:manager/features/stage/stage.view.dart';
-import 'package:manager/features/tasks/tasks_home/tasks_home.view.dart';
 import 'package:manager/routes/routes.dart';
 import 'package:stacked/stacked.dart';
 
@@ -30,12 +29,10 @@ import '../features/chat/archive_chat/archived_chat_list.view.dart';
 import '../features/Messages/create_group/create_group.view.dart';
 import '../features/auth/auth_selection/auth_selection.view.dart';
 import '../features/employee/add_employee/add_employee.view.dart';
-import '../features/home/customers_list/customers_list.view.dart';
 import '../features/home/my_customers/machine_details/customer_details/customer_edit_details.view.dart';
 import '../features/home/my_customers/my_customers.view.dart';
 import '../features/home/my_customers/customer_details/customer_details.view.dart';
 import '../features/home/my_customers/create_customer/create_new_customer.view.dart';
-import '../features/home/machine_supplier/machine_supplier.view.dart';
 import '../core/models/customer.dart';
 import '../features/home/employee_home/employee_home.view.dart';
 import '../features/home/organization_home/organization_home.view.dart';
@@ -50,16 +47,12 @@ import '../features/profile/create_or_edit_org/update_employee_profile.view.dart
 import '../features/profile/home/profile.view.dart';
 import '../features/service_pricing/set_service_pricing.view.dart';
 import '../features/profile/general/general.view.dart';
-import '../features/tickets/add_ticket/add_ticket.view.dart';
 import '../features/tickets/review_ticket/review_ticket.view.dart';
 import '../features/tickets/tickets_list/tickets_list.view.dart';
 import '../features/organization/employees_list/employee_role_cards.view.dart';
 import '../features/home/machine_records/machine_records.view.dart';
 import '../features/home/machine_records/machine_details/machine_details.view.dart';
 import '../features/home/machine_records/add_new_machine_model.view.dart';
-import '../features/home/machine_overview/machine_overview.view.dart';
-import '../features/home/machine_overview/machine_overview_details/machine_overview_details.view.dart';
-import '../core/models/machine_overview_model.dart';
 import '../core/models/machine_model.dart';
 
 // TODO: Add imports for the new views when they are created
@@ -144,21 +137,9 @@ class AppRouter extends RouterBase {
         settings: data,
       );
     },
-    CustomersListView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => CustomersListView(),
-        settings: data,
-      );
-    },
     MyCustomersView: (data) {
       return MaterialPageRoute(
         builder: (BuildContext _) => MyCustomersView(),
-        settings: data,
-      );
-    },
-    MachineSupplierView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => MachineSupplierView(),
         settings: data,
       );
     },
@@ -258,22 +239,6 @@ class AppRouter extends RouterBase {
             (BuildContext _) => EmployeeProfileView(
               attributes: data.arguments as EmployeeProfileViewAttributes,
             ),
-        settings: data,
-      );
-    },
-
-    AddTicketView: (data) {
-      return MaterialPageRoute(
-        builder:
-            (BuildContext _) => AddTicketView(
-              attributes: data.arguments as AddTicketViewAttributes,
-            ),
-        settings: data,
-      );
-    },
-    TasksHomeView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => TasksHomeView(),
         settings: data,
       );
     },
@@ -619,20 +584,6 @@ class AppRouter extends RouterBase {
         settings: data,
       );
     },
-    MachineOverviewView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => MachineOverviewView(),
-      );
-    },
-    MachineOverviewDetailsView: (data) {
-      return MaterialPageRoute(
-        builder:
-            (BuildContext _) => MachineOverviewDetailsView(
-              machine: data.arguments as MachineOverviewList?,
-            ),
-        settings: data,
-      );
-    },
     SetServicePricingView: (data) {
       return MaterialPageRoute(
         builder: (BuildContext _) => SetServicePricingView(),
@@ -659,9 +610,7 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.otpVerification, page: OtpVerificationView),
     RouteDef(Routes.organizationHome, page: OrganizationHomeView),
     RouteDef(Routes.employeeHome, page: EmployeeHomeView),
-    RouteDef(Routes.customersList, page: CustomersListView),
     RouteDef(Routes.myCustomers, page: MyCustomersView),
-    RouteDef(Routes.machineSupplier, page: MachineSupplierView),
     RouteDef(Routes.createNewCustomer, page: CreateNewCustomerView),
     RouteDef(Routes.customerDetails, page: CustomerDetailsView),
     RouteDef(Routes.ticketsList, page: TicketsListView),
@@ -670,8 +619,6 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.qr, page: QRView),
     RouteDef(Routes.updateOrg, page: UpdateOrganizationView),
     RouteDef(Routes.updateEmployee, page: EmployeeProfileView),
-    RouteDef(Routes.addTicket, page: AddTicketView),
-    RouteDef(Routes.tasks, page: TasksHomeView),
     RouteDef(Routes.adminManagersList, page: AdminManagersListView),
     RouteDef(Routes.stage, page: StageView),
     RouteDef(Routes.approval, page: ApprovalView),
@@ -704,8 +651,6 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.authSelectionView, page: AuthSelectionView),
     RouteDef(Routes.generalSetting, page: GeneralSettingView),
     RouteDef(Routes.machineRecords, page: MachineRecordsView),
-    RouteDef(Routes.machineOverview, page: MachineOverviewView),
-    RouteDef(Routes.machineOverviewDetails, page: MachineOverviewDetailsView),
     RouteDef(Routes.machineDetails, page: MachineDetailsView),
     RouteDef(Routes.addNewMachineModel, page: AddNewMachineModelView),
     RouteDef(Routes.customerEditDetailsView, page: CustomerEditDetailsView),

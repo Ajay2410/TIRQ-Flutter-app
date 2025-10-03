@@ -4,7 +4,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-import 'package:manager/core/models/hive/user/user.dart';
 import 'package:manager/features/home/organization_home/organization_home.vm.dart';
 import 'package:manager/routes/routes.dart';
 import 'package:manager/services/language.service.dart';
@@ -234,74 +233,30 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
     );
   }
 
-  List<DashboardCardData> _getMainActionsForRole(UserRole? userRole) {
-    // Define all possible actions with their properties
-    final Map<String, DashboardCardData> allActions = {
-      'tickets_summary': DashboardCardData(
+  List<DashboardCardData> _getMainActionsForOrganization() {
+    // Organization-specific actions in order: Tickets Summary, My Customers, My Teams, Tasks, PI & Invoice
+    return [
+      DashboardCardData(
         title: LanguageService.get('tickets_summary'),
         icon: AppImages.ticketSummary,
         color: AppColors.mediumPeriwinkle,
         route: Routes.ticketsList,
       ),
-      'my_customers': DashboardCardData(
-        title: LanguageService.get('my_customers'),
-        icon: AppImages.myCustomers,
-        color: AppColors.skyBlue,
-        route: Routes.myCustomers,
-      ),
-      'my_teams': DashboardCardData(
-        title: LanguageService.get('my_teams'),
-        icon: AppImages.myTeam,
-        color: AppColors.greenbackground,
-        route: Routes.teams,
-      ),
-      'tasks': DashboardCardData(title: LanguageService.get('tasks'), icon: AppImages.tasks, color: AppColors.redbackground, route: Routes.tasks),
-      'pi_invoice': DashboardCardData(
+      DashboardCardData(title: LanguageService.get('my_customers'), icon: AppImages.myCustomers, color: AppColors.skyBlue, route: Routes.myCustomers),
+      DashboardCardData(title: LanguageService.get('my_teams'), icon: AppImages.myTeam, color: AppColors.greenbackground, route: Routes.teams),
+      DashboardCardData(title: LanguageService.get('tasks'), icon: AppImages.tasks, color: AppColors.redbackground, route: Routes.tasks),
+      DashboardCardData(
         title: LanguageService.get('pi_invoice'),
         icon: AppImages.piInvoice,
         color: AppColors.darkGreenBack,
         route: Routes.invoice,
         isComingSoon: true,
       ),
-      'machine_suppliers': DashboardCardData(
-        title: LanguageService.get('machine_suppliers'),
-        icon: AppImages.machineSuppliers,
-        color: AppColors.skyBlue,
-        route: Routes.machineSupplier,
-      ),
-      'glass_flow_system': DashboardCardData(
-        title: LanguageService.get('glass_flow_system'),
-        icon: AppImages.glassFlowSystem,
-        color: AppColors.forestGreen,
-        route: Routes.glassFlowSystem,
-        isComingSoon: true,
-      ),
-    };
-
-    // Define role-based action order using enum
-    List<String> actionOrder;
-    switch (userRole) {
-      case UserRole.organization:
-        // Organization role actions in order: Tickets Summary, My Teams, Tasks, PI & Invoice
-        actionOrder = ['tickets_summary', 'my_customers', 'my_teams', 'tasks', 'pi_invoice'];
-        break;
-      case UserRole.processor:
-        // Processor role actions in order: Tickets Summary, Tasks, Machine Suppliers, My Teams, PI & Invoice, Glass Flow System
-        actionOrder = ['tickets_summary', 'tasks', 'machine_suppliers', 'my_teams', 'pi_invoice', 'glass_flow_system'];
-        break;
-      default:
-        // Default fallback - show all features if role is not recognized
-        actionOrder = ['tickets_summary', 'my_customers', 'my_teams', 'tasks', 'pi_invoice'];
-        break;
-    }
-
-    // Return actions in the specified order
-    return actionOrder.where((actionKey) => allActions.containsKey(actionKey)).map((actionKey) => allActions[actionKey]!).toList();
+    ];
   }
 
   Widget _buildMainActionCard(BuildContext context, OrganizationHomeViewModel model) {
-    final userRole = model.user.primaryRole;
-    final List<DashboardCardData> mainActions = _getMainActionsForRole(userRole);
+    final List<DashboardCardData> mainActions = _getMainActionsForOrganization();
 
     return Container(
       padding: EdgeInsets.all(20),
@@ -333,74 +288,44 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
     );
   }
 
-  List<DashboardCardData> _getSecondaryFeaturesForRole(UserRole? userRole) {
-    // Define all possible secondary features with their properties
-    final Map<String, DashboardCardData> allSecondaryFeatures = {
-      'analytics_dashboard': DashboardCardData(
+  List<DashboardCardData> _getSecondaryFeaturesForOrganization() {
+    // Organization-specific secondary features: Analytics Dashboard, Machine Records, Feedback & Ratings, Installation Tracker, Feedback Survey
+    return [
+      DashboardCardData(
         title: LanguageService.get('analytics_dashboard'),
         icon: AppImages.analyticsDashboard,
         color: AppColors.amberOrange,
         route: Routes.analytics,
       ),
-      'machine_records': DashboardCardData(
+      DashboardCardData(
         title: LanguageService.get('machine_records'),
         icon: AppImages.machineRecords,
         color: AppColors.crimsonRed,
         route: Routes.machinesList,
       ),
-      'machine_overview': DashboardCardData(
-        title: LanguageService.get('machine_overview'),
-        icon: AppImages.machineRecords,
-        color: AppColors.crimsonRed,
-        route: Routes.machineOverview,
-      ),
-      'feedback_rating': DashboardCardData(
+      DashboardCardData(
         title: LanguageService.get('feedback_rating'),
         icon: AppImages.feedbackRating,
         color: AppColors.mintGreen,
         route: Routes.feedback,
       ),
-      'installation_tracker': DashboardCardData(
+      DashboardCardData(
         title: LanguageService.get('installation_tracker'),
         icon: AppImages.installationTracker,
         color: AppColors.indigoBlue,
         route: Routes.installation,
       ),
-      'feedback_survey': DashboardCardData(
+      DashboardCardData(
         title: LanguageService.get('feedback_survey'),
         icon: AppImages.feedbackSurvey,
         color: AppColors.oliveGreen,
         route: Routes.feedbackSurvey,
       ),
-    };
-
-    // Define role-based secondary features order using enum
-    List<String> featureOrder;
-    switch (userRole) {
-      case UserRole.organization:
-        // Organization role secondary features: Analytics Dashboard, Machine Records, Feedback & Ratings, Installation Tracker, Feedback Survey
-        featureOrder = ['analytics_dashboard', 'machine_records', 'feedback_rating', 'installation_tracker', 'feedback_survey'];
-        break;
-      case UserRole.processor:
-        // Processor role secondary features: Analytics Dashboard, Machine Overview, Installation Tracker, Feedback Survey
-        featureOrder = ['analytics_dashboard', 'machine_overview', 'installation_tracker', 'feedback_survey'];
-        break;
-      default:
-        // Default fallback - show all features if role is not recognized
-        featureOrder = ['analytics_dashboard', 'machine_records', 'feedback_rating', 'installation_tracker', 'feedback_survey'];
-        break;
-    }
-
-    // Return features in the specified order
-    return featureOrder
-        .where((featureKey) => allSecondaryFeatures.containsKey(featureKey))
-        .map((featureKey) => allSecondaryFeatures[featureKey]!)
-        .toList();
+    ];
   }
 
   Widget _buildSecondaryFeaturesCard(BuildContext context, OrganizationHomeViewModel model) {
-    final userRole = model.user.primaryRole;
-    final List<DashboardCardData> secondaryFeatures = _getSecondaryFeaturesForRole(userRole);
+    final List<DashboardCardData> secondaryFeatures = _getSecondaryFeaturesForOrganization();
 
     return Container(
       padding: EdgeInsets.all(12),
