@@ -4,7 +4,8 @@
 
 import 'dart:convert';
 
-MachineModel machineModelFromJson(String str) => MachineModel.fromJson(json.decode(str));
+MachineModel machineModelFromJson(String str) =>
+    MachineModel.fromJson(json.decode(str));
 
 String machineModelToJson(MachineModel data) => json.encode(data.toJson());
 
@@ -12,19 +13,20 @@ class MachineModel {
   int? count;
   List<Datum>? data;
 
-  MachineModel({
-    this.count,
-    this.data,
-  });
+  MachineModel({this.count, this.data});
 
   factory MachineModel.fromJson(Map<String, dynamic> json) => MachineModel(
     count: json["count"],
-    data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+    data:
+        json["data"] == null
+            ? []
+            : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
     "count": count,
-    "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+    "data":
+        data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
   };
 }
 
@@ -64,7 +66,10 @@ class Datum {
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-    processingDimensions: json["processingDimensions"] == null ? null : ProcessingDimensions.fromJson(json["processingDimensions"]),
+    processingDimensions:
+        json["processingDimensions"] == null
+            ? null
+            : ProcessingDimensions.fromJson(json["processingDimensions"]),
     id: json["_id"],
     machineName: json["machineName"],
     modelNumber: json["modelNumber"],
@@ -76,8 +81,10 @@ class Datum {
     status: json["status"],
     isActive: json["isActive"],
     remarks: json["remarks"],
-    createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
-    updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
+    createdAt:
+        json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
+    updatedAt:
+        json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
   );
 
@@ -98,6 +105,11 @@ class Datum {
     "updatedAt": updatedAt?.toIso8601String(),
     "__v": v,
   };
+
+  @override
+  String toString() {
+    return machineName ?? '';
+  }
 }
 
 class ProcessingDimensions {
@@ -117,14 +129,15 @@ class ProcessingDimensions {
     this.maxSpeed,
   });
 
-  factory ProcessingDimensions.fromJson(Map<String, dynamic> json) => ProcessingDimensions(
-    maxHeight: json["maxHeight"],
-    maxWidth: json["maxWidth"],
-    minHeight: json["minHeight"],
-    minWidth: json["minWidth"],
-    thickness: json["thickness"],
-    maxSpeed: json["maxSpeed"],
-  );
+  factory ProcessingDimensions.fromJson(Map<String, dynamic> json) =>
+      ProcessingDimensions(
+        maxHeight: json["maxHeight"],
+        maxWidth: json["maxWidth"],
+        minHeight: json["minHeight"],
+        minWidth: json["minWidth"],
+        thickness: json["thickness"],
+        maxSpeed: json["maxSpeed"],
+      );
 
   Map<String, dynamic> toJson() => {
     "maxHeight": maxHeight,

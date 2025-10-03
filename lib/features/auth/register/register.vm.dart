@@ -18,7 +18,6 @@ class RegisterViewModel extends ReactiveViewModel {
 
   final formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController otherDescriptionController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -26,9 +25,7 @@ class RegisterViewModel extends ReactiveViewModel {
   // Organization app only handles organization registration
   bool get isOrganization => true;
 
-  String? _organizationType;
-
-  String? get organizationType => _organizationType;
+  // Organization type selection removed from UI; default handled on submit
 
   String? _language = "English";
 
@@ -56,7 +53,6 @@ class RegisterViewModel extends ReactiveViewModel {
 
   void init() {
     nameController.addListener(_updateFormValidity);
-    otherDescriptionController.addListener(_updateFormValidity);
     emailController.addListener(_updateFormValidity);
     phoneController.addListener(_updateFormValidity);
     passwordController.addListener(_updateFormValidity);
@@ -64,17 +60,7 @@ class RegisterViewModel extends ReactiveViewModel {
 
   // Removed setRegistrationType - organization app only handles organization registration
 
-  void _clearForm() {
-    nameController.clear();
-    otherDescriptionController.clear();
-    emailController.clear();
-    phoneController.clear();
-    passwordController.clear();
-    _organizationType = null;
-    _fullPhoneNumber = '';
-    _countryCode = '';
-    _updateFormValidity();
-  }
+  // Removed unused _clearForm()
 
   void updatePhoneNumber(PhoneNumber phoneNumber) {
     _fullPhoneNumber = phoneNumber.number;
@@ -87,14 +73,7 @@ class RegisterViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
-  void updateOrganizationType(String? value) {
-    _organizationType = value;
-    if (value != "Others") {
-      otherDescriptionController.clear();
-    }
-    _updateFormValidity();
-    notifyListeners();
-  }
+  // Removed updateOrganizationType - no organization type selection in UI
 
   void updateLanguage(String? value) {
     _language = value;
@@ -109,17 +88,13 @@ class RegisterViewModel extends ReactiveViewModel {
   }
 
   void _updateFormValidity() {
-    // Organization validation only
-    bool isOtherValid = _organizationType != "Others" || (_organizationType == "Others" && otherDescriptionController.text.isNotEmpty);
-
+    // Validation without organization type selection
     bool isValid =
         nameController.text.isNotEmpty &&
         emailController.text.isNotEmpty &&
         phoneController.text.isNotEmpty &&
         passwordController.text.isNotEmpty &&
-        _organizationType != null &&
-        _language != null &&
-        isOtherValid;
+        _language != null;
 
     if (_isFormValid != isValid) {
       _isFormValid = isValid;
@@ -137,7 +112,10 @@ class RegisterViewModel extends ReactiveViewModel {
       response.fold((exception) {}, (success) {
         _navigationService.navigateTo(
           Routes.otpVerification,
-          arguments: OtpVerificationViewAttributes(isOrganization: true, email: emailController.text),
+          arguments: OtpVerificationViewAttributes(
+            isOrganization: true,
+            email: emailController.text,
+          ),
         );
       });
     } else {
@@ -148,12 +126,9 @@ class RegisterViewModel extends ReactiveViewModel {
   }
 
   ResultFuture<String> registerOrganization() async {
-    String finalOrgType = _organizationType!;
-    if (_organizationType == "Others" && otherDescriptionController.text.isNotEmpty) {
-      finalOrgType = "Others: ${otherDescriptionController.text}";
-    }
-
-    String role = _organizationType == "Machine Manufacturer" ? "organization" : "processor";
+    // With no selection in UI, default to organization role and a fixed org type
+    const String finalOrgType = "Machine Manufacturer";
+    const String role = "organization";
 
     return await authService.register(
       fullName: nameController.text,
@@ -172,7 +147,6 @@ class RegisterViewModel extends ReactiveViewModel {
   @override
   void dispose() {
     nameController.dispose();
-    otherDescriptionController.dispose();
     emailController.dispose();
     phoneController.dispose();
     passwordController.dispose();

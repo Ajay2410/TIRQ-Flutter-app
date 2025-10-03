@@ -1306,6 +1306,7 @@ class TicketDetailsView extends StatelessWidget {
                             ? AppColors.gray
                             : AppColors.primaryDark,
                     foregroundColor: AppColors.white,
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppSizes.v50),
                     ),
@@ -1357,6 +1358,7 @@ class TicketDetailsView extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppSizes.v50),
                       ),
+                      elevation: 0,
                       padding: EdgeInsets.symmetric(vertical: 16),
                     ),
                     child: Text(
