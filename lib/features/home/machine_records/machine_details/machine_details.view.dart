@@ -96,7 +96,7 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CommonTextField(
-          controller: TextEditingController(text: "${widget.machine.modelNumber} - ${widget.machine.machineName}"),
+          controller: TextEditingController(text: widget.machine.machineName),
           label: 'machine_model_name'.lang,
           placeholder: '',
           readOnly: true,
@@ -130,29 +130,40 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
         ),
         const SizedBox(height: 16),
 
-        CommonTextField(
-          controller: _addOnController..text = widget.machine.remarks ?? '',
-          label: 'add_on'.lang,
-          placeholder: 'enter_add_on_here'.lang,
-          maxLines: 1,
-          suffixIcon: CustomPopup(
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Add machine add-ons like:', style: TextStyle(color: AppColors.white, fontSize: 11, fontWeight: FontWeight.w500)),
-                SizedBox(height: 4),
-                Text(
-                  '''• Machine with 2/4 station loader\n• Machine with loader & unloader\n• Machine with Auto detection\n• Machine with Single/double blower (furnace/washing)\netc.''',
-                  style: TextStyle(color: AppColors.white, fontSize: 9, fontWeight: FontWeight.w500),
-                ),
-              ],
+        Stack(
+          children: [
+            CommonTextField(
+
+              controller: _addOnController..text = widget.machine.remarks ?? '',
+              label: 'add_on'.lang,
+              placeholder: 'enter_add_on_here'.lang,
+              textStyle: TextStyle(color: AppColors.black),
+              enabled: false,
+              maxLines: 1,
             ),
-            position: PopupPosition.top,
-            arrowColor: AppColors.textGrey,
-            backgroundColor: AppColors.textGrey,
-            child: Padding(padding: EdgeInsets.all(16), child: Image.asset(AppImages.alert, width: 16, height: 16)),
-          ),
+            Positioned(
+              right: 0,
+              bottom: 2,
+              child: Center(child: CustomPopup(
+                content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Add machine add-ons like:', style: TextStyle(color: AppColors.white, fontSize: 11, fontWeight: FontWeight.w500)),
+                    SizedBox(height: 4),
+                    Text(
+                      '''• Machine with 2/4 station loader\n• Machine with loader & unloader\n• Machine with Auto detection\n• Machine with Single/double blower (furnace/washing)\netc.''',
+                      style: TextStyle(color: AppColors.white, fontSize: 9, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                position: PopupPosition.top,
+                arrowColor: AppColors.textGrey,
+                backgroundColor: AppColors.textGrey,
+                child: Padding(padding: EdgeInsets.all(16), child: Image.asset(AppImages.alert, width: 16, height: 16)),
+              )),
+            )
+          ],
         ),
         const SizedBox(height: 24),
 
@@ -269,6 +280,8 @@ class _MachineDetailsViewState extends State<MachineDetailsView> {
           label: 'notes_special_instructions'.lang,
           placeholder: 'link_here'.lang,
           maxLines: 3,
+          textStyle: TextStyle(color: AppColors.black),
+          enabled: false,
         ),
       ],
     );

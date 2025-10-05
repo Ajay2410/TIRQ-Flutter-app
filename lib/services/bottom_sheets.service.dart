@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:manager/widgets/bottom_sheets/file_picker_options/file_picker_options_sheet.dart';
 import 'package:manager/widgets/bottom_sheets/network_unavailable/network_unavailable_sheet.view.dart';
 import 'package:manager/widgets/bottom_sheets/qr_scan/qr_scan_sheet.view.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../core/locator.dart';
 
-enum BottomSheetType { networkUnavailable, qrScan, filePickerOptions }
+enum BottomSheetType { networkUnavailable, qrScan }
 
 Widget buildSheetVariant(
   BuildContext context,
@@ -24,11 +23,6 @@ Widget buildSheetVariant(
         request: request as SheetRequest<QrScanSheetAttributes>,
         completer: completer,
       );
-    case BottomSheetType.filePickerOptions:
-      return FilePickerOptionsSheet(
-        request: request as SheetRequest<FilePickerOptionsSheetAttributes>,
-        completer: completer,
-      );
   }
   return BottomSheet(
     onClosing: () {},
@@ -42,7 +36,6 @@ setUpBottomSheets() {
   final Map<BottomSheetType, SheetBuilder> bottomSheetsMap = {
     BottomSheetType.networkUnavailable: buildSheetVariant,
     BottomSheetType.qrScan: buildSheetVariant,
-    BottomSheetType.filePickerOptions: buildSheetVariant,
   };
 
   final BottomSheetService bottomSheetService = locator<BottomSheetService>();

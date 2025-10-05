@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_popup/flutter_popup.dart';
+import 'package:get/get.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:phone_input/phone_input_package.dart';
 import 'package:manager/core/models/organization.dart';
@@ -29,9 +30,15 @@ class UpdateOrganizationView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<UpdateOrganizationViewModel>.reactive(
       viewModelBuilder: () => UpdateOrganizationViewModel(),
-      onViewModelReady: (UpdateOrganizationViewModel model) => model.init(attributes.organization),
+      onViewModelReady:
+          (UpdateOrganizationViewModel model) =>
+              model.init(attributes.organization),
       disposeViewModel: false,
-      builder: (BuildContext context, UpdateOrganizationViewModel model, Widget? child) {
+      builder: (
+        BuildContext context,
+        UpdateOrganizationViewModel model,
+        Widget? child,
+      ) {
         return WillPopScope(
           onWillPop: () async {
             // if (!model.isDataChanged)
@@ -44,7 +51,11 @@ class UpdateOrganizationView extends StatelessWidget {
             backgroundColor: AppColors.cultured,
             body:
                 model.isBusy
-                    ? Center(child: CircularProgressIndicator(color: AppColors.primary))
+                    ? Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primary,
+                      ),
+                    )
                     : Form(
                       key: model.formKey,
                       child: SingleChildScrollView(
@@ -71,14 +82,23 @@ class UpdateOrganizationView extends StatelessWidget {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context, UpdateOrganizationViewModel model) {
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context,
+    UpdateOrganizationViewModel model,
+  ) {
     return GradientAppBar(titleKey: "update_profile");
   }
 
-  Widget _buildPersonalInformationSection(BuildContext context, UpdateOrganizationViewModel model) {
+  Widget _buildPersonalInformationSection(
+    BuildContext context,
+    UpdateOrganizationViewModel model,
+  ) {
     return Container(
       padding: const EdgeInsets.all(13),
-      decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -95,28 +115,56 @@ class UpdateOrganizationView extends StatelessWidget {
                         height: 80,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.primary, width: 3),
+                          border: Border.all(
+                            color: AppColors.primary,
+                            width: 3,
+                          ),
                           image:
-                              model.logoFile != null
-                                  ? DecorationImage(image: FileImage(model.logoFile!), fit: BoxFit.cover)
-                                  : model.logoUrl.isNotEmpty
-                                  ? DecorationImage(image: NetworkImage(model.logoUrl), fit: BoxFit.cover)
+                              model.profileImageFile != null
+                                  ? DecorationImage(
+                                    image: FileImage(model.profileImageFile!),
+                                    fit: BoxFit.cover,
+                                  )
+                                  : model.profileImageUrl.isNotEmpty
+                                  ? DecorationImage(
+                                    image: NetworkImage(model.profileImageUrl),
+                                    fit: BoxFit.cover,
+                                  )
                                   : null,
                         ),
-                        child: model.logoFile == null && model.logoUrl.isEmpty ? const Icon(Icons.person, size: 40, color: AppColors.gray) : null,
-                      ).animate().scale(duration: 500.ms, curve: Curves.easeOutBack),
+                        child:
+                            model.profileImageFile == null &&
+                                    model.profileImageUrl.isEmpty
+                                ? const Icon(
+                                  Icons.person,
+                                  size: 40,
+                                  color: AppColors.gray,
+                                )
+                                : null,
+                      ).animate().scale(
+                        duration: 500.ms,
+                        curve: Curves.easeOutBack,
+                      ),
 
                       Positioned(
                         bottom: 0,
                         right: 0,
                         child: GestureDetector(
                           onTap: () {
-                            // model.navigateToCreateOrEditOrgView();
+                            _showProfileImagePickerOptions(context, model);
                           },
                           child: Container(
                             padding: EdgeInsets.all(3.5),
-                            decoration: BoxDecoration(color: AppColors.primaryDark, borderRadius: BorderRadius.circular(14)),
-                            child: Image.asset(AppImages.edit, width: 20, height: 20, color: Colors.white),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryDark,
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: Image.asset(
+                              AppImages.edit,
+                              width: 20,
+                              height: 20,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -128,21 +176,31 @@ class UpdateOrganizationView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        (model.profileModel?.user?.fullName != null && model.profileModel!.user!.fullName!.isNotEmpty)
+                        (model.profileModel?.user?.fullName != null &&
+                                model.profileModel!.user!.fullName!.isNotEmpty)
                             ? model.profileModel!.user!.fullName!
                             : model.nameController.text.isNotEmpty
                             ? model.nameController.text
                             : "Leslie Alexander",
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.black),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.black,
+                        ),
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        (model.profileModel?.user?.email != null && model.profileModel!.user!.email!.isNotEmpty)
+                        (model.profileModel?.user?.email != null &&
+                                model.profileModel!.user!.email!.isNotEmpty)
                             ? model.profileModel!.user!.email!
                             : model.emailController.text.isNotEmpty
                             ? model.emailController.text
                             : "yourmail@gmail.com",
-                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: AppColors.textGrey),
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textGrey,
+                        ),
                       ),
                     ],
                   ),
@@ -158,7 +216,11 @@ class UpdateOrganizationView extends StatelessWidget {
               Expanded(
                 child: Text(
                   LanguageService.get("personal_information"),
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.black),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.black,
+                  ),
                 ),
               ),
               // Edit Details / Update Button
@@ -170,10 +232,19 @@ class UpdateOrganizationView extends StatelessWidget {
                     model.togglePersonalInfoEdit();
                   }
                 },
-                label: (model.isPersonalInfoEditable ?? false) ? LanguageService.get("update") : LanguageService.get("edit_details"),
-                backgroundColor: (model.isPersonalInfoEditable ?? false) ? AppColors.success : AppColors.primaryDark,
+                label:
+                    (model.isPersonalInfoEditable ?? false)
+                        ? LanguageService.get("update")
+                        : LanguageService.get("edit_details"),
+                backgroundColor:
+                    (model.isPersonalInfoEditable ?? false)
+                        ? AppColors.success
+                        : AppColors.primaryDark,
                 textColor: AppColors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
+                ),
                 borderRadius: 10,
                 fontSize: 10,
                 height: 28,
@@ -185,12 +256,17 @@ class UpdateOrganizationView extends StatelessWidget {
 
           // Organization Name (Read-only)
           CommonTextField(
-            controller: TextEditingController(text: model.profileModel?.organizationName ?? "Samsung"),
+            controller: TextEditingController(
+              text: model.profileModel?.organizationName ?? "Samsung",
+            ),
             label: LanguageService.get("organization_name"),
             placeholder: model.profileModel?.organizationName ?? "Samsung",
             readOnly: true,
             contentPadding: EdgeInsets.all(12),
-            textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            textStyle: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           const SizedBox(height: 16),
 
@@ -203,7 +279,10 @@ class UpdateOrganizationView extends StatelessWidget {
                 placeholder: LanguageService.get("unit_name"),
                 readOnly: !(model.isPersonalInfoEditable ?? false),
                 contentPadding: EdgeInsets.all(12),
-                textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                textStyle: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               Positioned(
                 right: 0,
@@ -212,12 +291,23 @@ class UpdateOrganizationView extends StatelessWidget {
                   child: CustomPopup(
                     content: Text(
                       '''Use this to create and manage a new factory or unit under your\ncompany — such as a new location, branch, or brand in another country.''',
-                      style: TextStyle(color: AppColors.white, fontSize: 9, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: 9,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     position: PopupPosition.top,
                     arrowColor: AppColors.textGrey,
                     backgroundColor: AppColors.textGrey,
-                    child: Padding(padding: EdgeInsets.all(16), child: Image.asset(AppImages.alert, width: 16, height: 16)),
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Image.asset(
+                        AppImages.alert,
+                        width: 16,
+                        height: 16,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -227,12 +317,17 @@ class UpdateOrganizationView extends StatelessWidget {
 
           // Your Name (Read-only)
           CommonTextField(
-            controller: TextEditingController(text: model.profileModel?.user?.fullName ?? "Raj"),
+            controller: TextEditingController(
+              text: model.profileModel?.user?.fullName ?? "Raj",
+            ),
             label: LanguageService.get("your_name"),
             placeholder: model.profileModel?.user?.fullName ?? "Raj",
             readOnly: true,
             contentPadding: EdgeInsets.all(12),
-            textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            textStyle: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           const SizedBox(height: 16),
 
@@ -246,13 +341,21 @@ class UpdateOrganizationView extends StatelessWidget {
 
           // Primary Email with verification
           CommonTextField(
-            controller: TextEditingController(text: model.profileModel?.user?.email ?? "tt@gamil.com"),
+            controller: TextEditingController(
+              text: model.profileModel?.user?.email ?? "tt@gamil.com",
+            ),
             label: LanguageService.get("primary_email"),
             placeholder: model.profileModel?.user?.email ?? "tt@gamil.com",
             keyboardType: TextInputType.emailAddress,
-            suffixIcon: Padding(padding: const EdgeInsets.all(12), child: Image.asset(AppImages.verified, width: 22, height: 22)),
+            suffixIcon: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Image.asset(AppImages.verified, width: 22, height: 22),
+            ),
             contentPadding: EdgeInsets.all(12),
-            textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            textStyle: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           const SizedBox(height: 12),
 
@@ -266,12 +369,21 @@ class UpdateOrganizationView extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Image.asset(AppImages.alert, width: 19, height: 19, color: AppColors.success),
+                Image.asset(
+                  AppImages.alert,
+                  width: 19,
+                  height: 19,
+                  color: AppColors.success,
+                ),
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     LanguageService.get('verification_sent_message'),
-                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.success),
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.success,
+                    ),
                   ),
                 ),
               ],
@@ -282,10 +394,16 @@ class UpdateOrganizationView extends StatelessWidget {
     );
   }
 
-  Widget _buildCorporateAddressSection(BuildContext context, UpdateOrganizationViewModel model) {
+  Widget _buildCorporateAddressSection(
+    BuildContext context,
+    UpdateOrganizationViewModel model,
+  ) {
     return Container(
       padding: const EdgeInsets.all(13),
-      decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,7 +413,11 @@ class UpdateOrganizationView extends StatelessWidget {
               Expanded(
                 child: Text(
                   LanguageService.get("corporate_address"),
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.black),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.black,
+                  ),
                 ),
               ),
               // Edit Details / Update Button
@@ -307,10 +429,19 @@ class UpdateOrganizationView extends StatelessWidget {
                     model.toggleCorporateAddressEdit();
                   }
                 },
-                label: (model.isCorporateAddressEditable ?? false) ? LanguageService.get("update") : LanguageService.get("edit_details"),
-                backgroundColor: (model.isCorporateAddressEditable ?? false) ? AppColors.success : AppColors.primaryDark,
+                label:
+                    (model.isCorporateAddressEditable ?? false)
+                        ? LanguageService.get("update")
+                        : LanguageService.get("edit_details"),
+                backgroundColor:
+                    (model.isCorporateAddressEditable ?? false)
+                        ? AppColors.success
+                        : AppColors.primaryDark,
                 textColor: AppColors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
+                ),
                 borderRadius: 10,
                 fontSize: 10,
                 height: 28,
@@ -326,7 +457,10 @@ class UpdateOrganizationView extends StatelessWidget {
             placeholder: LanguageService.get("address_line_1"),
             readOnly: !(model.isCorporateAddressEditable ?? false),
             contentPadding: EdgeInsets.all(12),
-            textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            textStyle: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           const SizedBox(height: 15),
 
@@ -336,7 +470,10 @@ class UpdateOrganizationView extends StatelessWidget {
             placeholder: LanguageService.get("address_line_2"),
             readOnly: !(model.isCorporateAddressEditable ?? false),
             contentPadding: EdgeInsets.all(12),
-            textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            textStyle: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           const SizedBox(height: 15),
 
@@ -349,7 +486,10 @@ class UpdateOrganizationView extends StatelessWidget {
                   placeholder: LanguageService.get("city"),
                   readOnly: !(model.isCorporateAddressEditable ?? false),
                   contentPadding: EdgeInsets.all(12),
-                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  textStyle: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
               const SizedBox(width: 15),
@@ -361,7 +501,10 @@ class UpdateOrganizationView extends StatelessWidget {
                   placeholder: LanguageService.get("state_province"),
                   readOnly: !(model.isCorporateAddressEditable ?? false),
                   contentPadding: EdgeInsets.all(12),
-                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  textStyle: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
@@ -388,7 +531,10 @@ class UpdateOrganizationView extends StatelessWidget {
                   placeholder: LanguageService.get("pin_code"),
                   readOnly: !(model.isCorporateAddressEditable ?? false),
                   contentPadding: EdgeInsets.all(12),
-                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  textStyle: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
@@ -398,10 +544,16 @@ class UpdateOrganizationView extends StatelessWidget {
     );
   }
 
-  Widget _buildFactoryAddressSection(BuildContext context, UpdateOrganizationViewModel model) {
+  Widget _buildFactoryAddressSection(
+    BuildContext context,
+    UpdateOrganizationViewModel model,
+  ) {
     return Container(
       padding: const EdgeInsets.all(13),
-      decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -414,7 +566,11 @@ class UpdateOrganizationView extends StatelessWidget {
                   children: [
                     Text(
                       LanguageService.get("factory_address"),
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.black),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.black,
+                      ),
                     ),
                     SizedBox(height: 9),
                     // Same as Corporate Address checkbox
@@ -422,12 +578,21 @@ class UpdateOrganizationView extends StatelessWidget {
                       children: [
                         Checkbox(
                           value: model.sameAsCorpAddress,
-                          onChanged: (model.isFactoryAddressEditable ?? false) ? (value) => model.toggleSameAsCorpAddress(value ?? false) : null,
+                          onChanged:
+                              (model.isFactoryAddressEditable ?? false)
+                                  ? (value) => model.toggleSameAsCorpAddress(
+                                    value ?? false,
+                                  )
+                                  : null,
                         ),
                         SizedBox(width: 6),
                         Text(
                           LanguageService.get("same_as_corporate_address"),
-                          style: const TextStyle(fontSize: 11, color: AppColors.textGrey, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: AppColors.textGrey,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ],
                     ),
@@ -443,10 +608,19 @@ class UpdateOrganizationView extends StatelessWidget {
                     model.toggleFactoryAddressEdit();
                   }
                 },
-                label: (model.isFactoryAddressEditable ?? false) ? LanguageService.get("update") : LanguageService.get("edit_details"),
-                backgroundColor: (model.isFactoryAddressEditable ?? false) ? AppColors.success : AppColors.primaryDark,
+                label:
+                    (model.isFactoryAddressEditable ?? false)
+                        ? LanguageService.get("update")
+                        : LanguageService.get("edit_details"),
+                backgroundColor:
+                    (model.isFactoryAddressEditable ?? false)
+                        ? AppColors.success
+                        : AppColors.primaryDark,
                 textColor: AppColors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
+                ),
                 borderRadius: 10,
                 fontSize: 10,
                 height: 28,
@@ -460,9 +634,14 @@ class UpdateOrganizationView extends StatelessWidget {
             controller: model.factoryAddressLine1Controller,
             label: LanguageService.get("address_line_1"),
             placeholder: LanguageService.get("address_line_1"),
-            readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
+            readOnly:
+                model.sameAsCorpAddress ||
+                !(model.isFactoryAddressEditable ?? false),
             contentPadding: EdgeInsets.all(12),
-            textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            textStyle: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           const SizedBox(height: 15),
 
@@ -470,9 +649,14 @@ class UpdateOrganizationView extends StatelessWidget {
             controller: model.factoryAddressLine2Controller,
             label: LanguageService.get("address_line_2"),
             placeholder: LanguageService.get("address_line_2"),
-            readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
+            readOnly:
+                model.sameAsCorpAddress ||
+                !(model.isFactoryAddressEditable ?? false),
             contentPadding: EdgeInsets.all(12),
-            textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            textStyle: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           const SizedBox(height: 15),
 
@@ -483,9 +667,14 @@ class UpdateOrganizationView extends StatelessWidget {
                   controller: model.factoryCityController,
                   label: LanguageService.get("city"),
                   placeholder: LanguageService.get("city"),
-                  readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
+                  readOnly:
+                      model.sameAsCorpAddress ||
+                      !(model.isFactoryAddressEditable ?? false),
                   contentPadding: EdgeInsets.all(12),
-                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  textStyle: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
               const SizedBox(width: 15),
@@ -495,9 +684,14 @@ class UpdateOrganizationView extends StatelessWidget {
                   controller: model.factoryStateController,
                   label: LanguageService.get("state_province"),
                   placeholder: LanguageService.get("state_province"),
-                  readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
+                  readOnly:
+                      model.sameAsCorpAddress ||
+                      !(model.isFactoryAddressEditable ?? false),
                   contentPadding: EdgeInsets.all(12),
-                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  textStyle: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
@@ -512,7 +706,8 @@ class UpdateOrganizationView extends StatelessWidget {
                   model,
                   model.profileModel?.factoryAddress?.country ?? "India",
                   (value) => model.updateFactoryCountry(value),
-                  model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
+                  model.sameAsCorpAddress ||
+                      !(model.isFactoryAddressEditable ?? false),
                 ),
               ),
               const SizedBox(width: 15),
@@ -522,9 +717,14 @@ class UpdateOrganizationView extends StatelessWidget {
                   controller: model.factoryPinCodeController,
                   label: LanguageService.get("pin_code"),
                   placeholder: LanguageService.get("pin_code"),
-                  readOnly: model.sameAsCorpAddress || !(model.isFactoryAddressEditable ?? false),
+                  readOnly:
+                      model.sameAsCorpAddress ||
+                      !(model.isFactoryAddressEditable ?? false),
                   contentPadding: EdgeInsets.all(12),
-                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  textStyle: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
@@ -534,11 +734,21 @@ class UpdateOrganizationView extends StatelessWidget {
     );
   }
 
-  Widget _buildDesignationDropdown(BuildContext context, UpdateOrganizationViewModel model) {
+  Widget _buildDesignationDropdown(
+    BuildContext context,
+    UpdateOrganizationViewModel model,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(LanguageService.get("your_designation"), style: const TextStyle(fontSize: 12, color: AppColors.textGrey, fontWeight: FontWeight.w500)),
+        Text(
+          LanguageService.get("your_designation"),
+          style: const TextStyle(
+            fontSize: 12,
+            color: AppColors.textGrey,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         const SizedBox(height: 8),
         SizedBox(
           height: 46,
@@ -563,10 +773,16 @@ class UpdateOrganizationView extends StatelessWidget {
               decoration: CustomDropdownDecoration(
                 headerStyle: TextStyle(
                   fontSize: 14,
-                  color: (model.isPersonalInfoEditable ?? false) ? AppColors.black : AppColors.textGrey,
+                  color:
+                      (model.isPersonalInfoEditable ?? false)
+                          ? AppColors.black
+                          : AppColors.textGrey,
                   fontWeight: FontWeight.w500,
                 ),
-                hintStyle: const TextStyle(fontSize: 12, color: AppColors.textGrey),
+                hintStyle: const TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textGrey,
+                ),
                 closedBorder: Border.all(color: AppColors.lightGrey),
                 expandedBorder: Border.all(color: AppColors.primary),
                 expandedFillColor: AppColors.white,
@@ -578,28 +794,44 @@ class UpdateOrganizationView extends StatelessWidget {
     );
   }
 
-  Widget _buildPhoneFieldWithFlag(BuildContext context, UpdateOrganizationViewModel model) {
+  Widget _buildPhoneFieldWithFlag(
+    BuildContext context,
+    UpdateOrganizationViewModel model,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           LanguageService.get("primary_phone_number"),
-          style: const TextStyle(fontSize: 12, color: AppColors.textGrey, fontWeight: FontWeight.w500),
+          style: const TextStyle(
+            fontSize: 12,
+            color: AppColors.textGrey,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         const SizedBox(height: 8),
         AbsorbPointer(
           absorbing: !(model.isPersonalInfoEditable ?? false),
           child: PhoneInput(
             flagShape: BoxShape.rectangle,
-            defaultCountry: _mapCountryCodeToIso(model.profileModel?.user?.countryCode) ?? IsoCode.IN,
+            defaultCountry:
+                _mapCountryCodeToIso(model.profileModel?.user?.countryCode) ??
+                IsoCode.IN,
             initialValue:
-                (model.profileModel?.user?.phone != null && model.profileModel!.user!.phone!.isNotEmpty)
+                (model.profileModel?.user?.phone != null &&
+                        model.profileModel!.user!.phone!.isNotEmpty)
                     ? PhoneNumber(
-                      isoCode: _mapCountryCodeToIso(model.profileModel?.user?.countryCode) ?? IsoCode.IN,
+                      isoCode:
+                          _mapCountryCodeToIso(
+                            model.profileModel?.user?.countryCode,
+                          ) ??
+                          IsoCode.IN,
                       nsn: model.profileModel!.user!.phone!,
                     )
                     : null,
-            key: ValueKey('org_phone_${model.profileModel?.user?.countryCode}_${model.profileModel?.user?.phone}'),
+            key: ValueKey(
+              'org_phone_${model.profileModel?.user?.countryCode}_${model.profileModel?.user?.phone}',
+            ),
             countrySelectorNavigator: CountrySelectorNavigator.dialog(
               countryCodeStyle: const TextStyle(color: AppColors.black),
               countryNameStyle: const TextStyle(color: AppColors.black),
@@ -619,7 +851,10 @@ class UpdateOrganizationView extends StatelessWidget {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSizes.v12),
-                  borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                  borderSide: const BorderSide(
+                    color: AppColors.primary,
+                    width: 2,
+                  ),
                 ),
               ),
             ),
@@ -628,20 +863,34 @@ class UpdateOrganizationView extends StatelessWidget {
                     ? (phone) {
                       if (phone != null) {
                         // Convert phone_input PhoneNumber to the format expected by the model
-                        model.updatePhoneNumberFromString('${phone.countryCode}${phone.nsn}');
+                        model.updatePhoneNumberFromString(
+                          '${phone.countryCode}${phone.nsn}',
+                        );
                       }
                     }
                     : null,
 
             decoration: InputDecoration(
               contentPadding: EdgeInsets.all(12),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: const BorderSide(color: AppColors.lightGrey)),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: const BorderSide(color: AppColors.lightGrey)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(13),
+                borderSide: const BorderSide(color: AppColors.lightGrey),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(13),
+                borderSide: const BorderSide(color: AppColors.lightGrey),
+              ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(13),
-                borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                borderSide: const BorderSide(
+                  color: AppColors.primary,
+                  width: 2,
+                ),
               ),
-              suffixIcon: Padding(padding: const EdgeInsets.all(12), child: Image.asset(AppImages.verified, width: 22, height: 22)),
+              suffixIcon: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Image.asset(AppImages.verified, width: 22, height: 22),
+              ),
             ),
           ),
         ),
@@ -746,7 +995,14 @@ class UpdateOrganizationView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(LanguageService.get("country"), style: const TextStyle(fontSize: 12, color: AppColors.textGrey, fontWeight: FontWeight.w500)),
+        Text(
+          LanguageService.get("country"),
+          style: const TextStyle(
+            fontSize: 12,
+            color: AppColors.textGrey,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         const SizedBox(height: 8),
         SizedBox(
           height: 46,
@@ -759,8 +1015,15 @@ class UpdateOrganizationView extends StatelessWidget {
               initialItem: validSelectedValue,
               hintText: LanguageService.get('select_country'),
               decoration: CustomDropdownDecoration(
-                headerStyle: TextStyle(fontSize: 12, color: isReadOnly ? AppColors.textGrey : AppColors.black, fontWeight: FontWeight.w500),
-                hintStyle: const TextStyle(fontSize: 12, color: AppColors.textGrey),
+                headerStyle: TextStyle(
+                  fontSize: 12,
+                  color: isReadOnly ? AppColors.textGrey : AppColors.black,
+                  fontWeight: FontWeight.w500,
+                ),
+                hintStyle: const TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textGrey,
+                ),
                 closedBorder: Border.all(color: AppColors.lightGrey),
                 expandedBorder: Border.all(color: AppColors.primary),
                 expandedFillColor: AppColors.white,
@@ -769,6 +1032,98 @@ class UpdateOrganizationView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _showProfileImagePickerOptions(
+    BuildContext context,
+    UpdateOrganizationViewModel model,
+  ) {
+    Get.bottomSheet(
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Draggable handle
+            Container(
+              width: 47,
+              height: 2,
+              decoration: BoxDecoration(
+                color: AppColors.textGrey,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            SizedBox(height: 15),
+
+            // Two options arranged horizontally
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                _buildOptionButton(
+                  iconPath: AppImages.gallery,
+                  label: 'Album',
+                  color: AppColors.turquoiseBlue,
+                  onTap: () {
+                    Get.back();
+                    model.pickProfileImageFromGallery();
+                  },
+                ),
+                SizedBox(width: 20),
+                _buildOptionButton(
+                  iconPath: AppImages.camera,
+                  label: 'Camera',
+                  color: AppColors.greenbackground,
+                  onTap: () {
+                    Get.back();
+                    model.takeProfilePhoto();
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 30),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionButton({
+    required String iconPath,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Image.asset(iconPath, width: 24, height: 25, color: color),
+          ),
+          SizedBox(height: 7),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              color: AppColors.black,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:manager/core/models/dashboard.dart';
-import 'package:manager/core/models/hive/user/user.dart';
+import 'package:manager/core/models/hive/user/user.dart' as hive_user;
+import 'package:manager/core/models/profile_model.dart';
 import 'package:manager/core/models/widgets/home/home_card_model.dart';
 import 'package:manager/core/storage/storage.dart';
 import 'package:manager/core/utils/app_logger.dart';
@@ -17,6 +18,7 @@ import '../../../services/auth.service.dart';
 import '../../../services/bottom_sheets.service.dart';
 import '../../../services/notification.service.dart';
 import '../../../services/stage.service.dart';
+import '../../../services/profile.service.dart';
 import '../../../widgets/bottom_sheets/qr_scan/qr_scan_sheet.view.dart';
 import '../../employee/add_employee/add_employee.view.dart';
 import '../../organization/add_partner/add_partner.view.dart';
@@ -28,9 +30,13 @@ class OrganizationHomeViewModel extends ReactiveViewModel {
   final _bottomSheetService = locator<BottomSheetService>();
   final _authService = locator<AuthService>();
   final _stageService = locator<StageService>();
+  final _profileService = locator<ProfileService>();
 
   final _user = ReactiveValue(getUser());
-  User get user => _user.value;
+  hive_user.User get user => _user.value;
+
+  final _profile = ReactiveValue<ProfileModel?>(null);
+  ProfileModel? get profile => _profile.value;
 
   final ReactiveValue<Dashboard?> _dashboard = ReactiveValue(null);
   Dashboard? get dashboard => _dashboard.value;
@@ -45,6 +51,7 @@ class OrganizationHomeViewModel extends ReactiveViewModel {
     requestPermissions();
     // fetchDashboardData();
     initNotifications();
+    fetchProfileData();
   }
 
   initNotifications() async {
@@ -73,6 +80,25 @@ class OrganizationHomeViewModel extends ReactiveViewModel {
 
     _isLoading.value = false;
     notifyListeners();
+  }
+
+  Future<void> fetchProfileData() async {
+    try {
+      final response = await _profileService.getProfile();
+      response.fold(
+        (exception) {
+          // Just log the error, don't show toast since this is background refresh
+          print('Error fetching profile: ${exception.message}');
+        },
+        (profile) {
+          _profile.value = profile;
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      // Silent error handling for background refresh
+      print('Error fetching profile: $e');
+    }
   }
 
   void navigateToRoute(

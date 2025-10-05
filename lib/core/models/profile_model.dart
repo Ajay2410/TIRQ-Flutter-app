@@ -4,7 +4,8 @@
 
 import 'dart:convert';
 
-ProfileModel profileModelFromJson(String str) => ProfileModel.fromJson(json.decode(str));
+ProfileModel profileModelFromJson(String str) =>
+    ProfileModel.fromJson(json.decode(str));
 
 String profileModelToJson(ProfileModel data) => json.encode(data.toJson());
 
@@ -16,6 +17,7 @@ class ProfileModel {
   String? organizationName;
   Address? corporateAddress;
   Address? factoryAddress;
+  String? profileImage;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
@@ -28,6 +30,7 @@ class ProfileModel {
     this.organizationName,
     this.corporateAddress,
     this.factoryAddress,
+    this.profileImage,
     this.createdAt,
     this.updatedAt,
     this.v,
@@ -39,10 +42,19 @@ class ProfileModel {
     unitName: json["unitName"],
     designation: json["designation"],
     organizationName: json["organizationName"],
-    corporateAddress: json["corporateAddress"] == null ? null : Address.fromJson(json["corporateAddress"]),
-    factoryAddress: json["factoryAddress"] == null ? null : Address.fromJson(json["factoryAddress"]),
-    createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
-    updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
+    corporateAddress:
+        json["corporateAddress"] == null
+            ? null
+            : Address.fromJson(json["corporateAddress"]),
+    factoryAddress:
+        json["factoryAddress"] == null
+            ? null
+            : Address.fromJson(json["factoryAddress"]),
+    profileImage: json["profileImage"],
+    createdAt:
+        json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
+    updatedAt:
+        json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
   );
 
@@ -54,6 +66,7 @@ class ProfileModel {
     "organizationName": organizationName,
     "corporateAddress": corporateAddress?.toJson(),
     "factoryAddress": factoryAddress?.toJson(),
+    "profileImage": profileImage,
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
     "__v": v,
@@ -140,7 +153,10 @@ class User {
     password: json["password"],
     phone: json["phone"],
     countryCode: json["countryCode"],
-    roles: json["roles"] == null ? [] : List<String>.from(json["roles"]!.map((x) => x)),
+    roles:
+        json["roles"] == null
+            ? []
+            : List<String>.from(json["roles"]!.map((x) => x)),
     emailOtp: json["emailOTP"],
     isEmailVerified: json["isEmailVerified"],
     isPhoneVerified: json["isPhoneVerified"],

@@ -178,7 +178,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
         CommonTextField(
           controller: _machineNameController,
           label: 'machine_model_name'.lang,
-          placeholder: '1234 - Machine Name',
+          placeholder: 'enter_machine_name'.lang,
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return '${'machine_model_name'.lang} ${'required'.lang}';
@@ -190,7 +190,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
         CommonTextField(
           controller: _modelNumberController,
           label: 'model_number'.lang,
-          placeholder: '1234',
+          placeholder: 'enter_model_number'.lang,
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return '${'model_number'.lang} ${'required'.lang}';
@@ -208,7 +208,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('functionality'.lang, style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+        Text('functionality'.lang, style: const TextStyle(color: AppColors.textPrimary, fontSize: 10, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         FormField<String>(
           validator: (value) {
@@ -369,7 +369,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
         CommonTextField(
           controller: _thicknessController,
           label: 'thickness'.lang,
-          placeholder: '3 - 25',
+          placeholder: 'enter_thickness_processing_range'.lang,
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return '${'thickness'.lang} ${'required'.lang}';
@@ -381,7 +381,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
         CommonTextField(
           controller: _maxSpeedController,
           label: 'max_speed'.lang,
-          placeholder: '12',
+          placeholder: 'enter_max_processing_speed'.lang,
           keyboardType: TextInputType.number,
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
@@ -401,7 +401,7 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
     return CommonTextField(
       controller: _totalPowerController,
       label: 'total_power'.lang,
-      placeholder: 'KW',
+      placeholder: 'enter_max_power_of_machine'.lang,
       keyboardType: TextInputType.number,
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
@@ -426,9 +426,10 @@ class _AddNewMachineModelViewState extends State<AddNewMachineModelView> {
         CommonTextField(controller: _addOnController, label: 'add_on'.lang, placeholder: 'enter_add_on_here'.lang, maxLines: 1),
         const SizedBox(height: 16),
 
-        CommonTextField(controller: _operatingManualsController, label: 'operating_manuals'.lang, placeholder: 'Link here'),
+        CommonTextField(controller: _operatingManualsController, label: 'operating_manuals'.lang, placeholder: 'enter_link_URL'.lang),
         const SizedBox(height: 16),
-        CommonTextField(controller: _notesController, label: 'notes_special_instructions'.lang, placeholder: 'Link here', maxLines: 3),
+        CommonTextField(controller: _notesController, label: 'notes_special_instructions'.lang, placeholder: 'enter_notes_or_special_instruction'.lang,
+            maxLines: 3),
       ],
     );
   }

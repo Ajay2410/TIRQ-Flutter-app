@@ -35,6 +35,13 @@ class _LanguageSelectionViewState extends State<LanguageSelectionView>
       'flag': '🇺🇸',
     },
     {
+      'code': 'en-GB',
+      'name': 'English (UK)',
+      'native': 'English',
+      'country': 'United Kingdom',
+      'flag': '🇬🇧',
+    },
+    {
       'code': 'zh',
       'name': 'Chinese (Simplified)',
       'native': '中文',

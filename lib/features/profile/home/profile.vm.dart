@@ -7,25 +7,23 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../../../core/locator.dart';
-import '../../../core/models/hive/user/user.dart';
+import '../../../core/models/hive/user/user.dart' as hive_user;
+import '../../../core/models/profile_model.dart';
 import '../../../core/storage/storage.dart';
 import '../../../services/account.service.dart';
 import '../../../services/auth.service.dart';
-import '../../../services/employee_profile.service.dart';
-import '../../../services/organization.service.dart';
 import '../../../services/customer_storage.service.dart';
 import '../../stage/stage.view.dart';
-import '../create_or_edit_org/update_employee_profile.view.dart';
+import '../../../services/profile.service.dart';
 
 class ProfileViewModel extends ReactiveViewModel {
   final _navigationService = locator<NavigationService>();
-  final _organizationService = locator<OrganizationService>();
-  final _employeeProfileService = locator<EmployeeProfileService>();
   final _authService = locator<AuthService>();
   final _customerStorageService = locator<CustomerStorageService>();
+  final _profileService = locator<ProfileService>();
 
   final _user = ReactiveValue(getUser());
-  User get user => _user.value;
+  hive_user.User get user => _user.value;
 
   final _organization = ReactiveValue<Organization?>(null);
   Organization? get organization => _organization.value;
@@ -35,6 +33,9 @@ class ProfileViewModel extends ReactiveViewModel {
 
   final _customer = ReactiveValue<Customer?>(null);
   Customer? get customer => _customer.value;
+
+  final _profile = ReactiveValue<ProfileModel?>(null);
+  ProfileModel? get profile => _profile.value;
 
   final _isLoading = ReactiveValue<bool>(false);
   bool get isLoading => _isLoading.value;
@@ -60,7 +61,8 @@ class ProfileViewModel extends ReactiveViewModel {
     notifyListeners();
 
     // Fetch customer data from API only if user role is processor
-    if (getUser().primaryRole == UserRole.processor && getUser().id != null) {
+    if (getUser().primaryRole == hive_user.UserRole.processor &&
+        getUser().id != null) {
       try {
         final customer = await _customerStorageService.fetchAndStoreCustomer(
           getUser().id!,
@@ -75,34 +77,22 @@ class ProfileViewModel extends ReactiveViewModel {
       }
     }
 
-    // Fetch organization profile
+    // Fetch organization profile using the global ProfileService
     try {
-      if (getUser().userType == UserType.employee) {
-        final response = await _employeeProfileService.getProfile();
-        response.fold(
-          (exception) {
-            // Just log the error, don't show toast since this is background refresh
-            // User might already be seeing other content
-          },
-          (emp) {
-            _employeeProfile.value = emp;
-          },
-        );
-      } else {
-        final response = await _organizationService.getProfile();
-
-        response.fold(
-          (exception) {
-            // Just log the error, don't show toast since this is background refresh
-            // User might already be seeing other content
-          },
-          (org) {
-            _organization.value = org;
-          },
-        );
-      }
+      final response = await _profileService.getProfile();
+      response.fold(
+        (exception) {
+          // Just log the error, don't show toast since this is background refresh
+          print('Error fetching profile: ${exception.message}');
+        },
+        (profile) {
+          _profile.value = profile;
+          notifyListeners();
+        },
+      );
     } catch (e) {
       // Silent error handling for background refresh
+      print('Error fetching profile: $e');
     } finally {
       _isLoading.value = false;
       notifyListeners();
@@ -133,24 +123,8 @@ class ProfileViewModel extends ReactiveViewModel {
     );
   }
 
-  void navigateToEmployeeProfileView() async {
-    final result = await _navigationService.navigateTo(
-      Routes.updateEmployee,
-      arguments: EmployeeProfileViewAttributes(employee: employeeProfile),
-    );
-
-    // Refresh profile when returning from edit screen
-    if (result == true) {
-      fetchUserProfile();
-    } else {
-      // Even if the user didn't explicitly save, refresh data
-      // to ensure consistency
-      fetchUserProfile();
-    }
-  }
-
   void navigateToLoginView() async {
-    User? currentUser = getUser();
+    hive_user.User? currentUser = getUser();
 
     if (currentUser.email != null) {
       await AccountManagerService.instance.saveCurrentUser(currentUser);

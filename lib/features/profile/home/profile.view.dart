@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -11,10 +10,10 @@ import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:stacked/stacked.dart';
 import 'package:manager/widgets/common_elevated_button.dart';
+import 'package:manager/widgets/common/common_cached_image.dart';
 
-import '../../../core/models/hive/user/user.dart';
-import '../../../core/storage/storage.dart';
 import '../../../services/language.service.dart';
+import '../../../configs.dart';
 import '../../../routes/routes.dart';
 import '../../../widgets/qr_dialog.dart';
 import '../security/security.view.dart';
@@ -51,13 +50,24 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context, ProfileViewModel model) {
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context,
+    ProfileViewModel model,
+  ) {
     return AppBar(
       backgroundColor: Colors.transparent,
       // Set to transparent
       elevation: 0,
       titleSpacing: 0,
-      leading: IconButton(icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white), onPressed: () => model.onBackPress),
+      leading: IconButton(
+        icon: Image.asset(
+          AppImages.back,
+          width: 24,
+          height: 24,
+          color: AppColors.white,
+        ),
+        onPressed: () => model.onBackPress,
+      ),
       flexibleSpace: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -68,7 +78,14 @@ class ProfileView extends StatelessWidget {
           ),
         ),
       ),
-      title: Text(LanguageService.get("my_profile"), style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+      title: Text(
+        LanguageService.get("my_profile"),
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 
@@ -78,7 +95,10 @@ class ProfileView extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20),
+          bottomRight: Radius.circular(20),
+        ),
       ),
       child: Column(
         children: [
@@ -91,24 +111,21 @@ class ProfileView extends StatelessWidget {
               Stack(
                 children: [
                   Container(
-                    decoration: BoxDecoration(color: AppColors.periwinkleBlue.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(40)),
+                    decoration: BoxDecoration(
+                      color: AppColors.periwinkleBlue.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(40),
+                    ),
                     padding: EdgeInsets.all(8),
                     child: ClipOval(
-                      child: CachedNetworkImage(
-                        imageUrl:
-                            model.customer?.userImage ?? model.user.logoUrl ?? 'https://img.freepik.com/free-vector/search-engine-logo_1071-76.jpg',
-                        width: 44,
-                        height: 44,
-                        fit: BoxFit.cover,
-                        placeholder:
-                            (context, url) =>
-                                Container(color: const Color(0xFFE8E8E8), child: const Icon(Icons.person, size: 40, color: Colors.grey)),
-                        errorWidget:
-                            (context, url, error) =>
-                                Container(color: AppColors.textGrey, child: const Icon(Icons.person, size: 40, color: Colors.grey)),
+                      child: ProfileCachedImage(
+                        imageUrl: _getProfileImageUrl(model),
+                        size: 44,
                       ),
                     ),
-                  ).animate().scale(duration: 500.ms, curve: Curves.easeOutBack),
+                  ).animate().scale(
+                    duration: 500.ms,
+                    curve: Curves.easeOutBack,
+                  ),
                   Positioned(
                     bottom: 0,
                     right: 0,
@@ -118,8 +135,16 @@ class ProfileView extends StatelessWidget {
                       },
                       child: Container(
                         padding: EdgeInsets.all(3),
-                        decoration: BoxDecoration(color: AppColors.primaryDark, borderRadius: BorderRadius.circular(14)),
-                        child: Image.asset(AppImages.edit, width: 12, height: 12, color: Colors.white),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryDark,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: Image.asset(
+                          AppImages.edit,
+                          width: 12,
+                          height: 12,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -132,13 +157,20 @@ class ProfileView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      model.customer?.customerName ?? model.organization?.name ?? model.user.name ?? 'Leslie Alexander',
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+                      _getProfileName(model),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ).animate().fadeIn(duration: 500.ms),
                     const SizedBox(height: 4),
                     Text(
-                      model.customer?.email ?? model.user.email ?? 'yourmail@email.com',
-                      style: const TextStyle(fontSize: 11, color: AppColors.textGrey),
+                      _getProfileEmail(model),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: AppColors.textGrey,
+                      ),
                     ).animate().fadeIn(duration: 500.ms, delay: 200.ms),
                   ],
                 ),
@@ -148,7 +180,9 @@ class ProfileView extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.1)),
+                    border: Border.all(
+                      color: AppColors.textGrey.withValues(alpha: 0.1),
+                    ),
                   ),
                   padding: EdgeInsets.all(8),
                   child: Image.asset(AppImages.qr, width: 32, height: 32),
@@ -228,7 +262,10 @@ class ProfileView extends StatelessWidget {
 
   Widget _buildMenuItems(BuildContext context, ProfileViewModel model) {
     return Container(
-      decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16)),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         children: [
           _buildMenuItem(
@@ -323,25 +360,50 @@ class ProfileView extends StatelessWidget {
             Container(
               width: 40,
               height: 40,
-              decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child:
                     imagePath != null
-                        ? Image.asset(imagePath, width: 24, height: 24, color: iconColor, fit: BoxFit.contain)
+                        ? Image.asset(
+                          imagePath,
+                          width: 24,
+                          height: 24,
+                          color: iconColor,
+                          fit: BoxFit.contain,
+                        )
                         : Icon(icon!, color: iconColor, size: 22),
               ),
             ),
             const SizedBox(width: 16),
-            Expanded(child: Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black))),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
             Container(
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: AppColors.primarySuperLight.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.1)),
+                border: Border.all(
+                  color: AppColors.textGrey.withValues(alpha: 0.1),
+                ),
               ),
-              child: Image.asset(AppImages.arrowRight, width: 16, height: 16, color: AppColors.textGrey),
+              child: Image.asset(
+                AppImages.arrowRight,
+                width: 16,
+                height: 16,
+                color: AppColors.textGrey,
+              ),
             ),
           ],
         ),
@@ -350,13 +412,23 @@ class ProfileView extends StatelessWidget {
   }
 
   Widget _buildDivider() {
-    return Container(margin: const EdgeInsets.symmetric(horizontal: 20), height: 1, color: const Color(0xFFEEEEEE));
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      height: 1,
+      color: const Color(0xFFEEEEEE),
+    );
   }
 
-  Widget _buildProfileCompletionCard(BuildContext context, ProfileViewModel model) {
+  Widget _buildProfileCompletionCard(
+    BuildContext context,
+    ProfileViewModel model,
+  ) {
     return Container(
       padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(color: AppColors.primaryLight.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+        color: AppColors.primaryLight.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Row(
         children: [
           Expanded(
@@ -365,12 +437,19 @@ class ProfileView extends StatelessWidget {
               children: [
                 Text(
                   LanguageService.get("please_complete_profile"),
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ).animate().fadeIn(duration: 500.ms),
                 const SizedBox(height: 8),
                 Text(
                   LanguageService.get("verify_email_phone_description"),
-                  style: const TextStyle(fontSize: 10, color: AppColors.textGrey),
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: AppColors.textGrey,
+                  ),
                 ).animate().fadeIn(duration: 500.ms, delay: 200.ms),
               ],
             ),
@@ -383,7 +462,8 @@ class ProfileView extends StatelessWidget {
   }
 
   Widget _buildCircularProgressIndicator() {
-    const double completionPercentage = 0.35; // 35% completion - can be made dynamic later
+    const double completionPercentage =
+        0.35; // 35% completion - can be made dynamic later
     // Test different percentages to verify color conditions:
     // 0.15 = 15% (Red), 0.45 = 45% (Orange), 0.75 = 75% (Blue), 1.0 = 100% (Green)
 
@@ -394,15 +474,29 @@ class ProfileView extends StatelessWidget {
       center: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("${(completionPercentage * 100).toInt()}%", style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black)),
+          Text(
+            "${(completionPercentage * 100).toInt()}%",
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
           const SizedBox(height: 2),
-          Text(LanguageService.get("complete"), style: const TextStyle(fontSize: 8, color: AppColors.textGrey)),
+          Text(
+            LanguageService.get("complete"),
+            style: const TextStyle(fontSize: 8, color: AppColors.textGrey),
+          ),
         ],
       ),
       progressColor: _getProgressColor(completionPercentage),
       backgroundColor: Colors.white,
       circularStrokeCap: CircularStrokeCap.round,
-    ).animate().scale(duration: 500.ms, delay: 300.ms, curve: Curves.easeOutBack);
+    ).animate().scale(
+      duration: 500.ms,
+      delay: 300.ms,
+      curve: Curves.easeOutBack,
+    );
   }
 
   /// Returns the appropriate progress color based on completion percentage
@@ -421,7 +515,13 @@ class ProfileView extends StatelessWidget {
   }
 
   void _showQRDialog(ProfileViewModel model) {
-    Get.dialog(QRDialog(user: model.user, organizationName: model.organization?.name, customer: model.customer));
+    Get.dialog(
+      QRDialog(
+        user: model.user,
+        organizationName: model.organization?.name,
+        customer: model.customer,
+      ),
+    );
   }
 
   void _showInviteContactDialog(BuildContext context) {
@@ -440,8 +540,22 @@ class ProfileView extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(LanguageService.get("invite_people"), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.black)),
-                  GestureDetector(onTap: () => Get.back(), child: Icon(Icons.close, size: 24, color: AppColors.textGrey)),
+                  Text(
+                    LanguageService.get("invite_people"),
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.black,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => Get.back(),
+                    child: Icon(
+                      Icons.close,
+                      size: 24,
+                      color: AppColors.textGrey,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 5),
@@ -449,7 +563,11 @@ class ProfileView extends StatelessWidget {
               // Share this link via section
               Text(
                 LanguageService.get("share_this_link_via"),
-                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w400, color: AppColors.textGrey),
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.textGrey,
+                ),
               ),
               const SizedBox(height: 20),
 
@@ -457,16 +575,39 @@ class ProfileView extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildShareOption(AppImages.whatsapp, "whatsapp", color: AppColors.emeraldGreen),
-                  _buildShareOption(AppImages.weChat, "wechat", color: AppColors.leafGreen),
-                  _buildShareOption(AppImages.email, "email", color: AppColors.redbackground),
-                  _buildShareOption(AppImages.message, "message", color: AppColors.turquoiseBlue),
+                  _buildShareOption(
+                    AppImages.whatsapp,
+                    "whatsapp",
+                    color: AppColors.emeraldGreen,
+                  ),
+                  _buildShareOption(
+                    AppImages.weChat,
+                    "wechat",
+                    color: AppColors.leafGreen,
+                  ),
+                  _buildShareOption(
+                    AppImages.email,
+                    "email",
+                    color: AppColors.redbackground,
+                  ),
+                  _buildShareOption(
+                    AppImages.message,
+                    "message",
+                    color: AppColors.turquoiseBlue,
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
 
               // Or Copy link section
-              Text(LanguageService.get("or_copy_link"), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textGrey)),
+              Text(
+                LanguageService.get("or_copy_link"),
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textGrey,
+                ),
+              ),
               const SizedBox(height: 15),
 
               // Copy link input field
@@ -474,14 +615,28 @@ class ProfileView extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(13),
-                  border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.1)),
+                  border: Border.all(
+                    color: AppColors.textGrey.withValues(alpha: 0.1),
+                  ),
                 ),
                 child: Row(
                   children: [
-                    Image.asset(AppImages.linkShare, width: 24, height: 24, color: AppColors.black),
+                    Image.asset(
+                      AppImages.linkShare,
+                      width: 24,
+                      height: 24,
+                      color: AppColors.black,
+                    ),
                     const SizedBox(width: 6),
                     Expanded(
-                      child: Text('https://yourwebsite.com/', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: AppColors.textGrey)),
+                      child: Text(
+                        'https://yourwebsite.com/',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textGrey,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 6),
                     CommonElevatedButton(
@@ -489,12 +644,19 @@ class ProfileView extends StatelessWidget {
                       width: 42,
                       label: LanguageService.get("copy"),
                       onPressed: () async {
-                        await Clipboard.setData(const ClipboardData(text: 'https://yourwebsite.com/'));
-                        Fluttertoast.showToast(msg: LanguageService.get("link_copied_to_clipboard"));
+                        await Clipboard.setData(
+                          const ClipboardData(text: 'https://yourwebsite.com/'),
+                        );
+                        Fluttertoast.showToast(
+                          msg: LanguageService.get("link_copied_to_clipboard"),
+                        );
                       },
                       backgroundColor: AppColors.primary,
                       textColor: AppColors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 8,
+                      ),
                       borderRadius: 8,
                       fontSize: 9,
                       fontWeight: FontWeight.w600,
@@ -509,7 +671,11 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  Widget _buildShareOption(String imagePath, String label, {required Color color}) {
+  Widget _buildShareOption(
+    String imagePath,
+    String label, {
+    required Color color,
+  }) {
     return GestureDetector(
       onTap: () {
         // TODO: Implement share functionality for each platform
@@ -517,8 +683,19 @@ class ProfileView extends StatelessWidget {
       },
       child: Container(
         padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(color: color.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(12)),
-        child: Center(child: Image.asset(imagePath, width: 25, height: 25, fit: BoxFit.contain, color: color)),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(
+          child: Image.asset(
+            imagePath,
+            width: 25,
+            height: 25,
+            fit: BoxFit.contain,
+            color: color,
+          ),
+        ),
       ),
     );
   }
@@ -537,15 +714,24 @@ class ProfileView extends StatelessWidget {
               // Warning icon
               Container(
                 padding: EdgeInsets.all(14),
-                decoration: BoxDecoration(color: AppColors.redBack.withValues(alpha: 0.1), shape: BoxShape.circle),
-                child: Center(child: Image.asset(AppImages.info, height: 32, width: 32)),
+                decoration: BoxDecoration(
+                  color: AppColors.redBack.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Image.asset(AppImages.info, height: 32, width: 32),
+                ),
               ),
               const SizedBox(height: 15),
 
               // Title text
               Text(
                 LanguageService.get("are_you_sure_you_want_to_logout"),
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.black,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
@@ -595,5 +781,71 @@ class ProfileView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getProfileImageUrl(ProfileViewModel model) {
+    // Priority: ProfileModel profileImage -> customer userImage -> user logoUrl -> default
+    if (model.profile?.profileImage != null &&
+        model.profile!.profileImage!.isNotEmpty) {
+      String baseUrl = Configurations().url;
+      if (model.profile!.profileImage!.startsWith('/')) {
+        return baseUrl + model.profile!.profileImage!;
+      } else {
+        return '$baseUrl/${model.profile!.profileImage!}';
+      }
+    }
+
+    if (model.customer?.userImage != null &&
+        model.customer!.userImage!.isNotEmpty) {
+      return model.customer!.userImage!;
+    }
+
+    if (model.user.logoUrl != null && model.user.logoUrl!.isNotEmpty) {
+      return model.user.logoUrl!;
+    }
+
+    return 'https://img.freepik.com/free-vector/search-engine-logo_1071-76.jpg';
+  }
+
+  String _getProfileName(ProfileViewModel model) {
+    // Priority: ProfileModel user fullName -> customer customerName -> organization name -> user name -> default
+    if (model.profile?.user?.fullName != null &&
+        model.profile!.user!.fullName!.isNotEmpty) {
+      return model.profile!.user!.fullName!;
+    }
+
+    if (model.customer?.customerName != null &&
+        model.customer!.customerName!.isNotEmpty) {
+      return model.customer!.customerName!;
+    }
+
+    if (model.organization?.name != null &&
+        model.organization!.name!.isNotEmpty) {
+      return model.organization!.name!;
+    }
+
+    if (model.user.name != null && model.user.name!.isNotEmpty) {
+      return model.user.name!;
+    }
+
+    return 'Leslie Alexander';
+  }
+
+  String _getProfileEmail(ProfileViewModel model) {
+    // Priority: ProfileModel user email -> customer email -> user email -> default
+    if (model.profile?.user?.email != null &&
+        model.profile!.user!.email!.isNotEmpty) {
+      return model.profile!.user!.email!;
+    }
+
+    if (model.customer?.email != null && model.customer!.email!.isNotEmpty) {
+      return model.customer!.email!;
+    }
+
+    if (model.user.email != null && model.user.email!.isNotEmpty) {
+      return model.user.email!;
+    }
+
+    return 'yourmail@email.com';
   }
 }

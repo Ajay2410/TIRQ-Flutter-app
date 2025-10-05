@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_field/countries.dart' as intl;
@@ -8,14 +9,13 @@ import 'package:manager/api_endpoints.dart';
 import 'package:manager/core/models/organization.dart';
 import 'package:manager/core/models/profile_model.dart';
 import 'package:manager/resources/app_resources/app_maps.dart';
-import 'package:manager/widgets/bottom_sheets/file_picker_options/file_picker_options_sheet.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../../../core/locator.dart';
 import '../../../core/utils/app_logger.dart';
 import '../../../services/api.service.dart';
-import '../../../services/bottom_sheets.service.dart';
+import '../../../configs.dart';
 import '../../../services/dialogs.service.dart';
 import '../../../services/file_picker.service.dart';
 import '../../../widgets/dialogs/loader/loader_dialog.view.dart';
@@ -23,7 +23,6 @@ import '../../../widgets/dialogs/loader/loader_dialog.view.dart';
 class UpdateOrganizationViewModel extends ReactiveViewModel {
   final _dialogService = locator<DialogService>();
   final _apiService = locator<ApiService>();
-  final _bottomSheetService = locator<BottomSheetService>();
   final _filePickerService = FilePickerService();
 
   // Form key for validation
@@ -456,6 +455,13 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
   final ReactiveValue<double> _uploadProgress = ReactiveValue<double>(0.0);
   double get uploadProgress => _uploadProgress.value;
 
+  // Profile image properties
+  File? _profileImageFile;
+  File? get profileImageFile => _profileImageFile;
+
+  String _profileImageUrl = '';
+  String get profileImageUrl => _profileImageUrl;
+
   bool _isEditing = false;
   bool get isEditing => _isEditing;
 
@@ -524,9 +530,25 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
 
   Future<void> updateProfileData(Map<String, dynamic> profileData) async {
     try {
+      dynamic dataToSend = profileData;
+
+      // If there's a profile image file, use FormData
+      if (_profileImageFile != null) {
+        final formData = FormData.fromMap({
+          ...profileData,
+          'profileImage': await MultipartFile.fromFile(
+            _profileImageFile!.path,
+            filename:
+                'profile_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
+            contentType: DioMediaType.parse('image/jpeg'),
+          ),
+        });
+        dataToSend = formData;
+      }
+
       final response = await _apiService.put(
         url: ApiEndpoints.updateProfile,
-        data: profileData,
+        data: dataToSend,
       );
 
       if (response.statusCode == 200) {
@@ -586,6 +608,141 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
         backgroundColor: Colors.red,
       );
     }
+  }
+
+  // Profile Image Picker Methods
+  Future<void> onProfileImageUpload() async {
+    await showProfileImagePickerOptions();
+  }
+
+  Future<void> showProfileImagePickerOptions() async {
+    // This method will be handled in the view file
+  }
+
+  Future<void> pickProfileImageFromGallery() async {
+    final pickerResult = await _filePickerService.pickImageFromGallery(
+      maxWidth: 1200,
+      maxHeight: 1200,
+      imageQuality: 80,
+    );
+
+    pickerResult.fold(
+      (failure) {
+        if (failure.message != 'No image selected') {
+          Fluttertoast.showToast(
+            msg: failure.message,
+            backgroundColor: Colors.red,
+          );
+        }
+      },
+      (file) {
+        _profileImageFile = file;
+        _didChange = true;
+        notifyListeners();
+        // Upload image immediately when picked
+        uploadProfileImageOnly();
+      },
+    );
+  }
+
+  Future<void> takeProfilePhoto() async {
+    final pickerResult = await _filePickerService.takePhoto(
+      maxWidth: 1200,
+      maxHeight: 1200,
+      imageQuality: 80,
+    );
+
+    pickerResult.fold(
+      (failure) {
+        if (failure.message != 'No photo taken') {
+          Fluttertoast.showToast(
+            msg: failure.message,
+            backgroundColor: Colors.red,
+          );
+        }
+      },
+      (file) {
+        _profileImageFile = file;
+        _didChange = true;
+        notifyListeners();
+        // Upload image immediately when captured
+        uploadProfileImageOnly();
+      },
+    );
+  }
+
+  Future<void> uploadProfileImageOnly() async {
+    if (_profileImageFile == null) return;
+
+    try {
+      setBusy(true);
+
+      // Create FormData for image upload
+      final formData = FormData.fromMap({
+        'profileImage': await MultipartFile.fromFile(
+          _profileImageFile!.path,
+          filename:
+              'profile_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
+          contentType: DioMediaType.parse('image/jpeg'),
+        ),
+      });
+
+      final response = await _apiService.put(
+        url: ApiEndpoints.updateProfile,
+        data: formData,
+      );
+
+      if (response.statusCode == 200) {
+        // Handle response
+        Map<String, dynamic> responseData;
+        if (response.data is String) {
+          responseData = jsonDecode(response.data);
+        } else if (response.data is Map<String, dynamic>) {
+          responseData = response.data;
+        } else {
+          AppLogger.error('Invalid response format');
+          return;
+        }
+
+        // Update profile image URL if provided in response
+        if (responseData['success'] == true && responseData['data'] != null) {
+          final profileData = responseData['data'];
+          if (profileData['profileImageUrl'] != null) {
+            _profileImageUrl = profileData['profileImageUrl'];
+          }
+        }
+
+        Fluttertoast.showToast(
+          msg: 'Profile image updated successfully',
+          backgroundColor: Colors.green,
+        );
+
+        notifyListeners();
+      } else {
+        AppLogger.error(
+          'Failed to update profile image: ${response.statusMessage}',
+        );
+        Fluttertoast.showToast(
+          msg: 'Failed to update profile image',
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (e) {
+      AppLogger.error('Error uploading profile image: $e');
+      Fluttertoast.showToast(
+        msg: 'Error uploading profile image: $e',
+        backgroundColor: Colors.red,
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  void removeProfileImage() {
+    _profileImageFile = null;
+    _profileImageUrl = '';
+    _didChange = true;
+    notifyListeners();
   }
 
   void addUnit() {
@@ -650,6 +807,17 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
 
   void _populateFormWithProfileData(ProfileModel profile) {
     AppLogger.info('Populating form with profile data: ${profile.toJson()}');
+
+    // Set profile image URL if available
+    if (profile.profileImage != null && profile.profileImage!.isNotEmpty) {
+      // Construct full URL by combining base URL with image path
+      String baseUrl = Configurations().url;
+      if (profile.profileImage!.startsWith('/')) {
+        _profileImageUrl = baseUrl + profile.profileImage!;
+      } else {
+        _profileImageUrl = '$baseUrl/${profile.profileImage!}';
+      }
+    }
 
     // Set basic organization fields from profile
     if (profile.user != null) {
@@ -804,30 +972,6 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
     }
 
     return (filledFields / totalFields) * 100;
-  }
-
-  // Logo handlers
-  Future<void> onLogoUpload() async {
-    await showImagePickerOptions();
-  }
-
-  Future<void> showImagePickerOptions() async {
-    final result = await _bottomSheetService.showCustomSheet(
-      variant: BottomSheetType.filePickerOptions,
-      data: FilePickerOptionsSheetAttributes(),
-      title: 'Upload Logo',
-      description: 'Choose an option',
-      mainButtonTitle: 'Cancel',
-    );
-
-    if (result?.confirmed == true) {
-      final option = result?.data;
-      if (option == 'camera') {
-        await takePhoto();
-      } else if (option == 'gallery') {
-        await pickGalleryImage();
-      }
-    }
   }
 
   Future<void> pickGalleryImage() async {

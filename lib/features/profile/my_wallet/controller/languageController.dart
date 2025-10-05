@@ -15,7 +15,11 @@ class LanguageController extends GetxController {
   final List<LanguageModel> languages = [
     LanguageModel(name: 'English', code: 'English', flag: '🇺🇸'),
     LanguageModel(name: 'Hindi', code: 'Hindi', flag: '🇮🇳'),
-    LanguageModel(name: 'Chinese (Simplified)', code: 'Chinese (Simplified)', flag: '🇨🇳'),
+    LanguageModel(
+      name: 'Chinese (Simplified)',
+      code: 'Chinese (Simplified)',
+      flag: '🇨🇳',
+    ),
     LanguageModel(name: 'Spanish', code: 'Spanish', flag: '🇪🇸'),
     LanguageModel(name: 'Japanese', code: 'Japanese', flag: '🇯🇵'),
     LanguageModel(name: 'German', code: 'German', flag: '🇩🇪'),
@@ -31,7 +35,11 @@ class LanguageController extends GetxController {
     LanguageModel(name: 'Thai', code: 'Thai', flag: '🇹🇭'),
     LanguageModel(name: 'Dutch', code: 'Dutch', flag: '🇳🇱'),
     LanguageModel(name: 'Polish', code: 'Polish', flag: '🇵🇱'),
-    LanguageModel(name: 'Malay/Indonesian', code: 'Malay/Indonesian', flag: '🇮🇩'),
+    LanguageModel(
+      name: 'Malay/Indonesian',
+      code: 'Malay/Indonesian',
+      flag: '🇮🇩',
+    ),
     LanguageModel(name: 'Ukrainian', code: 'Ukrainian', flag: '🇺🇦'),
   ];
 
@@ -47,7 +55,15 @@ class LanguageController extends GetxController {
   }
 
   List<LanguageModel> get filteredLanguages =>
-      searchQuery.value.isEmpty ? languages : languages.where((lang) => lang.name.toLowerCase().contains(searchQuery.value.toLowerCase())).toList();
+      searchQuery.value.isEmpty
+          ? languages
+          : languages
+              .where(
+                (lang) => lang.name.toLowerCase().contains(
+                  searchQuery.value.toLowerCase(),
+                ),
+              )
+              .toList();
 
   void selectLanguage(String code) {
     selectedLanguageCode.value = code;
@@ -68,10 +84,15 @@ class LanguageController extends GetxController {
       final userService = locator<UserService>();
       userService.updateSelectedLanguage(selectedLanguageCode.value);
 
-      AppLogger.info('Language saved successfully: ${selectedLanguageCode.value}');
+      AppLogger.info(
+        'Language saved successfully: ${selectedLanguageCode.value}',
+      );
 
       // Show success message
-      Fluttertoast.showToast(msg: 'Language changed to ${selectedLanguageCode.value}. App will restart...');
+      Fluttertoast.showToast(
+        msg:
+            'Language changed to ${selectedLanguageCode.value}. App will restart...',
+      );
 
       // Wait a bit for the user to see the success message
       await Future.delayed(Duration(seconds: 1));

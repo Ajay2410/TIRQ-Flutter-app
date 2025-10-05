@@ -43,7 +43,6 @@ import '../features/organization/admin_managers_list/admin_managers_list.view.da
 import '../features/organization/employees_list/department_hierarchy.view.dart';
 import '../features/organization/employees_list/employees_list.view.dart';
 import '../features/profile/create_or_edit_org/create_or_edit_org.view.dart';
-import '../features/profile/create_or_edit_org/update_employee_profile.view.dart';
 import '../features/profile/home/profile.view.dart';
 import '../features/service_pricing/set_service_pricing.view.dart';
 import '../features/profile/general/general.view.dart';
@@ -233,15 +232,6 @@ class AppRouter extends RouterBase {
       );
     },
 
-    EmployeeProfileView: (data) {
-      return MaterialPageRoute(
-        builder:
-            (BuildContext _) => EmployeeProfileView(
-              attributes: data.arguments as EmployeeProfileViewAttributes,
-            ),
-        settings: data,
-      );
-    },
     AdminManagersListView: (data) {
       return MaterialPageRoute(
         builder: (BuildContext _) => AdminManagersListView(),
@@ -618,7 +608,6 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.profile, page: ProfileView),
     RouteDef(Routes.qr, page: QRView),
     RouteDef(Routes.updateOrg, page: UpdateOrganizationView),
-    RouteDef(Routes.updateEmployee, page: EmployeeProfileView),
     RouteDef(Routes.adminManagersList, page: AdminManagersListView),
     RouteDef(Routes.stage, page: StageView),
     RouteDef(Routes.approval, page: ApprovalView),
