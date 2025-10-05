@@ -59,7 +59,8 @@ class MyCustomersViewModel extends BaseViewModel {
         final data = response.data;
         if (data != null && data['data'] != null) {
           final List<dynamic> customersData = data['data'];
-          _customers = customersData.map((json) => Customer.fromJson(json)).toList();
+          _customers =
+              customersData.map((json) => Customer.fromJson(json)).toList();
           _filteredCustomers = _customers;
         } else {
           _customers = [];
@@ -103,9 +104,17 @@ class MyCustomersViewModel extends BaseViewModel {
   void _applyFilters() {
     _filteredCustomers =
         _customers.where((customer) {
-          bool matchesSearch = _searchQuery.isEmpty || customer.customerName?.toLowerCase().contains(_searchQuery.toLowerCase()) == true;
+          bool matchesSearch =
+              _searchQuery.isEmpty ||
+              customer.customerName?.toLowerCase().contains(
+                    _searchQuery.toLowerCase(),
+                  ) ==
+                  true;
 
-          bool matchesStatus = _statusFilter == 'all' || (customer.isActive == true ? 'active' : 'inactive') == _statusFilter.toLowerCase();
+          bool matchesStatus =
+              _statusFilter == 'all' ||
+              (customer.isActive == true ? 'active' : 'inactive') ==
+                  _statusFilter.toLowerCase();
 
           return matchesSearch && matchesStatus;
         }).toList();
@@ -126,16 +135,32 @@ class MyCustomersViewModel extends BaseViewModel {
     );
   }
 
-  void onScanFromCamera(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ScanCodeView()));
+  void onScanFromCamera(BuildContext context) async {
+    final result = await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => const ScanCodeView()));
+
+    // If customer was edited from scan code, refresh the customers list
+    if (result == true) {
+      await _loadCustomers();
+    }
   }
 
-  void onSearchByPhone(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SearchOrganizationView()));
+  void onSearchByPhone(BuildContext context) async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const SearchOrganizationView()),
+    );
+
+    // If customer was edited from search organization, refresh the customers list
+    if (result == true) {
+      await _loadCustomers();
+    }
   }
 
   void onCustomerTap(BuildContext context, Customer customer) async {
-    final result = await Navigator.of(context).pushNamed(Routes.customerDetails, arguments: customer);
+    final result = await Navigator.of(
+      context,
+    ).pushNamed(Routes.customerDetails, arguments: customer);
 
     if (result == true) {
       await _loadCustomers();

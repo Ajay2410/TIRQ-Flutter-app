@@ -49,7 +49,9 @@ class ScanCodeViewModel extends BaseViewModel {
         data: LoaderDialogAttributes(
           task: () async {
             try {
-              final apiResponse = await _apiService.get(url: '${ApiEndpoints.getCustomerById}/$code');
+              final apiResponse = await _apiService.get(
+                url: '${ApiEndpoints.getCustomerById}/$code',
+              );
 
               AppLogger.info("API Response: ${apiResponse.data}");
 
@@ -57,7 +59,9 @@ class ScanCodeViewModel extends BaseViewModel {
                 final customer = Customer.fromJson(apiResponse.data);
                 return customer;
               } else {
-                throw Exception(apiResponse.data?['message'] ?? 'Failed to fetch customer');
+                throw Exception(
+                  apiResponse.data?['message'] ?? 'Failed to fetch customer',
+                );
               }
             } catch (e) {
               AppLogger.error("Error fetching customer: $e");
@@ -81,10 +85,24 @@ class ScanCodeViewModel extends BaseViewModel {
     }
   }
 
-  void _navigateToCustomerEditDetails(BuildContext context, Customer customer) {
-    Navigator.of(
-      context,
-    ).pushReplacement(MaterialPageRoute(builder: (context) => CustomerEditDetailsView(customer: customer, isFromSearchOrganization: false)));
+  void _navigateToCustomerEditDetails(
+    BuildContext context,
+    Customer customer,
+  ) async {
+    final editResult = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder:
+            (context) => CustomerEditDetailsView(
+              customer: customer,
+              isFromSearchOrganization: false,
+            ),
+      ),
+    );
+
+    if (editResult != null && editResult is Customer) {
+      // Navigate back to my_customers and refresh
+      Navigator.of(context).pop(true);
+    }
   }
 
   void _handleError(String errorMessage) {

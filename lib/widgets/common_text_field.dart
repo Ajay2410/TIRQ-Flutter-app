@@ -76,7 +76,7 @@ class CommonTextField extends StatelessWidget {
           onTapOutside:
               onTapOutside ??
               (event) {
-                FocusScope.of(context).unfocus();
+                FocusScope.of(context).requestFocus(FocusNode());
               },
           readOnly: readOnly,
           maxLines: maxLines,

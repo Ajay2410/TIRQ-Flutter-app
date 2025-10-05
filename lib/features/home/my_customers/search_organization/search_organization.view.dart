@@ -49,7 +49,12 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
                 child: _buildSearchTextField(context, model),
               ),
 
-              Expanded(child: Container(color: AppColors.scaffoldBackground, child: _buildSearchContent(model))),
+              Expanded(
+                child: Container(
+                  color: AppColors.scaffoldBackground,
+                  child: _buildSearchContent(model),
+                ),
+              ),
             ],
           ),
         );
@@ -61,7 +66,12 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
     return AppBar(
       elevation: 0,
       leading: IconButton(
-        icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
+        icon: Image.asset(
+          AppImages.back,
+          width: 24,
+          height: 24,
+          color: AppColors.white,
+        ),
         onPressed: () => Navigator.of(context).pop(),
       ),
       flexibleSpace: Container(
@@ -76,41 +86,72 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
       ),
       title: Text(
         LanguageService.get('search_by_phone_number_email'),
-        style: const TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.w600),
+        style: const TextStyle(
+          color: AppColors.white,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
       ),
       titleSpacing: 0,
     );
   }
 
-  Widget _buildSearchTextField(BuildContext context, SearchOrganizationViewModel model) {
+  Widget _buildSearchTextField(
+    BuildContext context,
+    SearchOrganizationViewModel model,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: Colors.grey.shade300, width: 1),
-        boxShadow: [BoxShadow(color: Colors.grey.shade100, blurRadius: 4, offset: const Offset(0, 2))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade100,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          Padding(padding: const EdgeInsets.all(16), child: Image.asset(AppImages.search, width: 20, height: 20, color: AppColors.black)),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Image.asset(
+              AppImages.search,
+              width: 20,
+              height: 20,
+              color: AppColors.black,
+            ),
+          ),
           Expanded(
             child: TextFormField(
               controller: _searchController,
               focusNode: _searchFocusNode,
               onChanged: model.performSearch,
-              style: const TextStyle(fontSize: 16, color: AppColors.black, fontWeight: FontWeight.w500),
+              style: const TextStyle(
+                fontSize: 16,
+                color: AppColors.black,
+                fontWeight: FontWeight.w500,
+              ),
               onTapOutside: (event) {
                 _searchFocusNode.unfocus();
               },
               decoration: const InputDecoration(
                 hintText: 'Search customers by name, phone, or email...',
-                hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 16),
+                hintStyle: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 16,
+                ),
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
                 errorBorder: InputBorder.none,
                 disabledBorder: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 16),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 0,
+                  vertical: 16,
+                ),
               ),
             ),
           ),
@@ -121,7 +162,10 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
                 model.clearSearch();
                 model.cancelSearch();
               },
-              child: const Padding(padding: EdgeInsets.all(16), child: Icon(Icons.close, color: AppColors.black, size: 20)),
+              child: const Padding(
+                padding: EdgeInsets.all(16),
+                child: Icon(Icons.close, color: AppColors.black, size: 20),
+              ),
             ),
           if (model.isLoading)
             const Padding(
@@ -129,7 +173,10 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
               child: SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary)),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                ),
               ),
             ),
         ],
@@ -138,16 +185,33 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
   }
 
   Widget _buildEmptyState() {
-    return Center(child: Image.asset(AppImages.earthSearch, width: 280, height: 280, color: AppColors.gray));
+    return Center(
+      child: Image.asset(
+        AppImages.earthSearch,
+        width: 280,
+        height: 280,
+        color: AppColors.gray,
+      ),
+    );
   }
 
   Widget _buildSearchContent(SearchOrganizationViewModel model) {
     if (model.isLoading) {
-      return const Center(child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.white)));
+      return const Center(
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
+        ),
+      );
     }
 
     if (model.errorMessage != null) {
-      return Center(child: Text(model.errorMessage!, style: const TextStyle(color: AppColors.error)));
+      return Center(
+        child: Text(
+          model.errorMessage!,
+          style: const TextStyle(color: AppColors.error),
+        ),
+      );
     }
 
     if (model.searchResults.isEmpty) {
@@ -161,60 +225,100 @@ class _SearchOrganizationViewState extends State<SearchOrganizationView> {
           (context, index) =>
               index == 0
                   ? SizedBox()
-                  : Padding(padding: const EdgeInsets.symmetric(horizontal: 10), child: const Divider(color: AppColors.lightGrey, height: 1)),
+                  : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: const Divider(color: AppColors.lightGrey, height: 1),
+                  ),
       itemBuilder: (context, index) {
         if (index == 0) {
           return SizedBox(height: 10);
         }
         final result = model.searchResults[index - 1];
-        return Container(color: AppColors.white, padding: EdgeInsets.all(10), child: _buildSearchResultItem(result, model));
+        return Container(
+          color: AppColors.white,
+          padding: EdgeInsets.all(10),
+          child: _buildSearchResultItem(result, model),
+        );
       },
     );
   }
 
-  Widget _buildSearchResultItem(Customer result, SearchOrganizationViewModel model) {
+  Widget _buildSearchResultItem(
+    Customer result,
+    SearchOrganizationViewModel model,
+  ) {
     return InkWell(
       onTap: () async {
-        final editResult = await Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (context) => CustomerEditDetailsView(customer: result, isFromSearchOrganization: true)));
+        final editResult = await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder:
+                (context) => CustomerEditDetailsView(
+                  customer: result,
+                  isFromSearchOrganization: true,
+                ),
+          ),
+        );
 
         if (editResult != null && editResult is Customer) {
-          model.performSearch(model.searchQuery);
+          // Navigate back to my_customers and refresh
+          Navigator.of(context).pop(true);
         }
       },
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorF0F2FC),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.colorF0F2FC,
+            ),
             child: Stack(
               clipBehavior: Clip.none,
               children: [
                 Container(
                   height: 50,
                   width: 50,
-                  decoration: BoxDecoration(color: AppColors.bluebackground, shape: BoxShape.circle),
+                  decoration: BoxDecoration(
+                    color: AppColors.bluebackground,
+                    shape: BoxShape.circle,
+                  ),
                   child: ClipOval(
                     child: Container(
                       color: AppColors.bluebackground,
                       child: Center(
                         child: Text(
-                          result.customerName?.substring(0, 2).toUpperCase() ?? '',
-                          style: const TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                          result.customerName?.substring(0, 2).toUpperCase() ??
+                              '',
+                          style: const TextStyle(
+                            color: AppColors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-                if (result.flag != null) Positioned(bottom: -4, right: -4, child: Image.asset(AppImages.flag, width: 17, height: 17)),
+                if (result.flag != null)
+                  Positioned(
+                    bottom: -4,
+                    right: -4,
+                    child: Image.asset(AppImages.flag, width: 17, height: 17),
+                  ),
               ],
             ),
           ),
 
           const SizedBox(width: 16),
 
-          Text(result.customerName ?? '', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+          Text(
+            result.customerName ?? '',
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+            ),
+          ),
         ],
       ),
     );

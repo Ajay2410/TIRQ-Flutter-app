@@ -474,9 +474,9 @@ class CustomerEditDetailsView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
+                Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 11, fontWeight: FontWeight.w500)),
                 const SizedBox(height: 4),
-                Text(value, style: TextStyle(color: isNotAvailable ? AppColors.redBack : iconColor, fontSize: 14, fontWeight: FontWeight.w500)),
+                Text(value, style: TextStyle(color: isNotAvailable ? AppColors.redBack : iconColor, fontSize: 11, fontWeight: FontWeight.w600)),
               ],
             ),
           ),
@@ -502,9 +502,9 @@ class CustomerEditDetailsView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
+                Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 11, fontWeight: FontWeight.w500)),
                 const SizedBox(height: 4),
-                Text(value, style: TextStyle(color: isEmpty ? AppColors.redBack : AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+                Text(value, style: TextStyle(color: isEmpty ? AppColors.redBack : AppColors.textPrimary, fontSize: 11, fontWeight: FontWeight.w600)),
               ],
             ),
           ),

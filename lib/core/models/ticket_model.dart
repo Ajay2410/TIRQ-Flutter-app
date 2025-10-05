@@ -53,6 +53,7 @@ class TicketList {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? warrantyStatus;
+  String? engineerRemark;
   int? v;
   ChatRoom? chatRoom;
   bool? IsShowChatOption;
@@ -74,6 +75,7 @@ class TicketList {
     this.pricing,
     this.paymentStatus,
     this.createdAt,
+    this.engineerRemark,
     this.updatedAt,
     this.warrantyStatus,
     this.v,
@@ -91,6 +93,7 @@ class TicketList {
     ticketType: json["ticketType"],
     type: json["type"],
     status: json["status"],
+    engineerRemark: json["engineerRemark"],
     isActive: json["isActive"],
     machine: json["machine"] == null ? null : Machine.fromJson(json["machine"]),
     processor: json["processor"] == null ? null : Organisation.fromJson(json["processor"]),
@@ -116,6 +119,7 @@ class TicketList {
     "type": type,
     "status": status,
     "isActive": isActive,
+    "engineerRemark": engineerRemark,
     "machine": machine?.toJson(),
     "processor": processor?.toJson(),
     "organisation": organisation?.toJson(),

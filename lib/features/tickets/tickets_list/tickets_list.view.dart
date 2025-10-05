@@ -500,7 +500,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                                 text: "${LanguageService.get("engineer_remarks")}: ",
                                 style: TextStyle(fontSize: 11, color: AppColors.black, fontWeight: FontWeight.bold),
                               ),
-                              TextSpan(text: ticket.problem ?? ticket.notes ?? "N/A", style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
+                              TextSpan(text: ticket.engineerRemark ?? ticket.notes ?? "N/A", style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
                             ],
                           ),
                         ),
