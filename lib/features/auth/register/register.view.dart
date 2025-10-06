@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_popup/flutter_popup.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:manager/features/auth/register/register.vm.dart';
+import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:stacked/stacked.dart';
 import '../../../resources/app_resources/app_resources.dart';
 import '../../../services/language.service.dart';
@@ -80,92 +82,100 @@ class RegisterView extends StatelessWidget {
   }
 
   Widget _buildRegistrationForm(BuildContext context, RegisterViewModel model) {
-    return Container(
-      child: Form(
-        key: model.formKey,
-        child: Column(
-          children: [
-            _buildTextFormField(
-              context,
-              controller: model.nameController,
-              label: LanguageService.get('organization_name'),
-              validator:
-                  (value) =>
-                      value?.isEmpty == true
-                          ? LanguageService.get(
-                            'please_enter_organization_name',
-                          )
-                          : null,
-            ),
-
-            SizedBox(height: AppSizes.h13),
-            _buildTextFormField(
-              context,
-              controller: model.emailController,
-              label: LanguageService.get('email'),
-              keyboardType: TextInputType.emailAddress,
-              validator:
-                  (value) =>
-                      value?.isEmpty == true
-                          ? LanguageService.get('please_enter_email')
-                          : null,
-            ),
-
-            SizedBox(height: AppSizes.h13),
-            SizedBox(
-              height: 60,
-              child: IntlPhoneField(
-                controller: model.phoneController,
-                pickerDialogStyle: PickerDialogStyle(
-                  backgroundColor: AppColors.white,
-                  countryCodeStyle: TextStyle(color: AppColors.black),
-                  countryNameStyle: TextStyle(color: AppColors.black),
-                ),
-                decoration: InputDecoration(
-                  labelText: LanguageService.get('phone_number'),
-                  labelStyle: TextStyle(
-                    color: AppColors.textGrey,
-                    fontSize: 13,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppSizes.v13),
-                    borderSide: BorderSide(color: AppColors.lightGrey),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppSizes.v13),
-                    borderSide: BorderSide(color: AppColors.lightGrey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppSizes.v13),
-                    borderSide: BorderSide(color: AppColors.primary, width: 2),
-                  ),
-                ),
-                initialCountryCode: 'IN',
-                onChanged: (phone) {
-                  model.updatePhoneNumber(phone);
-                },
-                validator: (phone) {
-                  if (phone == null || phone.number.isEmpty) {
-                    return LanguageService.get('please_enter_phone_number');
-                  }
-                  return null;
-                },
+    return Form(
+      key: model.formKey,
+      child: Column(
+        children: [
+          _buildTextFormField(
+            context,
+            controller: model.nameController,
+            label: LanguageService.get('organization_name'),
+            suffix: CustomPopup(
+              content: Text(
+                '''This Login is only for Organization''',
+                style: TextStyle(color: AppColors.white, fontSize: 9, fontWeight: FontWeight.w500),
               ),
+              position: PopupPosition.top,
+              arrowColor: AppColors.textGrey,
+              backgroundColor: AppColors.textGrey,
+              child: Padding(padding: EdgeInsets.all(16), child: Image.asset(AppImages.alert, width: 16, height: 16)),
             ),
+            validator:
+                (value) =>
+                    value?.isEmpty == true
+                        ? LanguageService.get(
+                          'please_enter_organization_name',
+                        )
+                        : null,
+          ),
 
-            SizedBox(height: AppSizes.h5),
-            _buildPasswordFormField(
-              context,
-              controller: model.passwordController,
-              obscureText: model.obscurePassword,
-              onToggleVisibility: model.togglePassword,
-              onFieldSubmitted: (_) => model.onSubmitForm(),
+          SizedBox(height: AppSizes.h13),
+          _buildTextFormField(
+            context,
+            controller: model.emailController,
+            label: LanguageService.get('email'),
+            keyboardType: TextInputType.emailAddress,
+            validator:
+                (value) =>
+                    value?.isEmpty == true
+                        ? LanguageService.get('please_enter_email')
+                        : null,
+          ),
+
+          SizedBox(height: AppSizes.h13),
+          SizedBox(
+            height: 60,
+            child: IntlPhoneField(
+              controller: model.phoneController,
+              pickerDialogStyle: PickerDialogStyle(
+                backgroundColor: AppColors.white,
+                countryCodeStyle: TextStyle(color: AppColors.black),
+                countryNameStyle: TextStyle(color: AppColors.black),
+              ),
+              decoration: InputDecoration(
+                labelText: LanguageService.get('phone_number'),
+                labelStyle: TextStyle(
+                  color: AppColors.textGrey,
+                  fontSize: 13,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppSizes.v13),
+                  borderSide: BorderSide(color: AppColors.lightGrey),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppSizes.v13),
+                  borderSide: BorderSide(color: AppColors.lightGrey),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppSizes.v13),
+                  borderSide: BorderSide(color: AppColors.primary, width: 2),
+                ),
+              ),
+              initialCountryCode: 'IN',
+              onChanged: (phone) {
+                model.updatePhoneNumber(phone);
+              },
+              validator: (phone) {
+                if (phone == null || phone.number.isEmpty) {
+                  return LanguageService.get('please_enter_phone_number');
+                }
+                return null;
+              },
             ),
+          ),
 
-            SizedBox(height: AppSizes.h15),
-            _buildSubmitButton(context, model),
-          ],
-        ),
+          SizedBox(height: AppSizes.h5),
+          _buildPasswordFormField(
+            context,
+            controller: model.passwordController,
+            obscureText: model.obscurePassword,
+            onToggleVisibility: model.togglePassword,
+            onFieldSubmitted: (_) => model.onSubmitForm(),
+          ),
+
+          SizedBox(height: AppSizes.h15),
+          _buildSubmitButton(context, model),
+        ],
       ),
     );
   }
@@ -175,6 +185,7 @@ class RegisterView extends StatelessWidget {
     required TextEditingController controller,
     required String label,
     TextInputType keyboardType = TextInputType.text,
+    Widget? suffix,
     String? Function(String?)? validator,
   }) {
     return SizedBox(
@@ -191,6 +202,7 @@ class RegisterView extends StatelessWidget {
             fontSize: 13,
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          suffixIcon: suffix,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(13),
             borderSide: BorderSide(color: AppColors.lightGrey),

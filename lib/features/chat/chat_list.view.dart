@@ -508,6 +508,7 @@ class _ChatListViewState extends State<ChatListView> with TickerProviderStateMix
                   contactInitials: chatWithName.isNotEmpty ? chatWithName.substring(0, 1).toUpperCase() : 'U',
                   roomId: chatRoom.id,
                   ticketId: chatRoom.ticket?.id,
+                  ticketStatus: chatRoom.ticket?.status,
                 ),
           ),
         );

@@ -250,18 +250,9 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
             ],
           ),
         ),
+        bottomNavigationBar: _buildNavigationButtons(currentPage),
         body: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [_buildHeader(), _buildPageContent()]),
-                ),
-              ),
-
-              _buildNavigationButtons(currentPage),
-            ],
-          ),
+          child: SingleChildScrollView(child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [_buildHeader(), _buildPageContent()])),
         ),
       ),
     );
@@ -374,10 +365,11 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
         return Opacity(
           opacity: _fadeAnimation.value,
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               _buildPageIndicators(),
               Text(page.title, style: TextStyle(fontSize: 34, fontWeight: FontWeight.w900, color: Colors.black), textAlign: TextAlign.center),
-              SizedBox(height: 6),
+              SizedBox(height: 20),
 
               Text(
                 page.description,
@@ -420,10 +412,9 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
 
   Widget _buildNavigationButtons(IntroPage page) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 22),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Back button
           AnimatedSwitcher(
@@ -436,7 +427,7 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
                       child: Container(
                         child: Text(
                           LanguageService.get("back"),
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.black),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF374151)),
                         ),
                       ),
                     )
@@ -444,83 +435,88 @@ class _IntroductionViewState extends State<IntroductionView> with TickerProvider
           ),
 
           // Next/Start button with progress indicator OR Continue button
-          _currentIndex == _pages.length - 1
-              ? // Continue button for last page
-              GestureDetector(
-                key: ValueKey('continue'),
-                onTap: _nextPage, // or your completion handler
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 63, vertical: 13),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFF042c74), Color(0xFF013ead)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [BoxShadow(color: Color(0xFF042c74).withOpacity(0.3), blurRadius: 12, offset: Offset(0, 4))],
-                  ),
-                  child: Text(
-                    LanguageService.get("continue"),
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.white),
-                  ),
-                ),
-              )
-              : // Circular progress button for other pages
-              GestureDetector(
-                key: ValueKey('next'),
-                onTap: _nextPage,
-                child: AnimatedBuilder(
-                  animation: _rippleAnimation,
-                  builder: (context, child) {
-                    return Container(
-                      width: 60,
-                      height: 60,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          // Circular progress indicator
-                          SizedBox(
+          AnimatedSwitcher(
+            duration: Duration(milliseconds: 300),
+            child:
+                _currentIndex == _pages.length - 1
+                    ? // Continue button for last page
+                    GestureDetector(
+                      key: ValueKey('continue'),
+                      onTap: _nextPage, // or your completion handler
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 32, vertical: 10),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF042c74), Color(0xFF013ead)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(30),
+                          boxShadow: [BoxShadow(color: Color(0xFF042c74).withOpacity(0.3), blurRadius: 12, offset: Offset(0, 4))],
+                        ),
+                        child: Text(
+                          LanguageService.get("continue"),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+                        ),
+                      ),
+                    )
+                    : // Circular progress button for other pages
+                    GestureDetector(
+                      key: ValueKey('next'),
+                      onTap: _nextPage,
+                      child: AnimatedBuilder(
+                        animation: _rippleAnimation,
+                        builder: (context, child) {
+                          return Container(
                             width: 60,
                             height: 60,
-                            child: CircularProgressIndicator(
-                              value: (_currentIndex + 1) / _pages.length,
-                              backgroundColor: Color(0xFFE5E7EB),
-                              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF042c74)),
-                              strokeWidth: 3,
-                            ),
-                          ),
-                          Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Color(0xFF042c74), Color(0xFF013ead)],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              shape: BoxShape.circle,
-                              boxShadow: [BoxShadow(color: Color(0xFF042c74).withOpacity(0.3), blurRadius: 12, offset: Offset(0, 4))],
-                            ),
-                            child: Icon(Icons.arrow_forward, color: Colors.white, size: 18),
-                          ),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                // Circular progress indicator
+                                SizedBox(
+                                  width: 60,
+                                  height: 60,
+                                  child: CircularProgressIndicator(
+                                    value: (_currentIndex + 1) / _pages.length,
+                                    backgroundColor: Color(0xFFE5E7EB),
+                                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF042c74)),
+                                    strokeWidth: 3,
+                                  ),
+                                ),
+                                Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [Color(0xFF042c74), Color(0xFF013ead)],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                    shape: BoxShape.circle,
+                                    boxShadow: [BoxShadow(color: Color(0xFF042c74).withOpacity(0.3), blurRadius: 12, offset: Offset(0, 4))],
+                                  ),
+                                  child: Icon(Icons.arrow_forward, color: Colors.white, size: 18),
+                                ),
 
-                          // Ripple effect
-                          if (_rippleAnimation.value > 0)
-                            Container(
-                              width: 60 + (_rippleAnimation.value * 20),
-                              height: 60 + (_rippleAnimation.value * 20),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Color(0xFF042c74).withOpacity(0.3 * (1 - _rippleAnimation.value)), width: 2),
-                              ),
+                                // Ripple effect
+                                if (_rippleAnimation.value > 0)
+                                  Container(
+                                    width: 60 + (_rippleAnimation.value * 20),
+                                    height: 60 + (_rippleAnimation.value * 20),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: Color(0xFF042c74).withOpacity(0.3 * (1 - _rippleAnimation.value)), width: 2),
+                                    ),
+                                  ),
+                              ],
                             ),
-                        ],
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
-              ),
+                    ),
+          ),
         ],
       ),
     );

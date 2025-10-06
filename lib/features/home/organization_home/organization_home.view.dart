@@ -32,11 +32,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
       viewModelBuilder: () => OrganizationHomeViewModel(),
       onViewModelReady: (OrganizationHomeViewModel model) => model.init(),
       disposeViewModel: false,
-      builder: (
-        BuildContext context,
-        OrganizationHomeViewModel model,
-        Widget? child,
-      ) {
+      builder: (BuildContext context, OrganizationHomeViewModel model, Widget? child) {
         return Scaffold(
           backgroundColor: AppColors.transparent,
           appBar: _buildHeader(context, model),
@@ -54,10 +50,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                           height: Get.height * 0.09,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [
-                                AppColors.primaryLight,
-                                AppColors.primaryDark,
-                              ],
+                              colors: [AppColors.primaryLight, AppColors.primaryDark],
                               begin: Alignment.centerRight,
                               end: Alignment.centerLeft,
                               stops: [0.08, 1],
@@ -68,9 +61,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                     ),
                   ),
 
-                  Column(
-                    children: [Expanded(child: _buildContent(context, model))],
-                  ),
+                  Column(children: [Expanded(child: _buildContent(context, model))]),
                 ],
               ),
             ),
@@ -80,10 +71,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
     );
   }
 
-  PreferredSizeWidget _buildHeader(
-    BuildContext context,
-    OrganizationHomeViewModel model,
-  ) {
+  PreferredSizeWidget _buildHeader(BuildContext context, OrganizationHomeViewModel model) {
     String greeting = _getGreetingBasedOnTime();
 
     return PreferredSize(
@@ -109,13 +97,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                   Container(
                     width: 50,
                     height: 50,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.white.withValues(alpha: 0.3),
-                        width: 2,
-                      ),
-                    ),
+                    decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: AppColors.white.withValues(alpha: 0.3), width: 2)),
                     child: ClipOval(child: _buildProfileImage(model)),
                   ),
 
@@ -129,23 +111,14 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                         children: [
                           Text(
                             greeting.toUpperCase(),
-                            style: TextStyle(
-                              color: AppColors.white.withValues(alpha: 0.9),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                            ),
+                            style: TextStyle(color: AppColors.white.withValues(alpha: 0.9), fontSize: 12, fontWeight: FontWeight.w400),
                           ),
                         ],
                       ),
                       SizedBox(height: 4),
                       Text(
-                        (model.user.name ?? model.user.fullName ?? 'User')
-                            .toUpperCase(),
-                        style: TextStyle(
-                          color: AppColors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        (model.user.name ?? model.user.fullName ?? 'User').toUpperCase(),
+                        style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.w600),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -162,10 +135,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                       {"value": "Unit 1", "display": "Unit 1"},
                       {"value": "Unit 2", "display": "Unit 2"},
                       {"value": "Unit 3", "display": "Unit 3"},
-                      {
-                        "value": "+ Add New",
-                        "display": LanguageService.get('add_new'),
-                      },
+                      {"value": "+ Add New", "display": LanguageService.get('add_new')},
                     ],
                     onChanged: (String? newValue) {
                       if (newValue != null) {
@@ -182,29 +152,17 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                   Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: AppColors.primarySuperLight.withValues(
-                        alpha: 0.04,
-                      ),
+                      color: AppColors.primarySuperLight.withValues(alpha: 0.04),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: AppColors.white.withValues(alpha: 0.10),
-                      ),
+                      border: Border.all(color: AppColors.white.withValues(alpha: 0.10)),
                     ),
-                    child: Icon(
-                      Icons.notifications_outlined,
-                      color: AppColors.white,
-                      size: 20,
-                    ),
+                    child: Icon(Icons.notifications_outlined, color: AppColors.white, size: 20),
                   ),
                 ],
               ),
             ),
 
-            SizedBox(
-              width: 95,
-              height: 56,
-              child: Image.asset(AppImages.triqLogo3, fit: BoxFit.contain),
-            ),
+            SizedBox(width: 95, height: 56, child: Image.asset(AppImages.triqLogo3, fit: BoxFit.contain)),
             // SizedBox(height: 12),
           ],
         ),
@@ -214,10 +172,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
 
   Widget _buildDefaultAvatar() {
     return Container(
-      decoration: BoxDecoration(
-        color: AppColors.white.withValues(alpha: 0.2),
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: AppColors.white.withValues(alpha: 0.2), shape: BoxShape.circle),
       child: Icon(Icons.person, color: AppColors.white, size: 24),
     );
   }
@@ -225,8 +180,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
   Widget _buildProfileImage(OrganizationHomeViewModel model) {
     // Construct full URL by combining base URL with image path
     String? imageUrl;
-    if (model.profile?.profileImage != null &&
-        model.profile!.profileImage!.isNotEmpty) {
+    if (model.profile?.profileImage != null && model.profile!.profileImage!.isNotEmpty) {
       String baseUrl = Configurations().url;
       if (model.profile!.profileImage!.startsWith('/')) {
         imageUrl = baseUrl + model.profile!.profileImage!;
@@ -247,19 +201,12 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
       padding: EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildDashboardCards(context, model),
-          SizedBox(height: 30),
-          _buildPromotionalBanner(context),
-        ],
+        children: [_buildDashboardCards(context, model), SizedBox(height: 30), _buildPromotionalBanner(context)],
       ),
     );
   }
 
-  Widget _buildDashboardCards(
-    BuildContext context,
-    OrganizationHomeViewModel model,
-  ) {
+  Widget _buildDashboardCards(BuildContext context, OrganizationHomeViewModel model) {
     // if (model.isLoading) {
     //   return Center(child: LottieBuilder.asset("assets/lotties/globe.json"));
     // }
@@ -310,24 +257,9 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
         color: AppColors.mediumPeriwinkle,
         route: Routes.ticketsList,
       ),
-      DashboardCardData(
-        title: LanguageService.get('my_customers'),
-        icon: AppImages.myCustomers,
-        color: AppColors.skyBlue,
-        route: Routes.myCustomers,
-      ),
-      DashboardCardData(
-        title: LanguageService.get('my_teams'),
-        icon: AppImages.myTeam,
-        color: AppColors.greenbackground,
-        route: Routes.teams,
-      ),
-      DashboardCardData(
-        title: LanguageService.get('tasks'),
-        icon: AppImages.tasks,
-        color: AppColors.redbackground,
-        route: Routes.tasks,
-      ),
+      DashboardCardData(title: LanguageService.get('my_customers'), icon: AppImages.myCustomers, color: AppColors.skyBlue, route: Routes.myCustomers),
+      DashboardCardData(title: LanguageService.get('my_teams'), icon: AppImages.myTeam, color: AppColors.greenbackground, route: Routes.teams),
+      DashboardCardData(title: LanguageService.get('tasks'), icon: AppImages.tasks, color: AppColors.redbackground, route: Routes.tasks),
       DashboardCardData(
         title: LanguageService.get('pi_invoice'),
         icon: AppImages.piInvoice,
@@ -338,25 +270,15 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
     ];
   }
 
-  Widget _buildMainActionCard(
-    BuildContext context,
-    OrganizationHomeViewModel model,
-  ) {
-    final List<DashboardCardData> mainActions =
-        _getMainActionsForOrganization();
+  Widget _buildMainActionCard(BuildContext context, OrganizationHomeViewModel model) {
+    final List<DashboardCardData> mainActions = _getMainActionsForOrganization();
 
     return Container(
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -417,35 +339,20 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
     ];
   }
 
-  Widget _buildSecondaryFeaturesCard(
-    BuildContext context,
-    OrganizationHomeViewModel model,
-  ) {
-    final List<DashboardCardData> secondaryFeatures =
-        _getSecondaryFeaturesForOrganization();
+  Widget _buildSecondaryFeaturesCard(BuildContext context, OrganizationHomeViewModel model) {
+    final List<DashboardCardData> secondaryFeatures = _getSecondaryFeaturesForOrganization();
 
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: Offset(0, 4))],
       ),
       child: GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          childAspectRatio: 0.78,
-        ),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: 0.78),
         itemCount: secondaryFeatures.length,
         itemBuilder: (context, index) {
           final card = secondaryFeatures[index];
@@ -455,12 +362,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
     );
   }
 
-  Widget _buildSecondaryFeatureCard(
-    BuildContext context,
-    DashboardCardData card,
-    int index,
-    OrganizationHomeViewModel model,
-  ) {
+  Widget _buildSecondaryFeatureCard(BuildContext context, DashboardCardData card, int index, OrganizationHomeViewModel model) {
     return GestureDetector(
           onTap: () {
             // Navigate based on the card route
@@ -481,14 +383,9 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                 break;
               default:
                 // Handle unknown routes
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      '${card.title} - Feature not implemented yet',
-                    ),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('${card.title} - Feature not implemented yet'), duration: Duration(seconds: 2)));
                 break;
             }
           },
@@ -500,30 +397,15 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
               Container(
                 width: 50,
                 height: 50,
-                decoration: BoxDecoration(
-                  color: card.color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(16),
-                ),
+                decoration: BoxDecoration(color: card.color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(16)),
                 padding: EdgeInsets.all(10),
-                child: Center(
-                  child: Image.asset(
-                    card.icon,
-                    width: 25,
-                    height: 25,
-                    color: card.color,
-                  ),
-                ),
+                child: Center(child: Image.asset(card.icon, width: 25, height: 25, color: card.color)),
               ),
               SizedBox(height: 8),
               // Title
               Text(
                 card.title,
-                style: TextStyle(
-                  color: AppColors.black,
-                  fontSize: 9,
-                  fontWeight: FontWeight.w700,
-                  height: 1.1,
-                ),
+                style: TextStyle(color: AppColors.black, fontSize: 9, fontWeight: FontWeight.w700, height: 1.1),
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -533,20 +415,10 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
         )
         .animate(delay: (index * 100).ms)
         .fadeIn(duration: 400.ms)
-        .slideY(
-          begin: 0.3,
-          end: 0,
-          curve: Curves.easeOutQuad,
-          duration: Duration(milliseconds: 200 + (index * 50)),
-        );
+        .slideY(begin: 0.3, end: 0, curve: Curves.easeOutQuad, duration: Duration(milliseconds: 200 + (index * 50)));
   }
 
-  Widget _buildDashboardCard(
-    BuildContext context,
-    DashboardCardData card,
-    int index,
-    OrganizationHomeViewModel model,
-  ) {
+  Widget _buildDashboardCard(BuildContext context, DashboardCardData card, int index, OrganizationHomeViewModel model) {
     return GestureDetector(
       onTap: () {
         // Navigate based on the card route
@@ -571,22 +443,14 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
           default:
             // Handle unknown routes or show coming soon message
             if (card.isComingSoon) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${card.title} - Coming Soon!'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${card.title} - Coming Soon!'), duration: Duration(seconds: 2)));
             }
             break;
         }
       },
       child: Container(
             padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: card.color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(13),
-            ),
+            decoration: BoxDecoration(color: card.color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(13)),
             child: Stack(
               fit: StackFit.expand,
               clipBehavior: Clip.none,
@@ -597,19 +461,9 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                   children: [
                     // Icon container
                     Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        shape: BoxShape.circle,
-                      ),
+                      decoration: BoxDecoration(color: AppColors.white, shape: BoxShape.circle),
                       padding: EdgeInsets.all(10),
-                      child: Center(
-                        child: Image.asset(
-                          card.icon,
-                          width: 25,
-                          height: 25,
-                          color: card.color,
-                        ),
-                      ),
+                      child: Center(child: Image.asset(card.icon, width: 25, height: 25, color: card.color)),
                     ),
 
                     SizedBox(height: 8),
@@ -618,12 +472,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                     Flexible(
                       child: Text(
                         card.title,
-                        style: TextStyle(
-                          color: AppColors.black,
-                          fontSize: 9,
-                          fontWeight: FontWeight.w700,
-                          height: 1.1,
-                        ),
+                        style: TextStyle(color: AppColors.black, fontSize: 9, fontWeight: FontWeight.w700, height: 1.1),
                         textAlign: TextAlign.center,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -639,17 +488,10 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                     right: -16,
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryDark.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
+                      decoration: BoxDecoration(color: AppColors.primaryDark.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(6)),
                       child: Text(
                         LanguageService.get('coming_soon'),
-                        style: TextStyle(
-                          color: AppColors.primaryDark,
-                          fontSize: 8,
-                          fontWeight: FontWeight.w700,
-                        ),
+                        style: TextStyle(color: AppColors.primaryDark, fontSize: 8, fontWeight: FontWeight.w700),
                       ),
                     ),
                   ),
@@ -658,12 +500,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
           )
           .animate(delay: (index * 100).ms)
           .fadeIn(duration: 400.ms)
-          .slideY(
-            begin: 0.3,
-            end: 0,
-            curve: Curves.easeOutQuad,
-            duration: Duration(milliseconds: 200 + (index * 50)),
-          ),
+          .slideY(begin: 0.3, end: 0, curve: Curves.easeOutQuad, duration: Duration(milliseconds: 200 + (index * 50))),
     );
   }
 
@@ -674,32 +511,21 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
         'subtitle': LanguageService.get('limited_time_only'),
         'description': LanguageService.get('up_to_80_off'),
         'colors': [AppColors.yellow, AppColors.yellow, AppColors.yellow],
-        'imageUrl':
-            'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=200&fit=crop',
+        'imageUrl': 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=200&fit=crop',
       },
       {
         'title': LanguageService.get('new_features'),
         'subtitle': LanguageService.get('coming_soon_feature'),
         'description': LanguageService.get('enhanced_experience'),
-        'colors': [
-          AppColors.bluebackground,
-          AppColors.greenbackground,
-          AppColors.darkGreenBack,
-        ],
-        'imageUrl':
-            'https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=200&fit=crop',
+        'colors': [AppColors.bluebackground, AppColors.greenbackground, AppColors.darkGreenBack],
+        'imageUrl': 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=200&fit=crop',
       },
       {
         'title': LanguageService.get('premium_support'),
         'subtitle': LanguageService.get('available_now'),
         'description': LanguageService.get('24_7_assistance'),
-        'colors': [
-          AppColors.bluebackground,
-          AppColors.redbackground,
-          AppColors.greenbackground,
-        ],
-        'imageUrl':
-            'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=200&fit=crop',
+        'colors': [AppColors.bluebackground, AppColors.redbackground, AppColors.greenbackground],
+        'imageUrl': 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=200&fit=crop',
       },
     ];
 
@@ -733,11 +559,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: item['colors'],
-                              ),
+                              gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: item['colors']),
                             ),
                           );
                         },
@@ -759,10 +581,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                   margin: EdgeInsets.symmetric(horizontal: 4.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
-                    color:
-                        currentCarouselIndex == entry.key
-                            ? AppColors.primary
-                            : AppColors.gray.withValues(alpha: 0.4),
+                    color: currentCarouselIndex == entry.key ? AppColors.primary : AppColors.gray.withValues(alpha: 0.4),
                   ),
                 );
               }).toList(),
@@ -797,33 +616,16 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.1), blurRadius: 4, offset: Offset(0, 2))],
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           isDense: true,
           value: value,
-          hint: Text(
-            label,
-            style: TextStyle(color: AppColors.gray, fontSize: 10),
-          ),
+          hint: Text(label, style: TextStyle(color: AppColors.gray, fontSize: 10)),
           onChanged: onChanged,
-          style: TextStyle(
-            color: AppColors.black,
-            fontWeight: FontWeight.w600,
-            fontSize: 10,
-          ),
-          icon: Icon(
-            Icons.keyboard_arrow_down,
-            color: AppColors.black.withValues(alpha: 0.7),
-            size: 16,
-          ),
+          style: TextStyle(color: AppColors.black, fontWeight: FontWeight.w600, fontSize: 10),
+          icon: Icon(Icons.keyboard_arrow_down, color: AppColors.black.withValues(alpha: 0.7), size: 16),
           dropdownColor: AppColors.white,
           elevation: 0,
           borderRadius: BorderRadius.circular(8),
@@ -838,31 +640,16 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                       isAddNew
                           ? Row(
                             children: [
-                              Icon(
-                                Icons.add,
-                                color: AppColors.primary,
-                                size: 16,
-                              ),
+                              Icon(Icons.add, color: AppColors.primary, size: 16),
                               SizedBox(width: 8),
-                              Text(
-                                item['display']!,
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 10,
-                                ),
-                              ),
+                              Text(item['display']!, style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 10)),
                             ],
                           )
                           : Text(
                             item['display']!,
                             style: TextStyle(
-                              color:
-                                  isSelected ? AppColors.black : AppColors.gray,
-                              fontWeight:
-                                  isSelected
-                                      ? FontWeight.w700
-                                      : FontWeight.w500,
+                              color: isSelected ? AppColors.black : AppColors.gray,
+                              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                               fontSize: 10,
                             ),
                           ),
@@ -882,13 +669,7 @@ class DashboardCardData {
   final String route;
   final bool isComingSoon;
 
-  DashboardCardData({
-    required this.title,
-    required this.icon,
-    required this.color,
-    required this.route,
-    this.isComingSoon = false,
-  });
+  DashboardCardData({required this.title, required this.icon, required this.color, required this.route, this.isComingSoon = false});
 }
 
 class HomeCardShimmer extends StatelessWidget {
@@ -907,14 +688,7 @@ class HomeCardShimmer extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.white,
             borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.gray.withValues(alpha: 0.2),
-                blurRadius: 3,
-                offset: const Offset(2, 2),
-                spreadRadius: 0,
-              ),
-            ],
+            boxShadow: [BoxShadow(color: AppColors.gray.withValues(alpha: 0.2), blurRadius: 3, offset: const Offset(2, 2), spreadRadius: 0)],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -923,22 +697,8 @@ class HomeCardShimmer extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    width: 100,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                  Container(
-                    width: 24,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
+                  Container(width: 100, height: 16, decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(4))),
+                  Container(width: 24, height: 24, decoration: BoxDecoration(color: AppColors.white, shape: BoxShape.circle)),
                 ],
               ),
               SizedBox(height: 12),
@@ -947,29 +707,12 @@ class HomeCardShimmer extends StatelessWidget {
               Container(
                 width: double.infinity,
                 height: 10,
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(4),
-                ),
+                decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(4)),
               ),
               SizedBox(height: 8),
-              Container(
-                width: 150,
-                height: 10,
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
+              Container(width: 150, height: 10, decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(4))),
               SizedBox(height: 8),
-              Container(
-                width: 120,
-                height: 10,
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
+              Container(width: 120, height: 10, decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(4))),
 
               const Spacer(),
 
@@ -980,10 +723,7 @@ class HomeCardShimmer extends StatelessWidget {
                   margin: EdgeInsets.only(top: 12),
                   width: 80,
                   height: 24,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                  decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16)),
                 ),
               ),
             ],
@@ -1019,10 +759,7 @@ class CustomSvgIcon extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         color: isFilled ? backgroundColor : Colors.transparent,
-        borderRadius:
-            backgroundType == "circle"
-                ? BorderRadius.circular(size / 2)
-                : BorderRadius.circular(size / 4),
+        borderRadius: backgroundType == "circle" ? BorderRadius.circular(size / 2) : BorderRadius.circular(size / 4),
         border: !isFilled ? Border.all(color: backgroundColor, width: 2) : null,
       ),
       child: Center(
@@ -1030,10 +767,7 @@ class CustomSvgIcon extends StatelessWidget {
           'assets/svg/$svgName',
           width: size * 0.5,
           height: size * 0.5,
-          colorFilter:
-              iconColor != null
-                  ? ColorFilter.mode(iconColor!, BlendMode.srcIn)
-                  : null,
+          colorFilter: iconColor != null ? ColorFilter.mode(iconColor!, BlendMode.srcIn) : null,
         ),
       ),
     );

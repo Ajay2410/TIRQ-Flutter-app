@@ -52,6 +52,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
   final FocusNode _searchFocusNode = FocusNode();
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
+  bool _hasConfirmedOnHoldSending = false; // Track if user confirmed sending while on hold
   final _apiService = locator<ApiService>();
   TicketsListViewModel ticketDetailsViewModel = TicketsListViewModel();
   TextEditingController remarkController = TextEditingController();
@@ -380,7 +381,6 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                               value: null,
                               label: LanguageService.get('select_time'),
                               items: [
-                                {"value": "1", "display": "1 Min"},
                                 {"value": "10", "display": "10 Min"},
                                 {"value": "15", "display": "15 Min"},
                                 {"value": "20", "display": "20 Min"},
@@ -1118,11 +1118,43 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                   onTap:
                       (model.isSendingMessage || model.isUploadingImage)
                           ? null
-                          : () {
-                            // Send message when send button is tapped
-                            if (model.messageController.text.trim().isNotEmpty || model.hasImagePreview) {
-                              model.sendMessage();
+                          : () async {
+                            if (model.messageController.text.trim().isEmpty && !model.hasImagePreview) return;
+
+                            // If ticket is on hold, ask for confirmation before sending (only once per session)
+                            if ((widget.ticketStatus ?? '').toLowerCase() == 'on hold' && !_hasConfirmedOnHoldSending) {
+                              final shouldSend = await Get.dialog<bool>(
+                                AlertDialog(
+                                  title: const Text('Confirmation'),
+                                  content: const Text('Your ticket is on hold. Do you want to continue?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        FocusScope.of(context).requestFocus(FocusNode());
+                                        Get.back(result: false);
+                                      },
+                                      child: const Text('No'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        FocusScope.of(context).requestFocus(FocusNode());
+                                        Get.back(result: true);
+                                      },
+                                      child: const Text('Yes'),
+                                    ),
+                                  ],
+                                ),
+                                barrierDismissible: true,
+                              );
+
+                              if (shouldSend != true) return; // Dismiss without sending
+
+                              // Mark as confirmed for this session
+                              _hasConfirmedOnHoldSending = true;
                             }
+
+                            // Proceed to send
+                            model.sendMessage();
                           },
                   child:
                       (model.isSendingMessage || model.isUploadingImage)
@@ -1148,6 +1180,35 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildMessageInputOrStatus(ChatViewModel model) {
+    final status = widget.ticketStatus?.toLowerCase();
+
+    if (status == "resolved") {
+      return _buildTicketStatusMessage("Ticket is Resolved", AppColors.success);
+    } else {
+      return _buildMessageInput(model);
+    }
+  }
+
+  Widget _buildTicketStatusMessage(String message, Color color) {
+    return Container(
+      margin: EdgeInsets.all(16),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.info_outline, color: color, size: 20),
+          SizedBox(width: 12),
+          Expanded(child: Text(message, style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.w500))),
+        ],
       ),
     );
   }
@@ -1263,8 +1324,8 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                 ),
                 // Image preview
                 _buildImagePreview(model),
-                // Message input
-                widget.ticketStatus == "Resolved" ? SizedBox.shrink() : _buildMessageInput(model),
+                // Message input or status message
+                _buildMessageInputOrStatus(model),
               ],
             ),
           ),

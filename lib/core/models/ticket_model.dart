@@ -51,6 +51,8 @@ class TicketList {
   String? pricing;
   String? paymentStatus;
   DateTime? createdAt;
+  String? rescheduleTime;
+  DateTime? rescheduleUpdateTime;
   DateTime? updatedAt;
   String? warrantyStatus;
   String? engineerRemark;
@@ -69,6 +71,8 @@ class TicketList {
     this.type,
     this.status,
     this.isActive,
+    this.rescheduleTime,
+    this.rescheduleUpdateTime,
     this.machine,
     this.processor,
     this.organisation,
@@ -92,6 +96,8 @@ class TicketList {
     media: json["media"] == null ? [] : List<Media>.from(json["media"]!.map((x) => Media.fromJson(x))),
     ticketType: json["ticketType"],
     type: json["type"],
+    rescheduleTime: json["reschedule_time"],
+    rescheduleUpdateTime: json["reschedule_update_time"] == null ? null : DateTime.parse(json["reschedule_update_time"]),
     status: json["status"],
     engineerRemark: json["engineerRemark"],
     isActive: json["isActive"],
@@ -118,6 +124,8 @@ class TicketList {
     "ticketType": ticketType,
     "type": type,
     "status": status,
+    "reschedule_time": rescheduleTime,
+    "reschedule_update_time": rescheduleUpdateTime?.toIso8601String(),
     "isActive": isActive,
     "engineerRemark": engineerRemark,
     "machine": machine?.toJson(),

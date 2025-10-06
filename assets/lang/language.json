@@ -2508,7 +2508,7 @@
     "Ukrainian": "Додатковий номер телефону"
   },
   "login_with_phone": {
-    "English": "Login with phone",
+    "English": "Login With Phone",
     "Hindi": "फोन से लॉगिन करें",
     "Chinese (Simplified)": "手机登录",
     "Spanish": "Iniciar sesión con teléfono",
@@ -3124,7 +3124,7 @@
     "Ukrainian": "Автоматично перекладати повідомлення, отримані в чаті"
   },
   "login_with_email": {
-    "English": "Login with email",
+    "English": "Login With Email",
     "Hindi": "ईमेल से लॉगिन करें",
     "Chinese (Simplified)": "邮箱登录",
     "Spanish": "Iniciar sesión con correo",
@@ -3146,7 +3146,7 @@
     "Ukrainian": "Увійти з email"
   },
   "login_with_otp": {
-    "English": "Login with OTP",
+    "English": "Login With OTP",
     "Hindi": "OTP से लॉगिन करें",
     "Chinese (Simplified)": "验证码登录",
     "Spanish": "Iniciar sesión con OTP",

@@ -30,6 +30,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
   late Animation<Offset> _slideAnimation;
   AnimationController? _fabAnimationController;
   bool _isSearchVisible = false;
+  final Set<String> _expiredTicketIds = {}; // Track which tickets have already triggered refresh
 
   // Dynamic border radius for segmented control
   BorderRadius _dynamicBorder = BorderRadius.only(topLeft: Radius.circular(AppSizes.v45), bottomLeft: Radius.circular(AppSizes.v45));
@@ -46,6 +47,15 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
     ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
     // FAB animation controller will be initialized lazily when needed
+  }
+
+  void _clearExpiredTicketIds() {
+    _expiredTicketIds.clear();
+  }
+
+  Future<void> _refreshTickets(TicketsListViewModel model) async {
+    _clearExpiredTicketIds();
+    await model.loadTickets(forceRefresh: true);
   }
 
   @override
@@ -159,7 +169,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                         children: [
                           // Active Tickets Tab
                           RefreshIndicator(
-                            onRefresh: () async => model.loadTickets(forceRefresh: true),
+                            onRefresh: () async => _refreshTickets(model),
                             color: AppColors.primary,
                             backgroundColor: AppColors.white,
                             child:
@@ -172,7 +182,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
 
                           // Resolved Tickets Tab
                           RefreshIndicator(
-                            onRefresh: () async => model.loadTickets(forceRefresh: true),
+                            onRefresh: () async => _refreshTickets(model),
                             color: AppColors.primary,
                             backgroundColor: AppColors.white,
                             child:
@@ -190,7 +200,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
               ),
             ),
           ),
-          );
+        );
       },
     );
   }
@@ -371,16 +381,22 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: AppSizes.w8, vertical: AppSizes.h2),
-                              decoration: BoxDecoration(
-                                color: _getStatusColorFromString(ticket.status).withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(AppSizes.v8),
-                              ),
-                              child: Text(
-                                ticket.status ?? 'N/A',
-                                style: TextStyle(color: _getStatusColorFromString(ticket.status), fontSize: AppSizes.v12),
-                              ),
+                            Row(
+                              children: [
+                                if (ticket.status == "On Hold") _buildCountdownTimer(ticket, model),
+                                SizedBox(width: 10),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: AppSizes.w8, vertical: AppSizes.h2),
+                                  decoration: BoxDecoration(
+                                    color: _getStatusColorFromString(ticket.status).withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(AppSizes.v8),
+                                  ),
+                                  child: Text(
+                                    ticket.status ?? 'N/A',
+                                    style: TextStyle(color: _getStatusColorFromString(ticket.status), fontSize: AppSizes.v12),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -434,32 +450,27 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
 
               Divider(),
               AppGaps.h8,
-              if ((ticket.problem != null && ticket.problem!.isNotEmpty) ||
-                  (ticket.notes != null && ticket.notes!.isNotEmpty))
-              Row(
-                children: [
-                  Expanded(
-                    child: RichText(
-                      text: TextSpan(
-                        style: TextStyle(fontFamily: GoogleFonts.lato().fontFamily),
-                        children: [
-                          TextSpan(
-                            text: "${LanguageService.get("problem_description")}: ",
-                            style: TextStyle(fontSize: 11, color: AppColors.black, fontWeight: FontWeight.bold),
-                          ),
-                          TextSpan(text: ticket.problem ?? ticket.notes ?? "N/A", style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
-                        ],
+              if ((ticket.problem != null && ticket.problem!.isNotEmpty) || (ticket.notes != null && ticket.notes!.isNotEmpty))
+                Row(
+                  children: [
+                    Expanded(
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(fontFamily: GoogleFonts.lato().fontFamily),
+                          children: [
+                            TextSpan(
+                              text: "${LanguageService.get("problem_description")}: ",
+                              style: TextStyle(fontSize: 11, color: AppColors.black, fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(text: ticket.problem ?? ticket.notes ?? "N/A", style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              if ((ticket.problem != null && ticket.problem!.isNotEmpty) ||
-                  (ticket.notes != null && ticket.notes!.isNotEmpty))
-              AppGaps.h8,
-              if ((ticket.problem != null && ticket.problem!.isNotEmpty) ||
-                  (ticket.notes != null && ticket.notes!.isNotEmpty))
-              Divider(),
+                  ],
+                ),
+              if ((ticket.problem != null && ticket.problem!.isNotEmpty) || (ticket.notes != null && ticket.notes!.isNotEmpty)) AppGaps.h8,
+              if ((ticket.problem != null && ticket.problem!.isNotEmpty) || (ticket.notes != null && ticket.notes!.isNotEmpty)) Divider(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -500,7 +511,10 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                                 text: "${LanguageService.get("engineer_remarks")}: ",
                                 style: TextStyle(fontSize: 11, color: AppColors.black, fontWeight: FontWeight.bold),
                               ),
-                              TextSpan(text: ticket.engineerRemark ?? ticket.notes ?? "N/A", style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
+                              TextSpan(
+                                text: ticket.engineerRemark ?? ticket.notes ?? "N/A",
+                                style: TextStyle(fontSize: 11, color: AppColors.textGrey),
+                              ),
                             ],
                           ),
                         ),
@@ -592,9 +606,9 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
         return Colors.blue;
       case 'rejected':
         return Colors.red;
-        case 'on hold':
+      case 'on hold':
         return Colors.red;
-        case 'waiting for accept':
+      case 'waiting for accept':
         return Colors.orange;
       default:
         return Colors.grey;
@@ -629,6 +643,51 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
     if (result == true) {
       await model.loadTickets(forceRefresh: true);
     }
+  }
+
+  Widget _buildCountdownTimer(TicketList ticket, TicketsListViewModel model) {
+    if (ticket.rescheduleUpdateTime == null) {
+      return Text('N/A', style: TextStyle(color: _getStatusColorFromString(ticket.status), fontSize: AppSizes.v12));
+    }
+
+    return StreamBuilder<DateTime>(
+      stream: Stream.periodic(Duration(seconds: 1), (_) => DateTime.now()),
+      builder: (context, snapshot) {
+        final now = snapshot.data ?? DateTime.now();
+        final rescheduleTime = ticket.rescheduleUpdateTime!;
+
+        if (now.isAfter(rescheduleTime)) {
+          // Trigger background refresh when timer expires (only once per ticket)
+          final ticketId = ticket.id ?? '';
+          if (ticketId.isNotEmpty && !_expiredTicketIds.contains(ticketId)) {
+            _expiredTicketIds.add(ticketId);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              model.loadTickets(forceRefresh: true);
+            });
+          }
+          return Text('Expired', style: TextStyle(color: AppColors.error, fontSize: AppSizes.v12));
+        }
+
+        final difference = rescheduleTime.difference(now);
+        final hours = difference.inHours;
+        final minutes = difference.inMinutes % 60;
+        final seconds = difference.inSeconds % 60;
+
+        String timeString;
+        if (hours > 0) {
+          timeString = '${hours}h ${minutes}m ${seconds}s';
+        } else if (minutes > 0) {
+          timeString = '${minutes}m ${seconds}s';
+        } else {
+          timeString = '${seconds}s';
+        }
+
+        return Text(
+          timeString,
+          style: TextStyle(color: _getStatusColorFromString(ticket.status), fontSize: AppSizes.v12, fontWeight: FontWeight.w500),
+        );
+      },
+    );
   }
 }
 
