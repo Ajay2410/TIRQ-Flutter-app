@@ -315,7 +315,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
                 child: Text(country, style: TextStyle(color: AppColors.colorBlue, fontSize: 14, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(width: 12),
-              Expanded(child: Text(machineName, style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold))),
+              Expanded(child: Text(machineName.toUpperCase(), style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold))),
 
               Container(
                 padding: const EdgeInsets.all(5),
@@ -356,7 +356,7 @@ class _CustomerDetailsViewState extends State<CustomerDetailsView> {
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(child: _buildMachineInfoRow('model_number'.lang, modelNumber)),
+              Expanded(child: _buildMachineInfoRow('model_number'.lang, modelNumber.toUpperCase())),
               const SizedBox(width: 24),
               Expanded(child: _buildMachineInfoRow('machine_type'.lang, machineType)),
             ],

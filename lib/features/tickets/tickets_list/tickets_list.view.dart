@@ -682,9 +682,16 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
           timeString = '${seconds}s';
         }
 
-        return Text(
-          timeString,
-          style: TextStyle(color: _getStatusColorFromString(ticket.status), fontSize: AppSizes.v12, fontWeight: FontWeight.w500),
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.w8, vertical: AppSizes.h2),
+          decoration: BoxDecoration(
+            color: _getStatusColorFromString(ticket.status).withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(AppSizes.v8),
+          ),
+          child: Text(
+            timeString,
+            style: TextStyle(color: _getStatusColorFromString(ticket.status), fontSize: AppSizes.v12, fontWeight: FontWeight.w500),
+          ),
         );
       },
     );

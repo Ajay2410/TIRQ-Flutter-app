@@ -248,7 +248,7 @@ class _CustomerMachineDetailsViewState extends State<CustomerMachineDetailsView>
         Padding(
           padding: const EdgeInsets.only(right: 16),
           child: Text(
-            widget.machineElement.machine?.machineName ?? 'Unknown Machine',
+            (widget.machineElement.machine?.machineName ?? 'Unknown Machine').toUpperCase(),
             style: const TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),

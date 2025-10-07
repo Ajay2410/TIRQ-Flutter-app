@@ -9,10 +9,14 @@ import 'package:manager/features/chat/chat_view.dart';
 import '../../../api_endpoints.dart';
 import '../../../core/utils/app_logger.dart';
 import '../../../services/api.service.dart';
+import '../../../services/dialogs.service.dart';
+import '../../../widgets/dialogs/loader/loader_dialog.view.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class TicketDetailsViewModel extends BaseViewModel {
   final TicketService _ticketService = locator<TicketService>();
   final _apiService = locator<ApiService>();
+  final _dialogService = locator<DialogService>();
 
   TicketDetailsModel? _ticketDetails;
   String? _errorMessage;
@@ -43,7 +47,7 @@ class TicketDetailsViewModel extends BaseViewModel {
     print("-------hellohellooo1111--------------${_ticketId}");
 
     if (_ticketId == null) return;
-print("-------hellohellooo--------------${_ticketId}");
+    print("-------hellohellooo--------------${_ticketId}");
     setBusy(true);
     _errorMessage = null;
     notifyListeners();
@@ -164,6 +168,49 @@ print("-------hellohellooo--------------${_ticketId}");
         return 'Expired';
       default:
         return status ?? 'Unknown';
+    }
+  }
+
+  // Submit problem report
+  Future<void> submitProblemReport(String title, String description) async {
+    if (_ticketId == null) {
+      Fluttertoast.showToast(
+        msg: 'Invalid ticket ID',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    final response = await _dialogService.showCustomDialog(
+      variant: DialogType.loader,
+      data: LoaderDialogAttributes(
+        task: () async {
+          final apiResponse = await _apiService.post(url: 'ticket/report/$_ticketId', data: {'reportTitle': title, 'reportDescription': description});
+          return apiResponse;
+        },
+      ),
+    );
+
+    if (response?.confirmed == true) {
+      Fluttertoast.showToast(
+        msg: 'Report submitted successfully',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+    } else {
+      AppLogger.error('Error submitting report: ${response?.data}');
+      Fluttertoast.showToast(
+        msg: 'Failed to submit report. Please try again.',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
     }
   }
 }
