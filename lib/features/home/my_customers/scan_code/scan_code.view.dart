@@ -4,24 +4,37 @@ import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:stacked/stacked.dart';
-import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart' as mlkit;
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart'
+    as mlkit;
 import 'scan_code.vm.dart';
 
+class ScanCodeViewAttributes {
+  final bool isFromProfile;
+
+  ScanCodeViewAttributes({this.isFromProfile = false});
+}
+
 class ScanCodeView extends StatelessWidget {
-  const ScanCodeView({super.key});
+  const ScanCodeView({super.key, this.attributes});
+
+  final ScanCodeViewAttributes? attributes;
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ScanCodeViewModel>.reactive(
       viewModelBuilder: () => ScanCodeViewModel(),
       builder: (context, model, child) {
-        return _ScanCodeViewContent();
+        return _ScanCodeViewContent(attributes: attributes);
       },
     );
   }
 }
 
 class _ScanCodeViewContent extends StatefulWidget {
+  const _ScanCodeViewContent({this.attributes});
+
+  final ScanCodeViewAttributes? attributes;
+
   @override
   State<_ScanCodeViewContent> createState() => _ScanCodeViewContentState();
 }
@@ -50,14 +63,19 @@ class _ScanCodeViewContentState extends State<_ScanCodeViewContent> {
 
   Future<void> _pickFromGallery() async {
     try {
-      final XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+      );
 
       if (image != null) {
         await _processImageFromGallery(image.path);
       }
     } catch (e) {
       print('Error picking image from gallery: $e');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error picking image from gallery')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error picking image from gallery')),
+      );
     }
   }
 
@@ -66,12 +84,25 @@ class _ScanCodeViewContentState extends State<_ScanCodeViewContent> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => AlertDialog(content: Row(children: [CircularProgressIndicator(), SizedBox(width: 16), Text('Processing image...')])),
+        builder:
+            (context) => AlertDialog(
+              content: Row(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(width: 16),
+                  Text('Processing image...'),
+                ],
+              ),
+            ),
       );
 
       final inputImage = mlkit.InputImage.fromFilePath(imagePath);
-      final barcodeScanner = mlkit.BarcodeScanner(formats: [mlkit.BarcodeFormat.qrCode]);
-      final List<mlkit.Barcode> barcodes = await barcodeScanner.processImage(inputImage);
+      final barcodeScanner = mlkit.BarcodeScanner(
+        formats: [mlkit.BarcodeFormat.qrCode],
+      );
+      final List<mlkit.Barcode> barcodes = await barcodeScanner.processImage(
+        inputImage,
+      );
       await barcodeScanner.close();
       Navigator.of(context).pop();
 
@@ -99,8 +130,15 @@ class _ScanCodeViewContentState extends State<_ScanCodeViewContent> {
       builder:
           (context) => AlertDialog(
             title: Text('No QR Code Found'),
-            content: Text('No QR code was detected in the selected image. Please try another image.'),
-            actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('OK'))],
+            content: Text(
+              'No QR code was detected in the selected image. Please try another image.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
           ),
     );
   }
@@ -112,7 +150,12 @@ class _ScanCodeViewContentState extends State<_ScanCodeViewContent> {
           (context) => AlertDialog(
             title: Text('Error'),
             content: Text(message),
-            actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('OK'))],
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
           ),
     );
   }
@@ -127,7 +170,10 @@ class _ScanCodeViewContentState extends State<_ScanCodeViewContent> {
           body: Stack(
             children: [
               if (model.isScanning && !model.isProcessing)
-                MobileScanner(onDetect: (capture) => _onCodeDetected(capture, model), controller: _scannerController)
+                MobileScanner(
+                  onDetect: (capture) => _onCodeDetected(capture, model),
+                  controller: _scannerController,
+                )
               else if (model.isProcessing)
                 Container(
                   color: AppColors.black,
@@ -137,16 +183,31 @@ class _ScanCodeViewContentState extends State<_ScanCodeViewContent> {
                       children: [
                         CircularProgressIndicator(color: AppColors.white),
                         SizedBox(height: 16),
-                        Text('Processing scan...', style: TextStyle(color: AppColors.white, fontSize: 16)),
+                        Text(
+                          'Processing scan...',
+                          style: TextStyle(
+                            color: AppColors.white,
+                            fontSize: 16,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 )
               else
-                Container(color: AppColors.black, child: Center(child: Text('Camera paused', style: TextStyle(color: AppColors.white)))),
+                Container(
+                  color: AppColors.black,
+                  child: Center(
+                    child: Text(
+                      'Camera paused',
+                      style: TextStyle(color: AppColors.white),
+                    ),
+                  ),
+                ),
 
               _buildStatusBarAndHeader(),
-              if (model.isScanning && !model.isProcessing) _buildScanningFrame(),
+              if (model.isScanning && !model.isProcessing)
+                _buildScanningFrame(),
               _buildBottomActionBar(model),
 
               Positioned(
@@ -156,17 +217,23 @@ class _ScanCodeViewContentState extends State<_ScanCodeViewContent> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 13.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment:
+
+                    widget.attributes?.isFromProfile ?? false?
+                    MainAxisAlignment.end
+                        :
+                    MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildActionButton(
-                        icon: Icons.qr_code,
-                        label: 'My Qr Code',
-                        image: AppImages.qr,
-                        isDisabled: model.isProcessing,
-                        onTap: () {
-                          print('My QR Code tapped');
-                        },
-                      ),
+                      if (!(widget.attributes?.isFromProfile ?? false))
+                        _buildActionButton(
+                          icon: Icons.qr_code,
+                          label: 'My Qr Code',
+                          image: AppImages.qr,
+                          isDisabled: model.isProcessing,
+                          onTap: () {
+                            print('My QR Code tapped');
+                          },
+                        ),
                       _buildActionButton(
                         icon: Icons.photo_library,
                         label: 'Album',
@@ -195,10 +262,22 @@ class _ScanCodeViewContentState extends State<_ScanCodeViewContent> {
           children: [
             IconButton(
               onPressed: () => Navigator.of(context).pop(),
-              icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
+              icon: Image.asset(
+                AppImages.back,
+                width: 24,
+                height: 24,
+                color: AppColors.white,
+              ),
             ),
             SizedBox(width: 8),
-            Text('Scan Code', style: TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(
+              'Scan Code',
+              style: TextStyle(
+                color: AppColors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ],
         ),
       ),
@@ -212,8 +291,19 @@ class _ScanCodeViewContentState extends State<_ScanCodeViewContent> {
         height: 350,
         child: Stack(
           children: [
-            Positioned.fill(child: Image.asset(AppImages.scannerBody, fit: BoxFit.contain, height: 500)),
-            Positioned.fill(child: Padding(padding: const EdgeInsets.all(10), child: _AnimatedScanningLine())),
+            Positioned.fill(
+              child: Image.asset(
+                AppImages.scannerBody,
+                fit: BoxFit.contain,
+                height: 500,
+              ),
+            ),
+            Positioned.fill(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: _AnimatedScanningLine(),
+              ),
+            ),
           ],
         ),
       ),
@@ -231,19 +321,41 @@ class _ScanCodeViewContentState extends State<_ScanCodeViewContent> {
         onTap: isDisabled ? null : () => model.setScanning(!model.isScanning),
         child: Container(
           padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(color: isDisabled ? AppColors.white.withOpacity(0.5) : AppColors.white, shape: BoxShape.circle),
+          decoration: BoxDecoration(
+            color:
+                isDisabled ? AppColors.white.withOpacity(0.5) : AppColors.white,
+            shape: BoxShape.circle,
+          ),
           child: Center(
             child:
                 isDisabled
-                    ? SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.black))
-                    : Image.asset(AppImages.camera, width: 36, height: 36, color: AppColors.black),
+                    ? SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.black,
+                      ),
+                    )
+                    : Image.asset(
+                      AppImages.camera,
+                      width: 36,
+                      height: 36,
+                      color: AppColors.black,
+                    ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildActionButton({required IconData icon, required String label, required VoidCallback onTap, String? image, bool isDisabled = false}) {
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    String? image,
+    bool isDisabled = false,
+  }) {
     return GestureDetector(
       onTap: isDisabled ? null : onTap,
       child: Column(
@@ -251,19 +363,47 @@ class _ScanCodeViewContentState extends State<_ScanCodeViewContent> {
         children: [
           Container(
             padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(color: isDisabled ? AppColors.white.withOpacity(0.5) : AppColors.white, shape: BoxShape.circle),
+            decoration: BoxDecoration(
+              color:
+                  isDisabled
+                      ? AppColors.white.withOpacity(0.5)
+                      : AppColors.white,
+              shape: BoxShape.circle,
+            ),
             child: Center(
               child:
                   image != null
-                      ? Image.asset(image, width: 22, height: 22, color: isDisabled ? AppColors.textGrey.withOpacity(0.5) : AppColors.textGrey)
-                      : Icon(icon, size: 22, color: isDisabled ? AppColors.black.withOpacity(0.5) : AppColors.black),
+                      ? Image.asset(
+                        image,
+                        width: 22,
+                        height: 22,
+                        color:
+                            isDisabled
+                                ? AppColors.textGrey.withOpacity(0.5)
+                                : AppColors.textGrey,
+                      )
+                      : Icon(
+                        icon,
+                        size: 22,
+                        color:
+                            isDisabled
+                                ? AppColors.black.withOpacity(0.5)
+                                : AppColors.black,
+                      ),
             ),
           ),
           if (label.isNotEmpty) ...[
             SizedBox(height: 5),
             Text(
               label,
-              style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: isDisabled ? AppColors.white.withOpacity(0.5) : AppColors.white),
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                color:
+                    isDisabled
+                        ? AppColors.white.withOpacity(0.5)
+                        : AppColors.white,
+              ),
             ),
           ],
         ],
@@ -277,16 +417,22 @@ class _AnimatedScanningLine extends StatefulWidget {
   _AnimatedScanningLineState createState() => _AnimatedScanningLineState();
 }
 
-class _AnimatedScanningLineState extends State<_AnimatedScanningLine> with SingleTickerProviderStateMixin {
+class _AnimatedScanningLineState extends State<_AnimatedScanningLine>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(duration: Duration(seconds: 2), vsync: this);
+    _animationController = AnimationController(
+      duration: Duration(seconds: 2),
+      vsync: this,
+    );
 
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
 
     _animationController.repeat(reverse: true);
   }
@@ -339,7 +485,10 @@ class ScanningLinePainter extends CustomPainter {
           ..color = AppColors.blue.withOpacity(0.3)
           ..maskFilter = MaskFilter.blur(BlurStyle.normal, 2);
 
-    canvas.drawRect(Rect.fromLTWH(0, lineY - 1, size.width, lineHeight + 2), glowPaint);
+    canvas.drawRect(
+      Rect.fromLTWH(0, lineY - 1, size.width, lineHeight + 2),
+      glowPaint,
+    );
   }
 
   @override

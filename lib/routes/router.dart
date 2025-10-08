@@ -18,6 +18,7 @@ import 'package:manager/features/organization/add_partner/add_partner.view.dart'
 import 'package:manager/features/permissions/permissions.view.dart';
 import 'package:manager/features/profile/qr/qr.view.dart';
 import 'package:manager/features/qr/scan_qr/scan_qr.view.dart';
+import 'package:manager/features/home/my_customers/scan_code/scan_code.view.dart';
 import 'package:manager/features/requests/approvals/approval.view.dart';
 import 'package:manager/features/search/search_view.dart';
 import 'package:manager/features/home/my_customers/search_organization/search_organization.view.dart';
@@ -121,6 +122,13 @@ class AppRouter extends RouterBase {
       final attributes = data.arguments as ScanQRViewAttributes;
       return MaterialPageRoute(
         builder: (BuildContext _) => ScanQRView(attributes: attributes),
+        settings: data,
+      );
+    },
+    ScanCodeView: (data) {
+      final attributes = data.arguments as ScanCodeViewAttributes?;
+      return MaterialPageRoute(
+        builder: (BuildContext _) => ScanCodeView(attributes: attributes),
         settings: data,
       );
     },
@@ -612,6 +620,7 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.stage, page: StageView),
     RouteDef(Routes.approval, page: ApprovalView),
     RouteDef(Routes.scanQr, page: ScanQRView),
+    RouteDef(Routes.scanCode, page: ScanCodeView),
     RouteDef(Routes.addPartner, page: AddPartnerView),
     RouteDef(Routes.employeesList, page: RoleEmployeeListView),
     RouteDef(Routes.addEmployee, page: AddEmployeeView),

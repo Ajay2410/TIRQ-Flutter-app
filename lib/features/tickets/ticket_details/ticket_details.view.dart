@@ -414,10 +414,11 @@ class TicketDetailsView extends StatelessWidget {
           itemBuilder:
               (BuildContext context) => [
                 PopupMenuItem<String>(
-
-
                   value: 'report',
-                  child: Text(LanguageService.get('report'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary)),
+                  child: Text(
+                    LanguageService.get('report'),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
+                  ),
                 ),
               ],
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -567,11 +568,11 @@ class TicketDetailsView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                model.ticketDetails?.ticketDetails?.ticketType ?? "",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                model.ticketDetails?.processorDetails?.fullName ?? "",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
               ),
               SizedBox(height: 4),
-              Text(pendingText, style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+              Text(pendingText, style: TextStyle(fontSize: 11, color: AppColors.textSecondary,fontWeight: FontWeight.w500)),
             ],
           ),
         ),
@@ -582,7 +583,7 @@ class TicketDetailsView extends StatelessWidget {
           children: [
             Text('Support Type', style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w400)),
             const SizedBox(height: 4),
-            Text(supportType, style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+            Text(supportType, style: TextStyle(color: AppColors.textPrimary, fontSize: 13, fontWeight: FontWeight.w600)),
           ],
         ),
       ],
@@ -646,13 +647,12 @@ class TicketDetailsView extends StatelessWidget {
 
   Widget _buildProblemDescriptionCard(BuildContext context, TicketDetailsViewModel model) {
     final problem = model.ticketDetails?.ticketDetails?.problem ?? 'No problem description available';
-    final engineerRemark = model.ticketDetails?.ticketDetails?.engineerRemark ?? 'No problem description available';
+    final engineerRemark = model.ticketDetails?.ticketDetails?.engineerRemark ?? '-';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        problem.isNotEmpty
-            ? RichText(
+        RichText(
               text: TextSpan(
                 style: TextStyle(fontFamily: GoogleFonts.lato().fontFamily),
                 children: [
@@ -660,33 +660,36 @@ class TicketDetailsView extends StatelessWidget {
                     text: "${LanguageService.get("problem_description")}: ",
                     style: TextStyle(fontSize: 11, color: AppColors.black, fontWeight: FontWeight.bold),
                   ),
-                  TextSpan(text: problem, style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
+                  TextSpan(text: problem.isNotEmpty ?problem:"-", style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
                 ],
               ),
-            )
-            : SizedBox.shrink(),
-        SizedBox(height: 10),
-        Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: AppColors.success.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(9),
-            border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.1)),
-          ),
-          padding: EdgeInsets.all(10),
-          child: RichText(
-            text: TextSpan(
-              style: TextStyle(fontFamily: GoogleFonts.lato().fontFamily),
-              children: [
-                TextSpan(
-                  text: "${LanguageService.get("engineer_remarks")}: ",
-                  style: TextStyle(fontSize: 11, color: AppColors.black, fontWeight: FontWeight.bold),
-                ),
-                TextSpan(text: engineerRemark ?? "N/A", style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
-              ],
+            ),
+
+
+        if(model.ticketDetails?.ticketDetails?.status == "Resolved")...[
+          SizedBox(height: 10),
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColors.success.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(9),
+              border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.1)),
+            ),
+            padding: EdgeInsets.all(10),
+            child: RichText(
+              text: TextSpan(
+                style: TextStyle(fontFamily: GoogleFonts.lato().fontFamily),
+                children: [
+                  TextSpan(
+                    text: "${LanguageService.get("engineer_remarks")}: ",
+                    style: TextStyle(fontSize: 11, color: AppColors.black, fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(text: engineerRemark ?? "N/A", style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
+                ],
+              ),
             ),
           ),
-        ),
+        ],
       ],
     );
   }
@@ -819,7 +822,7 @@ class TicketDetailsView extends StatelessWidget {
   }
 
   Widget _buildMediaItemFromApi(BuildContext context, Media media) {
-    final imageUrl = 'https://triq.onrender.com${media.url}';
+    final imageUrl = '${Configurations().url}${media.url}';
     final url = media.url?.toLowerCase() ?? '';
 
     final isVideo = url.endsWith('.mp4') || url.endsWith('.mov') || url.endsWith('.avi') || url.endsWith('.mkv');

@@ -167,6 +167,7 @@ abstract class Routes {
   static const String permissions = '/permissions';
   static const String createGroupChat = '/createGroupChat';
   static const scanQr = '/scanQR';
+  static const scanCode = '/scanCode';
 
   static const addPartner = '/addPartner';
 

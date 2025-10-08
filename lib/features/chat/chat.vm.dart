@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:manager/configs.dart';
 import 'package:manager/core/storage/storage.dart';
 import 'package:manager/core/utils/app_logger.dart';
 import 'package:stacked/stacked.dart';
@@ -146,7 +147,7 @@ class ChatViewModel extends ReactiveViewModel {
 
     // Initialize socket connection
     _socketService.initializeSocket(
-      serverUrl: 'https://triq.onrender.com/',
+      serverUrl: '${Configurations().url}/',
       queryParams: {'userId': userData.id ?? 'default_user', 'roomId': roomId},
       extraHeaders: {'Authorization': "${userData.token}"},
       onDisconnected: () {

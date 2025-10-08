@@ -10,17 +10,17 @@ class AccountManagerService {
 
   // Singleton pattern
   static AccountManagerService? _instance;
+
   static AccountManagerService get instance {
     _instance ??= AccountManagerService._internal();
     return _instance!;
   }
 
   AccountManagerService._internal();
+
   List<SavedAccount> getSavedAccounts() {
     try {
-      final dynamic rawData = Hive.box(
-        AppStrings.triqBox,
-      ).get(_savedAccountsBoxName);
+      final dynamic rawData = Hive.box(AppStrings.triqBox).get(_savedAccountsBoxName);
 
       if (rawData == null) {
         AppLogger.info('No saved accounts found in Hive');
@@ -32,9 +32,7 @@ class AccountManagerService {
       if (rawData is List) {
         accounts = rawData.cast<SavedAccount>();
       } else {
-        AppLogger.warning(
-          'Unexpected data type in saved accounts: ${rawData.runtimeType}',
-        );
+        AppLogger.warning('Unexpected data type in saved accounts: ${rawData.runtimeType}');
         return [];
       }
 
@@ -55,17 +53,12 @@ class AccountManagerService {
   Future<void> updateLastLogin(String email) async {
     try {
       final List<SavedAccount> retrieved = getSavedAccounts().toList();
-      final account =
-          retrieved.where((element) => element.email == email).toList();
+      final account = retrieved.where((element) => element.email == email).toList();
       if (account.isNotEmpty) {
-        final updatedAccount = account.first.copyWith(
-          lastLogin: DateTime.now(),
-        );
+        final updatedAccount = account.first.copyWith(lastLogin: DateTime.now());
         retrieved.removeWhere((e) => e.email == email);
         retrieved.add(updatedAccount);
-        await Hive.box(
-          AppStrings.triqBox,
-        ).put(_savedAccountsBoxName, retrieved);
+        await Hive.box(AppStrings.triqBox).put(_savedAccountsBoxName, retrieved);
         AppLogger.info('Updated last login for: $email');
       } else {
         AppLogger.warning('Account not found for email: $email');
@@ -93,11 +86,7 @@ class AccountManagerService {
         return;
       }
 
-      final savedAccount = SavedAccount(
-        email: user.email!,
-        name: user.name ?? user.fullName ?? user.yourName ?? '',
-        lastLogin: DateTime.now(),
-      );
+      final savedAccount = SavedAccount(email: user.email!, name: user.name ?? user.fullName ?? user.yourName ?? '', lastLogin: DateTime.now());
 
       final List<SavedAccount> retrievedAccounts = getSavedAccounts().toList();
       if (retrievedAccounts.where((e) => e.email == user.email).isNotEmpty) {
@@ -106,9 +95,7 @@ class AccountManagerService {
       }
       retrievedAccounts.add(savedAccount);
       try {
-        await Hive.box(
-          AppStrings.triqBox,
-        ).put(_savedAccountsBoxName, retrievedAccounts);
+        await Hive.box(AppStrings.triqBox).put(_savedAccountsBoxName, retrievedAccounts);
         AppLogger.info('Successfully saved account to Hive');
 
         // Verify it was saved

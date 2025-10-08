@@ -10,8 +10,23 @@ import 'otp_verification.vm.dart';
 class OtpVerificationViewAttributes {
   final bool isOrganization;
   final String email;
+  final String fullName;
+  final String password;
+  final String phone;
+  final String countryCode;
+  final String? organizationType;
+  final String? language;
 
-  OtpVerificationViewAttributes({required this.isOrganization, required this.email});
+  OtpVerificationViewAttributes({
+    required this.isOrganization,
+    required this.email,
+    required this.fullName,
+    required this.password,
+    required this.phone,
+    required this.countryCode,
+    this.organizationType,
+    this.language,
+  });
 }
 
 class OtpVerificationView extends StatelessWidget {
@@ -25,8 +40,13 @@ class OtpVerificationView extends StatelessWidget {
 
     return ViewModelBuilder<OtpVerificationViewModel>.reactive(
       viewModelBuilder: () => OtpVerificationViewModel(),
-      onViewModelReady: (OtpVerificationViewModel model) => model.init(attributes),
-      builder: (BuildContext context, OtpVerificationViewModel model, Widget? child) {
+      onViewModelReady:
+          (OtpVerificationViewModel model) => model.init(attributes),
+      builder: (
+        BuildContext context,
+        OtpVerificationViewModel model,
+        Widget? child,
+      ) {
         return Scaffold(
           backgroundColor: AppColors.white,
           body: SafeArea(
@@ -34,7 +54,12 @@ class OtpVerificationView extends StatelessWidget {
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: AppSizes.w20),
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: screenHeight - MediaQuery.of(context).padding.vertical - kToolbarHeight),
+                  constraints: BoxConstraints(
+                    minHeight:
+                        screenHeight -
+                        MediaQuery.of(context).padding.vertical -
+                        kToolbarHeight,
+                  ),
                   child: IntrinsicHeight(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +70,11 @@ class OtpVerificationView extends StatelessWidget {
                           // This moves items to the top
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [_buildBackButton(context), SizedBox(width: 60), _buildIllustrationSection(context)],
+                          children: [
+                            _buildBackButton(context),
+                            SizedBox(width: 60),
+                            _buildIllustrationSection(context),
+                          ],
                         ),
                         _buildHeaderSection(context),
 
@@ -72,7 +101,9 @@ class OtpVerificationView extends StatelessWidget {
     return Container(
       height: 200,
       margin: EdgeInsets.only(top: AppSizes.h2, bottom: AppSizes.h30),
-      child: Center(child: Image.asset('assets/images/auth4.png', fit: BoxFit.contain)),
+      child: Center(
+        child: Image.asset('assets/images/auth4.png', fit: BoxFit.contain),
+      ),
     );
   }
 
@@ -84,13 +115,21 @@ class OtpVerificationView extends StatelessWidget {
         children: [
           Text(
             LanguageService.get('verify_your_otp'),
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w900, fontSize: 20),
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w900,
+              fontSize: 20,
+            ),
             textAlign: TextAlign.left,
           ),
           SizedBox(height: AppSizes.h8),
           Text(
             'We have sent OTP to your registered mobile number or email.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500, fontSize: 12),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w500,
+              fontSize: 12,
+            ),
             textAlign: TextAlign.left,
           ),
         ],
@@ -98,7 +137,10 @@ class OtpVerificationView extends StatelessWidget {
     );
   }
 
-  Widget _buildOtpVerificationForm(BuildContext context, OtpVerificationViewModel model) {
+  Widget _buildOtpVerificationForm(
+    BuildContext context,
+    OtpVerificationViewModel model,
+  ) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: AppSizes.h15),
       child: Column(
@@ -106,13 +148,24 @@ class OtpVerificationView extends StatelessWidget {
         children: [
           PinFieldAutoFill(
             controller: model.otpController,
-            cursor: Cursor(enabled: true, color: AppColors.primary, width: AppSizes.w2, height: AppSizes.h30),
-            currentCode: model.otpController.text.length == 6 ? model.otpController.text : null,
+            cursor: Cursor(
+              enabled: true,
+              color: AppColors.primary,
+              width: AppSizes.w2,
+              height: AppSizes.h30,
+            ),
+            currentCode:
+                model.otpController.text.length == 6
+                    ? model.otpController.text
+                    : null,
             codeLength: 6,
             decoration: BoxLooseDecoration(
               strokeColorBuilder: FixedColorBuilder(AppColors.lightGrey),
               bgColorBuilder: FixedColorBuilder(Colors.transparent),
-              textStyle: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
+              textStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w600,
+              ),
               radius: Radius.circular(8),
               strokeWidth: 1,
             ),
@@ -124,23 +177,51 @@ class OtpVerificationView extends StatelessWidget {
     );
   }
 
-  Widget _buildResendOtpPrompt(BuildContext context, OtpVerificationViewModel model) {
+  Widget _buildResendOtpPrompt(
+    BuildContext context,
+    OtpVerificationViewModel model,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(LanguageService.get('didnt_receive_code'), style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary)),
+        Text(
+          LanguageService.get('didnt_receive_code'),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
+        ),
         GestureDetector(
-          onTap: model.resendOtp,
-          child: Text(
-            LanguageService.get('resend_otp'),
-            style: TextStyle(color: AppColors.primary, decoration: TextDecoration.underline, fontWeight: FontWeight.w600),
+          onTap: model.canResend ? model.resendOtp : null,
+          child: ValueListenableBuilder<int>(
+            valueListenable: model.timerNotifier,
+            builder: (context, countdown, child) {
+              return Text(
+                model.canResend
+                    ? LanguageService.get('resend_otp')
+                    : 'Resend OTP in ${countdown}s',
+                style: TextStyle(
+                  color:
+                      model.canResend
+                          ? AppColors.primary
+                          : AppColors.textSecondary,
+                  decoration:
+                      model.canResend
+                          ? TextDecoration.underline
+                          : TextDecoration.none,
+                  fontWeight: FontWeight.w600,
+                ),
+              );
+            },
           ),
         ),
       ],
     );
   }
 
-  Widget _buildVerifyButton(BuildContext context, OtpVerificationViewModel model) {
+  Widget _buildVerifyButton(
+    BuildContext context,
+    OtpVerificationViewModel model,
+  ) {
     return SizedBox(
       width: double.infinity,
       height: 46,
@@ -154,9 +235,7 @@ class OtpVerificationView extends StatelessWidget {
         height: AppSizes.h55,
         fontSize: 14,
         fontWeight: FontWeight.w600,
-        isLoading: model.isBusy,
         padding: EdgeInsets.symmetric(vertical: 13),
-        loadingWidget: SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: AppColors.white, strokeWidth: 2)),
       ),
     );
   }

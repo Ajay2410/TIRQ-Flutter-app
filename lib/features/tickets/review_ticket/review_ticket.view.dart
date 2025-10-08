@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:manager/configs.dart';
 import 'package:stacked/stacked.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
@@ -435,7 +436,7 @@ class ReviewTicketView extends StatelessWidget {
   }
 
   Widget _buildMediaItemFromApi(BuildContext context, Media media) {
-    final imageUrl = 'https://triq.onrender.com${media.url}';
+    final imageUrl = '${Configurations().url}${media.url}';
     final url = media.url?.toLowerCase() ?? '';
 
     final isVideo = url.endsWith('.mp4') || url.endsWith('.mov') || url.endsWith('.avi') || url.endsWith('.mkv');

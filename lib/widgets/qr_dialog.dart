@@ -19,6 +19,10 @@ import '../services/language.service.dart';
 import '../core/models/hive/user/user.dart';
 import '../core/models/customer.dart';
 import '../core/utils/app_logger.dart';
+import '../routes/routes.dart';
+import '../features/home/my_customers/scan_code/scan_code.view.dart';
+import '../core/locator.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'common_elevated_button.dart';
 
 class QRDialog extends StatefulWidget {
@@ -41,6 +45,7 @@ class _QRDialogState extends State<QRDialog> {
   final GlobalKey _qrKey = GlobalKey();
   bool _isSaving = false;
   bool _isSharing = false;
+  final _navigationService = locator<NavigationService>();
 
   @override
   Widget build(BuildContext context) {
@@ -239,6 +244,10 @@ class _QRDialogState extends State<QRDialog> {
 
   void _onScanPressed() {
     Navigator.of(context).pop();
+    _navigationService.navigateTo(
+      Routes.scanCode,
+      arguments: ScanCodeViewAttributes(isFromProfile: true),
+    );
   }
 
   Future<void> _onSharePressed() async {

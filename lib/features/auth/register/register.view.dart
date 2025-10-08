@@ -26,12 +26,7 @@ class RegisterView extends StatelessWidget {
             child: Center(
               child: SingleChildScrollView(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight:
-                        screenHeight -
-                        MediaQuery.of(context).padding.vertical -
-                        kToolbarHeight,
-                  ),
+                  constraints: BoxConstraints(minHeight: screenHeight - MediaQuery.of(context).padding.vertical - kToolbarHeight),
                   child: IntrinsicHeight(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: AppSizes.w13),
@@ -41,20 +36,10 @@ class RegisterView extends StatelessWidget {
                           SizedBox(height: AppSizes.h12),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment:
-                                CrossAxisAlignment
-                                    .start, // This moves items to the top
-                            children: [
-                              _buildBackButton(context),
-                              _buildHeaderSection(context, model),
-                            ],
+                            crossAxisAlignment: CrossAxisAlignment.start, // This moves items to the top
+                            children: [_buildBackButton(context), _buildHeaderSection(context, model)],
                           ),
-                          Column(
-                            children: [
-                              _buildRegistrationForm(context, model),
-                              _buildSignInLink(context),
-                            ],
-                          ),
+                          Column(children: [_buildRegistrationForm(context, model), _buildSignInLink(context)]),
                         ],
                       ),
                     ),
@@ -71,11 +56,7 @@ class RegisterView extends StatelessWidget {
   Widget _buildHeaderSection(BuildContext context, RegisterViewModel model) {
     return Column(
       children: [
-        SizedBox(
-          height: 240,
-          width: 250,
-          child: Image.asset('assets/images/auth2.png', fit: BoxFit.contain),
-        ),
+        SizedBox(height: 240, width: 250, child: Image.asset('assets/images/auth2.png', fit: BoxFit.contain)),
         SizedBox(height: AppSizes.h2),
       ],
     );
@@ -100,13 +81,7 @@ class RegisterView extends StatelessWidget {
               backgroundColor: AppColors.textGrey,
               child: Padding(padding: EdgeInsets.all(16), child: Image.asset(AppImages.alert, width: 16, height: 16)),
             ),
-            validator:
-                (value) =>
-                    value?.isEmpty == true
-                        ? LanguageService.get(
-                          'please_enter_organization_name',
-                        )
-                        : null,
+            validator: (value) => value?.isEmpty == true ? LanguageService.get('please_enter_organization_name') : null,
           ),
 
           SizedBox(height: AppSizes.h13),
@@ -115,11 +90,7 @@ class RegisterView extends StatelessWidget {
             controller: model.emailController,
             label: LanguageService.get('email'),
             keyboardType: TextInputType.emailAddress,
-            validator:
-                (value) =>
-                    value?.isEmpty == true
-                        ? LanguageService.get('please_enter_email')
-                        : null,
+            validator: (value) => value?.isEmpty == true ? LanguageService.get('please_enter_email') : null,
           ),
 
           SizedBox(height: AppSizes.h13),
@@ -134,14 +105,8 @@ class RegisterView extends StatelessWidget {
               ),
               decoration: InputDecoration(
                 labelText: LanguageService.get('phone_number'),
-                labelStyle: TextStyle(
-                  color: AppColors.textGrey,
-                  fontSize: 13,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppSizes.v13),
-                  borderSide: BorderSide(color: AppColors.lightGrey),
-                ),
+                labelStyle: TextStyle(color: AppColors.textGrey, fontSize: 13),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v13), borderSide: BorderSide(color: AppColors.lightGrey)),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSizes.v13),
                   borderSide: BorderSide(color: AppColors.lightGrey),
@@ -197,32 +162,14 @@ class RegisterView extends StatelessWidget {
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(color: AppColors.textGrey, fontSize: 13),
-          floatingLabelStyle: TextStyle(
-            color: AppColors.textGrey,
-            fontSize: 13,
-          ),
+          floatingLabelStyle: TextStyle(color: AppColors.textGrey, fontSize: 13),
           contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           suffixIcon: suffix,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: AppColors.lightGrey),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: AppColors.lightGrey),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: AppColors.primary, width: 2),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: Colors.red),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: Colors.red, width: 2),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: BorderSide(color: AppColors.lightGrey)),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: BorderSide(color: AppColors.lightGrey)),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: BorderSide(color: AppColors.primary, width: 2)),
+          errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: BorderSide(color: Colors.red)),
+          focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: BorderSide(color: Colors.red, width: 2)),
         ),
         validator: validator,
       ),
@@ -244,44 +191,19 @@ class RegisterView extends StatelessWidget {
         decoration: InputDecoration(
           labelText: LanguageService.get('password'),
           labelStyle: TextStyle(color: AppColors.textGrey, fontSize: 13),
-          floatingLabelStyle: TextStyle(
-            color: AppColors.textGrey,
-            fontSize: 14,
-          ),
+          floatingLabelStyle: TextStyle(color: AppColors.textGrey, fontSize: 14),
           contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           suffixIcon: IconButton(
-            icon: Icon(
-              obscureText ? Icons.visibility_off : Icons.visibility,
-              color: AppColors.gray,
-            ),
+            icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility, color: AppColors.gray),
             onPressed: onToggleVisibility,
           ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: AppColors.lightGrey),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: AppColors.lightGrey),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: AppColors.primary, width: 2),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: Colors.red),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(13),
-            borderSide: BorderSide(color: Colors.red, width: 2),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: BorderSide(color: AppColors.lightGrey)),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: BorderSide(color: AppColors.lightGrey)),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: BorderSide(color: AppColors.primary, width: 2)),
+          errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: BorderSide(color: Colors.red)),
+          focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: BorderSide(color: Colors.red, width: 2)),
         ),
-        validator:
-            (value) =>
-                value?.isEmpty == true
-                    ? LanguageService.get('please_enter_password')
-                    : null,
+        validator: (value) => value?.isEmpty == true ? LanguageService.get('please_enter_password') : null,
         onFieldSubmitted: onFieldSubmitted,
       ),
     );
@@ -297,29 +219,12 @@ class RegisterView extends StatelessWidget {
           backgroundColor: AppColors.primary,
           elevation: 4,
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 24),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         ),
-        child:
-            model.isBusy
-                ? SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(
-                    color: AppColors.white,
-                    strokeWidth: 2,
-                  ),
-                )
-                : Text(
-                  LanguageService.get("continue"),
-                  style: TextStyle(
-                    color: AppColors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                    letterSpacing: 0.5,
-                  ),
-                ),
+        child: Text(
+          LanguageService.get("continue"),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.w600, fontSize: 16, letterSpacing: 0.5),
+        ),
       ),
     );
   }
@@ -330,21 +235,13 @@ class RegisterView extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            LanguageService.get('already_have_account'),
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
-          ),
+          Text(LanguageService.get('already_have_account'), style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary)),
           SizedBox(width: AppSizes.w8),
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
             child: Text(
               LanguageService.get('sign_in'),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppColors.primary,
-                fontWeight: FontWeight.w600,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600),
             ),
           ),
         ],

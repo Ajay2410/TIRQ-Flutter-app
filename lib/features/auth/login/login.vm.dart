@@ -742,7 +742,7 @@ class LoginViewModel extends ReactiveViewModel {
     try {
       String contact = _forgotPasswordMode == LoginMode.email ? forgotEmailController.text.trim() : _forgotFullPhoneNumber;
 
-      final response = await authService.sendOtp(email: contact);
+      final response = await authService.sendOtp(email: contact, type: 'email');
 
       if (response == true) {
         _showOtpField = true;
@@ -816,7 +816,7 @@ class LoginViewModel extends ReactiveViewModel {
     try {
       String contact = _loginMode == LoginMode.email ? emailController.text : _fullPhoneNumber;
 
-      final response = await authService.sendOtp(email: contact);
+      final response = await authService.sendOtp(email: contact, type: 'email');
 
       if (response == true) {
         _showOtpField = true;

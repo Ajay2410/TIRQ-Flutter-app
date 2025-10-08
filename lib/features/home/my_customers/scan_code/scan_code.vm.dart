@@ -80,8 +80,6 @@ class ScanCodeViewModel extends BaseViewModel {
       }
     } catch (e) {
       _handleError(e.toString());
-    } finally {
-      _isProcessing = false;
     }
   }
 
@@ -99,6 +97,10 @@ class ScanCodeViewModel extends BaseViewModel {
       ),
     );
 
+    // Always reset processing state when returning from customer edit details
+    _isProcessing = false;
+    setScanning(true);
+
     if (editResult != null && editResult is Customer) {
       // Navigate back to my_customers and refresh
       Navigator.of(context).pop(true);
@@ -111,6 +113,11 @@ class ScanCodeViewModel extends BaseViewModel {
   }
 
   void resetScanning() {
+    setScanning(true);
+  }
+
+  void resetProcessingState() {
+    _isProcessing = false;
     setScanning(true);
   }
 }

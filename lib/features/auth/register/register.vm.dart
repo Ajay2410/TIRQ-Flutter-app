@@ -2,19 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:manager/core/locator.dart';
-import 'package:manager/core/utils/type_def.dart';
 import 'package:manager/features/auth/otp_verification/otp_verification.view.dart';
+import 'package:manager/features/stage/stage.view.dart';
 import 'package:manager/resources/app_resources/app_maps.dart';
 import 'package:manager/routes/routes.dart';
+import 'package:manager/services/dialogs.service.dart';
+import 'package:manager/widgets/dialogs/loader/loader_dialog.view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../../../core/utils/app_logger.dart';
+import '../../../core/utils/type_def.dart';
+import '../../../core/models/hive/user/user.dart';
+import '../../../core/storage/storage.dart';
 import '../../../services/auth.service.dart';
+import '../../../services/account.service.dart';
 
 class RegisterViewModel extends ReactiveViewModel {
   final _navigationService = locator<NavigationService>();
+  final _dialogService = locator<DialogService>();
   final authService = locator<AuthService>();
+  final AccountManagerService _accountManager = AccountManagerService.instance;
 
   final formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
@@ -104,20 +112,49 @@ class RegisterViewModel extends ReactiveViewModel {
 
   void onSubmitForm() async {
     if (formKey.currentState?.validate() == true && _isFormValid) {
-      AppLogger.info("Form is valid! Submitting...");
+      AppLogger.info("Form is valid! Sending OTP...");
       setBusy(true);
 
-      final response = await registerOrganization();
+      final response = await _dialogService.showCustomDialog(
+        variant: DialogType.loader,
+        data: LoaderDialogAttributes(
+          task: () async {
+            try {
+              final apiResponse = await authService.sendOtp(
+                email: emailController.text,
+                type: 'email',
+              );
 
-      response.fold((exception) {}, (success) {
+              return apiResponse.fold(
+                (failure) => throw Exception(failure.message),
+                (success) => success,
+              );
+            } catch (e) {
+              throw Exception(e.toString());
+            }
+          },
+          message: 'Sending OTP...',
+        ),
+      );
+
+      if (response?.confirmed == true) {
         _navigationService.navigateTo(
           Routes.otpVerification,
           arguments: OtpVerificationViewAttributes(
             isOrganization: true,
             email: emailController.text,
+            fullName: nameController.text,
+            password: passwordController.text,
+            phone: _fullPhoneNumber,
+            countryCode: _countryCode,
+            organizationType:
+                "Machine Manufacturer", // Default organization type
+            language: AppMaps.languageMap[_language] ?? "English",
           ),
         );
-      });
+      } else {
+        Fluttertoast.showToast(msg: response?.data ?? 'Failed to send OTP');
+      }
     } else {
       AppLogger.error("Form is invalid!");
       Fluttertoast.showToast(msg: 'Form is invalid');
@@ -125,23 +162,44 @@ class RegisterViewModel extends ReactiveViewModel {
     setBusy(false);
   }
 
-  ResultFuture<String> registerOrganization() async {
-    // With no selection in UI, default to organization role and a fixed org type
-    const String finalOrgType = "Machine Manufacturer";
-    const String role = "organization";
+  Future<void> _handleRegister() async {
+    setBusy(true);
 
+    final response = await register();
+    response.fold(
+      (failure) {
+        Fluttertoast.showToast(msg: failure.message);
+      },
+      (user) async {
+        await saveUser(user);
+        await _accountManager.saveCurrentUser(user);
+        navigateToStageView();
+      },
+    );
+    setBusy(false);
+  }
+
+  ResultFuture<User> register() async {
     return await authService.register(
       fullName: nameController.text,
       email: emailController.text,
       password: passwordController.text,
       phone: _fullPhoneNumber,
       countryCode: _countryCode,
-      role: role,
-      organizationType: finalOrgType,
+      role: "organization",
+      organizationType: "Machine Manufacturer", // Default organization type
       language: AppMaps.languageMap[_language] ?? "English",
     );
   }
 
+  Future<void> navigateToStageView() async {
+    await _navigationService.clearStackAndShow(
+      Routes.stage,
+      arguments: StageViewAttributes(selectedBottomNavIndex: 0),
+    );
+  }
+
+  // Removed registerOrganization - now using sendOtp API instead
   // Removed registerEmployee - organization app only handles organization registration
 
   @override
