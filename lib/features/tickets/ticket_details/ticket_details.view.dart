@@ -401,31 +401,34 @@ class TicketDetailsView extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: 8),
-        PopupMenuButton<String>(
-          icon: Icon(Icons.more_vert, color: AppColors.white, size: 20),
-          menuPadding: EdgeInsets.zero,
-          offset: Offset(-10, 40),
-          onSelected: (String value) {
-            if (value == 'report') {
-              _showReportDialog(context, model);
-            }
-          },
-          itemBuilder:
-              (BuildContext context) => [
-                PopupMenuItem<String>(
-                  value: 'report',
-                  child: Text(
-                    LanguageService.get('report'),
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
-                  ),
+        if (model.ticketDetails?.ticketDetails?.status?.toLowerCase() == "resolved")...[
+          SizedBox(width: 8),
+          PopupMenuButton<String>(
+            icon: Icon(Icons.more_vert, color: AppColors.white, size: 20),
+            menuPadding: EdgeInsets.zero,
+            offset: Offset(-10, 40),
+            onSelected: (String value) {
+              if (value == 'report') {
+                _showReportDialog(context, model);
+              }
+            },
+            itemBuilder:
+                (BuildContext context) => [
+              PopupMenuItem<String>(
+                value: 'report',
+                child: Text(
+                  LanguageService.get('report'),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
                 ),
-              ],
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          color: AppColors.white,
-          shadowColor: AppColors.black.withValues(alpha: 0.1),
-          elevation: 8,
-        ),
+              ),
+            ],
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            color: AppColors.white,
+            shadowColor: AppColors.black.withValues(alpha: 0.1),
+            elevation: 8,
+          ),
+        ]
+
       ],
     );
   }
@@ -572,7 +575,7 @@ class TicketDetailsView extends StatelessWidget {
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
               ),
               SizedBox(height: 4),
-              Text(pendingText, style: TextStyle(fontSize: 11, color: AppColors.textSecondary,fontWeight: FontWeight.w500)),
+              Text(pendingText, style: TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
             ],
           ),
         ),
@@ -597,7 +600,7 @@ class TicketDetailsView extends StatelessWidget {
 
     final createdDate = ticketDetails?.createdAt != null ? model.formatDate(ticketDetails!.createdAt) : 'N/A';
     final closeDate = ticketDetails?.updatedAt != null ? model.formatDate(ticketDetails!.updatedAt) : 'N/A';
-    final errorCode = ticketDetails?.errorCode == null || ticketDetails?.errorCode == '' ? 'N/A' : ticketDetails?.errorCode ?? 'N/A';
+    final errorCode = ticketDetails?.errorCode == null || ticketDetails?.errorCode == '' ? '' : ticketDetails?.errorCode ?? '';
     final warrantyStatus = customerMachineDetails?.warrantyStatus ?? 'Unknown';
     final machineName = machineDetails?.machineName ?? 'Unknown';
     final modelNumber = machineDetails?.modelNumber ?? 'Unknown';
@@ -612,7 +615,8 @@ class TicketDetailsView extends StatelessWidget {
           children: [
             Expanded(child: _buildDetailItem(LanguageService.get('created_date'), createdDate)),
             ticketStatus == "Resolved" ? Expanded(child: _buildDetailItem(LanguageService.get('close_date'), closeDate)) : SizedBox.shrink(),
-            Expanded(child: _buildDetailItem(LanguageService.get('error_code'), errorCode)),
+            if (errorCode != "") ...[Expanded(child: _buildDetailItem(LanguageService.get('error_code'), errorCode))],
+
             ticketStatus != "Resolved"
                 ? Expanded(
                   child: _buildDetailItem(
@@ -622,6 +626,7 @@ class TicketDetailsView extends StatelessWidget {
                   ),
                 )
                 : SizedBox.shrink(),
+            if (errorCode == "") ...[Expanded(child: SizedBox())],
           ],
         ),
         SizedBox(height: 12),
@@ -653,20 +658,19 @@ class TicketDetailsView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
-              text: TextSpan(
-                style: TextStyle(fontFamily: GoogleFonts.lato().fontFamily),
-                children: [
-                  TextSpan(
-                    text: "${LanguageService.get("problem_description")}: ",
-                    style: TextStyle(fontSize: 11, color: AppColors.black, fontWeight: FontWeight.bold),
-                  ),
-                  TextSpan(text: problem.isNotEmpty ?problem:"-", style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
-                ],
+          text: TextSpan(
+            style: TextStyle(fontFamily: GoogleFonts.lato().fontFamily),
+            children: [
+              TextSpan(
+                text: "${LanguageService.get("problem_description")}: ",
+                style: TextStyle(fontSize: 11, color: AppColors.black, fontWeight: FontWeight.bold),
               ),
-            ),
+              TextSpan(text: problem.isNotEmpty ? problem : "-", style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
+            ],
+          ),
+        ),
 
-
-        if(model.ticketDetails?.ticketDetails?.status == "Resolved")...[
+        if (model.ticketDetails?.ticketDetails?.status == "Resolved") ...[
           SizedBox(height: 10),
           Container(
             width: double.infinity,
@@ -943,10 +947,37 @@ class TicketDetailsView extends StatelessWidget {
   }
 
   Widget _buildBottomActionBar(BuildContext context, TicketDetailsViewModel model) {
-    return AbsorbPointer(
-      absorbing: model.ticketDetails?.ticketDetails?.status == "On Hold",
-      child: Row(
-        children: [
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            color: AppColors.white,
+            child: SizedBox(
+              // width: double.infinity,
+              child: ElevatedButton(
+                onPressed:
+                    model.ticketDetails?.ticketDetails?.IsShowChatOption == false
+                        ? null
+                        : () {
+                          model.startChat(context);
+                        },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: model.ticketDetails?.ticketDetails?.IsShowChatOption == false ? AppColors.gray : AppColors.primaryDark,
+                  foregroundColor: AppColors.white,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.v50)),
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: Text(
+                  getUser().primaryRole == UserRole.organization ? LanguageService.get('see_chat') : LanguageService.get('lets_chat'),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+          ),
+        ),
+        if (getUser().primaryRole == UserRole.organization && model.ticketDetails?.ticketDetails?.status?.toLowerCase() != "resolved")
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -954,60 +985,30 @@ class TicketDetailsView extends StatelessWidget {
               child: SizedBox(
                 // width: double.infinity,
                 child: ElevatedButton(
-                  onPressed:
-                      model.ticketDetails?.ticketDetails?.IsShowChatOption == false
-                          ? null
-                          : () {
-                            model.startChat(context);
-                          },
+                  onPressed: () async {
+                    if (model.formKey.currentState?.validate() == true) {
+                      final _dialogService = locator<DialogService>();
+                      await _dialogService.showCustomDialog(
+                        variant: DialogType.loader,
+                        data: LoaderDialogAttributes(task: () => model.rescheduleTicket(context)),
+                      );
+                    } else {
+                      Fluttertoast.showToast(msg: 'Select Reschedule Time', backgroundColor: Colors.red);
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: model.ticketDetails?.ticketDetails?.IsShowChatOption == false ? AppColors.gray : AppColors.primaryDark,
+                    backgroundColor: model.ticketDetails?.ticketDetails?.status == "On Hold" ? AppColors.gray : AppColors.primaryLight,
                     foregroundColor: AppColors.white,
-                    elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.v50)),
+                    elevation: 0,
                     padding: EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: Text(
-                    getUser().primaryRole == UserRole.organization ? LanguageService.get('see_chat') : LanguageService.get('lets_chat'),
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
+                  child: Text(LanguageService.get('Reschedule'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                 ),
               ),
             ),
           ),
-          if (getUser().primaryRole == UserRole.organization && model.ticketDetails?.ticketDetails?.status?.toLowerCase() != "resolved")
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                color: AppColors.white,
-                child: SizedBox(
-                  // width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (model.formKey.currentState?.validate() == true) {
-                        final _dialogService = locator<DialogService>();
-                        await _dialogService.showCustomDialog(
-                          variant: DialogType.loader,
-                          data: LoaderDialogAttributes(task: () => model.rescheduleTicket(context)),
-                        );
-                      } else {
-                        Fluttertoast.showToast(msg: 'Select Reschedule Time', backgroundColor: Colors.red);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: model.ticketDetails?.ticketDetails?.status == "On Hold" ? AppColors.gray : AppColors.primaryLight,
-                      foregroundColor: AppColors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.v50)),
-                      elevation: 0,
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: Text(LanguageService.get('Reschedule'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
+      ],
     );
   }
 

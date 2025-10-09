@@ -10383,6 +10383,28 @@
     "Malay/Indonesian": "Notifikasi",
     "Ukrainian": "Сповіщення"
   },
+  "your_name": {
+    "English": "Your name",
+    "Hindi": "आपका नाम",
+    "Chinese (Simplified)": "您的姓名",
+    "Spanish": "Su nombre",
+    "Japanese": "お名前",
+    "German": "Ihr Name",
+    "French": "Votre nom",
+    "Arabic": "اسمك",
+    "Portuguese": "Seu nome",
+    "Russian": "Ваше имя",
+    "Bengali": "আপনার নাম",
+    "Turkish": "Adınız",
+    "Italian": "Il tuo nome",
+    "Korean": "이름",
+    "Vietnamese": "Tên của bạn",
+    "Thai": "ชื่อของคุณ",
+    "Dutch": "Uw naam",
+    "Polish": "Twoje imię",
+    "Malay/Indonesian": "Nama Anda",
+    "Ukrainian": "Ваше ім'я"
+  },
   "organization_name": {
     "English": "Organization name",
     "Hindi": "संगठन का नाम",

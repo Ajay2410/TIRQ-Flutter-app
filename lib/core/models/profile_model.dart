@@ -4,12 +4,31 @@
 
 import 'dart:convert';
 
-ProfileModel profileModelFromJson(String str) =>
-    ProfileModel.fromJson(json.decode(str));
+ProfileModel profileModelFromJson(String str) => ProfileModel.fromJson(json.decode(str));
 
 String profileModelToJson(ProfileModel data) => json.encode(data.toJson());
 
 class ProfileModel {
+  Profile? profile;
+  String? qrCode;
+
+  ProfileModel({
+    this.profile,
+    this.qrCode,
+  });
+
+  factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
+    profile: json["profile"] == null ? null : Profile.fromJson(json["profile"]),
+    qrCode: json["qrCode"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "profile": profile?.toJson(),
+    "qrCode": qrCode,
+  };
+}
+
+class Profile {
   String? id;
   User? user;
   String? unitName;
@@ -22,7 +41,7 @@ class ProfileModel {
   DateTime? updatedAt;
   int? v;
 
-  ProfileModel({
+  Profile({
     this.id,
     this.user,
     this.unitName,
@@ -36,25 +55,17 @@ class ProfileModel {
     this.v,
   });
 
-  factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
+  factory Profile.fromJson(Map<String, dynamic> json) => Profile(
     id: json["_id"],
     user: json["user"] == null ? null : User.fromJson(json["user"]),
     unitName: json["unitName"],
     designation: json["designation"],
     organizationName: json["organizationName"],
-    corporateAddress:
-        json["corporateAddress"] == null
-            ? null
-            : Address.fromJson(json["corporateAddress"]),
-    factoryAddress:
-        json["factoryAddress"] == null
-            ? null
-            : Address.fromJson(json["factoryAddress"]),
+    corporateAddress: json["corporateAddress"] == null ? null : Address.fromJson(json["corporateAddress"]),
+    factoryAddress: json["factoryAddress"] == null ? null : Address.fromJson(json["factoryAddress"]),
     profileImage: json["profileImage"],
-    createdAt:
-        json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
-    updatedAt:
-        json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
+    createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
+    updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
   );
 
@@ -153,10 +164,7 @@ class User {
     password: json["password"],
     phone: json["phone"],
     countryCode: json["countryCode"],
-    roles:
-        json["roles"] == null
-            ? []
-            : List<String>.from(json["roles"]!.map((x) => x)),
+    roles: json["roles"] == null ? [] : List<String>.from(json["roles"]!.map((x) => x)),
     emailOtp: json["emailOTP"],
     isEmailVerified: json["isEmailVerified"],
     isPhoneVerified: json["isPhoneVerified"],

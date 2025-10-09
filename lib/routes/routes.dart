@@ -202,4 +202,7 @@ abstract class Routes {
   static const String teams = '/teams';
   static const String glassFlowSystem = '/glass-flow-system';
   static const String feedbackSurvey = '/survey';
+
+  /// Route for the Notification screen.
+  static const String notification = '/notification';
 }

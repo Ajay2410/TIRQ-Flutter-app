@@ -1,41 +1,40 @@
+import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl_phone_field/countries.dart' as intl;
-import 'package:intl_phone_field/phone_number.dart' as intl;
 import 'package:manager/api_endpoints.dart';
-import 'package:manager/core/models/organization.dart';
 import 'package:manager/core/models/profile_model.dart';
-import 'package:manager/resources/app_resources/app_maps.dart';
-import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
-
-import '../../../core/locator.dart';
-import '../../../core/utils/app_logger.dart';
-import '../../../services/api.service.dart';
-import '../../../configs.dart';
-import '../../../services/dialogs.service.dart';
-import '../../../services/file_picker.service.dart';
-import '../../../widgets/dialogs/loader/loader_dialog.view.dart';
+import 'package:manager/core/locator.dart';
+import 'package:manager/services/api.service.dart';
+import 'package:manager/services/file_picker.service.dart';
+import 'package:manager/services/profile.service.dart';
+import 'package:manager/core/utils/app_logger.dart';
+import 'package:manager/configs.dart';
+import 'package:dio/dio.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class UpdateOrganizationViewModel extends ReactiveViewModel {
-  final _dialogService = locator<DialogService>();
   final _apiService = locator<ApiService>();
   final _filePickerService = FilePickerService();
+  final _profileService = locator<ProfileService>();
+
+  // ProfileModel to store API response
+  final ReactiveValue<ProfileModel?> _profileModel =
+      ReactiveValue<ProfileModel?>(null);
+  ProfileModel? get profileModel => _profileModel.value;
+
+  // Profile image file
+  File? _profileImageFile;
+  File? get profileImageFile => _profileImageFile;
 
   // Form key for validation
   final formKey = GlobalKey<FormState>();
 
   // Organization basic info controllers
-  final TextEditingController nameController = TextEditingController();
   final TextEditingController yourNameController = TextEditingController();
   final TextEditingController unitNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-  final TextEditingController phone2Controller = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController email2Controller = TextEditingController();
 
   // Corporate Address controllers
   final TextEditingController addressLine1Controller = TextEditingController();
@@ -68,44 +67,27 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
   // Designation type
   final ReactiveValue<String> _designationType = ReactiveValue<String>('md');
   String get designationType => _designationType.value;
+
   void updateDesignationType(String? value) {
     if (value != null) {
       _designationType.value = value;
-      _onFormChanged();
       notifyListeners();
     }
   }
 
-  bool isDataChanged = false;
-
-  void markDataChanged() {
-    isDataChanged = true;
-    notifyListeners();
-  }
-
+  // Language selection
   String _language = 'English';
-
-  String preferredLanguage() {
-    return AppMaps.languageMap.entries
-        .firstWhere(
-          (e) => e.value == _language,
-          orElse:
-              () =>
-                  AppMaps.languageMap.entries.first, // fallback to first entry
-        )
-        .key;
-  }
+  String get language => _language;
 
   void updateLanguage(String value) {
-    _language =
-        AppMaps.languageMap.entries.firstWhere((e) => e.key == value).value;
-    _onFormChanged();
+    _language = value;
     notifyListeners();
   }
 
   // Other designation flag
   final ReactiveValue<bool> _showOtherDesignation = ReactiveValue<bool>(false);
   bool get showOtherDesignation => _showOtherDesignation.value;
+
   set showOtherDesignation(bool value) {
     _showOtherDesignation.value = value;
     notifyListeners();
@@ -114,129 +96,90 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
   // Same as corporate address flag
   final ReactiveValue<bool> _sameAsCorpAddress = ReactiveValue<bool>(false);
   bool get sameAsCorpAddress => _sameAsCorpAddress.value;
+
   void toggleSameAsCorpAddress(bool value) {
     _sameAsCorpAddress.value = value;
+
     if (value) {
       // Copy corporate address to factory address
-      if (profileModel?.corporateAddress != null) {
-        // Copy from profile model data
-        factoryAddressLine1Controller.text =
-            profileModel!.corporateAddress!.addressLine1 ?? '';
-        factoryAddressLine2Controller.text =
-            profileModel!.corporateAddress!.addressLine2 ?? '';
-        factoryCityController.text = profileModel!.corporateAddress!.city ?? '';
-        factoryStateController.text =
-            profileModel!.corporateAddress!.state ?? '';
-        factoryCountryController.text =
-            profileModel!.corporateAddress!.country ?? '';
-        factoryPinCodeController.text =
-            profileModel!.corporateAddress!.pincode ?? '';
-        _factoryCountry.value = _getValidCountry(
-          profileModel!.corporateAddress!.country,
-        );
-      } else {
-        // Fallback to controller values
-        factoryAddressLine1Controller.text = addressLine1Controller.text;
-        factoryAddressLine2Controller.text = addressLine2Controller.text;
-        factoryCityController.text = cityController.text;
-        factoryStateController.text = stateController.text;
-        factoryCountryController.text = countryController.text;
-        factoryPinCodeController.text = pinCodeController.text;
-        _factoryCountry.value = _country.value;
-      }
+      copyCorporateToFactory();
     }
-    _onFormChanged();
+
     notifyListeners();
   }
 
   // Country dropdown
   final ReactiveValue<String> _country = ReactiveValue<String>('India');
   String get country => _country.value;
+
   void updateCountry(String? value) {
     if (value != null) {
       _country.value = value;
       countryController.text = value;
-      _onFormChanged();
       notifyListeners();
-
-      // Update factory country if same as corporate address is checked
-      if (_sameAsCorpAddress.value) {
-        _factoryCountry.value = value;
-        factoryCountryController.text = value;
-      }
     }
   }
 
   // Factory country dropdown
   final ReactiveValue<String> _factoryCountry = ReactiveValue<String>('India');
   String get factoryCountry => _factoryCountry.value;
+
   void updateFactoryCountry(String? value) {
     if (value != null) {
       _factoryCountry.value = value;
       factoryCountryController.text = value;
-      _onFormChanged();
       notifyListeners();
     }
   }
 
-  // Helper method to validate and get a valid country value
-  String _getValidCountry(String? country) {
-    if (country == null || country.isEmpty) return 'India';
-
-    // Check if the country is already in our list
-    if (countries.contains(country)) return country;
-
-    // Handle regional variants like "India (Assam)" -> "India"
-    if (country.contains('(')) {
-      String mainCountry = country.split('(')[0].trim();
-      if (countries.contains(mainCountry)) return mainCountry;
-    }
-
-    // Handle specific mappings for common variations
-    switch (country.toLowerCase()) {
-      case 'uae':
-        return 'United Arab Emirates';
-      case 'usa':
-      case 'us':
-        return 'United States';
-      case 'uk':
-        return 'United Kingdom';
-      case 'south korea':
-        return 'South Korea';
-      case 'north korea':
-        return 'North Korea';
-    }
-
-    return 'India'; // Default fallback
-  }
-
-  String _countrySearchQuery = '';
-  String get countrySearchQuery => _countrySearchQuery;
-
-  intl.Country? _selectedCountry;
-  intl.Country? get selectedCountry => _selectedCountry;
-
-  intl.Country? _selectedCountryF;
-  intl.Country? get selectedCountryF => _selectedCountryF;
-
+  // Edit mode flags
   bool? isPersonalInfoEditable = false;
   bool? isCorporateAddressEditable = false;
   bool? isFactoryAddressEditable = false;
   bool? isAdditionalInfoEditable = false;
 
-  // Add these toggle methods
-  void togglePersonalInfoEdit() {
-    isPersonalInfoEditable = !(isPersonalInfoEditable ?? false);
-    notifyListeners();
+  void togglePersonalInfoEdit() async {
+    if (isPersonalInfoEditable ?? false) {
+      // Currently in edit mode, save the data
+      await updatePersonalInfo();
+    } else {
+      // Currently in view mode, switch to edit mode
+      isPersonalInfoEditable = true;
+      notifyListeners();
+    }
   }
 
-  void toggleCorporateAddressEdit() {
-    isCorporateAddressEditable = !(isCorporateAddressEditable ?? false);
-    notifyListeners();
+  void toggleCorporateAddressEdit() async {
+    if (isCorporateAddressEditable ?? false) {
+      // Currently in edit mode, save the data
+      await updateCorporateAddress();
+    } else {
+      // Currently in view mode, switch to edit mode
+      isCorporateAddressEditable = true;
+      notifyListeners();
+    }
   }
 
-  void toggleFactoryAddressEdit() {
-    isFactoryAddressEditable = !(isFactoryAddressEditable ?? false);
+  void toggleFactoryAddressEdit() async {
+    if (isFactoryAddressEditable ?? false) {
+      // Currently in edit mode, save the data
+      await updateFactoryAddress();
+    } else {
+      // Currently in view mode, switch to edit mode
+      isFactoryAddressEditable = true;
+      notifyListeners();
+    }
+  }
+
+  // Copy corporate address to factory address
+  void copyCorporateToFactory() {
+    factoryAddressLine1Controller.text = addressLine1Controller.text;
+    factoryAddressLine2Controller.text = addressLine2Controller.text;
+    factoryCityController.text = cityController.text;
+    factoryStateController.text = stateController.text;
+    factoryCountryController.text = countryController.text;
+    _factoryCountry.value = _country.value;
+    factoryPinCodeController.text = pinCodeController.text;
     notifyListeners();
   }
 
@@ -245,106 +188,22 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
-  // Method to save personal information section
-  Future<void> savePersonalInfo() async {
-    // Prepare profile data for personal info update
-    final profileData = {
-      "unitName": unitNameController.text,
-      "designation":
-          _designationType.value == 'Other'
-              ? otherDesignationController.text
-              : _designationType.value,
-    };
+  // Logo management
+  String logoUrl = '';
+  bool hasLogoFile = false;
 
-    // Show loader dialog
-    final response = await _dialogService.showCustomDialog(
-      variant: DialogType.loader,
-      data: LoaderDialogAttributes(task: () => updateProfileData(profileData)),
-    );
+  // Profile image management
+  String profileImageUrl = '';
+  bool hasProfileImageFile = false;
 
-    if (response?.confirmed == true) {
-      isPersonalInfoEditable = false;
-      notifyListeners();
-    }
-  }
+  // Upload status
+  final ReactiveValue<bool> _isUploading = ReactiveValue<bool>(false);
+  bool get isUploading => _isUploading.value;
 
-  // Method to save corporate address section
-  Future<void> saveCorporateAddress() async {
-    // Prepare profile data for corporate address update
-    final profileData = {
-      "corporateAddress": {
-        "addressLine1": addressLine1Controller.text,
-        "addressLine2": addressLine2Controller.text,
-        "city": cityController.text,
-        "state": stateController.text,
-        "country": countryController.text,
-        "pincode": pinCodeController.text,
-      },
-    };
+  final ReactiveValue<double> _uploadProgress = ReactiveValue<double>(0.0);
+  double get uploadProgress => _uploadProgress.value;
 
-    // Show loader dialog
-    final response = await _dialogService.showCustomDialog(
-      variant: DialogType.loader,
-      data: LoaderDialogAttributes(task: () => updateProfileData(profileData)),
-    );
-
-    if (response?.confirmed == true) {
-      isCorporateAddressEditable = false;
-      notifyListeners();
-    }
-  }
-
-  // Method to save factory address section
-  Future<void> saveFactoryAddress() async {
-    // Prepare profile data for factory address update
-    final profileData = {
-      "factoryAddress": {
-        "addressLine1": factoryAddressLine1Controller.text,
-        "addressLine2": factoryAddressLine2Controller.text,
-        "city": factoryCityController.text,
-        "state": factoryStateController.text,
-        "country": factoryCountryController.text,
-        "pincode": factoryPinCodeController.text,
-      },
-    };
-
-    // Show loader dialog
-    final response = await _dialogService.showCustomDialog(
-      variant: DialogType.loader,
-      data: LoaderDialogAttributes(task: () => updateProfileData(profileData)),
-    );
-
-    if (response?.confirmed == true) {
-      isFactoryAddressEditable = false;
-      notifyListeners();
-    }
-  }
-
-  // List<Country> get filteredCountries {
-  //   if (_countrySearchQuery.isEmpty) {
-  //     return countries.toList();
-  //   }
-  //   return countries.where((country) =>
-  //       country.name.toLowerCase().contains(_countrySearchQuery.toLowerCase())
-  //   ).toList();
-  // }
-
-  void updateCountrySearchQuery(String query) {
-    _countrySearchQuery = query;
-    notifyListeners();
-  }
-
-  void updateSelectedCountry(intl.Country? country) {
-    _selectedCountry = country;
-    notifyListeners();
-  }
-
-  void updateSelectedCountryF(intl.Country? country) {
-    _selectedCountryF = country;
-    notifyListeners();
-  }
-
-  // List of countries
+  // List of countries for dropdown
   List<String> countries = [
     "Afghanistan",
     "Albania",
@@ -430,193 +289,88 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
     "Vietnam",
   ];
 
-  final ReactiveValue<List<Units>> _units = ReactiveValue<List<Units>>([]);
-  List<Units> get units => _units.value;
+  // Units management
+  final ReactiveValue<List<Map<String, dynamic>>> _units =
+      ReactiveValue<List<Map<String, dynamic>>>([]);
+  List<Map<String, dynamic>> get units => _units.value;
 
   Map<int, TextEditingController> unitNameControllers = {};
   Map<int, TextEditingController> unitLocalityControllers = {};
   Map<int, String?> unitCountries = {};
 
-  // Logo management
-  String logoUrl = '';
-  File? _logoFile;
-  File? get logoFile => _logoFile;
+  void addUnit() {
+    final newIndex = _units.value.length;
+    _units.value = [
+      ..._units.value,
+      {'name': '', 'locality': '', 'country': null},
+    ];
 
-  String _email = '';
-  String? get email => _email;
+    // Initialize controllers for the new unit
+    unitNameControllers[newIndex] = TextEditingController();
+    unitLocalityControllers[newIndex] = TextEditingController();
+    unitCountries[newIndex] = null;
 
-  String _name = '';
-  String? get name => _name;
-
-  // For file upload status
-  final ReactiveValue<bool> _isUploading = ReactiveValue<bool>(false);
-  bool get isUploading => _isUploading.value;
-
-  final ReactiveValue<double> _uploadProgress = ReactiveValue<double>(0.0);
-  double get uploadProgress => _uploadProgress.value;
-
-  // Profile image properties
-  File? _profileImageFile;
-  File? get profileImageFile => _profileImageFile;
-
-  String _profileImageUrl = '';
-  String get profileImageUrl => _profileImageUrl;
-
-  bool _isEditing = false;
-  bool get isEditing => _isEditing;
-
-  bool _didChange = false;
-  bool get didChange => _didChange;
-
-  final _profileModel = ReactiveValue<ProfileModel?>(null);
-  ProfileModel? get profileModel => _profileModel.value;
-
-  void init(Organization? organization) async {
-    setBusy(true);
-
-    // Fetch profile data
-    await fetchProfileData();
-
-    _addTextChangedListeners();
-    setBusy(false);
+    notifyListeners();
   }
 
-  Future<void> fetchProfileData() async {
-    try {
-      final response = await _apiService.get(url: ApiEndpoints.getProfile);
+  void removeUnit(int index) {
+    if (index < _units.value.length) {
+      // Dispose controllers
+      unitNameControllers[index]?.dispose();
+      unitLocalityControllers[index]?.dispose();
 
-      if (response.statusCode == 200) {
-        // Handle different response data types
-        Map<String, dynamic> responseData;
-        if (response.data is String) {
-          responseData = jsonDecode(response.data);
-        } else if (response.data is Map<String, dynamic>) {
-          responseData = response.data;
-        } else {
-          AppLogger.error('Invalid response format');
-          return;
-        }
+      // Remove from lists
+      _units.value = List.from(_units.value)..removeAt(index);
 
-        // Check if response has nested data structure
-        ProfileModel profile;
-        if (responseData['success'] == true && responseData['data'] != null) {
-          profile = ProfileModel.fromJson(responseData['data']);
-        } else {
-          // Direct profile data parsing - handle user field as string ID
-          Map<String, dynamic> profileData = Map<String, dynamic>.from(
-            responseData,
-          );
-          if (profileData['user'] is String) {
-            // If user is a string ID, create a minimal User object
-            profileData['user'] = {
-              '_id': profileData['user'],
-              'fullName': '',
-              'email': '',
-            };
-          }
-          profile = ProfileModel.fromJson(profileData);
-        }
+      // Rebuild controller maps with updated indices
+      _rebuildControllerMaps();
 
-        _profileModel.value = profile;
-        _populateFormWithProfileData(profile);
-        notifyListeners();
-      } else {
-        AppLogger.error('Failed to fetch profile: ${response.statusMessage}');
-      }
-    } catch (e) {
-      AppLogger.error('Error fetching profile data: $e');
+      notifyListeners();
     }
   }
 
-  Future<void> updateProfileData(Map<String, dynamic> profileData) async {
-    try {
-      dynamic dataToSend = profileData;
-
-      // If there's a profile image file, use FormData
-      if (_profileImageFile != null) {
-        final formData = FormData.fromMap({
-          ...profileData,
-          'profileImage': await MultipartFile.fromFile(
-            _profileImageFile!.path,
-            filename:
-                'profile_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
-            contentType: DioMediaType.parse('image/jpeg'),
-          ),
-        });
-        dataToSend = formData;
-      }
-
-      final response = await _apiService.put(
-        url: ApiEndpoints.updateProfile,
-        data: dataToSend,
-      );
-
-      if (response.statusCode == 200) {
-        // Handle different response data types
-        Map<String, dynamic> responseData;
-        if (response.data is String) {
-          responseData = jsonDecode(response.data);
-        } else if (response.data is Map<String, dynamic>) {
-          responseData = response.data;
-        } else {
-          AppLogger.error('Invalid response format');
-          Fluttertoast.showToast(
-            msg: 'Invalid response format',
-            backgroundColor: Colors.red,
-          );
-          return;
-        }
-
-        // Check if response has nested data structure
-        ProfileModel profile;
-        if (responseData['success'] == true && responseData['data'] != null) {
-          profile = ProfileModel.fromJson(responseData['data']);
-        } else {
-          // Direct profile data parsing - handle user field as string ID
-          Map<String, dynamic> profileData = Map<String, dynamic>.from(
-            responseData,
-          );
-          if (profileData['user'] is String) {
-            // If user is a string ID, create a minimal User object
-            profileData['user'] = {
-              '_id': profileData['user'],
-              'fullName': _profileModel.value?.user?.fullName ?? '',
-              'email': _profileModel.value?.user?.email ?? '',
-            };
-          }
-          profile = ProfileModel.fromJson(profileData);
-        }
-
-        _profileModel.value = profile;
-        _populateFormWithProfileData(profile);
-        notifyListeners();
-        Fluttertoast.showToast(
-          msg: 'Profile updated successfully',
-          backgroundColor: Colors.green,
-        );
-      } else {
-        AppLogger.error('Failed to update profile: ${response.statusMessage}');
-        Fluttertoast.showToast(
-          msg: 'Failed to update profile: ${response.statusMessage}',
-          backgroundColor: Colors.red,
-        );
-      }
-    } catch (e) {
-      AppLogger.error('Error updating profile data: $e');
-      Fluttertoast.showToast(
-        msg: 'Error updating profile: $e',
-        backgroundColor: Colors.red,
-      );
+  void updateUnitCountry(int index, String? country) {
+    if (index < _units.value.length) {
+      unitCountries[index] = country;
+      notifyListeners();
     }
   }
 
-  // Profile Image Picker Methods
-  Future<void> onProfileImageUpload() async {
-    await showProfileImagePickerOptions();
+  void _rebuildControllerMaps() {
+    final newNameControllers = <int, TextEditingController>{};
+    final newLocalityControllers = <int, TextEditingController>{};
+    final newCountries = <int, String?>{};
+
+    for (int i = 0; i < _units.value.length; i++) {
+      if (unitNameControllers.containsKey(i)) {
+        newNameControllers[i] = unitNameControllers[i]!;
+        newLocalityControllers[i] = unitLocalityControllers[i]!;
+        newCountries[i] = unitCountries[i];
+      }
+    }
+
+    unitNameControllers = newNameControllers;
+    unitLocalityControllers = newLocalityControllers;
+    unitCountries = newCountries;
   }
 
-  Future<void> showProfileImagePickerOptions() async {
-    // This method will be handled in the view file
+  // Image picker methods (UI only)
+  Future<void> pickGalleryImage() async {
+    // UI placeholder - no actual file picking logic
+    hasLogoFile = true;
+    notifyListeners();
+  }
+
+  Future<void> takePhoto() async {
+    // UI placeholder - no actual camera logic
+    hasLogoFile = true;
+    notifyListeners();
+  }
+
+  void onLogoRemove() {
+    logoUrl = '';
+    hasLogoFile = false;
+    notifyListeners();
   }
 
   Future<void> pickProfileImageFromGallery() async {
@@ -628,6 +382,7 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
 
     pickerResult.fold(
       (failure) {
+        // Only show error if it's not "No image selected"
         if (failure.message != 'No image selected') {
           Fluttertoast.showToast(
             msg: failure.message,
@@ -637,10 +392,10 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
       },
       (file) {
         _profileImageFile = file;
-        _didChange = true;
+        hasProfileImageFile = true;
         notifyListeners();
-        // Upload image immediately when picked
-        uploadProfileImageOnly();
+        // Automatically upload the selected image
+        uploadProfileImage();
       },
     );
   }
@@ -654,6 +409,7 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
 
     pickerResult.fold(
       (failure) {
+        // Only show error if it's not "No photo taken"
         if (failure.message != 'No photo taken') {
           Fluttertoast.showToast(
             msg: failure.message,
@@ -663,20 +419,29 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
       },
       (file) {
         _profileImageFile = file;
-        _didChange = true;
+        hasProfileImageFile = true;
         notifyListeners();
-        // Upload image immediately when captured
-        uploadProfileImageOnly();
+        // Automatically upload the captured photo
+        uploadProfileImage();
       },
     );
   }
 
-  Future<void> uploadProfileImageOnly() async {
+  void onProfileImageRemove() {
+    profileImageUrl = '';
+    hasProfileImageFile = false;
+    _profileImageFile = null;
+    notifyListeners();
+  }
+
+  // Upload profile image to server
+  Future<void> uploadProfileImage() async {
     if (_profileImageFile == null) return;
 
-    try {
-      setBusy(true);
+    _isUploading.value = true;
+    notifyListeners();
 
+    try {
       // Create FormData for image upload
       final formData = FormData.fromMap({
         'profileImage': await MultipartFile.fromFile(
@@ -704,19 +469,19 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
           return;
         }
 
-        // Update profile image URL if provided in response
-        if (responseData['success'] == true && responseData['data'] != null) {
-          final profileData = responseData['data'];
-          if (profileData['profileImageUrl'] != null) {
-            _profileImageUrl = profileData['profileImageUrl'];
-          }
-        }
+        // Use ProfileService to update profile data
+        await _profileService.updateProfileData(responseData);
+
+        // Refresh profile data from API to get latest data
+        await refreshProfileData();
 
         Fluttertoast.showToast(
           msg: 'Profile image updated successfully',
           backgroundColor: Colors.green,
         );
 
+        // Clear the file since it's now uploaded
+        _profileImageFile = null;
         notifyListeners();
       } else {
         AppLogger.error(
@@ -734,128 +499,237 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
         backgroundColor: Colors.red,
       );
     } finally {
+      _isUploading.value = false;
+      notifyListeners();
+    }
+  }
+
+  // Update personal information
+  Future<void> updatePersonalInfo() async {
+    setBusy(true);
+    notifyListeners();
+
+    try {
+      // Prepare the data to send
+      final updateData = {
+        'organizationName': organizationType.text,
+        'unitName': unitNameController.text,
+        'fullName': yourNameController.text,
+        'designation': _designationType.value,
+      };
+
+      AppLogger.info('Updating personal info with data: $updateData');
+
+      // Use ProfileService to update profile data
+      await _profileService.updateProfileData(updateData);
+
+      // Refresh profile data from API to get latest data
+      await refreshProfileData();
+
+      // Switch back to view mode
+      isPersonalInfoEditable = false;
+
+      Fluttertoast.showToast(
+        msg: 'Personal information updated successfully',
+        backgroundColor: Colors.green,
+      );
+    } catch (e) {
+      AppLogger.error('Error updating personal info: $e');
+      Fluttertoast.showToast(
+        msg: 'Error updating personal information: $e',
+        backgroundColor: Colors.red,
+      );
+    } finally {
       setBusy(false);
-    }
-  }
-
-  void removeProfileImage() {
-    _profileImageFile = null;
-    _profileImageUrl = '';
-    _didChange = true;
-    notifyListeners();
-  }
-
-  void addUnit() {
-    final newIndex = _units.value.length;
-    _units.value = [..._units.value, Units()];
-
-    // Initialize controllers for the new unit
-    unitNameControllers[newIndex] = TextEditingController();
-    unitLocalityControllers[newIndex] = TextEditingController();
-    unitCountries[newIndex] = null;
-
-    // Add listeners
-    unitNameControllers[newIndex]?.addListener(_onFormChanged);
-    unitLocalityControllers[newIndex]?.addListener(_onFormChanged);
-
-    _onFormChanged();
-    notifyListeners();
-  }
-
-  void removeUnit(int index) {
-    if (index < _units.value.length) {
-      // Dispose controllers
-      unitNameControllers[index]?.dispose();
-      unitLocalityControllers[index]?.dispose();
-
-      // Remove from lists
-      _units.value = List.from(_units.value)..removeAt(index);
-
-      // Rebuild controller maps with updated indices
-      _rebuildControllerMaps();
-
-      _onFormChanged();
       notifyListeners();
     }
   }
 
-  void updateUnitCountry(int index, String? country) {
-    if (index < _units.value.length) {
-      unitCountries[index] = country;
-      _onFormChanged();
+  // Update corporate address
+  Future<void> updateCorporateAddress() async {
+    setBusy(true);
+    notifyListeners();
+
+    try {
+      // Prepare the corporate address data to send
+      final updateData = {
+        'corporateAddress': {
+          'addressLine1': addressLine1Controller.text,
+          'addressLine2': addressLine2Controller.text,
+          'city': cityController.text,
+          'state': stateController.text,
+          'country': _country.value,
+          'pincode': pinCodeController.text,
+        },
+      };
+
+      AppLogger.info('Updating corporate address with data: $updateData');
+
+      // Use ProfileService to update profile data
+      await _profileService.updateProfileData(updateData);
+
+      // Refresh profile data from API to get latest data
+      await refreshProfileData();
+
+      // Switch back to view mode
+      isCorporateAddressEditable = false;
+
+      Fluttertoast.showToast(
+        msg: 'Corporate address updated successfully',
+        backgroundColor: Colors.green,
+      );
+    } catch (e) {
+      AppLogger.error('Error updating corporate address: $e');
+      Fluttertoast.showToast(
+        msg: 'Error updating corporate address: $e',
+        backgroundColor: Colors.red,
+      );
+    } finally {
+      setBusy(false);
       notifyListeners();
     }
   }
 
-  void _rebuildControllerMaps() {
-    final newNameControllers = <int, TextEditingController>{};
-    final newLocalityControllers = <int, TextEditingController>{};
-    final newCountries = <int, String?>{};
+  // Update factory address
+  Future<void> updateFactoryAddress() async {
+    setBusy(true);
+    notifyListeners();
 
-    for (int i = 0; i < _units.value.length; i++) {
-      if (unitNameControllers.containsKey(i)) {
-        newNameControllers[i] = unitNameControllers[i]!;
-        newLocalityControllers[i] = unitLocalityControllers[i]!;
-        newCountries[i] = unitCountries[i];
+    try {
+      // Prepare the factory address data to send
+      final updateData = {
+        'factoryAddress': {
+          'addressLine1': factoryAddressLine1Controller.text,
+          'addressLine2': factoryAddressLine2Controller.text,
+          'city': factoryCityController.text,
+          'state': factoryStateController.text,
+          'country': _factoryCountry.value,
+          'pincode': factoryPinCodeController.text,
+        },
+      };
+
+      AppLogger.info('Updating factory address with data: $updateData');
+
+      // Use ProfileService to update profile data
+      await _profileService.updateProfileData(updateData);
+
+      // Refresh profile data from API to get latest data
+      await refreshProfileData();
+
+      // Switch back to view mode
+      isFactoryAddressEditable = false;
+
+      Fluttertoast.showToast(
+        msg: 'Factory address updated successfully',
+        backgroundColor: Colors.green,
+      );
+    } catch (e) {
+      AppLogger.error('Error updating factory address: $e');
+      Fluttertoast.showToast(
+        msg: 'Error updating factory address: $e',
+        backgroundColor: Colors.red,
+      );
+    } finally {
+      setBusy(false);
+      notifyListeners();
+    }
+  }
+
+  // Initialize the view model and load profile data
+  Future<void> init() async {
+    setBusy(true);
+    await loadProfileData();
+    setBusy(false);
+  }
+
+  // Refresh profile data from API after update
+  Future<void> refreshProfileData() async {
+    try {
+      AppLogger.info('Refreshing profile data from API...');
+
+      // Use ProfileService to refresh profile data
+      await _profileService.refreshProfile();
+
+      // Update local model with fresh data
+      final updatedProfile = _profileService.globalProfileModel;
+      if (updatedProfile != null) {
+        _profileModel.value = updatedProfile;
+        _populateFormWithProfileData(updatedProfile);
+        AppLogger.info('Profile data refreshed successfully');
       }
+    } catch (e) {
+      AppLogger.error('Error refreshing profile data: $e');
     }
-
-    unitNameControllers = newNameControllers;
-    unitLocalityControllers = newLocalityControllers;
-    unitCountries = newCountries;
   }
 
-  void _populateFormWithProfileData(ProfileModel profile) {
-    AppLogger.info('Populating form with profile data: ${profile.toJson()}');
+  // Load profile data from ProfileService (with API call if needed)
+  Future<void> loadProfileData() async {
+    try {
+      // First, ensure ProfileService is initialized
+      if (!_profileService.isInitialized) {
+        AppLogger.info('ProfileService not initialized, initializing now...');
+        await _profileService.initializeProfile();
+      }
 
-    // Set profile image URL if available
-    if (profile.profileImage != null && profile.profileImage!.isNotEmpty) {
-      // Construct full URL by combining base URL with image path
-      String baseUrl = Configurations().url;
-      if (profile.profileImage!.startsWith('/')) {
-        _profileImageUrl = baseUrl + profile.profileImage!;
+      // Get profile data from ProfileService
+      final profile = _profileService.globalProfileModel;
+      if (profile != null) {
+        _profileModel.value = profile;
+        _populateFormWithProfileData(profile);
+        AppLogger.info('Profile data loaded from ProfileService');
       } else {
-        _profileImageUrl = '$baseUrl/${profile.profileImage!}';
+        AppLogger.warning(
+          'No profile data available in ProfileService after initialization',
+        );
+        // Try to fetch profile data directly if global model is still null
+        final profileResult = await _profileService.getProfile();
+        profileResult.fold(
+          (failure) =>
+              AppLogger.error('Failed to fetch profile: ${failure.message}'),
+          (profileData) {
+            _profileModel.value = profileData;
+            _populateFormWithProfileData(profileData);
+            AppLogger.info('Profile data fetched directly from API');
+          },
+        );
       }
+    } catch (e) {
+      AppLogger.error('Error loading profile data: $e');
     }
+  }
 
-    // Set basic organization fields from profile
+  // Populate form fields with profile data
+  void _populateFormWithProfileData(ProfileModel profileModel) {
+    final profile = profileModel.profile;
+    if (profile == null) return;
+
+    // Set basic user info
     if (profile.user != null) {
-      nameController.text = profile.user!.fullName ?? '';
       yourNameController.text = profile.user!.fullName ?? '';
       phoneController.text = profile.user!.phone ?? '';
       emailController.text = profile.user!.email ?? '';
-      _email = profile.user!.email ?? "";
-      _name = profile.user!.fullName ?? "";
     }
 
-    // Set organization name
+    // Set organization info
     organizationType.text = profile.organizationName ?? '';
-
-    // Set unit name
     unitNameController.text = profile.unitName ?? '';
 
     // Set designation
     if (profile.designation != null && profile.designation!.isNotEmpty) {
-      // Map API designation values to dropdown values
-      String apiDesignation = profile.designation!.toLowerCase();
-      if (apiDesignation.contains('managing director') ||
-          apiDesignation.contains('md')) {
-        _designationType.value = 'MD';
-      } else if (apiDesignation.contains('chief executive officer') ||
-          apiDesignation.contains('ceo')) {
-        _designationType.value = 'CEO';
-      } else if (apiDesignation.contains('chairman') ||
-          apiDesignation.contains('chairperson')) {
-        _designationType.value = 'Chairman';
+      _designationType.value = profile.designation!;
+    }
+
+    // Set profile image URL
+    if (profile.profileImage != null && profile.profileImage!.isNotEmpty) {
+      String baseUrl = Configurations().url;
+      if (profile.profileImage!.startsWith('/')) {
+        profileImageUrl = baseUrl + profile.profileImage!;
       } else {
-        _designationType.value = 'Other';
-        otherDesignationController.text = profile.designation ?? '';
-        _showOtherDesignation.value = true;
+        profileImageUrl = '$baseUrl/${profile.profileImage!}';
       }
     }
 
-    // Set corporate address fields
+    // Set corporate address
     if (profile.corporateAddress != null) {
       addressLine1Controller.text =
           profile.corporateAddress!.addressLine1 ?? '';
@@ -863,15 +737,12 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
           profile.corporateAddress!.addressLine2 ?? '';
       cityController.text = profile.corporateAddress!.city ?? '';
       stateController.text = profile.corporateAddress!.state ?? '';
-      String corporateCountry = _getValidCountry(
-        profile.corporateAddress!.country,
-      );
-      countryController.text = corporateCountry;
-      _country.value = corporateCountry;
+      countryController.text = profile.corporateAddress!.country ?? '';
+      _country.value = profile.corporateAddress!.country ?? 'India';
       pinCodeController.text = profile.corporateAddress!.pincode ?? '';
     }
 
-    // Set factory address fields
+    // Set factory address
     if (profile.factoryAddress != null) {
       factoryAddressLine1Controller.text =
           profile.factoryAddress!.addressLine1 ?? '';
@@ -879,167 +750,18 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
           profile.factoryAddress!.addressLine2 ?? '';
       factoryCityController.text = profile.factoryAddress!.city ?? '';
       factoryStateController.text = profile.factoryAddress!.state ?? '';
-      String factoryCountry = _getValidCountry(profile.factoryAddress!.country);
-      factoryCountryController.text = factoryCountry;
-      _factoryCountry.value = factoryCountry;
+      factoryCountryController.text = profile.factoryAddress!.country ?? '';
+      _factoryCountry.value = profile.factoryAddress!.country ?? 'India';
       factoryPinCodeController.text = profile.factoryAddress!.pincode ?? '';
-
-      // Check if addresses are the same
-      _sameAsCorpAddress.value = _checkIfAddressesAreSameFromProfile(profile);
     }
-  }
-
-  bool _checkIfAddressesAreSameFromProfile(ProfileModel profile) {
-    if (profile.corporateAddress == null || profile.factoryAddress == null)
-      return false;
-
-    return profile.corporateAddress!.addressLine1 ==
-            profile.factoryAddress!.addressLine1 &&
-        profile.corporateAddress!.addressLine2 ==
-            profile.factoryAddress!.addressLine2 &&
-        profile.corporateAddress!.city == profile.factoryAddress!.city &&
-        profile.corporateAddress!.state == profile.factoryAddress!.state &&
-        profile.corporateAddress!.country == profile.factoryAddress!.country &&
-        profile.corporateAddress!.pincode == profile.factoryAddress!.pincode;
-  }
-
-  void _addTextChangedListeners() {
-    // Add listeners for all fields
-    nameController.addListener(_onFormChanged);
-    yourNameController.addListener(_onFormChanged);
-    phoneController.addListener(_onFormChanged);
-    phone2Controller.addListener(_onFormChanged);
-    emailController.addListener(_onFormChanged);
-    email2Controller.addListener(_onFormChanged);
-    otherDesignationController.addListener(_onFormChanged);
-
-    addressLine1Controller.addListener(_onFormChanged);
-    addressLine2Controller.addListener(_onFormChanged);
-    cityController.addListener(_onFormChanged);
-    stateController.addListener(_onFormChanged);
-    countryController.addListener(_onFormChanged);
-    pinCodeController.addListener(_onFormChanged);
-
-    factoryAddressLine1Controller.addListener(_onFormChanged);
-    factoryAddressLine2Controller.addListener(_onFormChanged);
-    factoryCityController.addListener(_onFormChanged);
-    factoryStateController.addListener(_onFormChanged);
-    factoryCountryController.addListener(_onFormChanged);
-    factoryPinCodeController.addListener(_onFormChanged);
-
-    establishedYearController.addListener(_onFormChanged);
-    descriptionController.addListener(_onFormChanged);
-  }
-
-  void _onFormChanged() {
-    if (!_didChange) {
-      _didChange = true;
-      notifyListeners();
-    }
-  }
-
-  // Calculate profile completion percentage
-  double calculateProfileCompletion() {
-    int totalFields = 13; // Count of primary fields we're tracking
-    int filledFields = 0;
-
-    // Check basic info
-    if (nameController.text.isNotEmpty) filledFields++;
-    if (yourNameController.text.isNotEmpty) filledFields++;
-    if (phoneController.text.isNotEmpty) filledFields++;
-    if (emailController.text.isNotEmpty) filledFields++;
-
-    // Check corporate address
-    if (addressLine1Controller.text.isNotEmpty) filledFields++;
-    if (cityController.text.isNotEmpty) filledFields++;
-    if (stateController.text.isNotEmpty) filledFields++;
-    if (countryController.text.isNotEmpty) filledFields++;
-    if (pinCodeController.text.isNotEmpty) filledFields++;
-
-    // Check additional info
-    if (establishedYearController.text.isNotEmpty) filledFields++;
-    if (descriptionController.text.isNotEmpty) filledFields++;
-
-    // Check logo
-    if (logoFile != null || logoUrl.isNotEmpty) filledFields++;
-
-    // Check designation
-    if (designationType.isNotEmpty) {
-      if (designationType != 'Other' ||
-          otherDesignationController.text.isNotEmpty) {
-        filledFields++;
-      }
-    }
-
-    return (filledFields / totalFields) * 100;
-  }
-
-  Future<void> pickGalleryImage() async {
-    final pickerResult = await _filePickerService.pickImageFromGallery(
-      maxWidth: 1200,
-      maxHeight: 1200,
-      imageQuality: 80,
-    );
-
-    pickerResult.fold(
-      (failure) {
-        // Only show error if it's not "No image selected"
-        if (failure.message != 'No image selected') {
-          Fluttertoast.showToast(
-            msg: failure.message,
-            backgroundColor: Colors.red,
-          );
-        }
-      },
-      (file) {
-        _logoFile = file;
-        _onFormChanged();
-        notifyListeners();
-      },
-    );
-  }
-
-  Future<void> takePhoto() async {
-    final pickerResult = await _filePickerService.takePhoto(
-      maxWidth: 1200,
-      maxHeight: 1200,
-      imageQuality: 80,
-    );
-
-    pickerResult.fold(
-      (failure) {
-        // Only show error if it's not "No photo taken"
-        if (failure.message != 'No photo taken') {
-          Fluttertoast.showToast(
-            msg: failure.message,
-            backgroundColor: Colors.red,
-          );
-        }
-      },
-      (file) {
-        _logoFile = file;
-        _onFormChanged();
-        notifyListeners();
-      },
-    );
-  }
-
-  void onLogoRemove() {
-    logoUrl = '';
-    _logoFile = null;
-    _onFormChanged();
-    notifyListeners();
   }
 
   @override
   void dispose() {
     // Dispose all controllers to prevent memory leaks
-    nameController.dispose();
     yourNameController.dispose();
     phoneController.dispose();
-    phone2Controller.dispose();
     emailController.dispose();
-    email2Controller.dispose();
     otherDesignationController.dispose();
 
     // Corporate address controllers
@@ -1072,19 +794,9 @@ class UpdateOrganizationViewModel extends ReactiveViewModel {
     super.dispose();
   }
 
-  String _fullPhoneNumber = '';
-  String get fullPhoneNumber => _fullPhoneNumber;
-
-  void updatePhoneNumber(intl.PhoneNumber phoneNumber) {
-    _fullPhoneNumber = '${phoneNumber.countryCode}${phoneNumber.number}';
-    _onFormChanged();
-  }
-
+  // Update phone number from string (used by phone input widget)
   void updatePhoneNumberFromString(String phoneNumber) {
-    _fullPhoneNumber = phoneNumber;
-    _onFormChanged();
+    phoneController.text = phoneNumber;
+    notifyListeners();
   }
-
-  @override
-  List<ReactiveServiceMixin> get reactiveServices => [];
 }

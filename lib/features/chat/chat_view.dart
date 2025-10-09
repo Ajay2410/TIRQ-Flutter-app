@@ -1188,7 +1188,7 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
     final status = widget.ticketStatus?.toLowerCase();
 
     if (status == "resolved") {
-      return _buildTicketStatusMessage("Ticket is Resolved", AppColors.success);
+      return SizedBox();
     } else {
       return _buildMessageInput(model);
     }

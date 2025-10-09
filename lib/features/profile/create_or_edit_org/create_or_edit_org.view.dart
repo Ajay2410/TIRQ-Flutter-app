@@ -4,9 +4,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_popup/flutter_popup.dart';
 import 'package:get/get.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
-import 'package:phone_input/phone_input_package.dart';
 import 'package:manager/core/models/organization.dart';
 import 'package:manager/services/language.service.dart';
+import 'package:phone_input/phone_input_package.dart';
+import 'package:phone_input/src/number_parser/models/phone_number.dart';
 import 'package:stacked/stacked.dart';
 import 'package:manager/widgets/common_text_field.dart';
 import 'package:manager/widgets/common_elevated_button.dart';
@@ -22,17 +23,15 @@ class UpdateOrganizationViewAttributes {
 }
 
 class UpdateOrganizationView extends StatelessWidget {
-  const UpdateOrganizationView({super.key, required this.attributes});
+  const UpdateOrganizationView({super.key, this.attributes});
 
-  final UpdateOrganizationViewAttributes attributes;
+  final UpdateOrganizationViewAttributes? attributes;
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<UpdateOrganizationViewModel>.reactive(
       viewModelBuilder: () => UpdateOrganizationViewModel(),
-      onViewModelReady:
-          (UpdateOrganizationViewModel model) =>
-              model.init(attributes.organization),
+      onViewModelReady: (UpdateOrganizationViewModel model) => model.init(),
       disposeViewModel: false,
       builder: (
         BuildContext context,
@@ -130,11 +129,25 @@ class UpdateOrganizationView extends StatelessWidget {
                                     image: NetworkImage(model.profileImageUrl),
                                     fit: BoxFit.cover,
                                   )
+                                  : model.hasLogoFile
+                                  ? DecorationImage(
+                                    image: AssetImage(
+                                      'assets/images/placeholder.png',
+                                    ),
+                                    fit: BoxFit.cover,
+                                  )
+                                  : model.logoUrl.isNotEmpty
+                                  ? DecorationImage(
+                                    image: NetworkImage(model.logoUrl),
+                                    fit: BoxFit.cover,
+                                  )
                                   : null,
                         ),
                         child:
                             model.profileImageFile == null &&
-                                    model.profileImageUrl.isEmpty
+                                    model.profileImageUrl.isEmpty &&
+                                    !model.hasLogoFile &&
+                                    model.logoUrl.isEmpty
                                 ? const Icon(
                                   Icons.person,
                                   size: 40,
@@ -176,12 +189,17 @@ class UpdateOrganizationView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        (model.profileModel?.user?.fullName != null &&
-                                model.profileModel!.user!.fullName!.isNotEmpty)
-                            ? model.profileModel!.user!.fullName!
-                            : model.nameController.text.isNotEmpty
-                            ? model.nameController.text
-                            : "Leslie Alexander",
+                        (model.profileModel?.profile?.user?.fullName != null &&
+                                model
+                                    .profileModel!
+                                    .profile!
+                                    .user!
+                                    .fullName!
+                                    .isNotEmpty)
+                            ? model.profileModel!.profile!.user!.fullName!
+                            : model.yourNameController.text.isNotEmpty
+                            ? model.yourNameController.text
+                            : "",
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
@@ -190,12 +208,17 @@ class UpdateOrganizationView extends StatelessWidget {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        (model.profileModel?.user?.email != null &&
-                                model.profileModel!.user!.email!.isNotEmpty)
-                            ? model.profileModel!.user!.email!
+                        (model.profileModel?.profile?.user?.email != null &&
+                                model
+                                    .profileModel!
+                                    .profile!
+                                    .user!
+                                    .email!
+                                    .isNotEmpty)
+                            ? model.profileModel!.profile!.user!.email!
                             : model.emailController.text.isNotEmpty
                             ? model.emailController.text
-                            : "yourmail@gmail.com",
+                            : "",
                         style: const TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
@@ -226,11 +249,7 @@ class UpdateOrganizationView extends StatelessWidget {
               // Edit Details / Update Button
               CommonElevatedButton(
                 onPressed: () {
-                  if (model.isPersonalInfoEditable ?? false) {
-                    model.savePersonalInfo();
-                  } else {
-                    model.togglePersonalInfoEdit();
-                  }
+                  model.togglePersonalInfoEdit();
                 },
                 label:
                     (model.isPersonalInfoEditable ?? false)
@@ -256,12 +275,10 @@ class UpdateOrganizationView extends StatelessWidget {
 
           // Organization Name (Read-only)
           CommonTextField(
-            controller: TextEditingController(
-              text: model.profileModel?.organizationName ?? "Samsung",
-            ),
+            controller: model.organizationType,
             label: LanguageService.get("organization_name"),
-            placeholder: model.profileModel?.organizationName ?? "Samsung",
-            readOnly: true,
+            placeholder: LanguageService.get("organization_name"),
+            readOnly: !(model.isPersonalInfoEditable ?? false),
             contentPadding: EdgeInsets.all(12),
             textStyle: const TextStyle(
               fontSize: 12,
@@ -315,14 +332,12 @@ class UpdateOrganizationView extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          // Your Name (Read-only)
+          // Your Name
           CommonTextField(
-            controller: TextEditingController(
-              text: model.profileModel?.user?.fullName ?? "Raj",
-            ),
+            controller: model.yourNameController,
             label: LanguageService.get("your_name"),
-            placeholder: model.profileModel?.user?.fullName ?? "Raj",
-            readOnly: true,
+            placeholder: LanguageService.get("your_name"),
+            readOnly: !(model.isPersonalInfoEditable ?? false),
             contentPadding: EdgeInsets.all(12),
             textStyle: const TextStyle(
               fontSize: 12,
@@ -341,16 +356,15 @@ class UpdateOrganizationView extends StatelessWidget {
 
           // Primary Email with verification
           CommonTextField(
-            controller: TextEditingController(
-              text: model.profileModel?.user?.email ?? "tt@gamil.com",
-            ),
+            controller: model.emailController,
             label: LanguageService.get("primary_email"),
-            placeholder: model.profileModel?.user?.email ?? "tt@gamil.com",
+            placeholder: LanguageService.get("primary_email"),
             keyboardType: TextInputType.emailAddress,
             suffixIcon: Padding(
               padding: const EdgeInsets.all(12),
               child: Image.asset(AppImages.verified, width: 22, height: 22),
             ),
+            readOnly: !(model.isPersonalInfoEditable ?? false),
             contentPadding: EdgeInsets.all(12),
             textStyle: const TextStyle(
               fontSize: 12,
@@ -423,11 +437,7 @@ class UpdateOrganizationView extends StatelessWidget {
               // Edit Details / Update Button
               CommonElevatedButton(
                 onPressed: () {
-                  if (model.isCorporateAddressEditable ?? false) {
-                    model.saveCorporateAddress();
-                  } else {
-                    model.toggleCorporateAddressEdit();
-                  }
+                  model.toggleCorporateAddressEdit();
                 },
                 label:
                     (model.isCorporateAddressEditable ?? false)
@@ -517,7 +527,8 @@ class UpdateOrganizationView extends StatelessWidget {
                 child: _buildCountryDropdown(
                   context,
                   model,
-                  model.profileModel?.corporateAddress?.country ?? "India",
+                  model.profileModel?.profile?.corporateAddress?.country ??
+                      model.country,
                   (value) => model.updateCountry(value),
                   !(model.isCorporateAddressEditable ?? false),
                 ),
@@ -602,11 +613,7 @@ class UpdateOrganizationView extends StatelessWidget {
               // Edit Details / Update Button
               CommonElevatedButton(
                 onPressed: () {
-                  if (model.isFactoryAddressEditable ?? false) {
-                    model.saveFactoryAddress();
-                  } else {
-                    model.toggleFactoryAddressEdit();
-                  }
+                  model.toggleFactoryAddressEdit();
                 },
                 label:
                     (model.isFactoryAddressEditable ?? false)
@@ -704,7 +711,8 @@ class UpdateOrganizationView extends StatelessWidget {
                 child: _buildCountryDropdown(
                   context,
                   model,
-                  model.profileModel?.factoryAddress?.country ?? "India",
+                  model.profileModel?.profile?.factoryAddress?.country ??
+                      model.factoryCountry,
                   (value) => model.updateFactoryCountry(value),
                   model.sameAsCorpAddress ||
                       !(model.isFactoryAddressEditable ?? false),
@@ -815,22 +823,27 @@ class UpdateOrganizationView extends StatelessWidget {
           child: PhoneInput(
             flagShape: BoxShape.rectangle,
             defaultCountry:
-                _mapCountryCodeToIso(model.profileModel?.user?.countryCode) ??
+                _mapCountryCodeToIso(
+                  model.profileModel?.profile?.user?.countryCode,
+                ) ??
                 IsoCode.IN,
             initialValue:
-                (model.profileModel?.user?.phone != null &&
-                        model.profileModel!.user!.phone!.isNotEmpty)
+                (model.profileModel?.profile?.user?.phone != null &&
+                        model.profileModel!.profile!.user!.phone!.isNotEmpty)
                     ? PhoneNumber(
                       isoCode:
                           _mapCountryCodeToIso(
-                            model.profileModel?.user?.countryCode,
+                            model.profileModel?.profile?.user?.countryCode,
                           ) ??
                           IsoCode.IN,
-                      nsn: model.profileModel!.user!.phone!,
+                      nsn: _extractNationalNumber(
+                        model.profileModel!.profile!.user!.phone!,
+                        model.profileModel?.profile?.user?.countryCode,
+                      ),
                     )
                     : null,
             key: ValueKey(
-              'org_phone_${model.profileModel?.user?.countryCode}_${model.profileModel?.user?.phone}',
+              'org_phone_${model.profileModel?.profile?.user?.countryCode}_${model.profileModel?.profile?.user?.phone}',
             ),
             countrySelectorNavigator: CountrySelectorNavigator.dialog(
               countryCodeStyle: const TextStyle(color: AppColors.black),
@@ -903,19 +916,6 @@ class UpdateOrganizationView extends StatelessWidget {
 
     if (designationType != null && validItems.contains(designationType)) {
       return designationType;
-    }
-    return null;
-  }
-
-  // Very small mapper for now – expands easily if needed
-  IsoCode? _mapCountryCodeToIso(String? countryCode) {
-    switch (countryCode) {
-      case '+91':
-        return IsoCode.IN;
-      case '+1':
-        return IsoCode.US;
-      case '+44':
-        return IsoCode.GB;
     }
     return null;
   }
@@ -1125,5 +1125,114 @@ class UpdateOrganizationView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  // Extract national number from phone number
+  String _extractNationalNumber(String phoneNumber, String? countryCode) {
+    if (phoneNumber.isEmpty) return '';
+
+    // Remove all non-digit characters
+    String cleanNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
+
+    // If country code is provided, try to remove it
+    if (countryCode != null && countryCode.isNotEmpty) {
+      String cleanCountryCode = countryCode.replaceAll(RegExp(r'[^\d]'), '');
+
+      // Check if the phone number starts with the country code
+      if (cleanNumber.startsWith(cleanCountryCode)) {
+        // Remove the country code from the beginning
+        cleanNumber = cleanNumber.substring(cleanCountryCode.length);
+      }
+    }
+
+    return cleanNumber;
+  }
+
+  // Map country code string to IsoCode
+  IsoCode? _mapCountryCodeToIso(String? countryCode) {
+    if (countryCode == null || countryCode.isEmpty) return IsoCode.IN;
+
+    // Remove + if present
+    String cleanCode = countryCode.replaceAll('+', '');
+
+    // Map common country codes to IsoCode
+    switch (cleanCode) {
+      case '91':
+        return IsoCode.IN;
+      case '1':
+        return IsoCode.US;
+      case '44':
+        return IsoCode.GB;
+      case '33':
+        return IsoCode.FR;
+      case '49':
+        return IsoCode.DE;
+      case '86':
+        return IsoCode.CN;
+      case '81':
+        return IsoCode.JP;
+      case '82':
+        return IsoCode.KR;
+      case '61':
+        return IsoCode.AU;
+      case '55':
+        return IsoCode.BR;
+      case '7':
+        return IsoCode.RU;
+      case '39':
+        return IsoCode.IT;
+      case '34':
+        return IsoCode.ES;
+      case '31':
+        return IsoCode.NL;
+      case '46':
+        return IsoCode.SE;
+      case '47':
+        return IsoCode.NO;
+      case '45':
+        return IsoCode.DK;
+      case '41':
+        return IsoCode.CH;
+      case '43':
+        return IsoCode.AT;
+      case '32':
+        return IsoCode.BE;
+      case '48':
+        return IsoCode.PL;
+      case '420':
+        return IsoCode.CZ;
+      case '421':
+        return IsoCode.SK;
+      case '36':
+        return IsoCode.HU;
+      case '40':
+        return IsoCode.RO;
+      case '359':
+        return IsoCode.BG;
+      case '385':
+        return IsoCode.HR;
+      case '386':
+        return IsoCode.SI;
+      case '372':
+        return IsoCode.EE;
+      case '371':
+        return IsoCode.LV;
+      case '370':
+        return IsoCode.LT;
+      case '353':
+        return IsoCode.IE;
+      case '351':
+        return IsoCode.PT;
+      case '30':
+        return IsoCode.GR;
+      case '357':
+        return IsoCode.CY;
+      case '356':
+        return IsoCode.MT;
+      case '352':
+        return IsoCode.LU;
+      default:
+        return IsoCode.IN; // Default to India
+    }
   }
 }

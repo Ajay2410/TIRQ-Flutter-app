@@ -153,6 +153,14 @@ class OrganizationHomeViewModel extends ReactiveViewModel {
     _stageService.updateSelectedBottomNavIndex(1);
   }
 
+  void navigateToProfile() async {
+    _stageService.updateSelectedBottomNavIndex(4);
+  }
+
+  void navigateToNotification() async {
+    _navigationService.navigateTo(Routes.notification);
+  }
+
   // Add these new route navigation methods for the quick action menu
   void showQuickActionMenu(BuildContext context) {
     // This method is called by the floating action button

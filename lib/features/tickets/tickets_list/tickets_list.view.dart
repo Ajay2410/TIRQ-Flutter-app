@@ -374,7 +374,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                           children: [
                             Expanded(
                               child: Text(
-                                ticket.processor?.fullName ?? 'N/A',
+                                ticket.processor?.fullName ?? '-',
                                 style: Theme.of(
                                   context,
                                 ).textTheme.titleMedium?.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 14),
@@ -392,7 +392,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                                     borderRadius: BorderRadius.circular(AppSizes.v8),
                                   ),
                                   child: Text(
-                                    ticket.status ?? 'N/A',
+                                    ticket.status ?? '-',
                                     style: TextStyle(color: _getStatusColorFromString(ticket.status), fontSize: AppSizes.v12),
                                   ),
                                 ),
@@ -412,7 +412,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                                   ],
                                 ),
                               ),
-                              Text(ticket.ticketNumber ?? 'N/A', style: TextStyle(fontSize: 10, color: AppColors.black, fontWeight: FontWeight.bold)),
+                              Text(ticket.ticketNumber ?? '-', style: TextStyle(fontSize: 10, color: AppColors.black, fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ],
@@ -428,22 +428,30 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
               AppGaps.h8,
 
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InfoColumn(label: LanguageService.get("created_date"), value: _formatTicketDate(ticket.createdAt!.toIso8601String())),
-                  InfoColumn(
-                    label: LanguageService.get("error_code"),
-                    value: ticket.errorCode == null || ticket.errorCode == "" ? "N/A" : ticket.errorCode ?? 'N/A',
+                  Expanded(
+                    child: InfoColumn(label: LanguageService.get("created_date"), value: _formatTicketDate(ticket.createdAt!.toIso8601String())),
                   ),
-                  InfoColumn(
-                    label: LanguageService.get("warranty_status"),
-                    value: ticket.warrantyStatus ?? "N/A",
-                    valueColor: ticket.warrantyStatus == 'In warranty' ? AppColors.success : AppColors.redBack,
-                    valueFontWeight: FontWeight.w600,
-                    valueFontSize: 10,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  if (ticket.errorCode != null && ticket.errorCode != "") ...[
+                    Expanded(
+                      child: InfoColumn(
+                        label: LanguageService.get("error_code"),
+                        value: ticket.errorCode == null || ticket.errorCode == "" ? "-" : ticket.errorCode ?? '-',
+                      ),
+                    ),
+                  ],
+                  Expanded(
+                    child: InfoColumn(
+                      label: LanguageService.get("warranty_status"),
+                      value: ticket.warrantyStatus ?? "-",
+                      valueColor: ticket.warrantyStatus == 'In warranty' ? AppColors.success : AppColors.redBack,
+                      valueFontWeight: FontWeight.w600,
+                      valueFontSize: 10,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
+                  if (ticket.errorCode == null || ticket.errorCode == "") ...[Expanded(child: SizedBox())],
                 ],
               ),
               AppGaps.h8,
@@ -462,7 +470,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                               text: "${LanguageService.get("problem_description")}: ",
                               style: TextStyle(fontSize: 11, color: AppColors.black, fontWeight: FontWeight.bold),
                             ),
-                            TextSpan(text: ticket.problem ?? ticket.notes ?? "N/A", style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
+                            TextSpan(text: ticket.problem ?? ticket.notes ?? "-", style: TextStyle(fontSize: 11, color: AppColors.textGrey)),
                           ],
                         ),
                       ),
@@ -512,7 +520,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
                                 style: TextStyle(fontSize: 11, color: AppColors.black, fontWeight: FontWeight.bold),
                               ),
                               TextSpan(
-                                text: ticket.engineerRemark ?? ticket.notes ?? "N/A",
+                                text: ticket.engineerRemark ?? ticket.notes ?? "-",
                                 style: TextStyle(fontSize: 11, color: AppColors.textGrey),
                               ),
                             ],
@@ -624,6 +632,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
     final chatWithName = ticket.processor?.fullName ?? 'Customer';
     final contactInitials = chatWithName.isNotEmpty ? chatWithName.substring(0, 1).toUpperCase() : 'U';
     final roomId = ticket.chatRoom?.id ?? '';
+    final ticketStatus = ticket.status ?? '';
 
     // Navigate to chat screen and wait for result
     final result = await Navigator.of(context).push(
@@ -634,6 +643,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
               contactNumber: ticketNumber,
               contactInitials: contactInitials,
               roomId: roomId,
+              ticketStatus: ticketStatus,
               ticketId: ticket.id,
             ),
       ),
@@ -647,7 +657,7 @@ class _TicketsListViewState extends State<TicketsListView> with TickerProviderSt
 
   Widget _buildCountdownTimer(TicketList ticket, TicketsListViewModel model) {
     if (ticket.rescheduleUpdateTime == null) {
-      return Text('N/A', style: TextStyle(color: _getStatusColorFromString(ticket.status), fontSize: AppSizes.v12));
+      return Text('-', style: TextStyle(color: _getStatusColorFromString(ticket.status), fontSize: AppSizes.v12));
     }
 
     return StreamBuilder<DateTime>(

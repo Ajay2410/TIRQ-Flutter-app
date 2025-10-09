@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:manager/core/locator.dart';
 import 'package:manager/features/profile/feedback/feedback_view.dart';
+import 'package:manager/services/stage.service.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:manager/features/profile/home/profile.vm.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
@@ -66,7 +68,10 @@ class ProfileView extends StatelessWidget {
           height: 24,
           color: AppColors.white,
         ),
-        onPressed: () => model.onBackPress,
+        onPressed: () {
+          final _stageService = locator<StageService>();
+          _stageService.updateSelectedBottomNavIndex(0);
+        },
       ),
       flexibleSpace: Container(
         decoration: BoxDecoration(
@@ -108,31 +113,31 @@ class ProfileView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Profile Image with Edit Button
-              Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.periwinkleBlue.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                    padding: EdgeInsets.all(8),
-                    child: ClipOval(
-                      child: ProfileCachedImage(
-                        imageUrl: _getProfileImageUrl(model),
-                        size: 44,
+              GestureDetector(
+                onTap: () {
+                  model.navigateToCreateOrEditOrgView();
+                },
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.periwinkleBlue.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(40),
                       ),
+                      padding: EdgeInsets.all(8),
+                      child: ClipOval(
+                        child: ProfileCachedImage(
+                          imageUrl: _getProfileImageUrl(model),
+                          size: 44,
+                        ),
+                      ),
+                    ).animate().scale(
+                      duration: 500.ms,
+                      curve: Curves.easeOutBack,
                     ),
-                  ).animate().scale(
-                    duration: 500.ms,
-                    curve: Curves.easeOutBack,
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: GestureDetector(
-                      onTap: () {
-                        model.navigateToCreateOrEditOrgView();
-                      },
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
                       child: Container(
                         padding: EdgeInsets.all(3),
                         decoration: BoxDecoration(
@@ -147,8 +152,8 @@ class ProfileView extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               const SizedBox(width: 16),
               // Name and Email
@@ -785,13 +790,13 @@ class ProfileView extends StatelessWidget {
 
   String _getProfileImageUrl(ProfileViewModel model) {
     // Priority: ProfileModel profileImage -> customer userImage -> user logoUrl -> default
-    if (model.profile?.profileImage != null &&
-        model.profile!.profileImage!.isNotEmpty) {
+    if (model.profile?.profile?.profileImage != null &&
+        model.profile!.profile!.profileImage!.isNotEmpty) {
       String baseUrl = Configurations().url;
-      if (model.profile!.profileImage!.startsWith('/')) {
-        return baseUrl + model.profile!.profileImage!;
+      if (model.profile!.profile!.profileImage!.startsWith('/')) {
+        return baseUrl + model.profile!.profile!.profileImage!;
       } else {
-        return '$baseUrl/${model.profile!.profileImage!}';
+        return '$baseUrl/${model.profile!.profile!.profileImage!}';
       }
     }
 
@@ -809,9 +814,9 @@ class ProfileView extends StatelessWidget {
 
   String _getProfileName(ProfileViewModel model) {
     // Priority: ProfileModel user fullName -> customer customerName -> organization name -> user name -> default
-    if (model.profile?.user?.fullName != null &&
-        model.profile!.user!.fullName!.isNotEmpty) {
-      return model.profile!.user!.fullName!;
+    if (model.profile?.profile?.user?.fullName != null &&
+        model.profile!.profile!.user!.fullName!.isNotEmpty) {
+      return model.profile!.profile!.user!.fullName!;
     }
 
     if (model.customer?.customerName != null &&
@@ -833,9 +838,9 @@ class ProfileView extends StatelessWidget {
 
   String _getProfileEmail(ProfileViewModel model) {
     // Priority: ProfileModel user email -> customer email -> user email -> default
-    if (model.profile?.user?.email != null &&
-        model.profile!.user!.email!.isNotEmpty) {
-      return model.profile!.user!.email!;
+    if (model.profile?.profile?.user?.email != null &&
+        model.profile!.profile!.user!.email!.isNotEmpty) {
+      return model.profile!.profile!.user!.email!;
     }
 
     if (model.customer?.email != null && model.customer!.email!.isNotEmpty) {

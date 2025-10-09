@@ -3,6 +3,8 @@ import 'package:manager/core/locator.dart';
 import 'package:manager/services/api.service.dart';
 import 'package:manager/api_endpoints.dart';
 import 'package:manager/core/models/customer.dart';
+import 'package:manager/core/models/hive/user/user.dart' as hive_user;
+import 'package:manager/core/storage/storage.dart';
 import 'package:manager/widgets/dialogs/loader/loader_dialog.view.dart';
 import 'package:manager/services/dialogs.service.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -17,6 +19,21 @@ class ScanCodeViewModel extends BaseViewModel {
   bool _isScanning = true;
   bool _isProcessing = false;
   DateTime? _lastScanTime;
+
+  // Add required properties for QRDialog
+  hive_user.User get user => getUser();
+  String? get organizationName => getUser().organizationName;
+  Customer? get customer => null; // No specific customer in scan code context
+
+  // Method to get fresh user data for QR dialog
+  hive_user.User getFreshUserData() {
+    final user =
+        getUser(); // This will always get the latest user data from storage
+    AppLogger.info(
+      'QR Dialog - User data: ID=${user.id}, Name=${user.name}, Email=${user.email}, Organization=${user.organizationName}',
+    );
+    return user;
+  }
 
   bool get isScanning => _isScanning;
 

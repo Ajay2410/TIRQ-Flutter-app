@@ -29,12 +29,14 @@ class QRDialog extends StatefulWidget {
   final User user;
   final String? organizationName;
   final Customer? customer;
+  final bool hideScanButton;
 
   const QRDialog({
     super.key,
     required this.user,
     this.organizationName,
     this.customer,
+    this.hideScanButton = false,
   });
 
   @override
@@ -201,16 +203,18 @@ class _QRDialogState extends State<QRDialog> {
             // Action buttons
             Row(
               children: [
-                Expanded(
-                  child: CommonElevatedButton(
-                    imagePath: AppImages.scan,
-                    label: LanguageService.get("scan"),
-                    backgroundColor: AppColors.primary,
-                    onPressed: _onScanPressed,
-                    borderRadius: 45,
+                if (!widget.hideScanButton) ...[
+                  Expanded(
+                    child: CommonElevatedButton(
+                      imagePath: AppImages.scan,
+                      label: LanguageService.get("scan"),
+                      backgroundColor: AppColors.primary,
+                      onPressed: _onScanPressed,
+                      borderRadius: 45,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
+                  const SizedBox(width: 12),
+                ],
                 Expanded(
                   child: CommonElevatedButton(
                     imagePath: AppImages.share,

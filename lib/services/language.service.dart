@@ -23,7 +23,8 @@ class LanguageService {
   }
 
   static String get(String key) {
-    return _data[key]?[locator<UserService>().selectedLanguage] ?? key;
+    String selectedLanguage = ["English (UK)", "English"].contains(locator<UserService>().selectedLanguage) ? "English" : locator<UserService>().selectedLanguage;
+    return _data[key]?[selectedLanguage] ?? key;
   }
 
   static String selectLanguage() {

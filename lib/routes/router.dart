@@ -9,6 +9,7 @@ import 'package:manager/features/home/analytics/analytics_view.dart';
 import 'package:manager/features/home/feedback/feedback_view.dart';
 import 'package:manager/features/home/globalActivity/globalActivity.dart';
 import 'package:manager/features/home/installations/installation.dart';
+import 'package:manager/features/home/notification/notification_view.dart';
 import 'package:manager/features/home/pi/pi_invoice_record_view.dart';
 import 'package:manager/features/home/warrenty/warrenty_tracker.dart';
 import 'package:manager/features/image/image_full_screen.view.dart';
@@ -147,6 +148,12 @@ class AppRouter extends RouterBase {
     MyCustomersView: (data) {
       return MaterialPageRoute(
         builder: (BuildContext _) => MyCustomersView(),
+        settings: data,
+      );
+    },
+    NotificationView: (data) {
+      return MaterialPageRoute(
+        builder: (BuildContext _) => NotificationView(),
         settings: data,
       );
     },
@@ -640,6 +647,7 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.analytics, page: AnalyticsView),
     RouteDef(Routes.feedback, page: FeedbackView),
     RouteDef(Routes.invoice, page: PiInvoiceRecordView),
+    RouteDef(Routes.notification, page: NotificationView),
     RouteDef(Routes.globalActivity, page: Globalactivity),
     RouteDef(Routes.warranty, page: WarrentyTrackerView),
     RouteDef(Routes.installation, page: InstallationTrackerView),

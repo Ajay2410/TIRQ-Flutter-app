@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
+import 'package:manager/widgets/qr_dialog.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:stacked/stacked.dart';
@@ -218,11 +220,9 @@ class _ScanCodeViewContentState extends State<_ScanCodeViewContent> {
                   padding: const EdgeInsets.symmetric(horizontal: 13.0),
                   child: Row(
                     mainAxisAlignment:
-
-                    widget.attributes?.isFromProfile ?? false?
-                    MainAxisAlignment.end
-                        :
-                    MainAxisAlignment.spaceBetween,
+                        widget.attributes?.isFromProfile ?? false
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.spaceBetween,
                     children: [
                       if (!(widget.attributes?.isFromProfile ?? false))
                         _buildActionButton(
@@ -231,7 +231,15 @@ class _ScanCodeViewContentState extends State<_ScanCodeViewContent> {
                           image: AppImages.qr,
                           isDisabled: model.isProcessing,
                           onTap: () {
-                            print('My QR Code tapped');
+                            Get.dialog(
+                              QRDialog(
+                                user: model.getFreshUserData(),
+                                organizationName:
+                                    model.getFreshUserData().organizationName,
+                                customer: model.customer,
+                                hideScanButton: true,
+                              ),
+                            );
                           },
                         ),
                       _buildActionButton(

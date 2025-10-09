@@ -116,12 +116,6 @@ class ProfileViewModel extends ReactiveViewModel {
     }
   }
 
-  void onBackPress() async {
-    await _navigationService.clearStackAndShow(
-      Routes.stage,
-      arguments: StageViewAttributes(selectedBottomNavIndex: 0),
-    );
-  }
 
   void navigateToLoginView() async {
     hive_user.User? currentUser = getUser();
