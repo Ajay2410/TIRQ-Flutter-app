@@ -78,15 +78,20 @@ class TicketDetailsViewModel extends BaseViewModel {
   void startChat(BuildContext context) async {
     if (_ticketDetails == null) return;
 
-    final ticketNumber = _ticketDetails!.ticketDetails?.ticketNumber ?? 'Unknown';
-    final chatWithName = _ticketDetails!.processorDetails?.fullName ?? 'Customer';
-    final contactInitials = chatWithName.isNotEmpty ? chatWithName.substring(0, 1).toUpperCase() : 'U';
+    final ticketNumber =
+        _ticketDetails!.ticketDetails?.ticketNumber ?? 'Unknown';
+    final chatWithName =
+        _ticketDetails!.processorDetails?.fullName ?? 'Customer';
+    final contactInitials =
+        chatWithName.isNotEmpty
+            ? chatWithName.substring(0, 1).toUpperCase()
+            : 'U';
     final roomId = _ticketDetails!.chatRoom?.id ?? '';
     final ticketStatus = _ticketDetails!.ticketDetails?.status ?? '';
     final userRole = _ticketDetails?.role;
 
     // Navigate to chat screen and wait for result
-    final result = await Navigator.of(context).push(
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder:
             (context) => ChatView(
@@ -101,25 +106,34 @@ class TicketDetailsViewModel extends BaseViewModel {
       ),
     );
 
-    // If ticket was resolved, refresh the ticket details
-    if (result == true) {
-      await refreshTicketDetails();
-    }
+    // Refresh ticket details when returning from chat screen
+    await refreshTicketDetails();
   }
 
   // Reschedule functionality
   Future<void> rescheduleTicket(BuildContext context) async {
     final body = {'reschedule_time': rescheduleTime};
 
-    final response = await _apiService.put(url: "${ApiEndpoints.updateTicket}/${_ticketId ?? ""}", data: body);
+    final response = await _apiService.put(
+      url: "${ApiEndpoints.updateTicket}/${_ticketId ?? ""}",
+      data: body,
+    );
 
     if (response.statusCode == 200) {
       fetchTicketDetails();
-      AppLogger.info('Site visit ticket created successfully: ${response.data['ticket']['_id']}');
-      Fluttertoast.showToast(msg: response.data["message"] ?? 'Reschedule successfully!', backgroundColor: Colors.green);
+      AppLogger.info(
+        'Site visit ticket created successfully: ${response.data['ticket']['_id']}',
+      );
+      Fluttertoast.showToast(
+        msg: response.data["message"] ?? 'Reschedule successfully!',
+        backgroundColor: Colors.green,
+      );
     } else {
       AppLogger.error('Failed to Reschedule');
-      Fluttertoast.showToast(msg: 'Failed to Reschedule', backgroundColor: Colors.green);
+      Fluttertoast.showToast(
+        msg: 'Failed to Reschedule',
+        backgroundColor: Colors.green,
+      );
     }
   }
 
@@ -127,7 +141,20 @@ class TicketDetailsViewModel extends BaseViewModel {
   String formatDate(DateTime? date) {
     if (date == null) return 'N/A';
 
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
 
     final month = months[date.month - 1];
     final day = date.day.toString().padLeft(2, '0');
@@ -188,7 +215,10 @@ class TicketDetailsViewModel extends BaseViewModel {
       variant: DialogType.loader,
       data: LoaderDialogAttributes(
         task: () async {
-          final apiResponse = await _apiService.post(url: 'ticket/report/$_ticketId', data: {'reportTitle': title, 'reportDescription': description});
+          final apiResponse = await _apiService.post(
+            url: 'ticket/report/$_ticketId',
+            data: {'reportTitle': title, 'reportDescription': description},
+          );
           return apiResponse;
         },
       ),

@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:manager/routes/routes.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:manager/features/tickets/ticket_details/ticket_details.view.dart';
 
 import '../../../api_endpoints.dart';
 import '../../../core/locator.dart';
@@ -261,8 +262,14 @@ class TicketsListViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
-  void navigateToTicketDetails({required String ticketId}) async {
-    await _navigationService.navigateTo(Routes.ticketDetails, arguments: ticketId);
+  void navigateToTicketDetails({required String ticketId, required BuildContext context}) async {
+    // Navigate to ticket details and wait for result
+    final result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => TicketDetailsView(ticketId: ticketId)));
+
+    // Refresh tickets when returning from ticket details
+    if (result == true || result == null) {
+      await loadTickets(forceRefresh: true);
+    }
   }
 
   void navigateToReviewTicketWithId({required String ticketId}) async {

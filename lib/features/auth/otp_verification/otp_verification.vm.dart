@@ -63,14 +63,15 @@ class OtpVerificationViewModel extends ReactiveViewModel {
   }
 
   void _startResendTimer() {
-    _resendCountdown = 60;
+    _resendCountdown = 30;
     _canResend = false;
     _timerNotifier.value = _resendCountdown;
     notifyListeners(); // Only notify once at the start
 
     _resendTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       _resendCountdown--;
-      _timerNotifier.value = _resendCountdown; // Update ValueNotifier without rebuilding entire widget
+      _timerNotifier.value =
+          _resendCountdown; // Update ValueNotifier without rebuilding entire widget
 
       if (_resendCountdown <= 0) {
         _canResend = true;
@@ -91,12 +92,17 @@ class OtpVerificationViewModel extends ReactiveViewModel {
       data: LoaderDialogAttributes(
         task: () async {
           try {
-            final apiResponse = await _apiService.post(url: ApiEndpoints.sendOtp, data: {'email': email, 'type': 'email'});
+            final apiResponse = await _apiService.post(
+              url: ApiEndpoints.sendOtp,
+              data: {'email': email, 'type': 'email'},
+            );
 
             if (apiResponse.statusCode == 200) {
               return 'OTP sent successfully';
             } else {
-              throw Exception(apiResponse.data['message'] ?? 'Failed to send OTP');
+              throw Exception(
+                apiResponse.data['message'] ?? 'Failed to send OTP',
+              );
             }
           } catch (e) {
             throw Exception(e.toString());
@@ -116,7 +122,10 @@ class OtpVerificationViewModel extends ReactiveViewModel {
 
   void _updateFormValidity() {
     // Check if OTP is 6 digits (assuming 6-digit OTP)
-    final isValid = email.isNotEmpty && otpController.text.isNotEmpty && otpController.text.length == 6;
+    final isValid =
+        email.isNotEmpty &&
+        otpController.text.isNotEmpty &&
+        otpController.text.length == 6;
 
     if (_isFormValid != isValid) {
       _isFormValid = isValid;
@@ -137,7 +146,10 @@ class OtpVerificationViewModel extends ReactiveViewModel {
       data: LoaderDialogAttributes(
         task: () async {
           try {
-            final apiResponse = await _apiService.post(url: ApiEndpoints.verifyEmail, data: {'email': email, 'code': otpValue, "type": "email"});
+            final apiResponse = await _apiService.post(
+              url: ApiEndpoints.verifyEmail,
+              data: {'email': email, 'code': otpValue, "type": "email"},
+            );
 
             if (apiResponse.statusCode == 200) {
               // After OTP verification, complete the registration
@@ -152,13 +164,18 @@ class OtpVerificationViewModel extends ReactiveViewModel {
                 language: language,
               );
 
-              return registerResponse.fold((failure) => throw Exception(failure.message), (user) async {
-                await saveUser(user);
-                await _accountManager.saveCurrentUser(user);
-                return 'Registration completed successfully';
-              });
+              return registerResponse.fold(
+                (failure) => throw Exception(failure.message),
+                (user) async {
+                  await saveUser(user);
+                  await _accountManager.saveCurrentUser(user);
+                  return 'Registration completed successfully';
+                },
+              );
             } else {
-              throw Exception(apiResponse.data['message'] ?? 'OTP verification failed');
+              throw Exception(
+                apiResponse.data['message'] ?? 'OTP verification failed',
+              );
             }
           } catch (e) {
             throw Exception(e.toString());
@@ -169,7 +186,10 @@ class OtpVerificationViewModel extends ReactiveViewModel {
 
     if (response?.confirmed == true) {
       // Registration completed successfully, navigate to main app
-      await _navigationService.clearStackAndShow(Routes.stage, arguments: StageViewAttributes(selectedBottomNavIndex: 0));
+      await _navigationService.clearStackAndShow(
+        Routes.stage,
+        arguments: StageViewAttributes(selectedBottomNavIndex: 0),
+      );
     }
     setBusy(false);
   }

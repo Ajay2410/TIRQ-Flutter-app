@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:manager/api_endpoints.dart';
 import 'package:manager/configs.dart';
 import 'package:manager/core/storage/storage.dart';
 import 'package:manager/core/utils/app_logger.dart';
@@ -300,8 +301,6 @@ class ChatViewModel extends ReactiveViewModel {
     }
   }
 
-
-
   /// Pick multiple media (images and videos) from album
   Future<void> pickMultipleMediaFromAlbum() async {
     try {
@@ -557,14 +556,14 @@ class ChatViewModel extends ReactiveViewModel {
   }
 
   /// Resolve chat by updating ticket status
-  Future<bool> resolveChat(String ticketId,String engineerRemark) async {
+  Future<bool> resolveChat(String ticketId, String engineerRemark) async {
     final response = await _dialogService.showCustomDialog(
       variant: DialogType.loader,
       data: LoaderDialogAttributes(
         message: 'Resolving chat...',
         task: () async {
           try {
-            final response = await _apiService.put(url: 'ticket/update/$ticketId', data: {'status': 'Resolved','engineerRemark': engineerRemark});
+            final response = await _apiService.put(url: 'ticket/update/$ticketId', data: {'status': 'Resolved', 'engineerRemark': engineerRemark});
 
             if (response.statusCode == 200) {
               AppLogger.info('Ticket resolved successfully');
@@ -599,7 +598,6 @@ class ChatViewModel extends ReactiveViewModel {
       return false;
     }
   }
-
 
   /// Resolve chat by updating ticket status
   // Future<bool> engineerRemark(String ticketId, String engineerRemark) async {
@@ -657,5 +655,46 @@ class ChatViewModel extends ReactiveViewModel {
     _searchController.dispose();
 
     super.dispose();
+  }
+
+  /// Update ticket status to "On Hold"
+  Future<bool> updateTicketStatusToActive(String ticketId) async {
+    try {
+      AppLogger.info('Updating ticket status to On Hold for ticket: $ticketId');
+
+      final response = await _dialogService.showCustomDialog(
+        variant: DialogType.loader,
+        data: LoaderDialogAttributes(
+          task: () async {
+            try {
+              final apiResponse = await _apiService.put(url: '${ApiEndpoints.updateTicket}/$ticketId', data: {'status': 'Active'});
+
+              AppLogger.info("Update ticket API Response: ${apiResponse.data}");
+
+              if (apiResponse.statusCode == 200) {
+                AppLogger.info('Successfully updated ticket status to On Hold');
+                return true;
+              } else {
+                AppLogger.error('Failed to update ticket status: ${apiResponse.statusCode}');
+                throw Exception(apiResponse.data?['message'] ?? 'Failed to update ticket status');
+              }
+            } catch (e) {
+              AppLogger.error("Error updating ticket status: $e");
+              rethrow;
+            }
+          },
+          message: 'Updating ticket status...',
+        ),
+      );
+
+      if (response?.confirmed == true && response?.data == true) {
+        return true;
+      } else {
+        throw Exception(response?.data?.toString() ?? 'Failed to update ticket status');
+      }
+    } catch (e) {
+      AppLogger.error("Error in updateTicketStatusToOnHold: $e");
+      rethrow;
+    }
   }
 }

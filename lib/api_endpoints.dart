@@ -93,4 +93,8 @@ abstract class ApiEndpoints {
   // Profile endpoints
   static const String getProfile = 'profile/get-profile';
   static const String updateProfile = 'profile/update-profile';
+
+  // Notification endpoints
+  static const String getNotifications = 'notification/getnotification';
+  static const String deleteNotification = 'notification/deleteNotification';
 }

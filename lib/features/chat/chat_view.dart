@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/widgets/common_app_bar.dart';
+import 'package:manager/widgets/common_elevated_button.dart';
 import 'package:manager/widgets/common_text_field.dart';
 import 'package:manager/widgets/common/common_cached_image.dart';
 import 'package:manager/features/chat/chat.vm.dart';
@@ -52,7 +53,8 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
   final FocusNode _searchFocusNode = FocusNode();
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
-  bool _hasConfirmedOnHoldSending = false; // Track if user confirmed sending while on hold
+  bool _hasConfirmedOnHoldSending =
+      false; // Track if user confirmed sending while on hold
   final _apiService = locator<ApiService>();
   TicketsListViewModel ticketDetailsViewModel = TicketsListViewModel();
   TextEditingController remarkController = TextEditingController();
@@ -60,11 +62,16 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0.0, -0.5),
       end: const Offset(0.0, 0.0),
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -92,20 +99,35 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
   }
 
   // Reschedule functionality
-  Future<void> rescheduleTicket(BuildContext context, String ticketId, String rescheduleTime) async {
+  Future<void> rescheduleTicket(
+    BuildContext context,
+    String ticketId,
+    String rescheduleTime,
+  ) async {
     print("------ticketId1212-------------${ticketId}");
     print("-------rescheduleTime1212------------${rescheduleTime}");
     final body = {'reschedule_time': rescheduleTime};
 
-    final response = await _apiService.put(url: "${ApiEndpoints.updateTicket}/${ticketId ?? ""}", data: body);
+    final response = await _apiService.put(
+      url: "${ApiEndpoints.updateTicket}/${ticketId ?? ""}",
+      data: body,
+    );
 
     if (response.statusCode == 200) {
       await ticketDetailsViewModel.loadActiveTickets();
-      AppLogger.info('Site visit ticket created successfully: ${response.data['ticket']['_id']}');
-      Fluttertoast.showToast(msg: response.data["message"] ?? 'Reschedule successfully!', backgroundColor: Colors.green);
+      AppLogger.info(
+        'Site visit ticket created successfully: ${response.data['ticket']['_id']}',
+      );
+      Fluttertoast.showToast(
+        msg: response.data["message"] ?? 'Reschedule successfully!',
+        backgroundColor: Colors.green,
+      );
     } else {
       AppLogger.error('Failed to Reschedule');
-      Fluttertoast.showToast(msg: 'Failed to Reschedule', backgroundColor: Colors.green);
+      Fluttertoast.showToast(
+        msg: 'Failed to Reschedule',
+        backgroundColor: Colors.green,
+      );
     }
   }
 
@@ -138,165 +160,247 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
   void _handleResolveAction(ChatViewModel model) {
     // Handle resolve action
     if (widget.ticketId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('No ticket ID available for resolution')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('No ticket ID available for resolution')),
+      );
       return;
     }
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        remarkController.clear();
-        return AlertDialog(
-          title: Text('Engineer Remark'),
-          content: TextField(
-            controller: remarkController,
-            decoration: InputDecoration(
-              hintText: 'Enter your remark',
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10), // Rounded border
+    final formKey = GlobalKey<FormState>();
+    remarkController.clear();
+
+    Get.dialog(
+      Dialog(
+        backgroundColor: AppColors.white,
+        insetPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 18),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(15),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: InkWell(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Icon(Icons.close_rounded),
+                ),
               ),
-              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.blue)),
-            ),
-          ),
-          actions: [
-            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
-            TextButton(
-              onPressed: () async {
-                // String remark = remarkController.text;
-                if (remarkController.text.isEmpty) {
-                  Fluttertoast.showToast(msg: "Enter Your Remark", backgroundColor: Colors.red);
-                } else {
-                  Navigator.of(context).pop();
 
-                  showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext context) {
-                      return Dialog(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                        child: Container(
-                          width: 400,
-                          padding: EdgeInsets.all(15),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // Icon
-                              CircleAvatar(
-                                backgroundColor: Color(0xFF7C4DFF).withOpacity(0.1),
-                                radius: 30,
-                                child: Image.asset(AppImages.ticketSummary, height: 30, width: 30),
-                              ),
-                              SizedBox(height: 10),
+              // Header
+              Text(
+                'Engineer Remark',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              SizedBox(height: 20),
 
-                              // Title
-                              Text('Close This Ticket?', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black87)),
-                              SizedBox(height: 6),
-                              // Description
-                              Text(
-                                'Closing this ticket means the customer\'s issue has been successfully resolved.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 14, color: Colors.grey[600], height: 1.4),
-                              ),
-                              // SizedBox(height: 4),
+              // Form with validation
+              Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    // Remark Field
+                    CommonTextField(
+                      controller: remarkController,
+                      placeholder: 'Enter your remark',
+                      maxLines: 4,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Remark is required';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
 
-                              // Question
-                              Text(
-                                'Are you sure you want to close this ticket?',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 14, color: Colors.grey[600], height: 1.4),
-                              ),
-                              SizedBox(height: 10),
-
-                              // Buttons
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // Cancel Button
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      padding: EdgeInsets.symmetric(vertical: 10),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(40),
-                                        side: BorderSide(color: Colors.black, width: 1),
-                                      ),
-                                      elevation: 0,
-                                      fixedSize: Size(80, 50),
-                                    ),
-                                    child: Text('Cancel', style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500)),
-                                  ),
-
-                                  SizedBox(width: 12),
-
-                                  // Close Ticket Button
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      final result = await model.resolveChat(widget.ticketId!, remarkController.text);
-                                      if (result == true) {
-                                        Get.back(result: true);
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color(0xFF4CAF50),
-                                      padding: EdgeInsets.symmetric(vertical: 10),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-                                      elevation: 0,
-                                      fixedSize: Size(150, 50),
-                                    ),
-                                    child: Text(
-                                      'Yes, Close Ticket',
-                                      style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ).then((value) {
-                    if (value != null) {
-                      print('Dialog closed with result: $value');
-                      remarkController.clear();
-                      if (value == 'cancel') {
-                        remarkController.clear();
-                      } else if (value == 'close') {
-                        remarkController.clear();
-                      }
-                    } else {
-                      print('Dialog closed by barrier dismiss or back button');
-                      remarkController.clear();
+              // Submit Button
+              SizedBox(
+                width: double.infinity,
+                child: CommonElevatedButton(
+                  label: 'Save',
+                  onPressed: () {
+                    // Validate the form
+                    if (formKey.currentState!.validate()) {
+                      // Form is valid, proceed to confirmation dialog
+                      Get.back();
+                      _showCloseTicketConfirmation(model);
                     }
-                  });
-                }
-              },
-              child: Text('Save'),
-            ),
-          ],
-        );
-      },
+                    // If validation fails, CommonTextField will show error messages
+                  },
+                  backgroundColor: AppColors.primaryDark,
+                  textColor: AppColors.white,
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  borderRadius: 23,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showCloseTicketConfirmation(ChatViewModel model) {
+    Get.dialog(
+      Dialog(
+        backgroundColor: AppColors.white,
+        insetPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 18),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(15),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: InkWell(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Icon(Icons.close_rounded),
+                ),
+              ),
+
+              // Icon
+              CircleAvatar(
+                backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                radius: 30,
+                child: Image.asset(
+                  AppImages.ticketSummary,
+                  height: 30,
+                  width: 30,
+                ),
+              ),
+              SizedBox(height: 20),
+
+              // Title
+              Text(
+                'Close This Ticket?',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              SizedBox(height: 10),
+
+              // Description
+              Text(
+                'Closing this ticket means the customer\'s issue has been successfully resolved.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppColors.textSecondary,
+                  height: 1.4,
+                ),
+              ),
+              SizedBox(height: 6),
+
+              // Question
+              Text(
+                'Are you sure you want to close this ticket?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppColors.textSecondary,
+                  height: 1.4,
+                ),
+              ),
+              SizedBox(height: 20),
+
+              // Buttons
+              Row(
+                children: [
+                  // Cancel Button
+                  Expanded(
+                    child: CommonElevatedButton(
+                      label: 'Cancel',
+                      onPressed: () {
+                        Get.back();
+                      },
+                      backgroundColor: AppColors.white,
+                      textColor: AppColors.textPrimary,
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      borderRadius: 23,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+
+                  SizedBox(width: 12),
+
+                  // Close Ticket Button
+                  Expanded(
+                    flex: 2,
+                    child: CommonElevatedButton(
+                      label: 'Yes, Close Ticket',
+                      onPressed: () async {
+                        Get.back();
+                        final result = await model.resolveChat(
+                          widget.ticketId!,
+                          remarkController.text,
+                        );
+                        if (result == true) {
+                          Get.back(result: true);
+                        }
+                      },
+                      backgroundColor: AppColors.success,
+                      textColor: AppColors.white,
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      borderRadius: 23,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context, ChatViewModel model) {
     return GradientAppBar(
       leading: IconButton(
-        icon: Image.asset(AppImages.back, width: 24, height: 24, color: AppColors.white),
+        icon: Image.asset(
+          AppImages.back,
+          width: 24,
+          height: 24,
+          color: AppColors.white,
+        ),
         onPressed: () => Navigator.of(context).pop(),
       ),
       titleWidget: Row(
         children: [
           Container(
             padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(color: AppColors.darkGray.withValues(alpha: 0.2), shape: BoxShape.circle),
-            child: Center(child: Text(widget.contactInitials, style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold, fontSize: 16))),
+            decoration: BoxDecoration(
+              color: AppColors.darkGray.withValues(alpha: 0.2),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(
+                widget.contactInitials,
+                style: TextStyle(
+                  color: AppColors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
           ),
           SizedBox(width: AppSizes.w12),
           Column(
@@ -304,24 +408,47 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
             children: [
               Row(
                 children: [
-                  Text(widget.contactName, style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+                  Text(
+                    widget.contactName,
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   SizedBox(width: AppSizes.w8),
                   Container(
                     width: 20,
                     height: 15,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(2)),
-                    child: ClipRRect(borderRadius: BorderRadius.circular(2), child: Image.asset(AppImages.flag, fit: BoxFit.cover)),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: Image.asset(AppImages.flag, fit: BoxFit.cover),
+                    ),
                   ),
                 ],
               ),
-              Text(widget.contactNumber, style: TextStyle(color: AppColors.white, fontSize: 12)),
+              Text(
+                widget.contactNumber,
+                style: TextStyle(color: AppColors.white, fontSize: 12),
+              ),
             ],
           ),
         ],
       ),
       titleSpacing: 0,
       actions: [
-        InkWell(child: Image.asset(AppImages.search, width: 20, height: 20, color: AppColors.white), onTap: () => _toggleSearch(model)),
+        InkWell(
+          child: Image.asset(
+            AppImages.search,
+            width: 20,
+            height: 20,
+            color: AppColors.white,
+          ),
+          onTap: () => _toggleSearch(model),
+        ),
         SizedBox(width: 16),
 
         // PopupMenuButton<String>(
@@ -372,7 +499,11 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                             // Header
                             Text(
                               LanguageService.get('reschedule'),
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textPrimary,
+                              ),
                             ),
                             SizedBox(height: 5),
                             // Dropdown Field
@@ -389,13 +520,19 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                                 {"value": "60", "display": "60 Min"},
                               ],
                               onChanged: (value) {
-                                rescheduleTicket(context, widget.ticketId ?? "", value ?? "");
+                                rescheduleTicket(
+                                  context,
+                                  widget.ticketId ?? "",
+                                  value ?? "",
+                                );
                               },
                               onItemTap: (val) {
                                 print("Tapped on12: $val"); // 👈 aa run thase
                               },
                               validator: (value) {
-                                return value == null ? LanguageService.get('please_select_time') : null;
+                                return value == null
+                                    ? LanguageService.get('please_select_time')
+                                    : null;
                               },
                             ),
                           ],
@@ -404,7 +541,15 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                     ),
 
                     // Divider
-                    PopupMenuItem<String>(enabled: false, height: 1, child: Divider(height: 1, thickness: 1, color: Colors.grey[200])),
+                    PopupMenuItem<String>(
+                      enabled: false,
+                      height: 1,
+                      child: Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: Colors.grey[200],
+                      ),
+                    ),
 
                     // Mark As Resolved Item
                     PopupMenuItem<String>(
@@ -413,11 +558,20 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                         width: 250, // Match width with reschedule item
                         padding: EdgeInsets.only(top: 10, bottom: 10),
 
-                        child: Text('Mark As Resolved', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                        child: Text(
+                          'Mark As Resolved',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
                       ),
                     ),
                   ],
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               color: AppColors.white,
               shadowColor: AppColors.black.withValues(alpha: 0.1),
               elevation: 8,
@@ -440,14 +594,23 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
       value: value,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: BorderSide(color: AppColors.lightGrey)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: BorderSide(color: AppColors.lightGrey)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSizes.v12),
+          borderSide: BorderSide(color: AppColors.lightGrey),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSizes.v12),
+          borderSide: BorderSide(color: AppColors.lightGrey),
+        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.v12),
           borderSide: BorderSide(color: AppColors.primary, width: 2),
         ),
         // 👇 dropdown jevo arrow right side ma lavva
-        suffixIcon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.black),
+        suffixIcon: const Icon(
+          Icons.keyboard_arrow_down_rounded,
+          color: Colors.black,
+        ),
       ),
       icon: const SizedBox.shrink(),
       // 👈 default arrow remove kari devu
@@ -467,10 +630,19 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
 
   Widget _buildSearchBar(ChatViewModel model) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppSizes.w20, vertical: AppSizes.h16),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.w20,
+        vertical: AppSizes.h16,
+      ),
       decoration: BoxDecoration(
         color: AppColors.white,
-        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), offset: const Offset(0, 2), blurRadius: 8)],
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withValues(alpha: 0.05),
+            offset: const Offset(0, 2),
+            blurRadius: 8,
+          ),
+        ],
       ),
       child: TextField(
         controller: model.searchController,
@@ -484,8 +656,14 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
           prefixIcon: Icon(Icons.search, color: AppColors.primary),
           fillColor: AppColors.lightGrey.withValues(alpha: 0.3),
           filled: true,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.v12), borderSide: BorderSide.none),
-          contentPadding: EdgeInsets.symmetric(vertical: AppSizes.h12, horizontal: AppSizes.w16),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(AppSizes.v12),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding: EdgeInsets.symmetric(
+            vertical: AppSizes.h12,
+            horizontal: AppSizes.w16,
+          ),
           suffixIcon:
               model.searchController.text.isNotEmpty
                   ? IconButton(
@@ -501,7 +679,11 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildHighlightedText(String text, String searchQuery, bool isSentByMe) {
+  Widget _buildHighlightedText(
+    String text,
+    String searchQuery,
+    bool isSentByMe,
+  ) {
     if (searchQuery.isEmpty) {
       return Text(
         text,
@@ -532,14 +714,22 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
 
     final baseColor = isSentByMe ? AppColors.white : AppColors.textPrimary;
     final highlightColor = isSentByMe ? AppColors.white : AppColors.primary;
-    final highlightBackground = isSentByMe ? AppColors.white.withValues(alpha: 0.3) : AppColors.primary.withValues(alpha: 0.2);
+    final highlightBackground =
+        isSentByMe
+            ? AppColors.white.withValues(alpha: 0.3)
+            : AppColors.primary.withValues(alpha: 0.2);
 
     return RichText(
       text: TextSpan(
         children: [
           TextSpan(
             text: text.substring(0, index),
-            style: TextStyle(color: baseColor, fontSize: AppSizes.f14, height: 1.4, fontWeight: FontWeight.w400),
+            style: TextStyle(
+              color: baseColor,
+              fontSize: AppSizes.f14,
+              height: 1.4,
+              fontWeight: FontWeight.w400,
+            ),
           ),
           TextSpan(
             text: text.substring(index, index + searchQuery.length),
@@ -553,7 +743,12 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
           ),
           TextSpan(
             text: text.substring(index + searchQuery.length),
-            style: TextStyle(color: baseColor, fontSize: AppSizes.f14, height: 1.4, fontWeight: FontWeight.w400),
+            style: TextStyle(
+              color: baseColor,
+              fontSize: AppSizes.f14,
+              height: 1.4,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ],
       ),
@@ -570,10 +765,20 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
             SizedBox(
               width: 16,
               height: 16,
-              child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary)),
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+              ),
             ),
             SizedBox(width: AppSizes.w8),
-            Text('Loading more messages...', style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w500)),
+            Text(
+              'Loading more messages...',
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
       ),
@@ -590,15 +795,24 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
           child: Opacity(
             opacity: value,
             child: Container(
-              margin: EdgeInsets.symmetric(vertical: AppSizes.h2, horizontal: AppSizes.w16),
+              margin: EdgeInsets.symmetric(
+                vertical: AppSizes.h2,
+                horizontal: AppSizes.w16,
+              ),
               child: Row(
-                mainAxisAlignment: message.isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+                mainAxisAlignment:
+                    message.isSentByMe
+                        ? MainAxisAlignment.end
+                        : MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   // Message content
                   Flexible(
                     child: Column(
-                      crossAxisAlignment: message.isSentByMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                      crossAxisAlignment:
+                          message.isSentByMe
+                              ? CrossAxisAlignment.end
+                              : CrossAxisAlignment.start,
                       children: [
                         // Message bubble
                         Material(
@@ -610,19 +824,42 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(AppSizes.v18),
                               topRight: Radius.circular(AppSizes.v18),
-                              bottomLeft: message.isSentByMe ? Radius.circular(AppSizes.v18) : Radius.circular(0),
-                              bottomRight: message.isSentByMe ? Radius.circular(0) : Radius.circular(AppSizes.v18),
+                              bottomLeft:
+                                  message.isSentByMe
+                                      ? Radius.circular(AppSizes.v18)
+                                      : Radius.circular(0),
+                              bottomRight:
+                                  message.isSentByMe
+                                      ? Radius.circular(0)
+                                      : Radius.circular(AppSizes.v18),
                             ),
                             child: Container(
-                              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
-                              padding: EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h12),
+                              constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.of(context).size.width * 0.75,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSizes.w16,
+                                vertical: AppSizes.h12,
+                              ),
                               decoration: BoxDecoration(
-                                color: message.isSentByMe ? AppColors.primaryDark : AppColors.primaryLight.withValues(alpha: 0.1),
+                                color:
+                                    message.isSentByMe
+                                        ? AppColors.primaryDark
+                                        : AppColors.primaryLight.withValues(
+                                          alpha: 0.1,
+                                        ),
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(AppSizes.v18),
                                   topRight: Radius.circular(AppSizes.v18),
-                                  bottomLeft: message.isSentByMe ? Radius.circular(AppSizes.v18) : Radius.circular(0),
-                                  bottomRight: message.isSentByMe ? Radius.circular(0) : Radius.circular(AppSizes.v18),
+                                  bottomLeft:
+                                      message.isSentByMe
+                                          ? Radius.circular(AppSizes.v18)
+                                          : Radius.circular(0),
+                                  bottomRight:
+                                      message.isSentByMe
+                                          ? Radius.circular(0)
+                                          : Radius.circular(AppSizes.v18),
                                 ),
                               ),
                               child: Column(
@@ -630,36 +867,58 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                                 children: [
                                   // Media attachments (images and videos)
                                   if (message.attachments.isNotEmpty) ...[
-                                    ...message.attachments.asMap().entries.map((entry) {
+                                    ...message.attachments.asMap().entries.map((
+                                      entry,
+                                    ) {
                                       final attachment = entry.value;
                                       if (attachment.type == 'image') {
                                         // Get all image URLs from this message
-                                        final imageUrls = message.attachments.where((att) => att.type == 'image').map((att) => att.url).toList();
+                                        final imageUrls =
+                                            message.attachments
+                                                .where(
+                                                  (att) => att.type == 'image',
+                                                )
+                                                .map((att) => att.url)
+                                                .toList();
 
                                         return Container(
-                                          margin: EdgeInsets.only(bottom: AppSizes.h8),
+                                          margin: EdgeInsets.only(
+                                            bottom: AppSizes.h8,
+                                          ),
                                           child: Hero(
                                             tag: 'chat_image_${attachment.url}',
                                             child: ChatCachedImage(
                                               imageUrl: attachment.url,
                                               width: 200,
                                               height: 200,
-                                              borderRadius: BorderRadius.circular(AppSizes.v8),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                    AppSizes.v8,
+                                                  ),
                                               allImageUrls: imageUrls,
-                                              imageIndex: imageUrls.indexOf(attachment.url),
-                                              messageContent: message.content.isNotEmpty ? message.content : null,
+                                              imageIndex: imageUrls.indexOf(
+                                                attachment.url,
+                                              ),
+                                              messageContent:
+                                                  message.content.isNotEmpty
+                                                      ? message.content
+                                                      : null,
                                             ),
                                           ),
                                         );
                                       } else if (attachment.type == 'video') {
                                         // Video attachment
                                         return Container(
-                                          margin: EdgeInsets.only(bottom: AppSizes.h8),
+                                          margin: EdgeInsets.only(
+                                            bottom: AppSizes.h8,
+                                          ),
                                           child: Hero(
                                             tag: 'chat_video_${attachment.url}',
                                             child: _buildVideoAttachment(
                                               attachment.url,
-                                              message.content.isNotEmpty ? message.content : null,
+                                              message.content.isNotEmpty
+                                                  ? message.content
+                                                  : null,
                                               message.isSentByMe,
                                             ),
                                           ),
@@ -672,11 +931,18 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                                   // Message text (only show if not empty)
                                   if (message.content.isNotEmpty) ...[
                                     model.isSearchMode
-                                        ? _buildHighlightedText(message.content, model.searchQuery, message.isSentByMe)
+                                        ? _buildHighlightedText(
+                                          message.content,
+                                          model.searchQuery,
+                                          message.isSentByMe,
+                                        )
                                         : Text(
                                           message.content,
                                           style: TextStyle(
-                                            color: message.isSentByMe ? AppColors.white : AppColors.textPrimary,
+                                            color:
+                                                message.isSentByMe
+                                                    ? AppColors.white
+                                                    : AppColors.textPrimary,
                                             fontSize: AppSizes.f14,
                                             height: 1.4,
                                             fontWeight: FontWeight.w400,
@@ -731,13 +997,23 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                           margin: EdgeInsets.only(top: AppSizes.h4),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: message.isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+                            mainAxisAlignment:
+                                message.isSentByMe
+                                    ? MainAxisAlignment.end
+                                    : MainAxisAlignment.start,
                             children: [
                               Text(
                                 "${_formatTimestamp(message.createdAt)} •",
-                                style: TextStyle(color: AppColors.textGrey, fontSize: AppSizes.f10, fontWeight: FontWeight.w500),
+                                style: TextStyle(
+                                  color: AppColors.textGrey,
+                                  fontSize: AppSizes.f10,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                              if (message.isSentByMe) ...[SizedBox(width: AppSizes.w6), _buildMessageStatus(message)],
+                              if (message.isSentByMe) ...[
+                                SizedBox(width: AppSizes.w6),
+                                _buildMessageStatus(message),
+                              ],
                             ],
                           ),
                         ),
@@ -772,7 +1048,14 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
         break;
     }
 
-    return Text(message.status.name.toUpperCase(), style: TextStyle(color: statusColor, fontSize: AppSizes.f10, fontWeight: FontWeight.w500));
+    return Text(
+      message.status.name.toUpperCase(),
+      style: TextStyle(
+        color: statusColor,
+        fontSize: AppSizes.f10,
+        fontWeight: FontWeight.w500,
+      ),
+    );
   }
 
   String _formatTimestamp(DateTime timestamp) {
@@ -800,7 +1083,10 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
   Widget _buildMultipleImagePreview(ChatViewModel model) {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h8),
+      margin: EdgeInsets.symmetric(
+        horizontal: AppSizes.w16,
+        vertical: AppSizes.h8,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -811,14 +1097,28 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
             children: [
               Text(
                 '${model.selectedMediaPaths.length} media file${model.selectedMediaPaths.length > 1 ? 's' : ''} selected',
-                style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               GestureDetector(
                 onTap: () => model.removeMultipleImagePreviews(),
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
-                  child: Text('Clear All', style: TextStyle(color: AppColors.error, fontSize: 12, fontWeight: FontWeight.w500)),
+                  decoration: BoxDecoration(
+                    color: AppColors.error.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    'Clear All',
+                    style: TextStyle(
+                      color: AppColors.error,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -831,7 +1131,10 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
               scrollDirection: Axis.horizontal,
               itemCount: model.selectedMediaPaths.length,
               itemBuilder: (context, index) {
-                final mediaType = index < model.selectedMediaTypes.length ? model.selectedMediaTypes[index] : 'image';
+                final mediaType =
+                    index < model.selectedMediaTypes.length
+                        ? model.selectedMediaTypes[index]
+                        : 'image';
                 return Container(
                   margin: EdgeInsets.only(right: AppSizes.w8),
                   child: Stack(
@@ -839,21 +1142,36 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                       Container(
                         width: 80,
                         height: 80,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSizes.v8)),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(AppSizes.v8),
+                        ),
                         child: Hero(
-                          tag: 'preview_${mediaType}_${model.selectedMediaPaths[index]}',
+                          tag:
+                              'preview_${mediaType}_${model.selectedMediaPaths[index]}',
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(AppSizes.v8),
                             child:
                                 mediaType == 'video'
-                                    ? _buildVideoThumbnail(model.selectedMediaPaths[index])
+                                    ? _buildVideoThumbnail(
+                                      model.selectedMediaPaths[index],
+                                    )
                                     : Image.file(
                                       File(model.selectedMediaPaths[index]),
                                       fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) {
+                                      errorBuilder: (
+                                        context,
+                                        error,
+                                        stackTrace,
+                                      ) {
                                         return Container(
-                                          color: AppColors.lightGrey.withValues(alpha: 0.3),
-                                          child: Icon(Icons.broken_image, color: AppColors.textGrey, size: 30),
+                                          color: AppColors.lightGrey.withValues(
+                                            alpha: 0.3,
+                                          ),
+                                          child: Icon(
+                                            Icons.broken_image,
+                                            color: AppColors.textGrey,
+                                            size: 30,
+                                          ),
                                         );
                                       },
                                     ),
@@ -872,7 +1190,13 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                               color: AppColors.white.withValues(alpha: 0.3),
                               borderRadius: BorderRadius.circular(AppSizes.v8),
                             ),
-                            child: Center(child: Icon(Icons.play_circle_filled, color: AppColors.white, size: 30)),
+                            child: Center(
+                              child: Icon(
+                                Icons.play_circle_filled,
+                                color: AppColors.white,
+                                size: 30,
+                              ),
+                            ),
                           ),
                         ),
                       // Remove button
@@ -883,8 +1207,15 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                           onTap: () => model.removeImageFromMultiple(index),
                           child: Container(
                             padding: EdgeInsets.all(3),
-                            decoration: BoxDecoration(color: AppColors.black.withValues(alpha: 0.6), shape: BoxShape.circle),
-                            child: Icon(Icons.close, color: AppColors.white, size: 10),
+                            decoration: BoxDecoration(
+                              color: AppColors.black.withValues(alpha: 0.6),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.close,
+                              color: AppColors.white,
+                              size: 10,
+                            ),
                           ),
                         ),
                       ),
@@ -899,7 +1230,11 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildVideoAttachment(String videoUrl, String? messageContent, bool isSentByMe) {
+  Widget _buildVideoAttachment(
+    String videoUrl,
+    String? messageContent,
+    bool isSentByMe,
+  ) {
     return GestureDetector(
       onTap: () {
         // Navigate to video player or show video in fullscreen
@@ -908,20 +1243,36 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
       child: Container(
         width: 200,
         height: 200,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSizes.v8), color: AppColors.lightGrey.withValues(alpha: 0.3)),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppSizes.v8),
+          color: AppColors.lightGrey.withValues(alpha: 0.3),
+        ),
         child: Stack(
           children: [
             // Video thumbnail
-            ClipRRect(borderRadius: BorderRadius.circular(AppSizes.v8), child: _buildVideoThumbnail(videoUrl)),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(AppSizes.v8),
+              child: _buildVideoThumbnail(videoUrl),
+            ),
             // Play button overlay
             Positioned.fill(
               child: Container(
-                decoration: BoxDecoration(color: AppColors.black.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(AppSizes.v8)),
+                decoration: BoxDecoration(
+                  color: AppColors.black.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(AppSizes.v8),
+                ),
                 child: Center(
                   child: Container(
                     padding: EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: AppColors.white.withValues(alpha: 0.5), shape: BoxShape.circle),
-                    child: Icon(Icons.play_arrow, color: AppColors.primary, size: 30),
+                    decoration: BoxDecoration(
+                      color: AppColors.white.withValues(alpha: 0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.play_arrow,
+                      color: AppColors.primary,
+                      size: 30,
+                    ),
                   ),
                 ),
               ),
@@ -936,11 +1287,18 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: AppColors.black.withValues(alpha: 0.7),
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(AppSizes.v8), bottomRight: Radius.circular(AppSizes.v8)),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(AppSizes.v8),
+                      bottomRight: Radius.circular(AppSizes.v8),
+                    ),
                   ),
                   child: Text(
                     messageContent,
-                    style: TextStyle(color: AppColors.white, fontSize: 12, fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -983,7 +1341,12 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container(
             color: AppColors.primarySuperLight.withValues(alpha: 0.1),
-            child: Center(child: CircularProgressIndicator(strokeWidth: 5, valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary))),
+            child: Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 5,
+                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+              ),
+            ),
           );
         }
 
@@ -1004,7 +1367,11 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
           errorBuilder:
               (context, error, stackTrace) => Container(
                 color: AppColors.primarySuperLight.withValues(alpha: 0.1),
-                child: Icon(Icons.videocam, color: AppColors.textGrey, size: 20),
+                child: Icon(
+                  Icons.videocam,
+                  color: AppColors.textGrey,
+                  size: 20,
+                ),
               ),
         );
       },
@@ -1018,17 +1385,33 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
 
   Widget _buildMessageInput(ChatViewModel model) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h12),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.w16,
+        vertical: AppSizes.h12,
+      ),
       decoration: BoxDecoration(
         color: AppColors.white,
-        boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.08), offset: Offset(0, -2), blurRadius: 12, spreadRadius: 0)],
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withValues(alpha: 0.08),
+            offset: Offset(0, -2),
+            blurRadius: 12,
+            spreadRadius: 0,
+          ),
+        ],
       ),
       child: SafeArea(
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.lightGrey.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(AppSizes.v24),
-            border: Border.all(color: _messageFocusNode.hasFocus ? AppColors.primary.withValues(alpha: 0.3) : Colors.transparent, width: 1),
+            border: Border.all(
+              color:
+                  _messageFocusNode.hasFocus
+                      ? AppColors.primary.withValues(alpha: 0.3)
+                      : Colors.transparent,
+              width: 1,
+            ),
           ),
           child: CommonTextField(
             controller: model.messageController,
@@ -1039,7 +1422,9 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
               onSelected: (value) => _handleAttachmentAction(value, model),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppSizes.v23),
-                side: BorderSide(color: AppColors.textGrey.withValues(alpha: 0.1)),
+                side: BorderSide(
+                  color: AppColors.textGrey.withValues(alpha: 0.1),
+                ),
               ),
               elevation: 0,
               position: PopupMenuPosition.over,
@@ -1051,25 +1436,45 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                     PopupMenuItem<String>(
                       value: 'file',
                       height: 34,
-                      child: _buildAttachmentMenuItem(icon: AppImages.file, label: 'File', color: AppColors.violetBlue, onTap: () {}),
+                      child: _buildAttachmentMenuItem(
+                        icon: AppImages.file,
+                        label: 'File',
+                        color: AppColors.violetBlue,
+                        onTap: () {},
+                      ),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'gallery',
                       height: 34,
-                      child: _buildAttachmentMenuItem(icon: AppImages.gallery, label: 'Album', color: AppColors.bluebackground, onTap: () {}),
+                      child: _buildAttachmentMenuItem(
+                        icon: AppImages.gallery,
+                        label: 'Album',
+                        color: AppColors.bluebackground,
+                        onTap: () {},
+                      ),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'camera',
                       height: 34,
-                      child: _buildAttachmentMenuItem(icon: AppImages.camera, label: 'Camera', color: AppColors.greenbackground, onTap: () {}),
+                      child: _buildAttachmentMenuItem(
+                        icon: AppImages.camera,
+                        label: 'Camera',
+                        color: AppColors.greenbackground,
+                        onTap: () {},
+                      ),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
                       value: 'location',
                       height: 34,
-                      child: _buildAttachmentMenuItem(icon: AppImages.location, label: 'Location', color: AppColors.redbackground, onTap: () {}),
+                      child: _buildAttachmentMenuItem(
+                        icon: AppImages.location,
+                        label: 'Location',
+                        color: AppColors.redbackground,
+                        onTap: () {},
+                      ),
                     ),
                     PopupMenuDivider(height: 0.5),
                     PopupMenuItem<String>(
@@ -1086,14 +1491,27 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                     PopupMenuItem<String>(
                       value: 'voice_call',
                       height: 34,
-                      child: _buildAttachmentMenuItem(icon: AppImages.phone, label: 'Voice Call', color: AppColors.colorFFB141, onTap: () {}),
+                      child: _buildAttachmentMenuItem(
+                        icon: AppImages.phone,
+                        label: 'Voice Call',
+                        color: AppColors.colorFFB141,
+                        onTap: () {},
+                      ),
                     ),
                   ],
               child: Container(
                 margin: EdgeInsets.all(8),
                 padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(color: AppColors.lightGrey.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(10)),
-                child: Image.asset(AppImages.attachment, width: 20, height: 20, color: AppColors.primaryDark),
+                decoration: BoxDecoration(
+                  color: AppColors.lightGrey.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Image.asset(
+                  AppImages.attachment,
+                  width: 20,
+                  height: 20,
+                  color: AppColors.primaryDark,
+                ),
               ),
             ),
             suffixIcon: Row(
@@ -1104,14 +1522,24 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                   onTap:
                       () => // Handle camera - add single image to multiple selection
                           model.pickImageFromCamera(),
-                  child: Image.asset(AppImages.cameraOutlined, width: 20, height: 20, color: AppColors.textGrey),
+                  child: Image.asset(
+                    AppImages.cameraOutlined,
+                    width: 20,
+                    height: 20,
+                    color: AppColors.textGrey,
+                  ),
                 ),
                 SizedBox(width: AppSizes.w12),
                 GestureDetector(
                   onTap: () {
                     // Handle voice message
                   },
-                  child: Image.asset(AppImages.microphone, width: 20, height: 20, color: AppColors.textGrey),
+                  child: Image.asset(
+                    AppImages.microphone,
+                    width: 20,
+                    height: 20,
+                    color: AppColors.textGrey,
+                  ),
                 ),
                 SizedBox(width: AppSizes.w12),
                 GestureDetector(
@@ -1119,25 +1547,55 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                       (model.isSendingMessage || model.isUploadingImage)
                           ? null
                           : () async {
-                            if (model.messageController.text.trim().isEmpty && !model.hasImagePreview) return;
+                            if (model.messageController.text.trim().isEmpty &&
+                                !model.hasImagePreview)
+                              return;
 
                             // If ticket is on hold, ask for confirmation before sending (only once per session)
-                            if ((widget.ticketStatus ?? '').toLowerCase() == 'on hold' && !_hasConfirmedOnHoldSending) {
+                            if ((widget.ticketStatus ?? '').toLowerCase() ==
+                                    'on hold' &&
+                                !_hasConfirmedOnHoldSending) {
                               final shouldSend = await Get.dialog<bool>(
                                 AlertDialog(
                                   title: const Text('Confirmation'),
-                                  content: const Text('Your ticket is on hold. Do you want to continue?'),
+                                  content: const Text(
+                                    'Your ticket is on hold. Do you want to continue?',
+                                  ),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
-                                        FocusScope.of(context).requestFocus(FocusNode());
+                                        FocusScope.of(
+                                          context,
+                                        ).requestFocus(FocusNode());
                                         Get.back(result: false);
                                       },
                                       child: const Text('No'),
                                     ),
                                     TextButton(
-                                      onPressed: () {
-                                        FocusScope.of(context).requestFocus(FocusNode());
+                                      onPressed: () async {
+                                        FocusScope.of(
+                                          context,
+                                        ).requestFocus(FocusNode());
+
+                                        // Update ticket status to "On Hold" before proceeding
+                                        if (widget.ticketId != null &&
+                                            widget.ticketId!.isNotEmpty) {
+                                          try {
+                                            final success = await model
+                                                .updateTicketStatusToActive(
+                                                  widget.ticketId!,
+                                                );
+                                          } catch (e) {
+                                            // Show error message
+                                            Fluttertoast.showToast(
+                                              msg:
+                                                  'Failed to update ticket status: ${e.toString()}',
+                                              backgroundColor: Colors.red,
+                                              textColor: Colors.white,
+                                            );
+                                          }
+                                        }
+
                                         Get.back(result: true);
                                       },
                                       child: const Text('Yes'),
@@ -1147,7 +1605,8 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                                 barrierDismissible: true,
                               );
 
-                              if (shouldSend != true) return; // Dismiss without sending
+                              if (shouldSend != true)
+                                return; // Dismiss without sending
 
                               // Mark as confirmed for this session
                               _hasConfirmedOnHoldSending = true;
@@ -1161,14 +1620,22 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                           ? SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AppColors.black)),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.black,
+                              ),
+                            ),
                           )
                           : Image.asset(
                             AppImages.send,
                             width: 20,
                             height: 20,
                             color:
-                                (model.messageController.text.trim().isNotEmpty || model.hasImagePreview) &&
+                                (model.messageController.text
+                                                .trim()
+                                                .isNotEmpty ||
+                                            model.hasImagePreview) &&
                                         !model.isSendingMessage &&
                                         !model.isUploadingImage
                                     ? AppColors.primaryDark
@@ -1207,24 +1674,53 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
         children: [
           Icon(Icons.info_outline, color: color, size: 20),
           SizedBox(width: 12),
-          Expanded(child: Text(message, style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.w500))),
+          Expanded(
+            child: Text(
+              message,
+              style: TextStyle(
+                color: color,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildAttachmentMenuItem({required String icon, required String label, required Color color, required VoidCallback onTap}) {
+  Widget _buildAttachmentMenuItem({
+    required String icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h12),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.w16,
+        vertical: AppSizes.h12,
+      ),
       child: Row(
         children: [
           Container(
             padding: EdgeInsets.all(9),
-            decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(AppSizes.v10)),
-            child: Center(child: Image.asset(icon, width: 18, height: 18, color: color)),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(AppSizes.v10),
+            ),
+            child: Center(
+              child: Image.asset(icon, width: 18, height: 18, color: color),
+            ),
           ),
           SizedBox(width: AppSizes.w12),
-          Text(label, style: TextStyle(color: AppColors.textPrimary, fontSize: AppSizes.f14, fontWeight: FontWeight.bold)),
+          Text(
+            label,
+            style: TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: AppSizes.f14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );
@@ -1255,7 +1751,13 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 // Animated search bar
-                SlideTransition(position: _slideAnimation, child: model.isSearchMode ? _buildSearchBar(model) : const SizedBox.shrink()),
+                SlideTransition(
+                  position: _slideAnimation,
+                  child:
+                      model.isSearchMode
+                          ? _buildSearchBar(model)
+                          : const SizedBox.shrink(),
+                ),
                 // Messages list
                 Flexible(
                   child:
@@ -1268,14 +1770,20 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                                     ? 6
                                     : model.isSearchMode
                                     ? model.filteredMessages.length
-                                    : model.messages.length + 1, // +1 for date separator
+                                    : model.messages.length +
+                                        1, // +1 for date separator
                             itemBuilder: (context, index) {
                               if (model.isLoading) {
                                 // Alternate shimmer sides for variety
-                                return MessageBubbleShimmer(isSentByMe: index % 2 == 0);
+                                return MessageBubbleShimmer(
+                                  isSentByMe: index % 2 == 0,
+                                );
                               }
 
-                              final message = model.isSearchMode ? model.filteredMessages[index] : model.messages[index - 1];
+                              final message =
+                                  model.isSearchMode
+                                      ? model.filteredMessages[index]
+                                      : model.messages[index - 1];
                               return _buildMessageBubble(message, model);
                             },
                           )
@@ -1284,7 +1792,9 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                               if (scrollInfo is ScrollUpdateNotification) {
                                 // Check if user scrolled to the bottom (for loading more messages)
                                 // Since list is reversed, bottom is where older messages are
-                                if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 100 &&
+                                if (scrollInfo.metrics.pixels >=
+                                        scrollInfo.metrics.maxScrollExtent -
+                                            100 &&
                                     model.hasMoreMessages &&
                                     !model.isLoadingMore) {
                                   model.loadMoreMessages();
@@ -1295,7 +1805,10 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                             child: ListView.builder(
                               controller: model.scrollController,
                               reverse: true,
-                              padding: EdgeInsets.only(top: AppSizes.h10, bottom: 20),
+                              padding: EdgeInsets.only(
+                                top: AppSizes.h10,
+                                bottom: 20,
+                              ),
                               itemCount:
                                   model.isSearchMode
                                       ? model.filteredMessages.length
@@ -1305,18 +1818,24 @@ class _ChatViewState extends State<ChatView> with TickerProviderStateMixin {
                               // +1 for loading indicator
                               itemBuilder: (context, index) {
                                 // Show loading indicator at the bottom (visually top) when loading more
-                                if (!model.isSearchMode && model.isLoadingMore && index == 0) {
+                                if (!model.isSearchMode &&
+                                    model.isLoadingMore &&
+                                    index == 0) {
                                   return _buildLoadingIndicator();
                                 }
 
                                 // Adjust index for loading indicator
-                                final adjustedIndex = model.isLoadingMore ? index - 1 : index;
+                                final adjustedIndex =
+                                    model.isLoadingMore ? index - 1 : index;
 
                                 if (!model.isSearchMode && adjustedIndex == 0) {
                                   return SizedBox();
                                 }
 
-                                final message = model.isSearchMode ? model.filteredMessages[adjustedIndex] : model.messages[adjustedIndex - 1];
+                                final message =
+                                    model.isSearchMode
+                                        ? model.filteredMessages[adjustedIndex]
+                                        : model.messages[adjustedIndex - 1];
                                 return _buildMessageBubble(message, model);
                               },
                             ),
@@ -1346,29 +1865,48 @@ class MessageBubbleShimmer extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
         child: Row(
-          mainAxisAlignment: isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment:
+              isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
             Flexible(
               child: Column(
-                crossAxisAlignment: isSentByMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    isSentByMe
+                        ? CrossAxisAlignment.end
+                        : CrossAxisAlignment.start,
                 children: [
                   // Message bubble shimmer
                   Container(
-                    constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.75,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                         topLeft: const Radius.circular(18),
                         topRight: const Radius.circular(18),
-                        bottomLeft: isSentByMe ? const Radius.circular(18) : const Radius.circular(0),
-                        bottomRight: isSentByMe ? const Radius.circular(0) : const Radius.circular(18),
+                        bottomLeft:
+                            isSentByMe
+                                ? const Radius.circular(18)
+                                : const Radius.circular(0),
+                        bottomRight:
+                            isSentByMe
+                                ? const Radius.circular(0)
+                                : const Radius.circular(18),
                       ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(height: 12, width: double.infinity, color: Colors.white),
+                        Container(
+                          height: 12,
+                          width: double.infinity,
+                          color: Colors.white,
+                        ),
                         const SizedBox(height: 6),
                         Container(height: 12, width: 80, color: Colors.white),
                       ],

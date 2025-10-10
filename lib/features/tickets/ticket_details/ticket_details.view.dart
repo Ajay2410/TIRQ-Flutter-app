@@ -401,34 +401,33 @@ class TicketDetailsView extends StatelessWidget {
             ),
           ),
         ),
-        if (model.ticketDetails?.ticketDetails?.status?.toLowerCase() == "resolved")...[
-          SizedBox(width: 8),
-          PopupMenuButton<String>(
-            icon: Icon(Icons.more_vert, color: AppColors.white, size: 20),
-            menuPadding: EdgeInsets.zero,
-            offset: Offset(-10, 40),
-            onSelected: (String value) {
-              if (value == 'report') {
-                _showReportDialog(context, model);
-              }
-            },
-            itemBuilder:
-                (BuildContext context) => [
-              PopupMenuItem<String>(
-                value: 'report',
-                child: Text(
-                  LanguageService.get('report'),
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
-                ),
-              ),
-            ],
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            color: AppColors.white,
-            shadowColor: AppColors.black.withValues(alpha: 0.1),
-            elevation: 8,
-          ),
-        ]
-
+        // if (model.ticketDetails?.ticketDetails?.status?.toLowerCase() == "resolved") ...[
+        //   SizedBox(width: 8),
+        //   PopupMenuButton<String>(
+        //     icon: Icon(Icons.more_vert, color: AppColors.white, size: 20),
+        //     menuPadding: EdgeInsets.zero,
+        //     offset: Offset(-10, 40),
+        //     onSelected: (String value) {
+        //       if (value == 'report') {
+        //         _showReportDialog(context, model);
+        //       }
+        //     },
+        //     itemBuilder:
+        //         (BuildContext context) => [
+        //           PopupMenuItem<String>(
+        //             value: 'report',
+        //             child: Text(
+        //               LanguageService.get('report'),
+        //               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
+        //             ),
+        //           ),
+        //         ],
+        //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        //     color: AppColors.white,
+        //     shadowColor: AppColors.black.withValues(alpha: 0.1),
+        //     elevation: 8,
+        //   ),
+        // ],
       ],
     );
   }
