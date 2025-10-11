@@ -40,6 +40,7 @@ class AuthService {
         AppLogger.error('Failed to get FCM token: $e');
       }
 
+
       final data = {
         'fullName': fullName,
         'email': email,
@@ -47,6 +48,7 @@ class AuthService {
         'phone': phone,
         'countryCode': countryCode,
         'role': role,
+        if (fcmToken != null) 'fcmToken': fcmToken,
       };
 
       // Add organization-specific fields if registering as organization
@@ -55,11 +57,6 @@ class AuthService {
         if (language != null) {
           data['language'] = language;
         }
-      }
-
-      // Add FCM token if available
-      if (fcmToken != null) {
-        data['notificationToken'] = fcmToken;
       }
 
       final response = await apiService.post(
