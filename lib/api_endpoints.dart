@@ -81,6 +81,7 @@ abstract class ApiEndpoints {
   static const String getAllTickets = 'ticket/getAll';
   static const String getTicketsByStatus = 'ticket/getticket';
   static const String getTicketSummary = 'ticket/getTicketSummary';
+  static const String getTicketRatingList = 'ticket/getReviewTickets';
 
   // Service Pricing endpoints
   static const String createServicePricing = 'servicePricing/create';
@@ -97,4 +98,5 @@ abstract class ApiEndpoints {
   // Notification endpoints
   static const String getNotifications = 'notification/getnotification';
   static const String deleteNotification = 'notification/deleteNotification';
+  static const String updateNotification = 'notification/updateticketnotification';
 }

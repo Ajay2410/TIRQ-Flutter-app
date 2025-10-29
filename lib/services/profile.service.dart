@@ -9,6 +9,8 @@ import 'package:manager/core/utils/failures.dart';
 import 'package:manager/core/utils/type_def.dart';
 import 'package:manager/services/api.service.dart';
 
+import '../core/storage/storage.dart';
+
 class ProfileService {
   final apiService = locator<ApiService>();
 
@@ -17,6 +19,8 @@ class ProfileService {
 
   // Track if profile has been initialized
   bool _isInitialized = false;
+
+  String chatLanguage = "en";
 
   // Getter for global profile model
   ProfileModel? get globalProfileModel => _globalProfileModel;
@@ -27,6 +31,7 @@ class ProfileService {
   // Initialize profile data - always fetch from API
   Future<void> initializeProfile() async {
     // Only initialize once
+    chatLanguage =  getChatSelectedLanguage();
     if (_isInitialized) {
       AppLogger.info('Profile already initialized, skipping...');
       return;
@@ -66,6 +71,10 @@ class ProfileService {
           profile = ProfileModel.fromJson(responseData['data']);
         } else {
           profile = ProfileModel.fromJson(responseData);
+        }
+
+        if((profile.profile?.chatLanguage ?? "").isNotEmpty) {
+          saveSelectedChatLanguage(profile.profile?.chatLanguage ?? "en");
         }
 
         _globalProfileModel = profile;
@@ -118,6 +127,10 @@ class ProfileService {
             };
           }
           profile = ProfileModel.fromJson(profileData);
+        }
+
+        if((profile.profile?.chatLanguage ?? "").isNotEmpty) {
+          saveSelectedChatLanguage(profile.profile?.chatLanguage ?? "en");
         }
 
         AppLogger.info('Profile fetched successfully: ${profile.toJson()}');
@@ -223,6 +236,10 @@ class ProfileService {
           profile = ProfileModel.fromJson(responseData['data']);
         } else {
           profile = ProfileModel.fromJson(responseData);
+        }
+
+        if((profile.profile?.chatLanguage ?? "").isNotEmpty) {
+          saveSelectedChatLanguage(profile.profile?.chatLanguage ?? "en");
         }
 
         // Update global profile model

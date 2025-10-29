@@ -40,6 +40,7 @@ class Profile {
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
+  String? chatLanguage;
 
   Profile({
     this.id,
@@ -53,6 +54,7 @@ class Profile {
     this.createdAt,
     this.updatedAt,
     this.v,
+    this.chatLanguage,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) => Profile(
@@ -67,6 +69,7 @@ class Profile {
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
+    chatLanguage: json["chatLanguage"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -81,6 +84,7 @@ class Profile {
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
     "__v": v,
+    "chatLanguage": chatLanguage,
   };
 }
 

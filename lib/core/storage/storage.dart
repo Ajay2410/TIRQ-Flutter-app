@@ -126,3 +126,24 @@ String getSelectedLanguage() {
     return 'en';
   }
 }
+
+Future<void> saveSelectedChatLanguage(String languageCode) async {
+  try {
+    AppLogger.info('Saving selected chat language: $languageCode');
+    await Hive.box(AppStrings.triqBox).put('selected_chat_language', languageCode);
+  } catch (e) {
+    AppLogger.error('Error saving selected chat language: $e');
+  }
+}
+
+String getChatSelectedLanguage() {
+  try {
+    AppLogger.info('Getting selected chat language');
+    return Hive.box(
+      AppStrings.triqBox,
+    ).get('selected_chat_language', defaultValue: 'en');
+  } catch (e) {
+    AppLogger.error('Error getting selected chat language: $e');
+    return 'en';
+  }
+}

@@ -12,6 +12,8 @@ import 'package:manager/widgets/common_app_bar.dart';
 import 'package:stacked/stacked.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../resources/enums/notification_enum.dart';
+
 class NotificationView extends StatefulWidget {
   const NotificationView({super.key});
 
@@ -84,7 +86,11 @@ class _NotificationViewState extends State<NotificationView> {
       padding: const EdgeInsets.all(13),
       itemCount: 10,
       itemBuilder: (context, index) {
-        return Shimmer.fromColors(baseColor: AppColors.lightGrey, highlightColor: AppColors.white, child: _buildNotificationCardShimmer());
+        return Shimmer.fromColors(
+          baseColor: AppColors.lightGrey,
+          highlightColor: AppColors.white,
+          child: _buildNotificationCardShimmer(),
+        );
       },
     );
   }
@@ -95,23 +101,43 @@ class _NotificationViewState extends State<NotificationView> {
         Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.lightGrey),
-          child: Container(height: 50, width: 50, decoration: BoxDecoration(color: AppColors.lightGrey, shape: BoxShape.circle)),
+          child: Container(
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(color: AppColors.lightGrey, shape: BoxShape.circle),
+          ),
         ),
         AppGaps.w16,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(height: 16, width: 120, decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4))),
+              Container(
+                height: 16,
+                width: 120,
+                decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4)),
+              ),
               AppGaps.h5,
-              Container(height: 14, width: 200, decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4))),
+              Container(
+                height: 14,
+                width: 200,
+                decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4)),
+              ),
               AppGaps.h5,
-              Container(height: 12, width: 80, decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4))),
+              Container(
+                height: 12,
+                width: 80,
+                decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(4)),
+              ),
             ],
           ),
         ),
         AppGaps.w16,
-        Container(height: 20, width: 60, decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(6))),
+        Container(
+          height: 20,
+          width: 60,
+          decoration: BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.circular(6)),
+        ),
       ],
     );
   }
@@ -128,7 +154,11 @@ class _NotificationViewState extends State<NotificationView> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
           ),
           AppGaps.h10,
-          Text(model.errorMessage ?? 'Unknown error', style: TextStyle(fontSize: 14, color: AppColors.textSecondary), textAlign: TextAlign.center),
+          Text(
+            model.errorMessage ?? 'Unknown error',
+            style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+            textAlign: TextAlign.center,
+          ),
           AppGaps.h20,
           ElevatedButton(
             onPressed: model.refreshNotifications,
@@ -151,7 +181,10 @@ class _NotificationViewState extends State<NotificationView> {
         children: [
           Image.asset(AppImages.alert, width: 80, height: 80, color: AppColors.gray),
           AppGaps.h20,
-          Text(LanguageService.get('no_notifications_found'), style: TextStyle(fontSize: 18, color: AppColors.textSecondary)),
+          Text(
+            LanguageService.get('no_notifications_found'),
+            style: TextStyle(fontSize: 18, color: AppColors.textSecondary),
+          ),
         ],
       ),
     );
@@ -183,7 +216,11 @@ class _NotificationViewState extends State<NotificationView> {
                               child: Center(
                                 child: Text(
                                   notification.title?.substring(0, 2).toUpperCase() ?? 'NA',
-                                  style: const TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             );
@@ -210,7 +247,12 @@ class _NotificationViewState extends State<NotificationView> {
               children: [
                 Text(
                   notification.title ?? 'Unknown Notification',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textPrimary, overflow: TextOverflow.ellipsis),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 AppGaps.h5,
                 Row(
@@ -230,51 +272,112 @@ class _NotificationViewState extends State<NotificationView> {
                       children: [
                         GestureDetector(
                           onTap: () async {
-                            // Get the processorId from notification data
-                            final processorId = notification.data?.processorId;
-                            if (processorId == null || processorId.isEmpty) {
+
+                            // Get the notification ID
+                            final notificationId = notification.id;
+                            if (notificationId == null || notificationId.isEmpty) {
                               if (mounted) {
-                                ScaffoldMessenger.of(
-                                  context,
-                                ).showSnackBar(SnackBar(content: Text('Invalid customer ID'), backgroundColor: AppColors.redBack));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Invalid notification ID'),
+                                    backgroundColor: AppColors.redBack,
+                                  ),
+                                );
                               }
                               return;
                             }
 
-                            try {
-                              // Show loading dialog while fetching customer data
-                              final response = await model.fetchCustomerById(processorId);
+                            if (notification.type == NotificationType.organizationRequest.name) {
+                              // Get the processorId from notification data
+                              final processorId = notification.data?.processorId;
+                              if (processorId == null || processorId.isEmpty) {
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Invalid customer ID'), backgroundColor: AppColors.redBack),
+                                  );
+                                }
+                                return;
+                              }
 
-                              if (response != null && mounted) {
-                                // Navigate to CustomerEditDetailsView with notification flag
-                                final editResult = await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => CustomerEditDetailsView(customer: response, isFromSearchOrganization: true),
-                                  ),
-                                );
+                              try {
+                                // Show loading dialog while fetching customer data
+                                final response = await model.fetchCustomerById(processorId);
 
-                                // Handle result if needed
-                                if (editResult != null) {
-                                  // Refresh notifications or handle the result
+                                if (response != null && mounted) {
+                                  // Navigate to CustomerEditDetailsView with notification flag
+                                  final editResult = await Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => CustomerEditDetailsView(
+                                            customer: response,
+                                            isFromSearchOrganization: true,
+                                          ),
+                                    ),
+                                  );
+
+                                  // Handle result if needed
+                                  if (editResult != null) {
+                                    // Refresh notifications or handle the result
+                                    model.refreshNotifications();
+                                  }
+                                } else if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Failed to fetch customer data'),
+                                      backgroundColor: AppColors.redBack,
+                                    ),
+                                  );
+                                }
+                              } catch (e) {
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Error: ${e.toString()}'),
+                                      backgroundColor: AppColors.redBack,
+                                    ),
+                                  );
+                                }
+                              }
+                            } else if (notification.type == NotificationType.ticketRequest.name) {
+
+                              try {
+                                // Show loading dialog while deleting notification
+                                final success = await model.updateNotificationAction(notification.data?.ticketId ?? "", 'accept');
+
+                                if (success && mounted) {
+                                  // Show success message
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Notification accepted successfully'),
+                                      backgroundColor: AppColors.success,
+                                    ),
+                                  );
+
+                                  // Refresh notifications list
                                   model.refreshNotifications();
                                 }
-                              } else if (mounted) {
-                                ScaffoldMessenger.of(
-                                  context,
-                                ).showSnackBar(SnackBar(content: Text('Failed to fetch customer data'), backgroundColor: AppColors.redBack));
-                              }
-                            } catch (e) {
-                              if (mounted) {
-                                ScaffoldMessenger.of(
-                                  context,
-                                ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}'), backgroundColor: AppColors.redBack));
+                              } catch (e) {
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Error: ${e.toString()}'),
+                                      backgroundColor: AppColors.redBack,
+                                    ),
+                                  );
+                                }
                               }
                             }
                           },
                           child: Container(
                             padding: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(6)),
-                            child: Text('Accept', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.success)),
+                            decoration: BoxDecoration(
+                              color: AppColors.success.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              'Accept',
+                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.success),
+                            ),
                           ),
                         ),
                         SizedBox(width: 10.h),
@@ -284,38 +387,82 @@ class _NotificationViewState extends State<NotificationView> {
                             final notificationId = notification.id;
                             if (notificationId == null || notificationId.isEmpty) {
                               if (mounted) {
-                                ScaffoldMessenger.of(
-                                  context,
-                                ).showSnackBar(SnackBar(content: Text('Invalid notification ID'), backgroundColor: AppColors.redBack));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Invalid notification ID'),
+                                    backgroundColor: AppColors.redBack,
+                                  ),
+                                );
                               }
                               return;
                             }
 
-                            try {
-                              // Show loading dialog while deleting notification
-                              final success = await model.deleteNotification(notificationId);
+                            if (notification.type == NotificationType.organizationRequest.name) {
+                              try {
+                                // Show loading dialog while deleting notification
+                                final success = await model.deleteNotification(notificationId);
 
-                              if (success && mounted) {
-                                // Show success message
-                                ScaffoldMessenger.of(
-                                  context,
-                                ).showSnackBar(SnackBar(content: Text('Notification rejected successfully'), backgroundColor: AppColors.success));
+                                if (success && mounted) {
+                                  // Show success message
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Notification rejected successfully'),
+                                      backgroundColor: AppColors.success,
+                                    ),
+                                  );
 
-                                // Refresh notifications list
-                                model.refreshNotifications();
+                                  // Refresh notifications list
+                                  model.refreshNotifications();
+                                }
+                              } catch (e) {
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Error: ${e.toString()}'),
+                                      backgroundColor: AppColors.redBack,
+                                    ),
+                                  );
+                                }
                               }
-                            } catch (e) {
-                              if (mounted) {
-                                ScaffoldMessenger.of(
-                                  context,
-                                ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}'), backgroundColor: AppColors.redBack));
+                            } else if (notification.type == NotificationType.ticketRequest.name) {
+                              try {
+                                // Show loading dialog while deleting notification
+                                final success = await model.updateNotificationAction(notification.data?.ticketId ?? "", 'reject');
+
+                                if (success && mounted) {
+                                  // Show success message
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Notification rejected successfully'),
+                                      backgroundColor: AppColors.success,
+                                    ),
+                                  );
+
+                                  // Refresh notifications list
+                                  model.refreshNotifications();
+                                }
+                              } catch (e) {
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Error: ${e.toString()}'),
+                                      backgroundColor: AppColors.redBack,
+                                    ),
+                                  );
+                                }
                               }
                             }
                           },
                           child: Container(
                             padding: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(color: AppColors.redBack.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(6)),
-                            child: Text('Reject', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.redBack)),
+                            decoration: BoxDecoration(
+                              color: AppColors.redBack.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              'Reject',
+                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.redBack),
+                            ),
                           ),
                         ),
                       ],

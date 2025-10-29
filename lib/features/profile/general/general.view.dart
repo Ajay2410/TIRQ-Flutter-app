@@ -8,10 +8,13 @@ import 'package:manager/resources/app_resources/app_resources.dart';
 import 'package:manager/resources/multimedia_resources/resources.dart';
 import 'package:manager/services/language.service.dart';
 
+import '../my_wallet/controller/languageController.dart';
 import 'app_currency.dart';
 
 class GeneralSettingView extends StatelessWidget {
-  const GeneralSettingView({super.key});
+  GeneralSettingView({super.key});
+
+  final controller = Get.put(LanguageController());
 
   void showTranslationDialog(BuildContext context) {
     Get.dialog(
@@ -19,145 +22,156 @@ class GeneralSettingView extends StatelessWidget {
         backgroundColor: AppColors.white,
         insetPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 18),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: InkWell(
-                  onTap: () {
-                    Get.back();
-                  },
-                  child: Icon(Icons.close_rounded),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.all(13),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.progressBlue.withValues(alpha: 0.1),
-                ),
-                child: Image.asset(AppImages.translate),
-              ),
-              SizedBox(height: 10),
-              Text(
-                LanguageService.get("chat_translation"),
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.primaryDark,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.primarySuperLight.withValues(alpha: 0.04),
-                  borderRadius: BorderRadius.circular(13),
-                  border: Border.all(
-                    color: AppColors.textGrey.withValues(alpha: 0.1),
+        child: ValueListenableBuilder(
+          valueListenable: controller.selectedChatLanguage,
+          builder: (context, value, child) {
+            return Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: InkWell(
+                      onTap: () {
+                        Get.back();
+                      },
+                      child: Icon(Icons.close_rounded),
+                    ),
                   ),
-                ),
-                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        LanguageService.get('translate_text_to'),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.black,
-                          fontSize: 12,
-                        ),
-                      ),
+                  Container(
+                    padding: EdgeInsets.all(13),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.progressBlue.withValues(alpha: 0.1),
                     ),
-                    Text(
-                      LanguageService.get('english'),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
-                        color: AppColors.textGrey,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: AppColors.gunmetal,
-                      size: 16,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-
-              Text(
-                LanguageService.get(
-                  'after_it_is_enabled_text_in_chats_will_be_translated_into_the_selected_language',
-                ),
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.textGrey,
-                  fontSize: 10,
-                ),
-              ),
-              const SizedBox(height: 25),
-              // Obx(() =>
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.primarySuperLight.withValues(alpha: 0.04),
-                  borderRadius: BorderRadius.circular(13),
-                  border: Border.all(
-                    color: AppColors.textGrey.withValues(alpha: 0.1),
+                    child: Image.asset(AppImages.translate),
                   ),
-                ),
-                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        LanguageService.get(
-                          'auto_translate_messages_received_in_chat',
-                        ),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.black,
-                          fontSize: 12,
-                        ),
-                      ),
+                  SizedBox(height: 10),
+                  Text(
+                    LanguageService.get("chat_translation"),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.primaryDark,
                     ),
-                    Switch(
-                      value: true,
-                      onChanged: (value) {},
-                      activeColor: AppColors.primary,
-                      inactiveThumbColor: AppColors.gray,
-                      inactiveTrackColor: AppColors.violetBlue.withValues(
-                        alpha: 0.1,
-                      ),
-                      trackOutlineColor: WidgetStateProperty.all(
-                        Colors.transparent,
-                      ),
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      splashRadius: 0,
-                    ),
-                  ],
-                ),
-              ),
-              // ),
-              const SizedBox(height: 10),
+                  ),
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(() => const AppLanguageView(chatLanguage: true));
 
-              Text(
-                LanguageService.get(
-                  'after_it_is_enabled_text_in_chats_will_be_translated_into_the_selected_language',
-                ),
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.textGrey,
-                  fontSize: 10,
-                ),
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.primarySuperLight.withValues(alpha: 0.04),
+                        borderRadius: BorderRadius.circular(13),
+                        border: Border.all(
+                          color: AppColors.textGrey.withValues(alpha: 0.1),
+                        ),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              LanguageService.get('translate_text_to'),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.black,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            controller.selectedChatLanguage.value.displayName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12,
+                              color: AppColors.textGrey,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: AppColors.gunmetal,
+                            size: 16,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  Text(
+                    LanguageService.get(
+                      'after_it_is_enabled_text_in_chats_will_be_translated_into_the_selected_language',
+                    ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.textGrey,
+                      fontSize: 10,
+                    ),
+                  ),
+                  const SizedBox(height: 25),
+                  // Obx(() =>
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.primarySuperLight.withValues(alpha: 0.04),
+                      borderRadius: BorderRadius.circular(13),
+                      border: Border.all(
+                        color: AppColors.textGrey.withValues(alpha: 0.1),
+                      ),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            LanguageService.get(
+                              'auto_translate_messages_received_in_chat',
+                            ),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.black,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                        Switch(
+                          value: true,
+                          onChanged: (value) {},
+                          activeColor: AppColors.primary,
+                          inactiveThumbColor: AppColors.gray,
+                          inactiveTrackColor: AppColors.violetBlue.withValues(
+                            alpha: 0.1,
+                          ),
+                          trackOutlineColor: WidgetStateProperty.all(
+                            Colors.transparent,
+                          ),
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          splashRadius: 0,
+                        ),
+                      ],
+                    ),
+                  ),
+                  // ),
+                  const SizedBox(height: 10),
+
+                  Text(
+                    LanguageService.get(
+                      'after_it_is_enabled_text_in_chats_will_be_translated_into_the_selected_language',
+                    ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.textGrey,
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          }
         ),
       ),
     );
@@ -236,18 +250,18 @@ class GeneralSettingView extends StatelessWidget {
               animationDelay: 300.ms,
             ),
             _buildDivider(),
-            _buildMenuItem(
-              imagePath: AppImages.currency,
-              title: LanguageService.get("currency"),
-              iconColor: AppColors.violetBlue,
-              onTap: () {
-                Get.to(
-                      () => AppCurrencyView(),
-                );
-                // _showCurrencySelectionDialog(context);
-              },
-              animationDelay: 400.ms,
-            ),
+            // _buildMenuItem(
+            //   imagePath: AppImages.currency,
+            //   title: LanguageService.get("currency"),
+            //   iconColor: AppColors.violetBlue,
+            //   onTap: () {
+            //     Get.to(
+            //           () => AppCurrencyView(),
+            //     );
+            //     // _showCurrencySelectionDialog(context);
+            //   },
+            //   animationDelay: 400.ms,
+            // ),
             _buildDivider(),
             _buildMenuItem(
               imagePath: AppImages.systemSound,
@@ -259,16 +273,16 @@ class GeneralSettingView extends StatelessWidget {
               animationDelay: 500.ms,
             ),
             _buildDivider(),
-            _buildMenuItem(
-              imagePath: AppImages.appearance,
-              title: LanguageService.get("appearance"),
-              iconColor: AppColors.backgroundlightgreen,
-              onTap: () {
-                // Navigate to appearance settings
-              },
-              hasToggle: true,
-              animationDelay: 600.ms,
-            ),
+            // _buildMenuItem(
+            //   imagePath: AppImages.appearance,
+            //   title: LanguageService.get("appearance"),
+            //   iconColor: AppColors.backgroundlightgreen,
+            //   onTap: () {
+            //     // Navigate to appearance settings
+            //   },
+            //   hasToggle: true,
+            //   animationDelay: 600.ms,
+            // ),
           ],
         ),
       ),

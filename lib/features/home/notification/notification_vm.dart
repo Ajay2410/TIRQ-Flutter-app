@@ -255,4 +255,69 @@ class NotificationViewModel extends ReactiveViewModel {
       rethrow;
     }
   }
+
+  /// update notification action by ID
+  Future<bool> updateNotificationAction(String ticketId, String type) async {
+    try {
+      AppLogger.info('update notification with ID: $ticketId');
+
+      final response = await _dialogService.showCustomDialog(
+        variant: DialogType.loader,
+        data: LoaderDialogAttributes(
+          task: () async {
+            try {
+              final apiResponse = await _apiService.post(
+                url: ApiEndpoints.updateNotification,
+                data: {'ticketId': ticketId, 'type': type},
+              );
+
+              AppLogger.info("update API Response Action: ${apiResponse.data}");
+
+              if (apiResponse.statusCode == 200) {
+                final responseData = apiResponse.data;
+                if (responseData is Map<String, dynamic> &&
+                    responseData['success'] == true) {
+                  AppLogger.info(
+                    'Successfully updated notification: $ticketId',
+                  );
+
+                  notifications.removeWhere((ticket) => ticket.data?.ticketId == ticketId);
+
+                  return true;
+                } else {
+                  throw Exception(
+                    responseData['msg'] ?? 'Failed to update notification action',
+                  );
+                }
+              } else {
+                AppLogger.error(
+                  'Failed to update notification action: ${apiResponse.statusCode}',
+                );
+                throw Exception(
+                  apiResponse.data?['msg'] ?? 'Failed to update notification action',
+                );
+              }
+            } catch (e) {
+              AppLogger.error("Error updating notification action: $e");
+              rethrow;
+            }
+          },
+          message: 'Updating notification...',
+        ),
+      );
+
+      if (response?.confirmed == true && response?.data == true) {
+        _notifications.value.removeWhere((ticket) => ticket.data?.ticketId == ticketId);
+        notifyListeners();
+        return true;
+      } else {
+        throw Exception(
+          response?.data?.toString() ?? 'Failed to update notification action',
+        );
+      }
+    } catch (e) {
+      AppLogger.error("Error in updateNotification: $e");
+      rethrow;
+    }
+  }
 }

@@ -11,7 +11,8 @@ import 'package:manager/widgets/common_text_field.dart';
 import '../my_wallet/controller/languageController.dart';
 
 class AppLanguageView extends StatefulWidget {
-  const AppLanguageView({super.key});
+  final bool chatLanguage;
+  const AppLanguageView({super.key, this.chatLanguage = false});
 
   @override
   State<AppLanguageView> createState() => _AppLanguageViewState();
@@ -40,7 +41,7 @@ class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProv
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return GradientAppBar(titleKey: "app_language");
+    return GradientAppBar(titleKey: widget.chatLanguage ? "chat_language" : "app_language");
   }
 
   Widget _buildSearchBar(BuildContext context) {
@@ -56,7 +57,10 @@ class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProv
         onChanged: (value) {
           controller.updateSearch(value);
         },
-        prefixIcon: Padding(padding: const EdgeInsets.all(12), child: Image.asset(AppImages.search, height: 17, width: 17, color: AppColors.black)),
+        prefixIcon: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Image.asset(AppImages.search, height: 17, width: 17, color: AppColors.black),
+        ),
         suffixIcon:
             _searchController.text.isNotEmpty
                 ? IconButton(
@@ -73,59 +77,84 @@ class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProv
   }
 
   Widget _buildLanguageList(BuildContext context) {
-    return Container(
-      color: AppColors.white,
-      child: ListView.separated(
-        separatorBuilder: (BuildContext context, int index) {
-          return Divider(height: 20, color: AppColors.textGrey.withValues(alpha: 0.1));
-        },
-        padding: EdgeInsets.symmetric(horizontal: 13, vertical: 16),
-        itemCount: controller.filteredLanguages.length,
-        itemBuilder: (_, index) {
-          final lang = controller.filteredLanguages[index];
+    return ValueListenableBuilder(
+      valueListenable: controller.selectedChatLanguage,
+      builder: (context, value, child) {
+        return Container(
+          color: AppColors.white,
+          child: ListView.separated(
+            separatorBuilder: (BuildContext context, int index) {
+              return Divider(height: 20, color: AppColors.textGrey.withValues(alpha: 0.1));
+            },
+            padding: EdgeInsets.symmetric(horizontal: 13, vertical: 16),
+            itemCount: controller.filteredLanguages.length,
+            itemBuilder: (_, index) {
+              final lang = controller.filteredLanguages[index];
 
-          return InkWell(
-            onTap: () => controller.selectLanguage(lang.code),
-            child: Row(
-              children: [
-                // Flag container
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: AppColors.softGray.withOpacity(0.1)),
-                  child: Center(child: Text(lang.flag, style: TextStyle(fontSize: 24))),
-                ),
-                SizedBox(width: 10),
-                // Language info
-                Expanded(child: Text(lang.name, style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w700))),
-                // Radio button
-                StreamBuilder<Object>(
-                  stream: controller.selectedLanguageCode.stream,
-                  builder: (context, snapshot) {
-                    final isSelected = controller.selectedLanguageCode.value == lang.code;
-
-                    return Container(
-                      padding: EdgeInsets.all(2),
+              return InkWell(
+                onTap: () {
+                  if (widget.chatLanguage) {
+                    controller.selectChatLanguage(lang);
+                  } else {
+                    controller.selectLanguage(lang.code);
+                  }
+                },
+                child: Row(
+                  children: [
+                    // Flag container
+                    Container(
+                      width: 48,
+                      height: 48,
                       decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: isSelected ? AppColors.primaryLight : AppColors.textGrey.withValues(alpha: 0.1), width: 1.5),
-                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.softGray.withOpacity(0.1),
                       ),
-                      child: Center(
-                        child: Container(
-                          width: 9,
-                          height: 9,
-                          decoration: BoxDecoration(shape: BoxShape.circle, color: isSelected ? AppColors.primaryLight : AppColors.transparent),
-                        ),
+                      child: Center(child: Text(lang.flag, style: TextStyle(fontSize: 24))),
+                    ),
+                    SizedBox(width: 10),
+                    // Language info
+                    Expanded(
+                      child: Text(
+                        lang.displayName,
+                        style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w700),
                       ),
-                    );
-                  },
+                    ),
+                    // Radio button
+                    StreamBuilder<Object>(
+                      stream: controller.selectedLanguageCode.stream,
+                      builder: (context, snapshot) {
+                        final isSelected =  (widget.chatLanguage ? controller.selectedChatLanguage.value.code :  controller.selectedLanguageCode.value) == lang.code;
+
+                        return Container(
+                          padding: EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: isSelected ? AppColors.primaryLight : AppColors.textGrey.withValues(alpha: 0.1),
+                              width: 1.5,
+                            ),
+                            color: AppColors.white,
+                          ),
+                          child: Center(
+                            child: Container(
+                              width: 9,
+                              height: 9,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: isSelected ? AppColors.primaryLight : AppColors.transparent,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
+        );
+      }
     );
   }
 
@@ -145,7 +174,11 @@ class _AppLanguageViewState extends State<AppLanguageView> with SingleTickerProv
               controller.isLoading.value
                   ? null
                   : () async {
-                    await controller.saveLanguage();
+                    if (widget.chatLanguage) {
+                      await controller.saveChatLanguage();
+                    } else {
+                      await controller.saveLanguage();
+                    }
                     // App will restart automatically, no need to navigate back
                   },
           backgroundColor: AppColors.primaryDark,

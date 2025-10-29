@@ -161,14 +161,21 @@ class ProfileView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      _getProfileName(model),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ).animate().fadeIn(duration: 500.ms),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            _getProfileName(model).toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ).animate().fadeIn(duration: 500.ms),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 4),
                     Text(
                       _getProfileEmail(model),
@@ -277,7 +284,9 @@ class ProfileView extends StatelessWidget {
             imagePath: AppImages.organization,
             title: LanguageService.get("organization"),
             iconColor: AppColors.violetBlue,
-            onTap: () {},
+            onTap: () {
+              model.navigateToCreateOrEditOrgView();
+            },
             animationDelay: 600.ms,
           ),
           _buildDivider(),

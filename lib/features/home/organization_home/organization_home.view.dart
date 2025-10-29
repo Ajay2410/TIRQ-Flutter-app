@@ -10,8 +10,10 @@ import 'package:manager/services/language.service.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../../core/locator.dart';
 import '../../../resources/app_resources/app_resources.dart';
 import '../../../resources/multimedia_resources/resources.dart';
+import '../../../services/profile.service.dart';
 import '../../../widgets/common/common_cached_image.dart';
 import '../../../configs.dart';
 
@@ -128,37 +130,36 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                   SizedBox(width: 16),
 
                   // Greeting and name
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            greeting.toUpperCase(),
-                            style: TextStyle(
-                              color: AppColors.white.withValues(alpha: 0.9),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                            ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          greeting.toUpperCase(),
+                          style: TextStyle(
+                            color: AppColors.white.withValues(alpha: 0.9),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        (model.user.name ?? model.user.fullName ?? 'User')
-                            .toUpperCase(),
-                        style: TextStyle(
-                          color: AppColors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                        SizedBox(height: 4),
+                        Text(
+                          (locator<ProfileService>().globalProfileModel?.profile?.user?.fullName ?? model.user.name ?? model.user.fullName ?? 'User').toUpperCase(),
+                          style: TextStyle(
+                            color: AppColors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
 
-                  Spacer(),
+                  // Spacer(),
                   // Unit selector
                   _buildDropdownFormField(
                     context,
@@ -408,7 +409,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
         route: Routes.machinesList,
       ),
       DashboardCardData(
-        title: LanguageService.get('feedback_rating'),
+        title: LanguageService.get('feedback_ratings'),
         icon: AppImages.feedbackRating,
         color: AppColors.mintGreen,
         route: Routes.feedback,
@@ -485,6 +486,7 @@ class _OrganizationHomeViewState extends State<OrganizationHomeView> {
                 model.navigateToMachineOverview();
                 break;
               case Routes.feedback:
+                model.navigateToFeedback();
                 break;
               case Routes.installation:
                 break;

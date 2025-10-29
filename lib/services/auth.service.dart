@@ -263,7 +263,7 @@ class AuthService {
           'email': email,
           'password': password,
           'role': role,
-          if (fcmToken != null) 'notificationToken': fcmToken,
+          if (fcmToken != null) 'fcmToken': fcmToken,
         },
       );
 
@@ -328,7 +328,7 @@ class AuthService {
         data: {
           'email': email,
           'idToken': token ?? "",
-          if (fcmToken != null) 'notificationToken': fcmToken,
+          if (fcmToken != null) 'fcmToken': fcmToken,
         },
       );
 
@@ -378,7 +378,7 @@ class AuthService {
         data: {
           'email': email,
           'idToken': token ?? "",
-          if (fcmToken != null) 'notificationToken': fcmToken,
+          if (fcmToken != null) 'fcmToken': fcmToken,
         },
       );
 
@@ -428,7 +428,7 @@ class AuthService {
         data: {
           'email': email,
           'otp': otp,
-          if (fcmToken != null) 'notificationToken': fcmToken,
+          if (fcmToken != null) 'fcmToken': fcmToken,
         },
       );
 

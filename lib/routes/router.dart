@@ -5,8 +5,8 @@ import 'package:manager/features/auth/login/login.view.dart';
 import 'package:manager/features/auth/otp_verification/otp_verification.view.dart';
 import 'package:manager/features/auth/register/register.view.dart';
 import 'package:manager/features/employee/detail_employee/employee_details.dart';
+import 'package:manager/features/feedback_ratings/feedback_ratings.view.dart';
 import 'package:manager/features/home/analytics/analytics_view.dart';
-import 'package:manager/features/home/feedback/feedback_view.dart';
 import 'package:manager/features/home/globalActivity/globalActivity.dart';
 import 'package:manager/features/home/installations/installation.dart';
 import 'package:manager/features/home/notification/notification_view.dart';
@@ -175,13 +175,6 @@ class AppRouter extends RouterBase {
     AnalyticsView: (data) {
       return MaterialPageRoute(
         builder: (BuildContext _) => AnalyticsView(),
-        settings: data,
-      );
-    },
-
-    FeedbackView: (data) {
-      return MaterialPageRoute(
-        builder: (BuildContext _) => FeedbackView(),
         settings: data,
       );
     },
@@ -602,6 +595,13 @@ class AppRouter extends RouterBase {
         settings: data,
       );
     },
+
+    FeedbackRatingsView: (data) {
+      return MaterialPageRoute(
+        builder: (BuildContext _) => FeedbackRatingsView(),
+        settings: data,
+      );
+    },
   };
 
   /// Defines the list of routes available in the app.
@@ -619,6 +619,7 @@ class AppRouter extends RouterBase {
     RouteDef(Routes.createNewCustomer, page: CreateNewCustomerView),
     RouteDef(Routes.customerDetails, page: CustomerDetailsView),
     RouteDef(Routes.ticketsList, page: TicketsListView),
+    RouteDef(Routes.feedbackRatings, page: FeedbackRatingsView),
     RouteDef(Routes.machinesList, page: MachinesListView),
     RouteDef(Routes.profile, page: ProfileView),
     RouteDef(Routes.qr, page: QRView),
@@ -645,7 +646,6 @@ class AppRouter extends RouterBase {
 
     // Analytics and existing dashboard routes
     RouteDef(Routes.analytics, page: AnalyticsView),
-    RouteDef(Routes.feedback, page: FeedbackView),
     RouteDef(Routes.invoice, page: PiInvoiceRecordView),
     RouteDef(Routes.notification, page: NotificationView),
     RouteDef(Routes.globalActivity, page: Globalactivity),

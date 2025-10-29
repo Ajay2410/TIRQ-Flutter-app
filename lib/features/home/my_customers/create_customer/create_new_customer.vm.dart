@@ -374,7 +374,7 @@ class CreateNewCustomerViewModel extends ReactiveViewModel {
     }
 
     if (phoneNumber.nsn.isNotEmpty) {
-      _fullPhoneNumber = phoneNumber.nsn;
+        _fullPhoneNumber = phoneNumber.nsn;
       AppLogger.info("Phone number updated to: $_fullPhoneNumber");
     }
 

@@ -52,6 +52,9 @@ abstract class Routes {
   /// Route for the Tickets List screen.
   static const String ticketsList = '/ticketsList';
 
+  /// Route for the Feedback Ratings screen
+  static const String feedbackRatings = '/feedbackRatings';
+
   /// Route for the Machines List screen.
   static const String machinesList = '/machinesList';
 

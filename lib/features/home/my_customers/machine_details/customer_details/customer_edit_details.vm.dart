@@ -156,7 +156,7 @@ class CustomerEditDetailsViewModel extends ReactiveViewModel {
 
       if (_fullPhoneNumber.length > 10) {
         phoneController.text = _fullPhoneNumber.substring(
-          (customer.phoneNumber ?? "").length - 11,
+          (customer.phoneNumber ?? "").length - 10,
         );
       } else {
         phoneController.text = _fullPhoneNumber;

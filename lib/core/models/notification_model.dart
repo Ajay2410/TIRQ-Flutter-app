@@ -83,14 +83,18 @@ class NotificationModel {
 class Data {
   String? action;
   String? processorId;
+  String? screenName;
+  String? ticketId;
 
-  Data({this.action, this.processorId});
+  Data({this.action, this.processorId, this.screenName, this.ticketId});
 
   factory Data.fromJson(Map<String, dynamic> json) =>
-      Data(action: json["action"], processorId: json["processorId"]);
+      Data(action: json["action"], processorId: json["processorId"], screenName: json["screenName"], ticketId: json["ticketId"]);
 
   Map<String, dynamic> toJson() => {
     "action": action,
     "processorId": processorId,
+    "screenName": screenName,
+    "ticketId": ticketId,
   };
 }

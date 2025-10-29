@@ -12,6 +12,7 @@ import 'package:manager/core/utils/app_logger.dart';
 import 'package:manager/core/utils/type_def.dart';
 import 'package:manager/services/api.service.dart';
 
+import '../core/models/rating_ticket_list_model.dart';
 import '../core/utils/failures.dart';
 
 class TicketService {
@@ -365,6 +366,65 @@ class TicketService {
       _isRefreshing = false;
     }
   }
+
+  /// Get tickets by status with pagination using the new API
+  ResultFuture<RatingTicketListModel> getTicketRatingList({
+    required String status,
+    int page = 1,
+    int limit = 5,
+    bool forceRefresh = false,
+  }) async {
+    // If already refreshing and not forced, return a failure
+    if (_isRefreshing && !forceRefresh) {
+      return Left(Failure('Refresh already in progress'));
+    }
+
+    try {
+      _isRefreshing = true;
+
+      final response = await apiService.get(
+        url: ApiEndpoints.getTicketRatingList,
+        // queryParameters: {'page': page, 'limit': limit},
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if (data != null) {
+          final paginatedResponse = RatingTicketListModel.fromJson({
+            "data": data,
+          });
+          AppLogger.info(
+            "Tickets fetched successfully: ${paginatedResponse.data?.length ?? 0} tickets (Page: ${paginatedResponse.page}/${paginatedResponse.pages})",
+          );
+          return Right(paginatedResponse);
+        } else {
+          AppLogger.error("Empty response data");
+          return Left(Failure('Empty response data'));
+        }
+      } else {
+        final errorMessage =
+            response.data?['message'] ?? 'Failed to fetch Ratings';
+        AppLogger.error(
+          "API error: $errorMessage (Status: ${response.statusCode})",
+        );
+        return Left(Failure(errorMessage));
+      }
+    } catch (e) {
+      AppLogger.error("Exception in getTicketRatingList: $e");
+      if (e is DioException) {
+        AppLogger.error(e.response?.data?['message'] ?? 'Something went wrong');
+        return Left(
+          Failure(e.response?.data?['message'] ?? 'Something went wrong'),
+        );
+      } else {
+        AppLogger.error(e);
+        return Left(Failure('Failed to get tickets: ${e.toString()}'));
+      }
+    } finally {
+      _isRefreshing = false;
+    }
+  }
+
 
   /// Get all tickets using the new getAll endpoint (kept for backward compatibility)
   ResultFuture<List<TicketList>> getAllTickets({bool forceRefresh = false}) async {
